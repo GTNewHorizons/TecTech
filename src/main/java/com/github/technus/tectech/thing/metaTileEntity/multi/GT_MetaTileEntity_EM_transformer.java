@@ -83,7 +83,7 @@ public class GT_MetaTileEntity_EM_transformer extends GT_MetaTileEntity_Multiblo
         mHardHammer = true;
         mSolderingTool = true;
         mCrowbar = true;
-        eDismantleBoom = true;
+        eDismantleBoom = false;
     }
 
     public GT_MetaTileEntity_EM_transformer(String aName) {
@@ -94,7 +94,7 @@ public class GT_MetaTileEntity_EM_transformer extends GT_MetaTileEntity_Multiblo
         mHardHammer = true;
         mSolderingTool = true;
         mCrowbar = true;
-        eDismantleBoom = true;
+        eDismantleBoom = false;
     }
 
     @Override
@@ -193,11 +193,6 @@ public class GT_MetaTileEntity_EM_transformer extends GT_MetaTileEntity_Multiblo
     @Override
     public boolean onRunningTick(ItemStack aStack) {
         return true;
-    }
-
-    @Override
-    public void doExplosion(long aExplosionPower) {
-        // do nothing zzz
     }
 
     @Override
