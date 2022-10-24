@@ -134,8 +134,6 @@ public class GT_MetaTileEntity_EM_transformer extends GT_MetaTileEntity_Multiblo
                         "gt.blockmachines.multimachine.em.transformer.desc.1")) // Can transform to and from any voltage
                 .addInfo(translateToLocal(
                         "gt.blockmachines.multimachine.em.transformer.desc.2")) // Only 0.004% power loss, HAYO!
-                .addInfo(translateToLocal(
-                        "gt.blockmachines.multimachine.em.transformer.desc.3")) // Will explode if broken while running
                 .addSeparator()
                 .beginStructureBlock(3, 3, 3, false)
                 .addController(translateToLocal("tt.keyword.Structure.FrontCenter")) // Controller: Front center
