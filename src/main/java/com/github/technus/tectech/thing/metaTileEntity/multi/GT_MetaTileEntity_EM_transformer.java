@@ -198,6 +198,11 @@ public class GT_MetaTileEntity_EM_transformer extends GT_MetaTileEntity_Multiblo
     }
 
     @Override
+    public void doExplosion(long aExplosionPower) {
+        // do nothing zzz
+    }
+
+    @Override
     public boolean doRandomMaintenanceDamage() {
         return true;
     }
