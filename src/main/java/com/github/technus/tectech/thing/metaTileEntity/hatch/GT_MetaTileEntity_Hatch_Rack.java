@@ -452,11 +452,25 @@ public class GT_MetaTileEntity_Hatch_Rack extends GT_MetaTileEntity_Hatch implem
         private final float heat, coEff, computation, maxHeat, voltageCoEff;
         private final boolean subZero;
 
-        RackComponent(ItemStack is, float computation, float heat, float coEff, float maxHeat, float voltageCoEff, boolean subZero) {
+        RackComponent(
+                ItemStack is,
+                float computation,
+                float heat,
+                float coEff,
+                float maxHeat,
+                float voltageCoEff,
+                boolean subZero) {
             this(getUniqueIdentifier(is), computation, heat, coEff, maxHeat, voltageCoEff, subZero);
         }
 
-        RackComponent(String is, float computation, float heat, float coEff, float maxHeat, float voltageCoEff, boolean subZero) {
+        RackComponent(
+                String is,
+                float computation,
+                float heat,
+                float coEff,
+                float maxHeat,
+                float voltageCoEff,
+                boolean subZero) {
             unlocalizedName = is;
             this.heat = heat;
             this.coEff = coEff;
