@@ -12,15 +12,18 @@ import static gregtech.api.util.GT_StructureUtility.buildHatchAdder;
 import static net.minecraft.util.StatCollector.translateToLocal;
 
 import com.github.technus.tectech.mechanics.dataTransport.QuantumDataPacket;
+import com.github.technus.tectech.thing.casing.TT_Container_Casings;
 import com.github.technus.tectech.thing.metaTileEntity.hatch.GT_MetaTileEntity_Hatch_InputData;
 import com.github.technus.tectech.thing.metaTileEntity.hatch.GT_MetaTileEntity_Hatch_OutputData;
 import com.github.technus.tectech.thing.metaTileEntity.hatch.GT_MetaTileEntity_Hatch_Rack;
 import com.github.technus.tectech.thing.metaTileEntity.multi.base.*;
 import com.github.technus.tectech.thing.metaTileEntity.multi.base.render.TT_RenderedExtendedFacingTexture;
 import com.github.technus.tectech.util.CommonValues;
+import com.google.common.collect.ImmutableList;
 import com.gtnewhorizon.structurelib.alignment.constructable.ISurvivalConstructable;
 import com.gtnewhorizon.structurelib.structure.IItemSource;
 import com.gtnewhorizon.structurelib.structure.IStructureDefinition;
+import com.gtnewhorizon.structurelib.structure.StructureUtility;
 import com.gtnewhorizon.structurelib.util.Vec3Impl;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -37,12 +40,17 @@ import gregtech.api.util.IGT_HatchAdder;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import net.minecraft.block.Block;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraftforge.fluids.FluidRegistry;
+import net.minecraftforge.fluids.FluidStack;
+import org.apache.commons.lang3.tuple.Pair;
 
 /**
  * Created by danie_000 on 17.12.2016.
@@ -51,6 +59,9 @@ public class GT_MetaTileEntity_EM_computer extends GT_MetaTileEntity_MultiblockB
         implements ISurvivalConstructable {
     // region variables
     private final ArrayList<GT_MetaTileEntity_Hatch_Rack> eRacks = new ArrayList<>();
+
+    /** Consumption of coolant per second */
+    private static final int COOLANT_CONSUMPTION_PER_SECOND = 1;
 
     private static Textures.BlockIcons.CustomIcon ScreenOFF;
     private static Textures.BlockIcons.CustomIcon ScreenON;
@@ -65,11 +76,19 @@ public class GT_MetaTileEntity_EM_computer extends GT_MetaTileEntity_MultiblockB
                 "gt.blockmachines.multimachine.em.computer.hint.1"), // 2 - Rack Hatches or Advanced computer casing
     };
 
+    private int coolerTier = -1;
+    private boolean hasLiquidCooler = false;
+    private static final List<Pair<Block, Integer>> COOLING_TIERS = ImmutableList.of(
+            Pair.of(TT_Container_Casings.sBlockCasingsTT2, 0),
+            Pair.of(TT_Container_Casings.sBlockCasingsTT2, 1),
+            Pair.of(TT_Container_Casings.sBlockCasingsTT2, 2),
+            Pair.of(TT_Container_Casings.sBlockCasingsTT2, 3));
+
     private static final IStructureDefinition<GT_MetaTileEntity_EM_computer> STRUCTURE_DEFINITION =
             IStructureDefinition.<GT_MetaTileEntity_EM_computer>builder()
                     .addShape("front", transpose(new String[][] {{" AA"}, {" AA"}, {" ~A"}, {" AA"}}))
                     .addShape("cap", transpose(new String[][] {{"-CB"}, {" DD"}, {" DD"}, {"-CB"}}))
-                    .addShape("slice", transpose(new String[][] {{"-CB"}, {" ED"}, {" ED"}, {"-CB"}}))
+                    .addShape("slice", transpose(new String[][] {{"-FB"}, {" ED"}, {" ED"}, {"-FB"}}))
                     .addShape("back", transpose(new String[][] {{" AA"}, {" AA"}, {" AA"}, {" AA"}}))
                     .addElement('B', ofBlock(sBlockCasingsTT, 1))
                     .addElement('C', ofBlock(sBlockCasingsTT, 2))
@@ -80,6 +99,7 @@ public class GT_MetaTileEntity_EM_computer extends GT_MetaTileEntity_MultiblockB
                                     .atLeast(
                                             Energy.or(HatchElement.EnergyMulti),
                                             Maintenance,
+                                            InputHatch,
                                             HatchElement.Uncertainty,
                                             HatchElement.OutputData)
                                     .casingIndex(textureOffset + 1)
@@ -90,6 +110,16 @@ public class GT_MetaTileEntity_EM_computer extends GT_MetaTileEntity_MultiblockB
                             ofChain(
                                     RackHatchElement.INSTANCE.newAny(textureOffset + 3, 2),
                                     ofBlock(sBlockCasingsTT, 3)))
+                    .addElement(
+                            'F',
+                            ofChain(
+                                    StructureUtility.ofBlocksTiered(
+                                            (block, meta) -> block == TT_Container_Casings.sBlockCasingsTT2 ? meta : -1,
+                                            COOLING_TIERS,
+                                            -1,
+                                            (computer, val) -> computer.coolerTier = val,
+                                            (computer) -> computer.coolerTier),
+                                    ofBlock(sBlockCasingsTT, 2)))
                     .build();
     // endregion
 
@@ -156,6 +186,8 @@ public class GT_MetaTileEntity_EM_computer extends GT_MetaTileEntity_MultiblockB
             }
         }
         eRacks.clear();
+        coolerTier = -1;
+        hasLiquidCooler = false;
         if (!structureCheck_EM("front", 1, 2, 0)) {
             return false;
         }
@@ -185,7 +217,11 @@ public class GT_MetaTileEntity_EM_computer extends GT_MetaTileEntity_MultiblockB
                 rack.getBaseMetaTileEntity().setActive(iGregTechTileEntity.isActive());
             }
         }
-        return eUncertainHatches.size() == 1;
+        if (eUncertainHatches.size() != 1) {
+            return false;
+        }
+        hasLiquidCooler = coolerTier > 1;
+        return true;
     }
 
     @Override
@@ -206,20 +242,36 @@ public class GT_MetaTileEntity_EM_computer extends GT_MetaTileEntity_MultiblockB
     @Override
     public void onPostTick(IGregTechTileEntity aBaseMetaTileEntity, long aTick) {
         super.onPostTick(aBaseMetaTileEntity, aTick);
-        if (aBaseMetaTileEntity.isServerSide()
-                && mMachine
-                && !aBaseMetaTileEntity.isActive()
-                && aTick % 20 == MULTI_CHECK_AT) {
-            double maxTemp = 0;
-            for (GT_MetaTileEntity_Hatch_Rack rack : eRacks) {
-                if (!GT_MetaTileEntity_MultiBlockBase.isValidMetaTileEntity(rack)) {
-                    continue;
+        if (aBaseMetaTileEntity.isServerSide() && mMachine) {
+            if (!aBaseMetaTileEntity.isActive() && aTick % 20 == MULTI_CHECK_AT) {
+                double maxTemp = 0;
+                for (GT_MetaTileEntity_Hatch_Rack rack : eRacks) {
+                    if (!GT_MetaTileEntity_MultiBlockBase.isValidMetaTileEntity(rack)) {
+                        continue;
+                    }
+                    if (rack.heat > maxTemp) {
+                        maxTemp = rack.heat;
+                    }
                 }
-                if (rack.heat > maxTemp) {
-                    maxTemp = rack.heat;
+                maxCurrentTemp.set(maxTemp);
+            } else if (aTick % 20 == 0) {
+                boolean hasCooled = !hasLiquidCooler;
+                if (hasLiquidCooler) {
+                    for (GT_MetaTileEntity_Hatch inputHatch : mInputHatches) {
+                        FluidStack drained = inputHatch.drain(
+                                ForgeDirection.UNKNOWN,
+                                new FluidStack(FluidRegistry.getFluid("ic2coolant"), COOLANT_CONSUMPTION_PER_SECOND),
+                                true);
+                        if (drained != null && drained.amount == COOLANT_CONSUMPTION_PER_SECOND) {
+                            hasCooled = true;
+                            break;
+                        }
+                    }
+                }
+                if (!hasCooled) {
+                    stopMachine();
                 }
             }
-            maxCurrentTemp.set(maxTemp);
         }
     }
 
