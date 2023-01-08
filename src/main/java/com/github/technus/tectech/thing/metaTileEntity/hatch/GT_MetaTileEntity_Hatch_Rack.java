@@ -48,7 +48,7 @@ public class GT_MetaTileEntity_Hatch_Rack extends GT_MetaTileEntity_Hatch implem
     private static Textures.BlockIcons.CustomIcon EM_R;
     private static Textures.BlockIcons.CustomIcon EM_R_ACTIVE;
     public int heat = 0;
-    private float overClock = 1, overVolt = 1;
+    private float overClock = 1, overVolt = 1, voltageModifier = 1;
     private static Map<String, RackComponent> componentBinds = new HashMap<>();
 
     private String clientLocale = "en_US";
@@ -157,8 +157,15 @@ public class GT_MetaTileEntity_Hatch_Rack extends GT_MetaTileEntity_Hatch implem
         return true;
     }
 
+    public float getVoltageModifier() {
+        return voltageModifier;
+    }
+
     private int getComputationPower(float overclock, float overvolt, boolean tickingComponents) {
         float computation = 0, heat = 0;
+        if (tickingComponents) {
+            voltageModifier = 1;
+        }
         for (int i = 0; i < mInventory.length; i++) {
             if (mInventory[i] == null || mInventory[i].stackSize != 1) {
                 continue;
@@ -168,6 +175,7 @@ public class GT_MetaTileEntity_Hatch_Rack extends GT_MetaTileEntity_Hatch implem
                 continue;
             }
             if (tickingComponents) {
+                this.voltageModifier *= comp.voltageCoEff;
                 if (this.heat > comp.maxHeat) {
                     mInventory[i] = null;
                     continue;
@@ -355,105 +363,106 @@ public class GT_MetaTileEntity_Hatch_Rack extends GT_MetaTileEntity_Hatch implem
     }
 
     public static void run() { // 20k heat cap max!
-        new RackComponent(ItemList.Circuit_Primitive.get(1), 1, 4, 0, 500, true); // Primitive Circuit
-        new RackComponent(ItemList.Circuit_Basic.get(1), 4, 8, 0, 1000, true); // Basic Circuit
-        new RackComponent(ItemList.Circuit_Microprocessor.get(1), 6, 8, 0, 1250, true);
-        new RackComponent(ItemList.Circuit_Good.get(1), 6, 9, -.05f, 1500, true); // Good Circuit
-        new RackComponent(ItemList.Circuit_Integrated_Good.get(1), 7, 9, -.075f, 1750, true);
-        new RackComponent(ItemList.Circuit_Processor.get(1), 8, 9, -.07f, 1800, true);
-        new RackComponent(ItemList.Circuit_Parts_Advanced.get(1), 1, 2, -.05f, 2000, true);
-        new RackComponent(ItemList.Circuit_Nanoprocessor.get(1), 8, 10, -.09f, 2250, true); // Advanced Circuit
-        new RackComponent(ItemList.Circuit_Advanced.get(1), 8, 10, -.1f, 2500, true);
-        new RackComponent(ItemList.Circuit_Data.get(1), 9, 1, -.1f, 3000, true); // EV Circuit
-        new RackComponent(ItemList.Circuit_Nanocomputer.get(1), 11, 10, -.125f, 3300, true);
-        new RackComponent(ItemList.Circuit_Quantumprocessor.get(1), 13, 10, -.15f, 3600, true);
-        new RackComponent(ItemList.Circuit_Elite.get(1), 12, 10, -.15F, 3500, true); // IV Circuit
-        new RackComponent(ItemList.Circuit_Elitenanocomputer.get(1), 14, 10, -.15F, 4000, true);
-        new RackComponent(ItemList.Circuit_Quantumcomputer.get(1), 16, 10, -.15F, 4500, true);
-        new RackComponent(ItemList.Circuit_Crystalprocessor.get(1), 18, 10, -.15F, 5000, true);
-        new RackComponent(ItemList.Circuit_Master.get(1), 16, 12, -.2F, 5000, true); // LuV Circuit
-        new RackComponent(ItemList.Circuit_Masterquantumcomputer.get(1), 16, 13, -.2F, 5100, true);
-        new RackComponent(ItemList.Circuit_Crystalcomputer.get(1), 20, 14, -.25F, 5200, true);
-        new RackComponent(ItemList.Circuit_Neuroprocessor.get(1), 24, 15, -.3F, 5300, true);
-        new RackComponent(ItemList.Circuit_Quantummainframe.get(1), 22, 14, -.3F, 5200, true); // ZPM Circuit
-        new RackComponent(ItemList.Circuit_Ultimatecrystalcomputer.get(1), 26, 16, -.3F, 5400, true);
-        new RackComponent(ItemList.Circuit_Wetwarecomputer.get(1), 30, 18, -.3F, 5600, true);
-        new RackComponent(ItemList.Circuit_Crystalmainframe.get(1), 30, 18, -.35F, 5500, true); // UV Circuit
-        new RackComponent(ItemList.Circuit_Wetwaresupercomputer.get(1), 35, 22, -.3F, 5700, true);
-        new RackComponent(ItemList.Circuit_Wetwaremainframe.get(1), 38, 25, -.4F, 6000, true); // UHV Circuit
+        new RackComponent(ItemList.Circuit_Primitive.get(1), 1, 4, 0, 500, .3F, true); // Primitive Circuit
+        new RackComponent(ItemList.Circuit_Basic.get(1), 4, 8, 0, 1000, .35F, true); // Basic Circuit
+        new RackComponent(ItemList.Circuit_Microprocessor.get(1), 6, 8, 0, 1250, .4F, true);
+        new RackComponent(ItemList.Circuit_Good.get(1), 6, 9, -.05f, 1500, .45F, true); // Good Circuit
+        new RackComponent(ItemList.Circuit_Integrated_Good.get(1), 7, 9, -.075f, 1750, .45F, true);
+        new RackComponent(ItemList.Circuit_Processor.get(1), 8, 9, -.07f, 1800, .45F, true);
+        new RackComponent(ItemList.Circuit_Parts_Advanced.get(1), 1, 2, -.05f, 2000, .45F, true);
+        new RackComponent(ItemList.Circuit_Nanoprocessor.get(1), 8, 10, -.09f, 2250, .5F, true); // Advanced Circuit
+        new RackComponent(ItemList.Circuit_Advanced.get(1), 8, 10, -.1f, 2500, .5F, true);
+        new RackComponent(ItemList.Circuit_Data.get(1), 9, 1, -.1f, 3000, .55F, true); // EV Circuit
+        new RackComponent(ItemList.Circuit_Nanocomputer.get(1), 11, 10, -.125f, 3300, .55F, true);
+        new RackComponent(ItemList.Circuit_Quantumprocessor.get(1), 13, 10, -.15f, 3600, .55F, true);
+        new RackComponent(ItemList.Circuit_Elite.get(1), 12, 10, -.15F, 3500, .6F, true); // IV Circuit
+        new RackComponent(ItemList.Circuit_Elitenanocomputer.get(1), 14, 10, -.15F, 4000, .6F, true);
+        new RackComponent(ItemList.Circuit_Quantumcomputer.get(1), 16, 10, -.15F, 4500, .6F, true);
+        new RackComponent(ItemList.Circuit_Crystalprocessor.get(1), 18, 10, -.15F, 5000, .6F, true);
+        new RackComponent(ItemList.Circuit_Master.get(1), 16, 12, -.2F, 5000, .65F, true); // LuV Circuit
+        new RackComponent(ItemList.Circuit_Masterquantumcomputer.get(1), 16, 13, -.2F, 5100, .65F, true);
+        new RackComponent(ItemList.Circuit_Crystalcomputer.get(1), 20, 14, -.25F, 5200, .65F, true);
+        new RackComponent(ItemList.Circuit_Neuroprocessor.get(1), 24, 15, -.3F, 5300, .65F, true);
+        new RackComponent(ItemList.Circuit_Quantummainframe.get(1), 22, 14, -.3F, 5200, .7F, true); // ZPM Circuit
+        new RackComponent(ItemList.Circuit_Ultimatecrystalcomputer.get(1), 26, 16, -.3F, 5400, .7F, true);
+        new RackComponent(ItemList.Circuit_Wetwarecomputer.get(1), 30, 18, -.3F, 5600, .7F, true);
+        new RackComponent(ItemList.Circuit_Crystalmainframe.get(1), 30, 18, -.35F, 5500, .7F, true); // UV Circuit
+        new RackComponent(ItemList.Circuit_Wetwaresupercomputer.get(1), 35, 22, -.3F, 5700, 1F, true);
+        new RackComponent(ItemList.Circuit_Wetwaremainframe.get(1), 38, 25, -.4F, 6000, 1.1F, true); // UHV Circuit
 
-        new RackComponent("IC2:ic2.reactorVent", 0, -1, 10f, 1000, false);
-        new RackComponent("IC2:ic2.reactorVentCore", 0, -1, 20f, 2500, false);
-        new RackComponent("IC2:ic2.reactorVentGold", 0, -1, 40f, 5000, false);
-        new RackComponent("IC2:ic2.reactorVentDiamond", 0, -1, 80f, 10000, false); // 2x oc
+        new RackComponent("IC2:ic2.reactorVent", 0, -1, 10f, 1000, 1F, false);
+        new RackComponent("IC2:ic2.reactorVentCore", 0, -1, 20f, 2500, 1F, false);
+        new RackComponent("IC2:ic2.reactorVentGold", 0, -1, 40f, 5000, 1F, false);
+        new RackComponent("IC2:ic2.reactorVentDiamond", 0, -1, 80f, 10000, 1F, false); // 2x oc
 
         if (Loader.isModLoaded(Reference.DREAMCRAFT)) {
             // GTNH-GT5u circuits
             // these components causes crashes when used with the original GT5u
-            new RackComponent(ItemList.NandChip.get(1), 2, 6, 0, 750, true); // Primitive Circuit
-            new RackComponent(ItemList.Circuit_Biowarecomputer.get(1), 40, 26, -.35F, 5900, true);
-            new RackComponent(ItemList.Circuit_Biowaresupercomputer.get(1), 42, 30, -.4F, 6200, true);
-            new RackComponent(ItemList.Circuit_Biomainframe.get(1), 44, 28, -.4F, 6000, true); // UEV Circuit
-            new RackComponent(ItemList.Circuit_Bioprocessor.get(1), 34, 20, -.35F, 5800, true);
+            new RackComponent(ItemList.NandChip.get(1), 2, 6, 0, 750, .1F, true); // Primitive Circuit
+            new RackComponent(ItemList.Circuit_Biowarecomputer.get(1), 40, 26, -.35F, 5900, 1F, true);
+            new RackComponent(ItemList.Circuit_Biowaresupercomputer.get(1), 42, 30, -.4F, 6200, 1.4F, true);
+            new RackComponent(ItemList.Circuit_Biomainframe.get(1), 44, 28, -.4F, 6000, 1.1F, true); // UEV Circuit
+            new RackComponent(ItemList.Circuit_Bioprocessor.get(1), 34, 20, -.35F, 5800, .7F, true);
 
-            new RackComponent("dreamcraft:item.HighEnergyCircuitParts", 3, 2, -.1f, 9001, true);
-            new RackComponent("dreamcraft:item.HighEnergyFlowCircuit", 48, 16, .5f, 10000, true);
-            new RackComponent("dreamcraft:item.NanoCircuit", 64, 35, -.45f, 8000, true);
-            new RackComponent("dreamcraft:item.PikoCircuit", 128, 40, -.5f, 8500, true);
-            new RackComponent("dreamcraft:item.QuantumCircuit", 160, 48, -.6f, 9000, true);
+            new RackComponent("dreamcraft:item.HighEnergyCircuitParts", 3, 2, -.1f, 9001, .55F, true);
+            new RackComponent("dreamcraft:item.HighEnergyFlowCircuit", 48, 16, .5f, 10000, .65F, true);
+            new RackComponent("dreamcraft:item.NanoCircuit", 64, 35, -.45f, 8000, 1.6F, true);
+            new RackComponent("dreamcraft:item.PikoCircuit", 128, 40, -.5f, 8500, 1.8F, true);
+            new RackComponent("dreamcraft:item.QuantumCircuit", 160, 48, -.6f, 9000, 2F, true);
         }
 
         if (Loader.isModLoaded(Reference.SPARTAKCORE)) {
             // CustomGT5u circuits
             // these components causes crashes when used with the original GT5u
-            new RackComponent(ItemList.NandChip.get(1), 2, 6, 0, 750, true); // Primitive Circuit
-            new RackComponent(ItemList.Circuit_Biowarecomputer.get(1), 40, 26, -.35F, 5900, true);
-            new RackComponent(ItemList.Circuit_Biowaresupercomputer.get(1), 42, 30, -.4F, 6200, true);
-            new RackComponent(ItemList.Circuit_Biomainframe.get(1), 44, 28, -.4F, 6000, true); // UHV Circuit
-            new RackComponent(ItemList.Circuit_Bioprocessor.get(1), 34, 20, -.35F, 5800, true);
+            new RackComponent(ItemList.NandChip.get(1), 2, 6, 0, 750, .1F, true); // Primitive Circuit
+            new RackComponent(ItemList.Circuit_Biowarecomputer.get(1), 40, 26, -.35F, 5900, 1F, true);
+            new RackComponent(ItemList.Circuit_Biowaresupercomputer.get(1), 42, 30, -.4F, 6200, 1.4F, true);
+            new RackComponent(ItemList.Circuit_Biomainframe.get(1), 44, 28, -.4F, 6000, 1.1F, true); // UHV Circuit
+            new RackComponent(ItemList.Circuit_Bioprocessor.get(1), 34, 20, -.35F, 5800, .7F, true);
         }
 
         if (Loader.isModLoaded("OpenComputers")) {
-            new RackComponent("OpenComputers:item.oc.Transistor", 0, 1, 0f, 100, true); // Transistor
-            new RackComponent("OpenComputers:item.oc.Microchip0", 7, 12, -.05f, 1500, true); // chip t1
-            new RackComponent("OpenComputers:item.oc.Microchip1", 18, 20, -.1f, 3000, true); // chip t2
-            new RackComponent("OpenComputers:item.oc.Microchip2", 25, 22, -.15f, 4500, true); // chip t3
-            new RackComponent("OpenComputers:item.oc.ALU", 10, 15, -.05f, 3000, true); // alu
-            new RackComponent("OpenComputers:item.oc.ControlUnit", 25, 18, -.05f, 1500, true); // cu
+            new RackComponent("OpenComputers:item.oc.Transistor", 0, 1, 0f, 100, .01F, true); // Transistor
+            new RackComponent("OpenComputers:item.oc.Microchip0", 7, 12, -.05f, 1500, .1F, true); // chip t1
+            new RackComponent("OpenComputers:item.oc.Microchip1", 18, 20, -.1f, 3000, .2F, true); // chip t2
+            new RackComponent("OpenComputers:item.oc.Microchip2", 25, 22, -.15f, 4500, .3F, true); // chip t3
+            new RackComponent("OpenComputers:item.oc.ALU", 10, 15, -.05f, 3000, .1F, true); // alu
+            new RackComponent("OpenComputers:item.oc.ControlUnit", 25, 18, -.05f, 1500, .3F, true); // cu
 
-            new RackComponent("OpenComputers:item.oc.ComponentBus0", 42, 30, -.05f, 1500, true); // bus t1
-            new RackComponent("OpenComputers:item.oc.ComponentBus1", 70, 50, -.1f, 3000, true); // bus t2
-            new RackComponent("OpenComputers:item.oc.ComponentBus2", 105, 72, -.15f, 4500, true); // bus t3
+            new RackComponent("OpenComputers:item.oc.ComponentBus0", 42, 30, -.05f, 1500, .8F, true); // bus t1
+            new RackComponent("OpenComputers:item.oc.ComponentBus1", 70, 50, -.1f, 3000, .9F, true); // bus t2
+            new RackComponent("OpenComputers:item.oc.ComponentBus2", 105, 72, -.15f, 4500, 1F, true); // bus t3
 
-            new RackComponent("OpenComputers:item.oc.CPU0", 106, 73, -.1f, 1500, true); // cpu t1
-            new RackComponent("OpenComputers:item.oc.CPU1", 226, 153, -.15f, 3000, true); // cpu t2
-            new RackComponent("OpenComputers:item.oc.CPU2", 374, 241, -.2f, 4500, true); // cpu t3
+            new RackComponent("OpenComputers:item.oc.CPU0", 106, 73, -.1f, 1500, .8F, true); // cpu t1
+            new RackComponent("OpenComputers:item.oc.CPU1", 226, 153, -.15f, 3000, .9F, true); // cpu t2
+            new RackComponent("OpenComputers:item.oc.CPU2", 374, 241, -.2f, 4500, 1F, true); // cpu t3
 
-            new RackComponent("OpenComputers:item.oc.GraphicsCard0", 20, 27, -.1f, 1500, true); // gpu t1
-            new RackComponent("OpenComputers:item.oc.GraphicsCard1", 62, 67, -.2f, 3000, true); // gpu t2
-            new RackComponent("OpenComputers:item.oc.GraphicsCard2", 130, 111, -.3f, 4500, true); // gpu t3
+            new RackComponent("OpenComputers:item.oc.GraphicsCard0", 20, 27, -.1f, 1500, .7F, true); // gpu t1
+            new RackComponent("OpenComputers:item.oc.GraphicsCard1", 62, 67, -.2f, 3000, .9F, true); // gpu t2
+            new RackComponent("OpenComputers:item.oc.GraphicsCard2", 130, 111, -.3f, 4500, 1F, true); // gpu t3
 
-            new RackComponent("OpenComputers:item.oc.APU0", 120, 234, -.1f, 1500, true); // apu t2
-            new RackComponent("OpenComputers:item.oc.APU1", 250, 398, -.2f, 4500, true); // apu t3
-            new RackComponent("OpenComputers:item.oc.APU2", 330, 1006, -.3f, 9000, true); // apu tC
+            new RackComponent("OpenComputers:item.oc.APU0", 120, 234, -.1f, 1500, 1.3F, true); // apu t2
+            new RackComponent("OpenComputers:item.oc.APU1", 250, 398, -.2f, 4500, 1.6F, true); // apu t3
+            new RackComponent("OpenComputers:item.oc.APU2", 330, 1006, -.3f, 9000, 2F, true); // apu tC
         }
     }
 
     public static class RackComponent implements Comparable<RackComponent> {
         private final String unlocalizedName;
-        private final float heat, coEff, computation, maxHeat;
+        private final float heat, coEff, computation, maxHeat, voltageCoEff;
         private final boolean subZero;
 
-        RackComponent(ItemStack is, float computation, float heat, float coEff, float maxHeat, boolean subZero) {
-            this(getUniqueIdentifier(is), computation, heat, coEff, maxHeat, subZero);
+        RackComponent(ItemStack is, float computation, float heat, float coEff, float maxHeat, float voltageCoEff, boolean subZero) {
+            this(getUniqueIdentifier(is), computation, heat, coEff, maxHeat, voltageCoEff, subZero);
         }
 
-        RackComponent(String is, float computation, float heat, float coEff, float maxHeat, boolean subZero) {
+        RackComponent(String is, float computation, float heat, float coEff, float maxHeat, float voltageCoEff, boolean subZero) {
             unlocalizedName = is;
             this.heat = heat;
             this.coEff = coEff;
             this.computation = computation;
             this.maxHeat = maxHeat;
+            this.voltageCoEff = voltageCoEff;
             this.subZero = subZero;
             componentBinds.put(unlocalizedName, this);
             if (DEBUG_MODE) {

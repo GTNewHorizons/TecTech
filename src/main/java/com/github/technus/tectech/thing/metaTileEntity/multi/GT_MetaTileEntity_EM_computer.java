@@ -286,13 +286,8 @@ public class GT_MetaTileEntity_EM_computer extends GT_MetaTileEntity_MultiblockB
             return false;
         }
         if (overclock.getStatus(true).isOk && overvolt.getStatus(true).isOk) {
-            float eut = V[8] * (float) overVoltageRatio * (float) overClockRatio;
-            if (eut < Integer.MAX_VALUE - 7) {
-                mEUt = -(int) eut;
-            } else {
-                mEUt = -(int) V[8];
-                return false;
-            }
+            float eut = 0, totalVoltageModifier = 1;
+
             short thingsActive = 0;
             int rackComputation;
 
@@ -304,12 +299,15 @@ public class GT_MetaTileEntity_EM_computer extends GT_MetaTileEntity_MultiblockB
                     maxTemp = rack.heat;
                 }
                 rackComputation = rack.tickComponents((float) overClockRatio, (float) overVoltageRatio);
+                totalVoltageModifier *= rack.getVoltageModifier();
                 if (rackComputation > 0) {
                     eAvailableData += rackComputation;
                     thingsActive += 4;
                 }
                 rack.getBaseMetaTileEntity().setActive(true);
             }
+
+            eut += V[8] * (float) overVoltageRatio * (float) overClockRatio * totalVoltageModifier;
 
             for (GT_MetaTileEntity_Hatch_InputData di : eInputData) {
                 if (di.q != null) // ok for power losses
@@ -321,6 +319,12 @@ public class GT_MetaTileEntity_EM_computer extends GT_MetaTileEntity_MultiblockB
             if (thingsActive > 0 && eCertainStatus == 0) {
                 thingsActive += eOutputData.size();
                 eAmpereFlow = 1 + (thingsActive >> 2);
+                if (eut < Integer.MAX_VALUE - 7) {
+                    mEUt = -(int) eut;
+                } else {
+                    mEUt = -(int) V[8];
+                    return false;
+                }
                 mMaxProgresstime = 20;
                 mEfficiencyIncrease = 10000;
                 maxCurrentTemp.set(maxTemp);
