@@ -536,6 +536,19 @@ gt.blockcasingsBA0.8.name=Tesla Secondary Windings
 gt.blockcasingsBA0.8.desc.0=Picks up power from a primary coil
 gt.blockcasingsBA0.8.desc.1=Who wouldn't want a 32k epoxy multi?
 
+gt.blockcasingsTT2.0.name=Computer Air Cooler MK-I
+gt.blockcasingsTT2.0.desc.0=The Ol' reliable.
+gt.blockcasingsTT2.0.desc.1=I hope you clean it from time to time.
+gt.blockcasingsTT2.1.name=Computer Air Cooler MK-II
+gt.blockcasingsTT2.1.desc.0=Like a jet engine.
+gt.blockcasingsTT2.1.desc.1=You clean it from time to time, right?
+gt.3blockcasingsT2T.2.name=Computer Liquid Cooler MK-I
+gt.blockcasingsTT2.2.desc.0=Industrial AIO cooling solution.
+gt.blockcasingsTT2.2.desc.1=I hope it doesn't leak!
+gt.blockcasingsTT2.3.name=Computer Liquid Cooler MK-II
+gt.blockcasingsTT2.3.desc.0=Finally a custom loop.
+gt.blockcasingsTT2.3.desc.1=It uses colored liquid!
+
 #Multiblocks
 gt.blockmachines.multimachine.em.transformer.name=Active Transformer
 gt.blockmachines.multimachine.em.transformer.hint=1 - Energy IO Hatches or High Power Casing

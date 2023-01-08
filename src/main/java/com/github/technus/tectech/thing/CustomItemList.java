@@ -391,7 +391,11 @@ public enum CustomItemList implements IItemContainer {
     Machine_TeslaCoil_4by4_IV,
     DATApipeBlock,
     EMpipeBlock,
-    LASERpipeBlock;
+    LASERpipeBlock,
+    eM_Computer_Vent_T1,
+    eM_Computer_Vent_T2,
+    eM_Computer_Liquid_Cooler_T1,
+    eM_Computer_Liquid_Cooler_T2;
 
     private ItemStack mStack;
     private boolean mHasNotBeenSet = true;
