@@ -4,17 +4,16 @@ import static com.github.technus.tectech.TecTech.RANDOM;
 
 import com.github.technus.tectech.Reference;
 import com.github.technus.tectech.compatibility.openmodularturrets.TT_turret_loader;
-import com.github.technus.tectech.thing.block.QuantumGlassBlock;
-import com.github.technus.tectech.thing.block.QuantumGlassRender;
-import com.github.technus.tectech.thing.block.QuantumStuffBlock;
-import com.github.technus.tectech.thing.block.QuantumStuffRender;
+import com.github.technus.tectech.thing.block.*;
 import com.github.technus.tectech.thing.item.DebugElementalInstanceContainer_EM;
 import com.github.technus.tectech.thing.item.ElementalDefinitionContainer_EM;
 import com.github.technus.tectech.thing.item.renderElemental.RenderElementalName;
 import com.gtnewhorizon.structurelib.entity.fx.WeightlessParticleFX;
 import cpw.mods.fml.client.FMLClientHandler;
+import cpw.mods.fml.client.registry.ClientRegistry;
 import cpw.mods.fml.client.registry.RenderingRegistry;
 import cpw.mods.fml.common.Loader;
+import cpw.mods.fml.common.event.FMLInitializationEvent;
 import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityClientPlayerMP;
@@ -33,8 +32,8 @@ public class ClientProxy extends CommonProxy {
         QuantumGlassBlock.renderID = RenderingRegistry.getNextAvailableRenderId();
         RenderingRegistry.registerBlockHandler(QuantumGlassBlock.renderID, new QuantumGlassRender());
 
-        QuantumStuffBlock.renderID = RenderingRegistry.getNextAvailableRenderId();
-        RenderingRegistry.registerBlockHandler(QuantumStuffBlock.renderID, new QuantumStuffRender());
+        //        QuantumStuffBlock.renderID = RenderingRegistry.getNextAvailableRenderId();
+        //        RenderingRegistry.registerBlockHandler(QuantumStuffBlock.renderID, new QuantumStuffRender());
 
         MinecraftForgeClient.registerItemRenderer(
                 ElementalDefinitionContainer_EM.INSTANCE, RenderElementalName.INSTANCE);
@@ -46,6 +45,9 @@ public class ClientProxy extends CommonProxy {
         if (Loader.isModLoaded("openmodularturrets")) {
             new TT_turret_loader().run();
         }
+
+        ClientRegistry.bindTileEntitySpecialRenderer(TileEyeOfHarmony.class, new RenderEyeOfHarmony());
+
     }
 
     @Override
@@ -186,4 +188,6 @@ public class ClientProxy extends CommonProxy {
     public boolean isThePlayer(EntityPlayer player) {
         return getPlayer() == player;
     }
+
+
 }
