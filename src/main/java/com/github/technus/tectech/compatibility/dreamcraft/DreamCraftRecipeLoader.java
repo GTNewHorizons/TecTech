@@ -6134,7 +6134,8 @@ public class DreamCraftRecipeLoader {
                             ME_Singularity,
                             ME_Singularity,
                             ME_Singularity,
-                            GT_OreDictUnificator.get(OrePrefixes.plateDense, Materials.WhiteDwarfMatter, absoluteTier * 2),
+                            GT_OreDictUnificator.get(
+                                    OrePrefixes.plateDense, Materials.WhiteDwarfMatter, absoluteTier * 2),
                             getModItem("gregtech", "gt.metaitem.01", set, 32429)
                         },
                         new FluidStack[] {
@@ -6164,7 +6165,8 @@ public class DreamCraftRecipeLoader {
                             ME_Singularity,
                             ME_Singularity,
                             ME_Singularity,
-                            GT_OreDictUnificator.get(OrePrefixes.plateDense, Materials.WhiteDwarfMatter, absoluteTier * 2),
+                            GT_OreDictUnificator.get(
+                                    OrePrefixes.plateDense, Materials.WhiteDwarfMatter, absoluteTier * 2),
                             getModItem("gregtech", "gt.metaitem.01", set, 32429)
                         },
                         new FluidStack[] {
@@ -6195,7 +6197,8 @@ public class DreamCraftRecipeLoader {
                             ME_Singularity,
                             ME_Singularity,
                             ME_Singularity,
-                            GT_OreDictUnificator.get(OrePrefixes.plateDense, Materials.WhiteDwarfMatter, absoluteTier * 2),
+                            GT_OreDictUnificator.get(
+                                    OrePrefixes.plateDense, Materials.WhiteDwarfMatter, absoluteTier * 2),
                             getModItem("gregtech", "gt.metaitem.01", set, 32429)
                         },
                         new FluidStack[] {
