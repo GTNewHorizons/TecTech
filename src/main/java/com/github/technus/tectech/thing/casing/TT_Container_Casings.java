@@ -21,5 +21,7 @@ public final class TT_Container_Casings {
     // Do NOT delete, it will break. The IDE is a liar.
     public static Block eyeOfHarmonyRenderBlock = new EyeOfHarmonyBlock();
 
+    public static Block GravitonFlowModulators;
+
     private TT_Container_Casings() {}
 }

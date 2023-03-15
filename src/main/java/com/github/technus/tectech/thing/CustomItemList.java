@@ -343,8 +343,8 @@ public enum CustomItemList implements IItemContainer {
     Machine_Multi_Wormhole,
     Machine_Multi_Annihilation,
     Machine_Multi_EyeOfHarmony,
-
     Machine_Multi_ForgeOfGods,
+
     hint_0,
     hint_1,
     hint_2,
@@ -434,7 +434,17 @@ public enum CustomItemList implements IItemContainer {
     StabilisationFieldGeneratorTier5,
     StabilisationFieldGeneratorTier6,
     StabilisationFieldGeneratorTier7,
-    StabilisationFieldGeneratorTier8;
+    StabilisationFieldGeneratorTier8,
+
+    GravitonFlowModulatorTier0,
+    GravitonFlowModulatorTier1,
+    GravitonFlowModulatorTier2,
+    GravitonFlowModulatorTier3,
+    GravitonFlowModulatorTier4,
+    GravitonFlowModulatorTier5,
+    GravitonFlowModulatorTier6,
+    GravitonFlowModulatorTier7,
+    GravitonFlowModulatorTier8;
 
     private ItemStack mStack;
     private boolean mHasNotBeenSet = true;
