@@ -841,6 +841,19 @@ achievement.gt.stabilisation_field_generator.6=Perfect Stabilisation Field Gener
 achievement.gt.stabilisation_field_generator.7=Tipler Stabilisation Field Generator
 achievement.gt.stabilisation_field_generator.8=Gallifreyan Stabilisation Field Generator
 
+# Forge of Gods
+achievement.gt.blockmachines.multimachine.em.forge_of_gods=FOG
+
+achievement.gt.graviton_flow_modulator.0=Crude Graviton Flow Modulator
+achievement.gt.graviton_flow_modulator.1=Primitive Graviton Flow Modulator
+achievement.gt.graviton_flow_modulator.2=Stable Graviton Flow Modulator
+achievement.gt.graviton_flow_modulator.3=Advanced Graviton Flow Modulator
+achievement.gt.graviton_flow_modulator.4=Superb Graviton Flow Modulator
+achievement.gt.graviton_flow_modulator.5=Exotic Graviton Flow Modulator
+achievement.gt.graviton_flow_modulator.6=Perfect Graviton Flow Modulator
+achievement.gt.graviton_flow_modulator.7=Tipler Graviton Flow Modulator
+achievement.gt.graviton_flow_modulator.8=Hyperion Graviton Flow Modulator
+
 # Optical Circuits
 achievement.gt.metaitem.03.32155=Optical Assembly
 achievement.gt.metaitem.03.32156=Optical Computer

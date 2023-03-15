@@ -65,6 +65,9 @@ public class ThingsLoader implements Runnable {
 
         TT_Container_Casings.StabilisationFieldGenerators = new StabilisationFieldCasing();
 
+        TT_Container_Casings.GravitonFlowModulators = new GravitonModulationCasing();
+        TecTech.LOGGER.info("Graviton Flow Modulators registered.");
+
         QuantumGlassBlock.run();
         TecTech.LOGGER.info("Quantum Glass registered");
 

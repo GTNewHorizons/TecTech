@@ -20,5 +20,7 @@ public final class TT_Container_Casings {
 
     public static Block eyeOfHarmonyRenderBlock = new EyeOfHarmonyBlock();
 
+    public static Block GravitonFlowModulators;
+
     private TT_Container_Casings() {}
 }
