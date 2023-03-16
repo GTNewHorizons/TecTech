@@ -11,7 +11,6 @@ import static net.minecraft.util.StatCollector.translateToLocal;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.EnumChatFormatting;
 
 import org.apache.commons.lang3.tuple.Pair;
 
@@ -33,6 +32,8 @@ import gregtech.api.interfaces.ITexture;
 import gregtech.api.interfaces.metatileentity.IMetaTileEntity;
 import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
 import gregtech.api.util.GT_Multiblock_Tooltip_Builder;
+import gregtech.common.tileentities.machines.GT_MetaTileEntity_Hatch_OutputBus_ME;
+import gregtech.common.tileentities.machines.GT_MetaTileEntity_Hatch_Output_ME;
 
 public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_MultiblockBase_EM
         implements IConstructable, IGlobalWirelessEnergy, ISurvivalConstructable {
@@ -3016,14 +3017,6 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
         return STRUCTURE_DEFINITION;
     }
 
-    private static final String[] description = new String[] {
-            EnumChatFormatting.AQUA + translateToLocal("tt.keyphrase.Hint_Details") + ":",
-            translateToLocal("gt.blockmachines.multimachine.em.blackholegenerator.hint.0"), // 1 - Classic Hatches or
-                                                                                            // High Power Casing
-            translateToLocal("gt.blockmachines.multimachine.em.blackholegenerator.hint.1"),// 2 - Elemental Hatches or
-                                                                                           // Molecular Casing
-    };
-
     // endregion
     public GT_MetaTileEntity_EM_ForgeOfGods(int aID, String aName, String aNameRegional) {
         super(aID, aName, aNameRegional);
@@ -3090,7 +3083,69 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
     }
 
     @Override
+    public boolean checkMachine_EM(IGregTechTileEntity iGregTechTileEntity, ItemStack itemStack) {
+
+        spacetimeCompressionFieldMetadata = -1;
+
+        // Check structure of multi.
+        if (!structureCheck_EM(STRUCTURE_PIECE_MAIN, 31, 34, 0)) {
+            return false;
+        }
+
+        // Check if there is 1 output bus, and it is a ME output bus.
+        {
+            if (mOutputBusses.size() != 1) {
+                return false;
+            }
+
+            if (!(mOutputBusses.get(0) instanceof GT_MetaTileEntity_Hatch_OutputBus_ME)) {
+                return false;
+            }
+        }
+
+        // Check if there is 1 output hatch, and they are ME output hatches.
+        {
+            if (mOutputHatches.size() != 1) {
+                return false;
+            }
+
+            if (!(mOutputHatches.get(0) instanceof GT_MetaTileEntity_Hatch_Output_ME)) {
+                return false;
+            }
+        }
+
+        // Check there is 1 input bus.
+        if (mInputBusses.size() != 1) {
+            return false;
+        }
+
+        // Make sure there are no energy hatches.
+        {
+            if (mEnergyHatches.size() > 0) {
+                return false;
+            }
+
+            if (mExoticEnergyHatches.size() > 0) {
+                return false;
+            }
+        }
+
+        // Make sure there is 1 input hatch.
+        if (mInputHatches.size() != 1) {
+            return false;
+        }
+
+        mHardHammer = true;
+        mSoftHammer = true;
+        mScrewdriver = true;
+        mCrowbar = true;
+        mSolderingTool = true;
+        mWrench = true;
+        return true;
+    }
+
+    @Override
     public String[] getStructureDescription(ItemStack stackSize) {
-        return description;
+        return new String[] { "Forge of Gods multiblock" };
     }
 }
