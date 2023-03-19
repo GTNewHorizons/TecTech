@@ -3,7 +3,6 @@ package com.github.technus.tectech.thing.metaTileEntity.multi;
 import static com.github.technus.tectech.thing.casing.GT_Block_CasingsTT.texturePage;
 import static com.github.technus.tectech.thing.casing.TT_Container_Casings.sBlockCasingsBA0;
 import static com.github.technus.tectech.thing.casing.TT_Container_Casings.sBlockCasingsTT;
-import static com.github.technus.tectech.util.RecipeFinderForParallel.*;
 import static com.gtnewhorizon.structurelib.structure.StructureUtility.*;
 import static gregtech.api.enums.GT_HatchElement.*;
 import static gregtech.api.util.GT_StructureUtility.buildHatchAdder;
@@ -3183,20 +3182,17 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
 
         GT_OverclockCalculator calculator = new GT_OverclockCalculator().setRecipeEUt(tRecipe.mEUt).setEUt(tEnergy)
                 .setDuration(tRecipe.mDuration)
-                .setParallel(maxParallel)
-                .enableHeatOC().enableHeatDiscount().setRecipeHeat(tRecipe.mSpecialValue).setMultiHeat(15000)
+                .setParallel(helper.getCurrentParallel())
                 .calculate();
 
-        lEUt = -calculator.getConsumption();
+        long EUt = -calculator.getConsumption();
         mMaxProgresstime = (int) Math.ceil(calculator.getDuration() * helper.getDurationMultiplier());
 
-        if (!addEUToGlobalEnergyMap(userUUID, lEUt * mMaxProgresstime)) {
+        if (!addEUToGlobalEnergyMap(userUUID, EUt * mMaxProgresstime)) {
             stopMachine();
             return false;
         }
 
-        if (lEUt < 0)
-        {addEUToGlobalEnergyMap(userUUID, lEUt * mMaxProgresstime);}
 
         mOutputItems = helper.getItemOutputs();
         mOutputFluids = helper.getFluidOutputs();
@@ -3356,6 +3352,10 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
         return GT_Recipe.GT_Recipe_Map.sBlastRecipes;
     }
 
+    @Override
+    public boolean energyFlowOnRunningTick(ItemStack aStack, boolean allowProduction) {
+        return true;
+    }
     @Override
     public String[] getStructureDescription(ItemStack stackSize) {
         return new String[] { "Forge of Gods multiblock" };
