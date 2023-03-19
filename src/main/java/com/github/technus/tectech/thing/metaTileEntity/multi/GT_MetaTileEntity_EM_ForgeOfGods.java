@@ -26,7 +26,6 @@ import com.github.technus.tectech.thing.casing.TT_Container_Casings;
 import com.github.technus.tectech.thing.metaTileEntity.multi.base.GT_MetaTileEntity_MultiblockBase_EM;
 import com.github.technus.tectech.thing.metaTileEntity.multi.base.render.TT_RenderedExtendedFacingTexture;
 import com.github.technus.tectech.util.CommonValues;
-import com.github.technus.tectech.util.RecipeFinderForParallel;
 import com.google.common.collect.ImmutableList;
 import com.gtnewhorizon.structurelib.alignment.constructable.IConstructable;
 import com.gtnewhorizon.structurelib.alignment.constructable.ISurvivalConstructable;
@@ -3106,7 +3105,8 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
         return new ITexture[] { Textures.BlockIcons.casingTexturePages[texturePage][12] };
     }
 
-    @Override
+
+   @Override
     public boolean checkRecipe_EM(ItemStack aStack) {
         ItemStack[] tInputs;
         FluidStack[] tFluids = this.getStoredFluids().toArray(new FluidStack[0]);
@@ -3130,84 +3130,80 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
         return false;
     }
 
-    protected boolean processRecipe(ItemStack[] tItems, FluidStack[] tFluids) {
-        if (tItems.length <= 0 && tFluids.length <= 0) return false;
-        long tTotalEU = TierEU.MAX
-                * (long) (Math.pow(4, spacetimeCompressionFieldMetadata + 1) * Math.pow(4, (solenoidCoilMetadata - 7)));
+    /*
+     * protected boolean processRecipe(ItemStack[] tItems, FluidStack[] tFluids) { if (tItems.length <= 0 &&
+     * tFluids.length <= 0) return false; long tTotalEU = TierEU.MAX (long) (Math.pow(4,
+     * spacetimeCompressionFieldMetadata + 1) * Math.pow(4, (solenoidCoilMetadata - 7))); GT_Recipe recipe =
+     * getRecipeMap().findRecipe(getBaseMetaTileEntity(), false, tTotalEU, tFluids, tItems); if (recipe == null) return
+     * false; long parallels = Math.min((long) Math.pow(4, spacetimeCompressionFieldMetadata + 1), tTotalEU /
+     * recipe.mEUt); currentParallels = RecipeFinderForParallel.handleParallelRecipe(recipe, tFluids, tItems, (int)
+     * parallels); if (currentParallels <= 0) return false; GT_OverclockCalculator calculator = new
+     * GT_OverclockCalculator().setRecipeEUt(recipe.mEUt)
+     * .setParallel(currentParallels).setDuration(recipe.mDuration).setEUt(tTotalEU).calculate(); lEUt =
+     * calculator.getConsumption(); mMaxProgresstime = calculator.getDuration(); mMaxProgresstime = Math.max(1,
+     * mMaxProgresstime); if (!addEUToGlobalEnergyMap(userUUID, -lEUt * mMaxProgresstime)) { stopMachine(); return
+     * false; } com.github.technus.tectech.util.Pair<ArrayList<FluidStack>, ArrayList<ItemStack>> outputs =
+     * getMultiOutput( recipe, currentParallels); if (lEUt > 0) { lEUt = -lEUt; } addEUToGlobalEnergyMap(userUUID, lEUt
+     * * mMaxProgresstime); mEfficiency = getCurrentEfficiency(null); mOutputItems = outputs.getValue().toArray(new
+     * ItemStack[0]); mOutputFluids = outputs.getKey().toArray(new FluidStack[0]); updateSlots(); return true; }
+     */
 
-        GT_Recipe recipe = getRecipeMap().findRecipe(getBaseMetaTileEntity(), false, tTotalEU, tFluids, tItems);
-        if (recipe == null) return false;
+    public boolean processRecipe(ItemStack[] aItemInputs, FluidStack[] aFluidInputs) {
 
-        long parallels = Math.min((long) Math.pow(4, spacetimeCompressionFieldMetadata + 1), tTotalEU / recipe.mEUt);
-        currentParallels = RecipeFinderForParallel.handleParallelRecipe(recipe, tFluids, tItems, (int) parallels);
-        if (currentParallels <= 0) return false;
+        // Reset outputs and progress stats
+        this.lEUt = 0;
+        this.mMaxProgresstime = 0;
+        this.mOutputItems = new ItemStack[] {};
+        this.mOutputFluids = new FluidStack[] {};
+        int maxParallel = (int) Math.pow(4, spacetimeCompressionFieldMetadata + 1);
 
-        GT_OverclockCalculator calculator = new GT_OverclockCalculator().setRecipeEUt(recipe.mEUt)
-                .setParallel(currentParallels).setDuration(recipe.mDuration).setEUt(tTotalEU).calculate();
+        long tVoltage = TierEU.MAX * (long) Math.pow(4, (solenoidCoilMetadata - 7));
+        byte tTier = (byte) Math.max(1, GT_Utility.getTier(tVoltage));
+        long tEnergy = maxParallel * tVoltage;
 
-        lEUt = calculator.getConsumption();
-        mMaxProgresstime = calculator.getDuration();
-        mMaxProgresstime = Math.max(1, mMaxProgresstime);
+        GT_Recipe tRecipe = this.getRecipeMap().findRecipe(
+                getBaseMetaTileEntity(),
+                false,
+                gregtech.api.enums.GT_Values.V[tTier],
+                aFluidInputs,
+                aItemInputs);
 
-        if (!addEUToGlobalEnergyMap(userUUID, -lEUt * mMaxProgresstime)) {
+        GT_ParallelHelper helper = new GT_ParallelHelper().setRecipe(tRecipe).setItemInputs(aItemInputs)
+                .setFluidInputs(aFluidInputs).setAvailableEUt(tEnergy).setMaxParallel(maxParallel).enableConsumption()
+                .enableOutputCalculation();
+
+        helper.build();
+
+        if (helper.getCurrentParallel() == 0) {
+            return false;
+        }
+
+        this.mEfficiency = (10000 - (getIdealStatus() - getRepairStatus()) * 1000);
+        this.mEfficiencyIncrease = 10000;
+
+        GT_OverclockCalculator calculator = new GT_OverclockCalculator().setRecipeEUt(tRecipe.mEUt).setEUt(tEnergy)
+                .setDuration(tRecipe.mDuration)
+                .setParallel(maxParallel)
+                .enableHeatOC().enableHeatDiscount().setRecipeHeat(tRecipe.mSpecialValue).setMultiHeat(15000)
+                .calculate();
+
+        lEUt = -calculator.getConsumption();
+        mMaxProgresstime = (int) Math.ceil(calculator.getDuration() * helper.getDurationMultiplier());
+
+        if (!addEUToGlobalEnergyMap(userUUID, lEUt * mMaxProgresstime)) {
             stopMachine();
             return false;
         }
 
-        com.github.technus.tectech.util.Pair<ArrayList<FluidStack>, ArrayList<ItemStack>> outputs = getMultiOutput(
-                recipe,
-                currentParallels);
+        if (lEUt < 0)
+        {addEUToGlobalEnergyMap(userUUID, lEUt * mMaxProgresstime);}
 
-        if (lEUt > 0) {
-            lEUt = -lEUt;
-        }
-
-        addEUToGlobalEnergyMap(userUUID, lEUt * mMaxProgresstime);
-
-        mEfficiency = getCurrentEfficiency(null);
-
-        mOutputItems = outputs.getValue().toArray(new ItemStack[0]);
-        mOutputFluids = outputs.getKey().toArray(new FluidStack[0]);
+        mOutputItems = helper.getItemOutputs();
+        mOutputFluids = helper.getFluidOutputs();
         updateSlots();
 
         return true;
     }
-
-    /**
-     * public boolean checkRecipe_EM(ItemStack[] aItemInputs, FluidStack[] aFluidInputs, int maxParallel) {
-     * 
-     * // Reset outputs and progress stats this.lEUt = 0; this.mMaxProgresstime = 0; this.mOutputItems = new ItemStack[]
-     * {}; this.mOutputFluids = new FluidStack[] {}; maxParallel = (int) Math.pow(4, spacetimeCompressionFieldMetadata);
-     * 
-     * long tVoltage = TierEU.MAX * (long) Math.pow(4, (solenoidCoilMetadata-7)); byte tTier = (byte) Math.max(1,
-     * GT_Utility.getTier(tVoltage)); long tEnergy = maxParallel * tVoltage;
-     * 
-     * GT_Recipe tRecipe = this.getRecipeMap().findRecipe( getBaseMetaTileEntity(), false,
-     * gregtech.api.enums.GT_Values.V[tTier], aFluidInputs, aItemInputs);
-     * 
-     * 
-     * GT_ParallelHelper helper = new GT_ParallelHelper().setRecipe(tRecipe).setItemInputs(aItemInputs)
-     * .setFluidInputs(aFluidInputs).setAvailableEUt(tEnergy).setMaxParallel(maxParallel)
-     * .enableConsumption().enableOutputCalculation();
-     * 
-     * helper.build();
-     * 
-     * if (helper.getCurrentParallel() == 0) { return false; }
-     * 
-     * this.mEfficiency = (10000 - (getIdealStatus() - getRepairStatus()) * 1000); this.mEfficiencyIncrease = 10000;
-     * 
-     * GT_OverclockCalculator calculator = new GT_OverclockCalculator().setRecipeEUt(tRecipe.mEUt).setEUt(tEnergy)
-     * .setDuration(tRecipe.mDuration) .setParallel((int) Math.floor(helper.getCurrentParallel() /
-     * helper.getDurationMultiplier())) .enableHeatOC().enableHeatDiscount().setRecipeHeat(tRecipe.mSpecialValue)
-     * .setMultiHeat(15000).calculate(); lEUt = -calculator.getConsumption(); mMaxProgresstime = (int)
-     * Math.ceil(calculator.getDuration() * helper.getDurationMultiplier());
-     * 
-     * mOutputItems = helper.getItemOutputs(); mOutputFluids = helper.getFluidOutputs(); updateSlots();
-     * 
-     * return true; }
-     * 
-     * 
-     */
 
     @Override
     public void construct(ItemStack stackSize, boolean hintsOnly) {
