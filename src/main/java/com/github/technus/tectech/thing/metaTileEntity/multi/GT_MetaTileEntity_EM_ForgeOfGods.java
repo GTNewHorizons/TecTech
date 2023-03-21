@@ -56,7 +56,6 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
 
     private int spacetimeCompressionFieldMetadata = -1;
     private int solenoidCoilMetadata = -1;
-    private int currentParallels;
     private static final int TICKS_BETWEEN_FUEL_DRAIN = 100;
 
     private String userUUID = "";
@@ -3180,8 +3179,8 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
         this.mEfficiency = (10000 - (getIdealStatus() - getRepairStatus()) * 1000);
         this.mEfficiencyIncrease = 10000;
 
-        GT_OverclockCalculator calculator = new GT_OverclockCalculator().setRecipeEUt(tRecipe.mEUt).setEUt(tEnergy)
-                .setDuration(tRecipe.mDuration)
+        GT_OverclockCalculator calculator = new GT_OverclockCalculator().setRecipeEUt(tRecipe.mEUt).setEUt(tVoltage)
+                .setDuration(tRecipe.mDuration).setAmperage(helper.getCurrentParallel())
                 .setParallel(helper.getCurrentParallel())
                 .calculate();
 
