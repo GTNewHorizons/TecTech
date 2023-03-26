@@ -11,6 +11,7 @@ import static net.minecraft.util.StatCollector.translateToLocal;
 
 import java.util.*;
 
+import com.github.technus.tectech.thing.metaTileEntity.multi.base.*;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -22,7 +23,6 @@ import net.minecraftforge.fluids.FluidStack;
 import org.apache.commons.lang3.tuple.Pair;
 
 import com.github.technus.tectech.thing.casing.TT_Container_Casings;
-import com.github.technus.tectech.thing.metaTileEntity.multi.base.GT_MetaTileEntity_MultiblockBase_EM;
 import com.github.technus.tectech.thing.metaTileEntity.multi.base.render.TT_RenderedExtendedFacingTexture;
 import com.github.technus.tectech.util.CommonValues;
 import com.google.common.collect.ImmutableList;
@@ -53,6 +53,9 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
     // region variables
     private static Textures.BlockIcons.CustomIcon ScreenOFF;
     private static Textures.BlockIcons.CustomIcon ScreenON;
+
+    Parameters.Group.ParameterIn[] parallelParameter;
+    Parameters.Group.ParameterIn[] fuelConsumptionParameter;
 
     private int spacetimeCompressionFieldMetadata = -1;
     private int solenoidCoilMetadata = -1;
@@ -3128,23 +3131,28 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
         return false;
     }
 
-    /*
-     * protected boolean processRecipe(ItemStack[] tItems, FluidStack[] tFluids) { if (tItems.length <= 0 &&
-     * tFluids.length <= 0) return false; long tTotalEU = TierEU.MAX (long) (Math.pow(4,
-     * spacetimeCompressionFieldMetadata + 1) * Math.pow(4, (solenoidCoilMetadata - 7))); GT_Recipe recipe =
-     * getRecipeMap().findRecipe(getBaseMetaTileEntity(), false, tTotalEU, tFluids, tItems); if (recipe == null) return
-     * false; long parallels = Math.min((long) Math.pow(4, spacetimeCompressionFieldMetadata + 1), tTotalEU /
-     * recipe.mEUt); currentParallels = RecipeFinderForParallel.handleParallelRecipe(recipe, tFluids, tItems, (int)
-     * parallels); if (currentParallels <= 0) return false; GT_OverclockCalculator calculator = new
-     * GT_OverclockCalculator().setRecipeEUt(recipe.mEUt)
-     * .setParallel(currentParallels).setDuration(recipe.mDuration).setEUt(tTotalEU).calculate(); lEUt =
-     * calculator.getConsumption(); mMaxProgresstime = calculator.getDuration(); mMaxProgresstime = Math.max(1,
-     * mMaxProgresstime); if (!addEUToGlobalEnergyMap(userUUID, -lEUt * mMaxProgresstime)) { stopMachine(); return
-     * false; } com.github.technus.tectech.util.Pair<ArrayList<FluidStack>, ArrayList<ItemStack>> outputs =
-     * getMultiOutput( recipe, currentParallels); if (lEUt > 0) { lEUt = -lEUt; } addEUToGlobalEnergyMap(userUUID, lEUt
-     * * mMaxProgresstime); mEfficiency = getCurrentEfficiency(null); mOutputItems = outputs.getValue().toArray(new
-     * ItemStack[0]); mOutputFluids = outputs.getKey().toArray(new FluidStack[0]); updateSlots(); return true; }
-     */
+    @Override
+    protected void parametersInstantiation_EM() {
+        super.parametersInstantiation_EM();
+        parallelParameter = new Parameters.Group.ParameterIn[1];
+        fuelConsumptionParameter = new Parameters.Group.ParameterIn[1];
+        parallelParameter[0] = parametrization.getGroup(0, false)
+                .makeInParameter(0, 1, PARALLEL_PARAM_NAME, PARALLEL_AMOUNT);
+        fuelConsumptionParameter[0] = parametrization.getGroup(0, false)
+                .makeInParameter(1, 1, FUEL_CONSUMPTION_PARAM_NAME, FUEL_CONSUMPTION_VALUE);
+    }
+
+    //Parallel parameter localisation
+    private static final INameFunction<GT_MetaTileEntity_EM_ForgeOfGods> PARALLEL_PARAM_NAME = (base, p) -> translateToLocal("gt.blockmachines.multimachine.FOG.parallel"); // Planet Type
+    //Parallel parameter value
+    private static final IStatusFunction<GT_MetaTileEntity_EM_ForgeOfGods> PARALLEL_AMOUNT = (base, p) -> LedStatus
+            .fromLimitsInclusiveOuterBoundary(p.get(), 1, 0, base.getMaxParallels(), base.getMaxParallels());
+
+    //Fuel consumption parameter localisation
+    private static final INameFunction<GT_MetaTileEntity_EM_ForgeOfGods> FUEL_CONSUMPTION_PARAM_NAME = (base, p) -> translateToLocal("gt.blockmachines.multimachine.FOG.fuelconsumption"); // Planet Type
+    //Fuel consumption parameter value
+    private static final IStatusFunction<GT_MetaTileEntity_EM_ForgeOfGods> FUEL_CONSUMPTION_VALUE = (base, p) -> LedStatus
+            .fromLimitsInclusiveOuterBoundary(p.get(), 0, 0, 10, 10);
 
     public boolean processRecipe(ItemStack[] aItemInputs, FluidStack[] aFluidInputs) {
 
@@ -3153,7 +3161,7 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
         this.mMaxProgresstime = 0;
         this.mOutputItems = new ItemStack[] {};
         this.mOutputFluids = new FluidStack[] {};
-        int maxParallel = (int) Math.pow(4, spacetimeCompressionFieldMetadata + 1);
+        int maxParallel = (int) parallelParameter[0].get();
 
         long tVoltage = TierEU.MAX * (long) Math.pow(4, (solenoidCoilMetadata - 7));
         byte tTier = (byte) Math.max(1, GT_Utility.getTier(tVoltage));
@@ -3344,6 +3352,10 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
         if (!aNBT.hasKey(INPUT_SEPARATION_NBT_KEY)) {
             inputSeparation = aNBT.getBoolean("separateBusses");
         }
+    }
+
+    protected int getMaxParallels() {
+        return (int) Math.pow(4, spacetimeCompressionFieldMetadata + 1);
     }
 
     @Override
