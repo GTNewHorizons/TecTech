@@ -12,6 +12,7 @@ import static net.minecraft.util.StatCollector.translateToLocal;
 import java.util.*;
 
 import com.github.technus.tectech.thing.metaTileEntity.multi.base.*;
+import gregtech.api.metatileentity.implementations.GT_MetaTileEntity_Hatch;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -61,6 +62,7 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
     private int solenoidCoilMetadata = -1;
     private static final int TICKS_BETWEEN_FUEL_DRAIN = 100;
 
+    private GT_MetaTileEntity_Hatch_Input fuelInputHatch;
     private String userUUID = "";
 
     @Override
@@ -1267,7 +1269,7 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
                                             "      CCCCCBB                                                        ",
                                             "     C DDCCBB                                                        ",
                                             "    CDDDDDCC                                                         ",
-                                            "   CDDDDDD C                   CAAAACC                               ",
+                                            "   CDDDDDD C                   CAAAFCC                               ",
                                             "  C DDDDDD C    CCCC         CCCC DDDDCCC                            ",
                                             "  CDDDDDDD C   C DDDC       CCCCCC DDDDD CC                          ",
                                             "  CDDDDDDDC    CDDDDC        CCCCCCCCCDDDD C                         ",
@@ -3040,6 +3042,12 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
                             -1,
                             (t, meta) -> t.spacetimeCompressionFieldMetadata = meta,
                             t -> t.spacetimeCompressionFieldMetadata))
+            .addElement(
+                    'F',
+                    buildHatchAdder(GT_MetaTileEntity_EM_ForgeOfGods.class).hatchClass(GT_MetaTileEntity_Hatch_Input.class)
+                            .adder(GT_MetaTileEntity_EM_ForgeOfGods::addFuelInputToMachineList)
+                            .casingIndex(texturePage << 7).dot(2)
+                            .buildAndChain(sBlockCasingsBA0, 12))
             .build();
 
     @Override
@@ -3155,7 +3163,6 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
             .fromLimitsInclusiveOuterBoundary(p.get(), 0, 0, 10, 10);
 
     public boolean processRecipe(ItemStack[] aItemInputs, FluidStack[] aFluidInputs) {
-
         // Reset outputs and progress stats
         this.lEUt = 0;
         this.mMaxProgresstime = 0;
@@ -3163,7 +3170,7 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
         this.mOutputFluids = new FluidStack[] {};
         int maxParallel = (int) parallelParameter[0].get();
 
-        long tVoltage = TierEU.MAX * (long) Math.pow(4, (solenoidCoilMetadata - 7));
+        long tVoltage = TierEU.LuV * (long) Math.pow(4, (solenoidCoilMetadata - 7));
         byte tTier = (byte) Math.max(1, GT_Utility.getTier(tVoltage));
         long tEnergy = maxParallel * tVoltage;
 
@@ -3213,7 +3220,7 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
         structureBuild_EM(STRUCTURE_PIECE_MAIN, 31, 34, 0, stackSize, hintsOnly);
     }
 
-    private final Map<FluidStack, Integer> validFluidMap = new HashMap<FluidStack, Integer>() {
+    private final Map<FluidStack, Integer> validFuelMap = new HashMap<FluidStack, Integer>() {
 
         {
             put(Materials.DimensionallyTranscendentResidue.getFluid(1), 2500);
@@ -3221,6 +3228,19 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
             put(Materials.BlackDwarfMatter.getMolten(1), 3);
         }
     };
+
+    public boolean addFuelInputToMachineList(IGregTechTileEntity aTileEntity, int aBaseCasingIndex) {
+        if (aTileEntity == null) return false;
+        IMetaTileEntity aMetaTileEntity = aTileEntity.getMetaTileEntity();
+        if (aMetaTileEntity == null) return false;
+        if (aMetaTileEntity instanceof GT_MetaTileEntity_Hatch_Input) {
+            ((GT_MetaTileEntity_Hatch) aMetaTileEntity).updateTexture(aBaseCasingIndex);
+            ((GT_MetaTileEntity_Hatch_Input) aMetaTileEntity).mRecipeMap = null;
+            fuelInputHatch = (GT_MetaTileEntity_Hatch_Input) aMetaTileEntity;
+            return true;
+        }
+        return false;
+    }
 
     private void drainFuel() {
         for (GT_MetaTileEntity_Hatch_Input inputHatch : mInputHatches) {
@@ -3231,8 +3251,8 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
             }
 
             // Iterate over valid fluids and drain them
-            for (FluidStack validFluid : validFluidMap.keySet()) {
-                int drainAmount = validFluidMap.get(validFluid);
+            for (FluidStack validFluid : validFuelMap.keySet()) {
+                int drainAmount = (int) (validFuelMap.get(validFluid) * fuelConsumptionParameter[0].get());
                 if (fluidInHatch.isFluidEqual(validFluid)) {
                     FluidStack tFluid = new FluidStack(validFluid, drainAmount);
                     FluidStack tLiquid = inputHatch.drain(tFluid.amount, true);
@@ -3248,6 +3268,7 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
     public boolean checkMachine_EM(IGregTechTileEntity iGregTechTileEntity, ItemStack itemStack) {
 
         spacetimeCompressionFieldMetadata = -1;
+        fuelInputHatch = null;
 
         // Check structure of multi.
         if (!structureCheck_EM(STRUCTURE_PIECE_MAIN, 31, 34, 0)) {
@@ -3292,8 +3313,12 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
             }
         }
 
-        // Make sure there is 1 input hatch.
-        if (mInputHatches.size() != 1) {
+        // Make sure there are 2 input hatches.
+        if (mInputHatches.size() != 2) {
+            return false;
+        }
+
+        if (fuelInputHatch == null) {
             return false;
         }
 
