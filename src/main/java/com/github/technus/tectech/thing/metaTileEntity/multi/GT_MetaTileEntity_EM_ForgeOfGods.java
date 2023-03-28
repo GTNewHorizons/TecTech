@@ -11,8 +11,6 @@ import static net.minecraft.util.StatCollector.translateToLocal;
 
 import java.util.*;
 
-import com.github.technus.tectech.thing.metaTileEntity.multi.base.*;
-import gregtech.api.metatileentity.implementations.GT_MetaTileEntity_Hatch;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -24,6 +22,7 @@ import net.minecraftforge.fluids.FluidStack;
 import org.apache.commons.lang3.tuple.Pair;
 
 import com.github.technus.tectech.thing.casing.TT_Container_Casings;
+import com.github.technus.tectech.thing.metaTileEntity.multi.base.*;
 import com.github.technus.tectech.thing.metaTileEntity.multi.base.render.TT_RenderedExtendedFacingTexture;
 import com.github.technus.tectech.util.CommonValues;
 import com.google.common.collect.ImmutableList;
@@ -42,6 +41,7 @@ import gregtech.api.interfaces.IGlobalWirelessEnergy;
 import gregtech.api.interfaces.ITexture;
 import gregtech.api.interfaces.metatileentity.IMetaTileEntity;
 import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
+import gregtech.api.metatileentity.implementations.GT_MetaTileEntity_Hatch;
 import gregtech.api.metatileentity.implementations.GT_MetaTileEntity_Hatch_Input;
 import gregtech.api.metatileentity.implementations.GT_MetaTileEntity_Hatch_InputBus;
 import gregtech.api.util.*;
@@ -60,7 +60,6 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
 
     private int spacetimeCompressionFieldMetadata = -1;
     private int solenoidCoilMetadata = -1;
-    private static final int TICKS_BETWEEN_FUEL_DRAIN = 100;
 
     private GT_MetaTileEntity_Hatch_Input fuelInputHatch;
     private String userUUID = "";
@@ -3044,10 +3043,10 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
                             t -> t.spacetimeCompressionFieldMetadata))
             .addElement(
                     'F',
-                    buildHatchAdder(GT_MetaTileEntity_EM_ForgeOfGods.class).hatchClass(GT_MetaTileEntity_Hatch_Input.class)
+                    buildHatchAdder(GT_MetaTileEntity_EM_ForgeOfGods.class)
+                            .hatchClass(GT_MetaTileEntity_Hatch_Input.class)
                             .adder(GT_MetaTileEntity_EM_ForgeOfGods::addFuelInputToMachineList)
-                            .casingIndex(texturePage << 7).dot(2)
-                            .buildAndChain(sBlockCasingsBA0, 12))
+                            .casingIndex(texturePage << 7).dot(2).buildAndChain(sBlockCasingsBA0, 12))
             .build();
 
     @Override
@@ -3114,8 +3113,7 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
         return new ITexture[] { Textures.BlockIcons.casingTexturePages[texturePage][12] };
     }
 
-
-   @Override
+    @Override
     public boolean checkRecipe_EM(ItemStack aStack) {
         ItemStack[] tInputs;
         FluidStack[] tFluids = this.getStoredFluids().toArray(new FluidStack[0]);
@@ -3150,17 +3148,19 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
                 .makeInParameter(1, 1, FUEL_CONSUMPTION_PARAM_NAME, FUEL_CONSUMPTION_VALUE);
     }
 
-    //Parallel parameter localisation
-    private static final INameFunction<GT_MetaTileEntity_EM_ForgeOfGods> PARALLEL_PARAM_NAME = (base, p) -> translateToLocal("gt.blockmachines.multimachine.FOG.parallel"); // Planet Type
-    //Parallel parameter value
+    // Parallel parameter localisation
+    private static final INameFunction<GT_MetaTileEntity_EM_ForgeOfGods> PARALLEL_PARAM_NAME = (base,
+            p) -> translateToLocal("gt.blockmachines.multimachine.FOG.parallel"); // Planet Type
+    // Parallel parameter value
     private static final IStatusFunction<GT_MetaTileEntity_EM_ForgeOfGods> PARALLEL_AMOUNT = (base, p) -> LedStatus
             .fromLimitsInclusiveOuterBoundary(p.get(), 1, 0, base.getMaxParallels(), base.getMaxParallels());
 
-    //Fuel consumption parameter localisation
-    private static final INameFunction<GT_MetaTileEntity_EM_ForgeOfGods> FUEL_CONSUMPTION_PARAM_NAME = (base, p) -> translateToLocal("gt.blockmachines.multimachine.FOG.fuelconsumption"); // Planet Type
-    //Fuel consumption parameter value
-    private static final IStatusFunction<GT_MetaTileEntity_EM_ForgeOfGods> FUEL_CONSUMPTION_VALUE = (base, p) -> LedStatus
-            .fromLimitsInclusiveOuterBoundary(p.get(), 0, 0, 10, 10);
+    // Fuel consumption parameter localisation
+    private static final INameFunction<GT_MetaTileEntity_EM_ForgeOfGods> FUEL_CONSUMPTION_PARAM_NAME = (base,
+            p) -> translateToLocal("gt.blockmachines.multimachine.FOG.fuelconsumption"); // Planet Type
+    // Fuel consumption parameter value
+    private static final IStatusFunction<GT_MetaTileEntity_EM_ForgeOfGods> FUEL_CONSUMPTION_VALUE = (base,
+            p) -> LedStatus.fromLimitsInclusiveOuterBoundary(p.get(), 0, 0, 10, 10);
 
     public boolean processRecipe(ItemStack[] aItemInputs, FluidStack[] aFluidInputs) {
         // Reset outputs and progress stats
@@ -3196,8 +3196,7 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
 
         GT_OverclockCalculator calculator = new GT_OverclockCalculator().setRecipeEUt(tRecipe.mEUt).setEUt(tVoltage)
                 .setDuration(tRecipe.mDuration).setAmperage(helper.getCurrentParallel())
-                .setParallel(helper.getCurrentParallel())
-                .calculate();
+                .setParallel(helper.getCurrentParallel()).calculate();
 
         long EUt = -calculator.getConsumption();
         mMaxProgresstime = (int) Math.ceil(calculator.getDuration() * helper.getDurationMultiplier());
@@ -3206,7 +3205,6 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
             stopMachine();
             return false;
         }
-
 
         mOutputItems = helper.getItemOutputs();
         mOutputFluids = helper.getFluidOutputs();
@@ -3242,26 +3240,37 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
         return false;
     }
 
-    private void drainFuel() {
-        for (GT_MetaTileEntity_Hatch_Input inputHatch : mInputHatches) {
-            FluidStack fluidInHatch = inputHatch.getFluid();
+    private int ticker = 0;
 
-            if (fluidInHatch == null) {
-                continue;
+    @Override
+    public boolean onRunningTick(ItemStack aStack) {
+        if (!super.onRunningTick(aStack)) {
+            criticalStopMachine();
+            return false;
+        }
+
+        if (ticker % 100 == 0) {
+            if (fuelInputHatch == null) {
+                criticalStopMachine();
+                return false;
             }
-
+            FluidStack fluidInHatch = fuelInputHatch.getFluid();
             // Iterate over valid fluids and drain them
             for (FluidStack validFluid : validFuelMap.keySet()) {
                 int drainAmount = (int) (validFuelMap.get(validFluid) * fuelConsumptionParameter[0].get());
                 if (fluidInHatch.isFluidEqual(validFluid)) {
                     FluidStack tFluid = new FluidStack(validFluid, drainAmount);
-                    FluidStack tLiquid = inputHatch.drain(tFluid.amount, true);
+                    FluidStack tLiquid = fuelInputHatch.drain(tFluid.amount, true);
                     if (tLiquid == null || tLiquid.amount < tFluid.amount) {
                         criticalStopMachine();
                     }
                 }
             }
+            ticker = 0;
         }
+        ticker++;
+
+        return true;
     }
 
     @Override
@@ -3340,15 +3349,8 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
             String userName = getBaseMetaTileEntity().getOwnerName();
             strongCheckOrAddUser(userUUID, userName);
         }
-
-        if (!recipeRunning) {
-            if ((aTick % TICKS_BETWEEN_FUEL_DRAIN) == 0) {
-                drainFuel();
-            }
-        }
     }
 
-    private boolean recipeRunning = false;
     protected boolean inputSeparation = false;
     protected static String INPUT_SEPARATION_NBT_KEY = "inputSeparation";
 
