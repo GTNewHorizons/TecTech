@@ -5,11 +5,14 @@ import static com.github.technus.tectech.thing.casing.TT_Container_Casings.sBloc
 import static com.github.technus.tectech.thing.casing.TT_Container_Casings.sBlockCasingsTT;
 import static com.gtnewhorizon.structurelib.structure.StructureUtility.*;
 import static gregtech.api.enums.GT_HatchElement.*;
+import static gregtech.api.util.GT_OreDictUnificator.getAssociation;
 import static gregtech.api.util.GT_StructureUtility.buildHatchAdder;
 import static gregtech.api.util.GT_Utility.formatNumbers;
 import static net.minecraft.util.StatCollector.translateToLocal;
 
 import java.util.*;
+
+import javax.annotation.Nullable;
 
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.player.EntityPlayer;
@@ -17,7 +20,9 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.StatCollector;
+import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.oredict.OreDictionary;
 
 import org.apache.commons.lang3.tuple.Pair;
 
@@ -34,9 +39,7 @@ import com.gtnewhorizon.structurelib.structure.IStructureDefinition;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import gregtech.api.GregTech_API;
-import gregtech.api.enums.Materials;
-import gregtech.api.enums.Textures;
-import gregtech.api.enums.TierEU;
+import gregtech.api.enums.*;
 import gregtech.api.interfaces.IGlobalWirelessEnergy;
 import gregtech.api.interfaces.ITexture;
 import gregtech.api.interfaces.metatileentity.IMetaTileEntity;
@@ -44,6 +47,7 @@ import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
 import gregtech.api.metatileentity.implementations.GT_MetaTileEntity_Hatch;
 import gregtech.api.metatileentity.implementations.GT_MetaTileEntity_Hatch_Input;
 import gregtech.api.metatileentity.implementations.GT_MetaTileEntity_Hatch_InputBus;
+import gregtech.api.objects.ItemData;
 import gregtech.api.util.*;
 import gregtech.common.tileentities.machines.GT_MetaTileEntity_Hatch_OutputBus_ME;
 import gregtech.common.tileentities.machines.GT_MetaTileEntity_Hatch_Output_ME;
@@ -56,10 +60,11 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
     private static Textures.BlockIcons.CustomIcon ScreenON;
 
     Parameters.Group.ParameterIn[] parallelParameter;
-    Parameters.Group.ParameterIn[] fuelConsumptionParameter;
+    static Parameters.Group.ParameterIn[] fuelConsumptionParameter;
 
     private int spacetimeCompressionFieldMetadata = -1;
     private int solenoidCoilMetadata = -1;
+    private int currentParallel = 0;
 
     private GT_MetaTileEntity_Hatch_Input fuelInputHatch;
     private String userUUID = "";
@@ -3150,14 +3155,14 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
 
     // Parallel parameter localisation
     private static final INameFunction<GT_MetaTileEntity_EM_ForgeOfGods> PARALLEL_PARAM_NAME = (base,
-            p) -> translateToLocal("gt.blockmachines.multimachine.FOG.parallel"); // Planet Type
+            p) -> translateToLocal("gt.blockmachines.multimachine.FOG.parallel");
     // Parallel parameter value
     private static final IStatusFunction<GT_MetaTileEntity_EM_ForgeOfGods> PARALLEL_AMOUNT = (base, p) -> LedStatus
             .fromLimitsInclusiveOuterBoundary(p.get(), 1, 0, base.getMaxParallels(), base.getMaxParallels());
 
     // Fuel consumption parameter localisation
     private static final INameFunction<GT_MetaTileEntity_EM_ForgeOfGods> FUEL_CONSUMPTION_PARAM_NAME = (base,
-            p) -> translateToLocal("gt.blockmachines.multimachine.FOG.fuelconsumption"); // Planet Type
+            p) -> translateToLocal("gt.blockmachines.multimachine.FOG.fuelconsumption");
     // Fuel consumption parameter value
     private static final IStatusFunction<GT_MetaTileEntity_EM_ForgeOfGods> FUEL_CONSUMPTION_VALUE = (base,
             p) -> LedStatus.fromLimitsInclusiveOuterBoundary(p.get(), 0, 0, 10, 10);
@@ -3170,7 +3175,7 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
         this.mOutputFluids = new FluidStack[] {};
         int maxParallel = (int) parallelParameter[0].get();
 
-        long tVoltage = TierEU.LuV * (long) Math.pow(4, (solenoidCoilMetadata - 7));
+        long tVoltage = TierEU.MAX * (long) Math.pow(4, (solenoidCoilMetadata - 7));
         byte tTier = (byte) Math.max(1, GT_Utility.getTier(tVoltage));
         long tEnergy = maxParallel * tVoltage;
 
@@ -3208,9 +3213,127 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
 
         mOutputItems = helper.getItemOutputs();
         mOutputFluids = helper.getFluidOutputs();
-        updateSlots();
 
+        ArrayList<ItemStack> ItemOutputs = new ArrayList<>();
+        ArrayList<FluidStack> FluidOutputs = new ArrayList<>();
+        currentParallel = helper.getCurrentParallel();
+
+        if (fuelConsumptionParameter[0].get() >= 5 && fuelConsumptionParameter[0].get() < 10) {
+            for (int i = 0; i < mOutputItems.length; i++) {
+                FluidStack foundFluid = tryConvertItemStackToFluidMaterial(tRecipe.getOutput(i));
+                ItemData data = getAssociation(tRecipe.getOutput(i));
+                Materials mat = data == null ? null : data.mMaterial.mMaterial;
+                if (i < tRecipe.mOutputs.length) {
+                    if (foundFluid != null) {
+                        FluidOutputs.add(foundFluid);
+                    } else if (mat.getMolten(0) != null) {
+                        FluidOutputs.add(mat.getMolten(tRecipe.getOutput(i).stackSize * 144L * currentParallel));
+                    } else if (mat.getFluid(0) != null) {
+                        FluidOutputs.add(mat.getFluid(tRecipe.getOutput(i).stackSize * 1000L * currentParallel));
+                    } else {
+                        ItemStack aItem = tRecipe.getOutput(i);
+                        ItemOutputs.add(GT_Utility.copyAmountUnsafe((long) aItem.stackSize * currentParallel, aItem));
+                    }
+                    for (int j = 0; j < mOutputFluids.length; j++) {
+                        FluidOutputs.add(tRecipe.getFluidOutput(j));
+                    }
+                } else {
+                    FluidStack aFluid = tRecipe.getFluidOutput(i - tRecipe.mOutputs.length);
+                    FluidOutputs.add(new FluidStack(aFluid, aFluid.amount * currentParallel));
+                }
+            }
+        } else if (fuelConsumptionParameter[0].get() >= 10) {
+            for (int i = 0; i < mOutputItems.length; i++) {
+                FluidStack foundPlasma = tryConvertItemStackToFluidMaterial(tRecipe.getOutput(i));
+                ItemData data = getAssociation(tRecipe.getOutput(i));
+                Materials mat = data == null ? null : data.mMaterial.mMaterial;
+                if (i < tRecipe.mOutputs.length) {
+                    if (foundPlasma != null) {
+                        FluidOutputs.add(foundPlasma);
+                    } else if (mat.getPlasma(0) != null) {
+                        FluidOutputs.add(mat.getPlasma(tRecipe.getOutput(i).stackSize * 144L * currentParallel));
+                    } else if (mat.getMolten(0) != null) {
+                        FluidOutputs.add(mat.getMolten(tRecipe.getOutput(i).stackSize * 144L * currentParallel));
+                    } else if (mat.getFluid(0) != null) {
+                        FluidOutputs.add(mat.getFluid(tRecipe.getOutput(i).stackSize * 1000L * currentParallel));
+                    } else {
+                        ItemStack aItem = tRecipe.getOutput(i);
+                        ItemOutputs.add(GT_Utility.copyAmountUnsafe((long) aItem.stackSize * currentParallel, aItem));
+                    }
+                    for (int j = 0; j < mOutputFluids.length; j++) {
+                        FluidOutputs.add(tRecipe.getFluidOutput(j));
+                    }
+                } else {
+                    FluidStack aFluid = tRecipe.getFluidOutput(i - tRecipe.mOutputs.length);
+                    FluidOutputs.add(new FluidStack(aFluid, aFluid.amount * currentParallel));
+                }
+            }
+        } else {
+            for (int i = 0; i < mOutputItems.length + mOutputFluids.length; i++) {
+                if (i < tRecipe.mOutputs.length) {
+                    ItemStack aItem = tRecipe.getOutput(i).copy();
+                    aItem.stackSize *= currentParallel;
+                    ItemOutputs.add(aItem);
+                } else {
+                    FluidStack aFluid = tRecipe.getFluidOutput(i - tRecipe.mOutputs.length).copy();
+                    aFluid.amount *= currentParallel;
+                    FluidOutputs.add(aFluid);
+                }
+            }
+        }
+
+        mOutputItems = ItemOutputs.toArray(new ItemStack[0]);
+        mOutputFluids = FluidOutputs.toArray(new FluidStack[0]);
+        updateSlots();
         return true;
+    }
+
+    @Nullable
+    private static FluidStack tryConvertItemStackToFluidMaterial(ItemStack input) {
+        ArrayList<String> oreDicts = new ArrayList<>();
+        for (int id : OreDictionary.getOreIDs(input)) {
+            oreDicts.add(OreDictionary.getOreName(id));
+        }
+
+        for (String dict : oreDicts) {
+            OrePrefixes orePrefix;
+            try {
+                orePrefix = OrePrefixes.valueOf(findBestPrefix(dict));
+            } catch (Exception e) {
+                continue;
+            }
+
+            String strippedOreDict = dict.substring(orePrefix.toString().length());
+
+            // Prevents things like AnyCopper or AnyIron from messing the search up.
+            if (strippedOreDict.contains("Any")) continue;
+
+            if (fuelConsumptionParameter[0].get() < 10) {
+                return FluidRegistry.getFluidStack(
+                        "molten." + strippedOreDict.toLowerCase(),
+                        (int) (orePrefix.mMaterialAmount / (GT_Values.M / 144)) * input.stackSize);
+            } else if (fuelConsumptionParameter[0].get() >= 10) {
+                return FluidRegistry.getFluidStack(
+                        "plasma." + strippedOreDict.toLowerCase(),
+                        (int) (orePrefix.mMaterialAmount / (GT_Values.M / 144)) * input.stackSize);
+            }
+        }
+        return null;
+    }
+
+    private static String findBestPrefix(String oreDict) {
+        int longestPrefixLength = 0;
+        String matchingPrefix = null;
+        for (OrePrefixes prefix : OrePrefixes.values()) {
+            String name = prefix.toString();
+            if (oreDict.startsWith(name)) {
+                if (name.length() > longestPrefixLength) {
+                    longestPrefixLength = name.length();
+                    matchingPrefix = name;
+                }
+            }
+        }
+        return matchingPrefix;
     }
 
     @Override
@@ -3394,6 +3517,7 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
     public boolean energyFlowOnRunningTick(ItemStack aStack, boolean allowProduction) {
         return true;
     }
+
     @Override
     public String[] getStructureDescription(ItemStack stackSize) {
         return new String[] { "Forge of Gods multiblock" };
