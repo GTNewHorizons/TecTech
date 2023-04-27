@@ -4,16 +4,35 @@ import static com.github.technus.tectech.TecTech.eyeOfHarmonyRecipeStorage;
 import static com.github.technus.tectech.thing.casing.GT_Block_CasingsTT.texturePage;
 import static com.github.technus.tectech.thing.casing.TT_Container_Casings.eyeOfHarmonyRenderBlock;
 import static com.github.technus.tectech.thing.casing.TT_Container_Casings.sBlockCasingsBA0;
-import static com.gtnewhorizon.structurelib.structure.StructureUtility.*;
-import static gregtech.api.enums.GT_HatchElement.*;
+import static com.gtnewhorizon.structurelib.structure.StructureUtility.ofBlock;
+import static com.gtnewhorizon.structurelib.structure.StructureUtility.ofBlocksTiered;
+import static com.gtnewhorizon.structurelib.structure.StructureUtility.transpose;
+import static gregtech.api.enums.GT_HatchElement.InputBus;
+import static gregtech.api.enums.GT_HatchElement.InputHatch;
+import static gregtech.api.enums.GT_HatchElement.OutputBus;
+import static gregtech.api.enums.GT_HatchElement.OutputHatch;
 import static gregtech.api.enums.GT_Values.AuthorColen;
 import static gregtech.api.util.GT_StructureUtility.buildHatchAdder;
 import static gregtech.api.util.GT_Utility.formatNumbers;
-import static java.lang.Math.*;
-import static net.minecraft.util.EnumChatFormatting.*;
+import static java.lang.Math.abs;
+import static java.lang.Math.exp;
+import static java.lang.Math.max;
+import static java.lang.Math.pow;
+import static java.lang.Math.random;
+import static net.minecraft.util.EnumChatFormatting.BLUE;
+import static net.minecraft.util.EnumChatFormatting.DARK_RED;
+import static net.minecraft.util.EnumChatFormatting.GOLD;
+import static net.minecraft.util.EnumChatFormatting.GRAY;
+import static net.minecraft.util.EnumChatFormatting.GREEN;
+import static net.minecraft.util.EnumChatFormatting.RED;
+import static net.minecraft.util.EnumChatFormatting.RESET;
+import static net.minecraft.util.EnumChatFormatting.UNDERLINE;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.player.EntityPlayer;
@@ -26,7 +45,6 @@ import net.minecraft.util.EnumChatFormatting;
 import net.minecraftforge.fluids.FluidStack;
 
 import org.apache.commons.lang3.tuple.Pair;
-import org.spongepowered.libraries.com.google.common.math.LongMath;
 
 import appeng.util.ReadableNumberConverter;
 
@@ -38,6 +56,7 @@ import com.github.technus.tectech.thing.metaTileEntity.multi.base.render.TT_Rend
 import com.github.technus.tectech.util.CommonValues;
 import com.github.technus.tectech.util.ItemStackLong;
 import com.google.common.collect.ImmutableList;
+import com.google.common.math.LongMath;
 import com.gtnewhorizon.structurelib.alignment.constructable.IConstructable;
 import com.gtnewhorizon.structurelib.alignment.constructable.ISurvivalConstructable;
 import com.gtnewhorizon.structurelib.structure.IItemSource;
@@ -46,6 +65,7 @@ import com.gtnewhorizon.structurelib.structure.IStructureDefinition;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import gregtech.api.enums.Materials;
+import gregtech.api.enums.MaterialsUEVplus;
 import gregtech.api.enums.Textures;
 import gregtech.api.interfaces.IGlobalWirelessEnergy;
 import gregtech.api.interfaces.ITexture;
@@ -83,6 +103,8 @@ public class GT_MetaTileEntity_EM_EyeOfHarmony extends GT_MetaTileEntity_Multibl
 
     private String userUUID = "";
     private long euOutput = 0;
+
+    private long startEU = 0;
 
     @Override
     public int survivalConstruct(ItemStack stackSize, int elementBudget, IItemSource source, EntityPlayerMP actor) {
@@ -945,7 +967,9 @@ public class GT_MetaTileEntity_EM_EyeOfHarmony extends GT_MetaTileEntity_Multibl
                                 + ")^(Recipe tier)"
                                 + GRAY
                                 + "L of molten")
-                .addInfo(Materials.SpaceTime.getLocalizedNameForItem("%material") + " and return half the start EU.")
+                .addInfo(
+                        MaterialsUEVplus.SpaceTime.getLocalizedNameForItem("%material")
+                                + " and return half the start EU.")
                 .addInfo(TOOLTIP_BAR).addInfo("Animations can be disabled by using a screwdriver on the multiblock.")
                 .addSeparator().addStructureInfo("Eye of Harmony structure is too complex! See schematic for details.")
                 .addStructureInfo(
@@ -1004,7 +1028,9 @@ public class GT_MetaTileEntity_EM_EyeOfHarmony extends GT_MetaTileEntity_Multibl
         structureBuild_EM(STRUCTURE_PIECE_MAIN, 16, 16, 0, stackSize, hintsOnly);
     }
 
-    private final Map<FluidStack, Long> validFluidMap = new HashMap<FluidStack, Long>() {
+    private final Map<FluidStack, Long> validFluidMap = new HashMap<>() {
+
+        private static final long serialVersionUID = -8452610443191188130L;
 
         {
             put(Materials.Hydrogen.getGas(1), 0L);
@@ -1102,10 +1128,10 @@ public class GT_MetaTileEntity_EM_EyeOfHarmony extends GT_MetaTileEntity_Multibl
             return false;
         }
 
+        startEU = recipeObject.getEUStartCost();
+
         // Remove EU from the users network.
-        if (!addEUToGlobalEnergyMap(
-                userUUID,
-                (long) (-recipeObject.getEUStartCost() * pow(4, currentCircuitMultiplier)))) {
+        if (!addEUToGlobalEnergyMap(userUUID, (long) (-startEU * pow(4, currentCircuitMultiplier)))) {
             return false;
         }
 
@@ -1197,7 +1223,7 @@ public class GT_MetaTileEntity_EM_EyeOfHarmony extends GT_MetaTileEntity_Multibl
 
     private void outputFailedChance() {
         // 2^Tier spacetime released upon recipe failure.
-        mOutputFluids = new FluidStack[] { Materials.SpaceTime.getMolten(
+        mOutputFluids = new FluidStack[] { MaterialsUEVplus.SpaceTime.getMolten(
                 (long) (successChance * MOLTEN_SPACETIME_PER_FAILURE_TIER
                         * pow(SPACETIME_FAILURE_BASE, currentRecipe.getRocketTier() + 1))) };
         super.outputAfterRecipe_EM();
@@ -1235,6 +1261,7 @@ public class GT_MetaTileEntity_EM_EyeOfHarmony extends GT_MetaTileEntity_Multibl
                 userUUID,
                 (long) (euOutput * (1 - ((TOTAL_CASING_TIERS_WITH_POWER_PENALTY - stabilisationFieldMetadata)
                         * STABILITY_INCREASE_PROBABILITY_DECREASE_YIELD_PER_TIER))));
+        startEU = 0;
         euOutput = 0;
 
         if (successChance < random()) {
@@ -1312,7 +1339,14 @@ public class GT_MetaTileEntity_EM_EyeOfHarmony extends GT_MetaTileEntity_Multibl
             str.add(GOLD + "---------------------- Other Stats ---------------");
             str.add("Recipe Success Chance: " + RED + formatNumbers(100 * successChance) + RESET + "%");
             str.add("Recipe Yield: " + RED + formatNumbers(100 * recipeYieldCalculator()) + RESET + "%");
-            str.add("EU Output: " + RED + formatNumbers(euOutput) + RESET + " EU");
+            str.add(
+                    "EU Output: " + RED
+                            + formatNumbers(
+                                    euOutput * (1
+                                            - ((TOTAL_CASING_TIERS_WITH_POWER_PENALTY - stabilisationFieldMetadata)
+                                                    * STABILITY_INCREASE_PROBABILITY_DECREASE_YIELD_PER_TIER)))
+                            + RESET
+                            + " EU");
             if (mOutputFluids.length > 0) {
                 // Star matter is always the last element in the array.
                 str.add(
@@ -1321,13 +1355,16 @@ public class GT_MetaTileEntity_EM_EyeOfHarmony extends GT_MetaTileEntity_Multibl
                                 + RESET
                                 + " L");
             }
-            long euPerTick = euOutput / maxProgresstime();
-            if (euPerTick < LongMath.pow(10, 12)) {
-                str.add("Estimated EU/t: " + RED + formatNumbers(euOutput / maxProgresstime()) + RESET + " EU/t");
+            long euPerTick = (long) -(startEU * pow(4, currentCircuitMultiplier)
+                    - euOutput * (1 - ((TOTAL_CASING_TIERS_WITH_POWER_PENALTY - stabilisationFieldMetadata)
+                            * STABILITY_INCREASE_PROBABILITY_DECREASE_YIELD_PER_TIER)))
+                    / maxProgresstime();
+            if (abs(euPerTick) < LongMath.pow(10, 12)) {
+                str.add("Estimated EU/t: " + RED + formatNumbers(euPerTick) + RESET + " EU/t");
             } else {
                 str.add(
                         "Estimated EU/t: " + RED
-                                + ReadableNumberConverter.INSTANCE.toWideReadableForm(euOutput / maxProgresstime())
+                                + ReadableNumberConverter.INSTANCE.toWideReadableForm(euPerTick)
                                 + RESET
                                 + " EU/t");
             }

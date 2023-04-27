@@ -1,7 +1,7 @@
 package com.github.technus.tectech.thing.block;
 
 import static com.github.technus.tectech.Reference.MODID;
-import static java.lang.Math.*;
+import static java.lang.Math.pow;
 
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.Tessellator;
@@ -19,10 +19,10 @@ import cpw.mods.fml.client.FMLClientHandler;
 
 public class RenderEyeOfHarmony extends TileEntitySpecialRenderer {
 
-    private static final ResourceLocation STAR_LAYER_0 = new ResourceLocation(MODID, "models/StarLayer0.png");
-    private static final ResourceLocation STAR_LAYER_1 = new ResourceLocation(MODID, "models/StarLayer1.png");
-    private static final ResourceLocation STAR_LAYER_2 = new ResourceLocation(MODID, "models/StarLayer2.png");
-    private static IModelCustom starModel;
+    public static final ResourceLocation STAR_LAYER_0 = new ResourceLocation(MODID, "models/StarLayer0.png");
+    public static final ResourceLocation STAR_LAYER_1 = new ResourceLocation(MODID, "models/StarLayer1.png");
+    public static final ResourceLocation STAR_LAYER_2 = new ResourceLocation(MODID, "models/StarLayer2.png");
+    public static IModelCustom starModel;
     private static IModelCustom spaceModel;
 
     public RenderEyeOfHarmony() {
@@ -80,7 +80,7 @@ public class RenderEyeOfHarmony extends TileEntitySpecialRenderer {
         GL11.glPopMatrix();
     }
 
-    private static void renderOuterSpaceShell() {
+    public static void renderOuterSpaceShell() {
 
         // Begin animation.
         GL11.glPushMatrix();

@@ -1,6 +1,10 @@
 package com.github.technus.tectech.thing.metaTileEntity.single;
 
-import static com.github.technus.tectech.thing.metaTileEntity.Textures.*;
+import static com.github.technus.tectech.thing.metaTileEntity.Textures.MACHINE_CASINGS_TT;
+import static com.github.technus.tectech.thing.metaTileEntity.Textures.OVERLAYS_ENERGY_IN_MULTI_TT;
+import static com.github.technus.tectech.thing.metaTileEntity.Textures.OVERLAYS_ENERGY_IN_POWER_TT;
+import static com.github.technus.tectech.thing.metaTileEntity.Textures.OVERLAYS_ENERGY_OUT_MULTI_TT;
+import static com.github.technus.tectech.thing.metaTileEntity.Textures.OVERLAYS_ENERGY_OUT_POWER_TT;
 import static net.minecraft.util.StatCollector.translateToLocal;
 
 import com.github.technus.tectech.util.CommonValues;
@@ -18,14 +22,14 @@ public class GT_MetaTileEntity_TT_Transformer extends GT_MetaTileEntity_Transfor
         TT_Utility.setTier(aTier, this);
     }
 
-    public GT_MetaTileEntity_TT_Transformer(String aName, int aTier, String aDescription, ITexture[][][] aTextures) {
+    public GT_MetaTileEntity_TT_Transformer(String aName, int aTier, String[] aDescription, ITexture[][][] aTextures) {
         super(aName, aTier, aDescription, aTextures);
         TT_Utility.setTier(aTier, this);
     }
 
     @Override
     public IMetaTileEntity newMetaEntity(IGregTechTileEntity aTileEntity) {
-        return new GT_MetaTileEntity_TT_Transformer(mName, mTier, mDescription, mTextures);
+        return new GT_MetaTileEntity_TT_Transformer(mName, mTier, mDescriptionArray, mTextures);
     }
 
     @Override

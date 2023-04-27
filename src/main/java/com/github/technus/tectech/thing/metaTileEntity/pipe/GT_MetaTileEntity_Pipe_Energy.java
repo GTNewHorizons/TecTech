@@ -41,7 +41,7 @@ public class GT_MetaTileEntity_Pipe_Energy extends MetaPipeEntity implements ICo
     private static Textures.BlockIcons.CustomIcon EMpipe;
     public byte connectionCount = 0;
 
-    private boolean active, lastActive;
+    private boolean active;
 
     public GT_MetaTileEntity_Pipe_Energy(int aID, String aName, String aNameRegional) {
         super(aID, aName, aNameRegional, 0);
@@ -166,24 +166,12 @@ public class GT_MetaTileEntity_Pipe_Energy extends MetaPipeEntity implements ICo
                         connectionCount++;
                     } else if (tTileEntity instanceof IGregTechTileEntity && ((IGregTechTileEntity) tTileEntity)
                             .getMetaTileEntity() instanceof IConnectsToEnergyTunnel) {
-                                if ( // ((IGregTechTileEntity)
-                                     // tTileEntity).getCoverBehaviorAtSide(b1).alwaysLookConnected(b1,
-                                // ((IGregTechTileEntity) tTileEntity).getCoverIDAtSide(b1), ((IGregTechTileEntity)
-                                // tTileEntity).getCoverDataAtSide(b1), ((IGregTechTileEntity) tTileEntity)) ||
-                                ((IConnectsToEnergyTunnel) ((IGregTechTileEntity) tTileEntity).getMetaTileEntity())
+                                if (((IConnectsToEnergyTunnel) ((IGregTechTileEntity) tTileEntity).getMetaTileEntity())
                                         .canConnect(b1)) {
                                     mConnections |= 1 << b0;
                                     connectionCount++;
                                 }
                             }
-                    // }
-                    // else {
-                    // mConnections |= (1 << b0);
-                    // if (mOld != mConnections) {
-                    // connectionCount++;
-                    // mOld = mConnections;
-                    // }
-                    // }
                 }
             }
 

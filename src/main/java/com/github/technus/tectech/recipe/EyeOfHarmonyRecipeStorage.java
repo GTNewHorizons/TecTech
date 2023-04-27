@@ -4,7 +4,9 @@ import static com.github.technus.tectech.recipe.EyeOfHarmonyRecipe.processHelper
 import static com.github.technus.tectech.recipe.TT_recipe.GT_Recipe_MapTT.sEyeofHarmonyRecipes;
 import static java.lang.Math.pow;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 
 import net.minecraft.block.Block;
 import net.minecraft.item.ItemStack;
@@ -30,7 +32,9 @@ public class EyeOfHarmonyRecipeStorage {
     private static final double CHANCE_DECREASE_PER_DIMENSION = 0.05;
 
     // Map is unique so this is fine.
-    HashMap<Block, String> blocksMapInverted = new HashMap<Block, String>() {
+    HashMap<Block, String> blocksMapInverted = new HashMap<>() {
+
+        private static final long serialVersionUID = -1634011860327553337L;
 
         {
             ModBlocks.blocks.forEach((dimString, dimBlock) -> { put(dimBlock, dimString); });
@@ -38,6 +42,8 @@ public class EyeOfHarmonyRecipeStorage {
     };
 
     private final HashMap<String, EyeOfHarmonyRecipe> recipeHashMap = new HashMap<String, EyeOfHarmonyRecipe>() {
+
+        private static final long serialVersionUID = -3501819612517400500L;
 
         {
             for (String dimAbbreviation : DimensionHelper.DimNameDisplayed) {

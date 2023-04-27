@@ -2,7 +2,13 @@ package com.github.technus.tectech.thing.metaTileEntity.hatch;
 
 import static net.minecraft.util.StatCollector.translateToLocal;
 import static net.minecraft.util.StatCollector.translateToLocalFormatted;
-import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.opengl.GL11.GL_BLEND;
+import static org.lwjgl.opengl.GL11.GL_ONE_MINUS_SRC_ALPHA;
+import static org.lwjgl.opengl.GL11.GL_SRC_ALPHA;
+import static org.lwjgl.opengl.GL11.glBlendFunc;
+import static org.lwjgl.opengl.GL11.glColor4f;
+import static org.lwjgl.opengl.GL11.glDisable;
+import static org.lwjgl.opengl.GL11.glEnable;
 
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.player.EntityPlayer;
@@ -61,7 +67,8 @@ public class GT_MetaTileEntity_Hatch_Uncertainty extends GT_MetaTileEntity_Hatch
         regenerate();
     }
 
-    public GT_MetaTileEntity_Hatch_Uncertainty(String aName, int aTier, String aDescription, ITexture[][][] aTextures) {
+    public GT_MetaTileEntity_Hatch_Uncertainty(String aName, int aTier, String[] aDescription,
+            ITexture[][][] aTextures) {
         super(aName, aTier, 0, aDescription, aTextures);
         regenerate();
     }
@@ -100,7 +107,7 @@ public class GT_MetaTileEntity_Hatch_Uncertainty extends GT_MetaTileEntity_Hatch
 
     @Override
     public IMetaTileEntity newMetaEntity(IGregTechTileEntity iGregTechTileEntity) {
-        return new GT_MetaTileEntity_Hatch_Uncertainty(mName, mTier, mDescription, mTextures);
+        return new GT_MetaTileEntity_Hatch_Uncertainty(mName, mTier, mDescriptionArray, mTextures);
     }
 
     @Override
@@ -330,14 +337,6 @@ public class GT_MetaTileEntity_Hatch_Uncertainty extends GT_MetaTileEntity_Hatch
         compute();
         return status;
     }
-
-    // @Override
-    // public void onScrewdriverRightClick(byte aSide, EntityPlayer aPlayer, float aX, float aY, float aZ) {
-    // if(aSide == this.getBaseMetaTileEntity().getFrontFacing()) {
-    // changeMode(++mode);
-    // GT_Utility.sendChatToPlayer(aPlayer, "Equation mode: "+mode);
-    // }
-    // }
 
     @Override
     public boolean useModularUI() {

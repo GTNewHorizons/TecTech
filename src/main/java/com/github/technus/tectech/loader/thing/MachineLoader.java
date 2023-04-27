@@ -1,23 +1,393 @@
 package com.github.technus.tectech.loader.thing;
 
 import static com.github.technus.tectech.mechanics.elementalMatter.core.transformations.EMTransformationRegistry.EM_COUNT_PER_MATERIAL_AMOUNT;
-import static com.github.technus.tectech.thing.CustomItemList.*;
+import static com.github.technus.tectech.thing.CustomItemList.DATApipe;
+import static com.github.technus.tectech.thing.CustomItemList.DATApipeBlock;
+import static com.github.technus.tectech.thing.CustomItemList.EMpipe;
+import static com.github.technus.tectech.thing.CustomItemList.EMpipeBlock;
+import static com.github.technus.tectech.thing.CustomItemList.LASERpipe;
+import static com.github.technus.tectech.thing.CustomItemList.LASERpipeBlock;
+import static com.github.technus.tectech.thing.CustomItemList.Machine_BuckConverter_IV;
+import static com.github.technus.tectech.thing.CustomItemList.Machine_BuckConverter_LuV;
+import static com.github.technus.tectech.thing.CustomItemList.Machine_BuckConverter_UEV;
+import static com.github.technus.tectech.thing.CustomItemList.Machine_BuckConverter_UHV;
+import static com.github.technus.tectech.thing.CustomItemList.Machine_BuckConverter_UIV;
+import static com.github.technus.tectech.thing.CustomItemList.Machine_BuckConverter_UMV;
+import static com.github.technus.tectech.thing.CustomItemList.Machine_BuckConverter_UV;
+import static com.github.technus.tectech.thing.CustomItemList.Machine_BuckConverter_UXV;
+import static com.github.technus.tectech.thing.CustomItemList.Machine_BuckConverter_ZPM;
+import static com.github.technus.tectech.thing.CustomItemList.Machine_DataReader;
+import static com.github.technus.tectech.thing.CustomItemList.Machine_DebugGenny;
+import static com.github.technus.tectech.thing.CustomItemList.Machine_DebugPollutor;
+import static com.github.technus.tectech.thing.CustomItemList.Machine_DebugWriter;
+import static com.github.technus.tectech.thing.CustomItemList.Machine_Multi_Annihilation;
+import static com.github.technus.tectech.thing.CustomItemList.Machine_Multi_Collider;
+import static com.github.technus.tectech.thing.CustomItemList.Machine_Multi_Computer;
+import static com.github.technus.tectech.thing.CustomItemList.Machine_Multi_DataBank;
+import static com.github.technus.tectech.thing.CustomItemList.Machine_Multi_Decay;
+import static com.github.technus.tectech.thing.CustomItemList.Machine_Multi_EMCrafter;
+import static com.github.technus.tectech.thing.CustomItemList.Machine_Multi_EMToEssentia;
+import static com.github.technus.tectech.thing.CustomItemList.Machine_Multi_EMToMatter;
+import static com.github.technus.tectech.thing.CustomItemList.Machine_Multi_EMjunction;
+import static com.github.technus.tectech.thing.CustomItemList.Machine_Multi_EMmachine;
+import static com.github.technus.tectech.thing.CustomItemList.Machine_Multi_EssentiaToEM;
+import static com.github.technus.tectech.thing.CustomItemList.Machine_Multi_EyeOfHarmony;
+import static com.github.technus.tectech.thing.CustomItemList.Machine_Multi_Infuser;
+import static com.github.technus.tectech.thing.CustomItemList.Machine_Multi_MatterToEM;
+import static com.github.technus.tectech.thing.CustomItemList.Machine_Multi_Microwave;
+import static com.github.technus.tectech.thing.CustomItemList.Machine_Multi_Research;
+import static com.github.technus.tectech.thing.CustomItemList.Machine_Multi_Scanner;
+import static com.github.technus.tectech.thing.CustomItemList.Machine_Multi_Stabilizer;
+import static com.github.technus.tectech.thing.CustomItemList.Machine_Multi_Switch;
+import static com.github.technus.tectech.thing.CustomItemList.Machine_Multi_TeslaCoil;
+import static com.github.technus.tectech.thing.CustomItemList.Machine_Multi_Transformer;
+import static com.github.technus.tectech.thing.CustomItemList.Machine_Multi_Wormhole;
+import static com.github.technus.tectech.thing.CustomItemList.Machine_OwnerDetector;
+import static com.github.technus.tectech.thing.CustomItemList.Machine_TeslaCoil_1by1_EV;
+import static com.github.technus.tectech.thing.CustomItemList.Machine_TeslaCoil_1by1_HV;
+import static com.github.technus.tectech.thing.CustomItemList.Machine_TeslaCoil_1by1_IV;
+import static com.github.technus.tectech.thing.CustomItemList.Machine_TeslaCoil_1by1_LV;
+import static com.github.technus.tectech.thing.CustomItemList.Machine_TeslaCoil_1by1_MV;
+import static com.github.technus.tectech.thing.CustomItemList.Machine_TeslaCoil_2by2_EV;
+import static com.github.technus.tectech.thing.CustomItemList.Machine_TeslaCoil_2by2_HV;
+import static com.github.technus.tectech.thing.CustomItemList.Machine_TeslaCoil_2by2_IV;
+import static com.github.technus.tectech.thing.CustomItemList.Machine_TeslaCoil_2by2_LV;
+import static com.github.technus.tectech.thing.CustomItemList.Machine_TeslaCoil_2by2_MV;
+import static com.github.technus.tectech.thing.CustomItemList.Machine_TeslaCoil_3by3_EV;
+import static com.github.technus.tectech.thing.CustomItemList.Machine_TeslaCoil_3by3_HV;
+import static com.github.technus.tectech.thing.CustomItemList.Machine_TeslaCoil_3by3_IV;
+import static com.github.technus.tectech.thing.CustomItemList.Machine_TeslaCoil_3by3_LV;
+import static com.github.technus.tectech.thing.CustomItemList.Machine_TeslaCoil_3by3_MV;
+import static com.github.technus.tectech.thing.CustomItemList.Machine_TeslaCoil_4by4_EV;
+import static com.github.technus.tectech.thing.CustomItemList.Machine_TeslaCoil_4by4_HV;
+import static com.github.technus.tectech.thing.CustomItemList.Machine_TeslaCoil_4by4_IV;
+import static com.github.technus.tectech.thing.CustomItemList.Machine_TeslaCoil_4by4_LV;
+import static com.github.technus.tectech.thing.CustomItemList.Machine_TeslaCoil_4by4_MV;
+import static com.github.technus.tectech.thing.CustomItemList.ParametrizerTXT_Hatch;
+import static com.github.technus.tectech.thing.CustomItemList.ParametrizerX_Hatch;
+import static com.github.technus.tectech.thing.CustomItemList.Parametrizer_Hatch;
+import static com.github.technus.tectech.thing.CustomItemList.UncertaintyX_Hatch;
+import static com.github.technus.tectech.thing.CustomItemList.Uncertainty_Hatch;
+import static com.github.technus.tectech.thing.CustomItemList.UnusedStuff;
+import static com.github.technus.tectech.thing.CustomItemList.capacitor_Hatch;
+import static com.github.technus.tectech.thing.CustomItemList.dataInAss_Hatch;
+import static com.github.technus.tectech.thing.CustomItemList.dataIn_Hatch;
+import static com.github.technus.tectech.thing.CustomItemList.dataOutAss_Hatch;
+import static com.github.technus.tectech.thing.CustomItemList.dataOut_Hatch;
+import static com.github.technus.tectech.thing.CustomItemList.eM_avr_EV;
+import static com.github.technus.tectech.thing.CustomItemList.eM_avr_HV;
+import static com.github.technus.tectech.thing.CustomItemList.eM_avr_IV;
+import static com.github.technus.tectech.thing.CustomItemList.eM_avr_LuV;
+import static com.github.technus.tectech.thing.CustomItemList.eM_avr_UEV;
+import static com.github.technus.tectech.thing.CustomItemList.eM_avr_UHV;
+import static com.github.technus.tectech.thing.CustomItemList.eM_avr_UIV;
+import static com.github.technus.tectech.thing.CustomItemList.eM_avr_UMV;
+import static com.github.technus.tectech.thing.CustomItemList.eM_avr_UV;
+import static com.github.technus.tectech.thing.CustomItemList.eM_avr_ZPM;
+import static com.github.technus.tectech.thing.CustomItemList.eM_dynamoMulti16_EV;
+import static com.github.technus.tectech.thing.CustomItemList.eM_dynamoMulti16_IV;
+import static com.github.technus.tectech.thing.CustomItemList.eM_dynamoMulti16_LuV;
+import static com.github.technus.tectech.thing.CustomItemList.eM_dynamoMulti16_UEV;
+import static com.github.technus.tectech.thing.CustomItemList.eM_dynamoMulti16_UHV;
+import static com.github.technus.tectech.thing.CustomItemList.eM_dynamoMulti16_UIV;
+import static com.github.technus.tectech.thing.CustomItemList.eM_dynamoMulti16_UMV;
+import static com.github.technus.tectech.thing.CustomItemList.eM_dynamoMulti16_UV;
+import static com.github.technus.tectech.thing.CustomItemList.eM_dynamoMulti16_UXV;
+import static com.github.technus.tectech.thing.CustomItemList.eM_dynamoMulti16_ZPM;
+import static com.github.technus.tectech.thing.CustomItemList.eM_dynamoMulti4_EV;
+import static com.github.technus.tectech.thing.CustomItemList.eM_dynamoMulti4_IV;
+import static com.github.technus.tectech.thing.CustomItemList.eM_dynamoMulti4_LuV;
+import static com.github.technus.tectech.thing.CustomItemList.eM_dynamoMulti4_UEV;
+import static com.github.technus.tectech.thing.CustomItemList.eM_dynamoMulti4_UHV;
+import static com.github.technus.tectech.thing.CustomItemList.eM_dynamoMulti4_UIV;
+import static com.github.technus.tectech.thing.CustomItemList.eM_dynamoMulti4_UMV;
+import static com.github.technus.tectech.thing.CustomItemList.eM_dynamoMulti4_UV;
+import static com.github.technus.tectech.thing.CustomItemList.eM_dynamoMulti4_UXV;
+import static com.github.technus.tectech.thing.CustomItemList.eM_dynamoMulti4_ZPM;
+import static com.github.technus.tectech.thing.CustomItemList.eM_dynamoMulti64_EV;
+import static com.github.technus.tectech.thing.CustomItemList.eM_dynamoMulti64_IV;
+import static com.github.technus.tectech.thing.CustomItemList.eM_dynamoMulti64_LuV;
+import static com.github.technus.tectech.thing.CustomItemList.eM_dynamoMulti64_UEV;
+import static com.github.technus.tectech.thing.CustomItemList.eM_dynamoMulti64_UHV;
+import static com.github.technus.tectech.thing.CustomItemList.eM_dynamoMulti64_UIV;
+import static com.github.technus.tectech.thing.CustomItemList.eM_dynamoMulti64_UMV;
+import static com.github.technus.tectech.thing.CustomItemList.eM_dynamoMulti64_UV;
+import static com.github.technus.tectech.thing.CustomItemList.eM_dynamoMulti64_UXV;
+import static com.github.technus.tectech.thing.CustomItemList.eM_dynamoMulti64_ZPM;
+import static com.github.technus.tectech.thing.CustomItemList.eM_dynamoTunnel1_IV;
+import static com.github.technus.tectech.thing.CustomItemList.eM_dynamoTunnel1_LuV;
+import static com.github.technus.tectech.thing.CustomItemList.eM_dynamoTunnel1_UEV;
+import static com.github.technus.tectech.thing.CustomItemList.eM_dynamoTunnel1_UHV;
+import static com.github.technus.tectech.thing.CustomItemList.eM_dynamoTunnel1_UIV;
+import static com.github.technus.tectech.thing.CustomItemList.eM_dynamoTunnel1_UMV;
+import static com.github.technus.tectech.thing.CustomItemList.eM_dynamoTunnel1_UV;
+import static com.github.technus.tectech.thing.CustomItemList.eM_dynamoTunnel1_UXV;
+import static com.github.technus.tectech.thing.CustomItemList.eM_dynamoTunnel1_ZPM;
+import static com.github.technus.tectech.thing.CustomItemList.eM_dynamoTunnel2_IV;
+import static com.github.technus.tectech.thing.CustomItemList.eM_dynamoTunnel2_LuV;
+import static com.github.technus.tectech.thing.CustomItemList.eM_dynamoTunnel2_UEV;
+import static com.github.technus.tectech.thing.CustomItemList.eM_dynamoTunnel2_UHV;
+import static com.github.technus.tectech.thing.CustomItemList.eM_dynamoTunnel2_UIV;
+import static com.github.technus.tectech.thing.CustomItemList.eM_dynamoTunnel2_UMV;
+import static com.github.technus.tectech.thing.CustomItemList.eM_dynamoTunnel2_UV;
+import static com.github.technus.tectech.thing.CustomItemList.eM_dynamoTunnel2_UXV;
+import static com.github.technus.tectech.thing.CustomItemList.eM_dynamoTunnel2_ZPM;
+import static com.github.technus.tectech.thing.CustomItemList.eM_dynamoTunnel3_IV;
+import static com.github.technus.tectech.thing.CustomItemList.eM_dynamoTunnel3_LuV;
+import static com.github.technus.tectech.thing.CustomItemList.eM_dynamoTunnel3_UEV;
+import static com.github.technus.tectech.thing.CustomItemList.eM_dynamoTunnel3_UHV;
+import static com.github.technus.tectech.thing.CustomItemList.eM_dynamoTunnel3_UIV;
+import static com.github.technus.tectech.thing.CustomItemList.eM_dynamoTunnel3_UMV;
+import static com.github.technus.tectech.thing.CustomItemList.eM_dynamoTunnel3_UV;
+import static com.github.technus.tectech.thing.CustomItemList.eM_dynamoTunnel3_UXV;
+import static com.github.technus.tectech.thing.CustomItemList.eM_dynamoTunnel3_ZPM;
+import static com.github.technus.tectech.thing.CustomItemList.eM_dynamoTunnel4_IV;
+import static com.github.technus.tectech.thing.CustomItemList.eM_dynamoTunnel4_LuV;
+import static com.github.technus.tectech.thing.CustomItemList.eM_dynamoTunnel4_UEV;
+import static com.github.technus.tectech.thing.CustomItemList.eM_dynamoTunnel4_UHV;
+import static com.github.technus.tectech.thing.CustomItemList.eM_dynamoTunnel4_UIV;
+import static com.github.technus.tectech.thing.CustomItemList.eM_dynamoTunnel4_UMV;
+import static com.github.technus.tectech.thing.CustomItemList.eM_dynamoTunnel4_UV;
+import static com.github.technus.tectech.thing.CustomItemList.eM_dynamoTunnel4_UXV;
+import static com.github.technus.tectech.thing.CustomItemList.eM_dynamoTunnel4_ZPM;
+import static com.github.technus.tectech.thing.CustomItemList.eM_dynamoTunnel5_IV;
+import static com.github.technus.tectech.thing.CustomItemList.eM_dynamoTunnel5_LuV;
+import static com.github.technus.tectech.thing.CustomItemList.eM_dynamoTunnel5_UEV;
+import static com.github.technus.tectech.thing.CustomItemList.eM_dynamoTunnel5_UHV;
+import static com.github.technus.tectech.thing.CustomItemList.eM_dynamoTunnel5_UIV;
+import static com.github.technus.tectech.thing.CustomItemList.eM_dynamoTunnel5_UMV;
+import static com.github.technus.tectech.thing.CustomItemList.eM_dynamoTunnel5_UV;
+import static com.github.technus.tectech.thing.CustomItemList.eM_dynamoTunnel5_UXV;
+import static com.github.technus.tectech.thing.CustomItemList.eM_dynamoTunnel5_ZPM;
+import static com.github.technus.tectech.thing.CustomItemList.eM_dynamoTunnel6_IV;
+import static com.github.technus.tectech.thing.CustomItemList.eM_dynamoTunnel6_LuV;
+import static com.github.technus.tectech.thing.CustomItemList.eM_dynamoTunnel6_UEV;
+import static com.github.technus.tectech.thing.CustomItemList.eM_dynamoTunnel6_UHV;
+import static com.github.technus.tectech.thing.CustomItemList.eM_dynamoTunnel6_UIV;
+import static com.github.technus.tectech.thing.CustomItemList.eM_dynamoTunnel6_UMV;
+import static com.github.technus.tectech.thing.CustomItemList.eM_dynamoTunnel6_UV;
+import static com.github.technus.tectech.thing.CustomItemList.eM_dynamoTunnel6_UXV;
+import static com.github.technus.tectech.thing.CustomItemList.eM_dynamoTunnel6_ZPM;
+import static com.github.technus.tectech.thing.CustomItemList.eM_dynamoTunnel7_IV;
+import static com.github.technus.tectech.thing.CustomItemList.eM_dynamoTunnel7_LuV;
+import static com.github.technus.tectech.thing.CustomItemList.eM_dynamoTunnel7_UEV;
+import static com.github.technus.tectech.thing.CustomItemList.eM_dynamoTunnel7_UHV;
+import static com.github.technus.tectech.thing.CustomItemList.eM_dynamoTunnel7_UIV;
+import static com.github.technus.tectech.thing.CustomItemList.eM_dynamoTunnel7_UMV;
+import static com.github.technus.tectech.thing.CustomItemList.eM_dynamoTunnel7_UV;
+import static com.github.technus.tectech.thing.CustomItemList.eM_dynamoTunnel7_UXV;
+import static com.github.technus.tectech.thing.CustomItemList.eM_dynamoTunnel7_ZPM;
+import static com.github.technus.tectech.thing.CustomItemList.eM_dynamoTunnel9001;
+import static com.github.technus.tectech.thing.CustomItemList.eM_energyMulti16_EV;
+import static com.github.technus.tectech.thing.CustomItemList.eM_energyMulti16_IV;
+import static com.github.technus.tectech.thing.CustomItemList.eM_energyMulti16_LuV;
+import static com.github.technus.tectech.thing.CustomItemList.eM_energyMulti16_UEV;
+import static com.github.technus.tectech.thing.CustomItemList.eM_energyMulti16_UHV;
+import static com.github.technus.tectech.thing.CustomItemList.eM_energyMulti16_UIV;
+import static com.github.technus.tectech.thing.CustomItemList.eM_energyMulti16_UMV;
+import static com.github.technus.tectech.thing.CustomItemList.eM_energyMulti16_UV;
+import static com.github.technus.tectech.thing.CustomItemList.eM_energyMulti16_UXV;
+import static com.github.technus.tectech.thing.CustomItemList.eM_energyMulti16_ZPM;
+import static com.github.technus.tectech.thing.CustomItemList.eM_energyMulti4_EV;
+import static com.github.technus.tectech.thing.CustomItemList.eM_energyMulti4_IV;
+import static com.github.technus.tectech.thing.CustomItemList.eM_energyMulti4_LuV;
+import static com.github.technus.tectech.thing.CustomItemList.eM_energyMulti4_UEV;
+import static com.github.technus.tectech.thing.CustomItemList.eM_energyMulti4_UHV;
+import static com.github.technus.tectech.thing.CustomItemList.eM_energyMulti4_UIV;
+import static com.github.technus.tectech.thing.CustomItemList.eM_energyMulti4_UMV;
+import static com.github.technus.tectech.thing.CustomItemList.eM_energyMulti4_UV;
+import static com.github.technus.tectech.thing.CustomItemList.eM_energyMulti4_UXV;
+import static com.github.technus.tectech.thing.CustomItemList.eM_energyMulti4_ZPM;
+import static com.github.technus.tectech.thing.CustomItemList.eM_energyMulti64_EV;
+import static com.github.technus.tectech.thing.CustomItemList.eM_energyMulti64_IV;
+import static com.github.technus.tectech.thing.CustomItemList.eM_energyMulti64_LuV;
+import static com.github.technus.tectech.thing.CustomItemList.eM_energyMulti64_UEV;
+import static com.github.technus.tectech.thing.CustomItemList.eM_energyMulti64_UHV;
+import static com.github.technus.tectech.thing.CustomItemList.eM_energyMulti64_UIV;
+import static com.github.technus.tectech.thing.CustomItemList.eM_energyMulti64_UMV;
+import static com.github.technus.tectech.thing.CustomItemList.eM_energyMulti64_UV;
+import static com.github.technus.tectech.thing.CustomItemList.eM_energyMulti64_UXV;
+import static com.github.technus.tectech.thing.CustomItemList.eM_energyMulti64_ZPM;
+import static com.github.technus.tectech.thing.CustomItemList.eM_energyTunnel1_IV;
+import static com.github.technus.tectech.thing.CustomItemList.eM_energyTunnel1_LuV;
+import static com.github.technus.tectech.thing.CustomItemList.eM_energyTunnel1_UEV;
+import static com.github.technus.tectech.thing.CustomItemList.eM_energyTunnel1_UHV;
+import static com.github.technus.tectech.thing.CustomItemList.eM_energyTunnel1_UIV;
+import static com.github.technus.tectech.thing.CustomItemList.eM_energyTunnel1_UMV;
+import static com.github.technus.tectech.thing.CustomItemList.eM_energyTunnel1_UV;
+import static com.github.technus.tectech.thing.CustomItemList.eM_energyTunnel1_UXV;
+import static com.github.technus.tectech.thing.CustomItemList.eM_energyTunnel1_ZPM;
+import static com.github.technus.tectech.thing.CustomItemList.eM_energyTunnel2_IV;
+import static com.github.technus.tectech.thing.CustomItemList.eM_energyTunnel2_LuV;
+import static com.github.technus.tectech.thing.CustomItemList.eM_energyTunnel2_UEV;
+import static com.github.technus.tectech.thing.CustomItemList.eM_energyTunnel2_UHV;
+import static com.github.technus.tectech.thing.CustomItemList.eM_energyTunnel2_UIV;
+import static com.github.technus.tectech.thing.CustomItemList.eM_energyTunnel2_UMV;
+import static com.github.technus.tectech.thing.CustomItemList.eM_energyTunnel2_UV;
+import static com.github.technus.tectech.thing.CustomItemList.eM_energyTunnel2_UXV;
+import static com.github.technus.tectech.thing.CustomItemList.eM_energyTunnel2_ZPM;
+import static com.github.technus.tectech.thing.CustomItemList.eM_energyTunnel3_IV;
+import static com.github.technus.tectech.thing.CustomItemList.eM_energyTunnel3_LuV;
+import static com.github.technus.tectech.thing.CustomItemList.eM_energyTunnel3_UEV;
+import static com.github.technus.tectech.thing.CustomItemList.eM_energyTunnel3_UHV;
+import static com.github.technus.tectech.thing.CustomItemList.eM_energyTunnel3_UIV;
+import static com.github.technus.tectech.thing.CustomItemList.eM_energyTunnel3_UMV;
+import static com.github.technus.tectech.thing.CustomItemList.eM_energyTunnel3_UV;
+import static com.github.technus.tectech.thing.CustomItemList.eM_energyTunnel3_UXV;
+import static com.github.technus.tectech.thing.CustomItemList.eM_energyTunnel3_ZPM;
+import static com.github.technus.tectech.thing.CustomItemList.eM_energyTunnel4_IV;
+import static com.github.technus.tectech.thing.CustomItemList.eM_energyTunnel4_LuV;
+import static com.github.technus.tectech.thing.CustomItemList.eM_energyTunnel4_UEV;
+import static com.github.technus.tectech.thing.CustomItemList.eM_energyTunnel4_UHV;
+import static com.github.technus.tectech.thing.CustomItemList.eM_energyTunnel4_UIV;
+import static com.github.technus.tectech.thing.CustomItemList.eM_energyTunnel4_UMV;
+import static com.github.technus.tectech.thing.CustomItemList.eM_energyTunnel4_UV;
+import static com.github.technus.tectech.thing.CustomItemList.eM_energyTunnel4_UXV;
+import static com.github.technus.tectech.thing.CustomItemList.eM_energyTunnel4_ZPM;
+import static com.github.technus.tectech.thing.CustomItemList.eM_energyTunnel5_IV;
+import static com.github.technus.tectech.thing.CustomItemList.eM_energyTunnel5_LuV;
+import static com.github.technus.tectech.thing.CustomItemList.eM_energyTunnel5_UEV;
+import static com.github.technus.tectech.thing.CustomItemList.eM_energyTunnel5_UHV;
+import static com.github.technus.tectech.thing.CustomItemList.eM_energyTunnel5_UIV;
+import static com.github.technus.tectech.thing.CustomItemList.eM_energyTunnel5_UMV;
+import static com.github.technus.tectech.thing.CustomItemList.eM_energyTunnel5_UV;
+import static com.github.technus.tectech.thing.CustomItemList.eM_energyTunnel5_UXV;
+import static com.github.technus.tectech.thing.CustomItemList.eM_energyTunnel5_ZPM;
+import static com.github.technus.tectech.thing.CustomItemList.eM_energyTunnel6_IV;
+import static com.github.technus.tectech.thing.CustomItemList.eM_energyTunnel6_LuV;
+import static com.github.technus.tectech.thing.CustomItemList.eM_energyTunnel6_UEV;
+import static com.github.technus.tectech.thing.CustomItemList.eM_energyTunnel6_UHV;
+import static com.github.technus.tectech.thing.CustomItemList.eM_energyTunnel6_UIV;
+import static com.github.technus.tectech.thing.CustomItemList.eM_energyTunnel6_UMV;
+import static com.github.technus.tectech.thing.CustomItemList.eM_energyTunnel6_UV;
+import static com.github.technus.tectech.thing.CustomItemList.eM_energyTunnel6_UXV;
+import static com.github.technus.tectech.thing.CustomItemList.eM_energyTunnel6_ZPM;
+import static com.github.technus.tectech.thing.CustomItemList.eM_energyTunnel7_IV;
+import static com.github.technus.tectech.thing.CustomItemList.eM_energyTunnel7_LuV;
+import static com.github.technus.tectech.thing.CustomItemList.eM_energyTunnel7_UEV;
+import static com.github.technus.tectech.thing.CustomItemList.eM_energyTunnel7_UHV;
+import static com.github.technus.tectech.thing.CustomItemList.eM_energyTunnel7_UIV;
+import static com.github.technus.tectech.thing.CustomItemList.eM_energyTunnel7_UMV;
+import static com.github.technus.tectech.thing.CustomItemList.eM_energyTunnel7_UV;
+import static com.github.technus.tectech.thing.CustomItemList.eM_energyTunnel7_UXV;
+import static com.github.technus.tectech.thing.CustomItemList.eM_energyTunnel7_ZPM;
+import static com.github.technus.tectech.thing.CustomItemList.eM_energyTunnel9001;
+import static com.github.technus.tectech.thing.CustomItemList.eM_energyWirelessMulti16_EV;
+import static com.github.technus.tectech.thing.CustomItemList.eM_energyWirelessMulti16_IV;
+import static com.github.technus.tectech.thing.CustomItemList.eM_energyWirelessMulti16_LuV;
+import static com.github.technus.tectech.thing.CustomItemList.eM_energyWirelessMulti16_MAX;
+import static com.github.technus.tectech.thing.CustomItemList.eM_energyWirelessMulti16_UEV;
+import static com.github.technus.tectech.thing.CustomItemList.eM_energyWirelessMulti16_UHV;
+import static com.github.technus.tectech.thing.CustomItemList.eM_energyWirelessMulti16_UIV;
+import static com.github.technus.tectech.thing.CustomItemList.eM_energyWirelessMulti16_UMV;
+import static com.github.technus.tectech.thing.CustomItemList.eM_energyWirelessMulti16_UV;
+import static com.github.technus.tectech.thing.CustomItemList.eM_energyWirelessMulti16_UXV;
+import static com.github.technus.tectech.thing.CustomItemList.eM_energyWirelessMulti16_ZPM;
+import static com.github.technus.tectech.thing.CustomItemList.eM_energyWirelessMulti4_EV;
+import static com.github.technus.tectech.thing.CustomItemList.eM_energyWirelessMulti4_IV;
+import static com.github.technus.tectech.thing.CustomItemList.eM_energyWirelessMulti4_LuV;
+import static com.github.technus.tectech.thing.CustomItemList.eM_energyWirelessMulti4_MAX;
+import static com.github.technus.tectech.thing.CustomItemList.eM_energyWirelessMulti4_UEV;
+import static com.github.technus.tectech.thing.CustomItemList.eM_energyWirelessMulti4_UHV;
+import static com.github.technus.tectech.thing.CustomItemList.eM_energyWirelessMulti4_UIV;
+import static com.github.technus.tectech.thing.CustomItemList.eM_energyWirelessMulti4_UMV;
+import static com.github.technus.tectech.thing.CustomItemList.eM_energyWirelessMulti4_UV;
+import static com.github.technus.tectech.thing.CustomItemList.eM_energyWirelessMulti4_UXV;
+import static com.github.technus.tectech.thing.CustomItemList.eM_energyWirelessMulti4_ZPM;
+import static com.github.technus.tectech.thing.CustomItemList.eM_energyWirelessMulti64_EV;
+import static com.github.technus.tectech.thing.CustomItemList.eM_energyWirelessMulti64_IV;
+import static com.github.technus.tectech.thing.CustomItemList.eM_energyWirelessMulti64_LuV;
+import static com.github.technus.tectech.thing.CustomItemList.eM_energyWirelessMulti64_MAX;
+import static com.github.technus.tectech.thing.CustomItemList.eM_energyWirelessMulti64_UEV;
+import static com.github.technus.tectech.thing.CustomItemList.eM_energyWirelessMulti64_UHV;
+import static com.github.technus.tectech.thing.CustomItemList.eM_energyWirelessMulti64_UIV;
+import static com.github.technus.tectech.thing.CustomItemList.eM_energyWirelessMulti64_UMV;
+import static com.github.technus.tectech.thing.CustomItemList.eM_energyWirelessMulti64_UV;
+import static com.github.technus.tectech.thing.CustomItemList.eM_energyWirelessMulti64_UXV;
+import static com.github.technus.tectech.thing.CustomItemList.eM_energyWirelessMulti64_ZPM;
+import static com.github.technus.tectech.thing.CustomItemList.eM_in_UEV;
+import static com.github.technus.tectech.thing.CustomItemList.eM_in_UHV;
+import static com.github.technus.tectech.thing.CustomItemList.eM_in_UIV;
+import static com.github.technus.tectech.thing.CustomItemList.eM_in_UMV;
+import static com.github.technus.tectech.thing.CustomItemList.eM_in_UV;
+import static com.github.technus.tectech.thing.CustomItemList.eM_in_UXV;
+import static com.github.technus.tectech.thing.CustomItemList.eM_muffler_UEV;
+import static com.github.technus.tectech.thing.CustomItemList.eM_muffler_UHV;
+import static com.github.technus.tectech.thing.CustomItemList.eM_muffler_UIV;
+import static com.github.technus.tectech.thing.CustomItemList.eM_muffler_UMV;
+import static com.github.technus.tectech.thing.CustomItemList.eM_muffler_UV;
+import static com.github.technus.tectech.thing.CustomItemList.eM_muffler_UXV;
+import static com.github.technus.tectech.thing.CustomItemList.eM_out_UEV;
+import static com.github.technus.tectech.thing.CustomItemList.eM_out_UHV;
+import static com.github.technus.tectech.thing.CustomItemList.eM_out_UIV;
+import static com.github.technus.tectech.thing.CustomItemList.eM_out_UMV;
+import static com.github.technus.tectech.thing.CustomItemList.eM_out_UV;
+import static com.github.technus.tectech.thing.CustomItemList.eM_out_UXV;
+import static com.github.technus.tectech.thing.CustomItemList.hatch_CreativeData;
+import static com.github.technus.tectech.thing.CustomItemList.hatch_CreativeMaintenance;
+import static com.github.technus.tectech.thing.CustomItemList.holder_Hatch;
+import static com.github.technus.tectech.thing.CustomItemList.rack_Hatch;
 import static com.github.technus.tectech.util.CommonValues.V;
 
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 
-import com.github.technus.tectech.Reference;
-import com.github.technus.tectech.compatibility.dreamcraft.NoDreamCraftMachineLoader;
 import com.github.technus.tectech.compatibility.thaumcraft.thing.metaTileEntity.multi.GT_MetaTileEntity_EM_essentiaDequantizer;
 import com.github.technus.tectech.compatibility.thaumcraft.thing.metaTileEntity.multi.GT_MetaTileEntity_EM_essentiaQuantizer;
-import com.github.technus.tectech.thing.metaTileEntity.hatch.*;
-import com.github.technus.tectech.thing.metaTileEntity.multi.*;
+import com.github.technus.tectech.thing.metaTileEntity.hatch.GT_MetaTileEntity_Hatch_Capacitor;
+import com.github.technus.tectech.thing.metaTileEntity.hatch.GT_MetaTileEntity_Hatch_CreativeData;
+import com.github.technus.tectech.thing.metaTileEntity.hatch.GT_MetaTileEntity_Hatch_CreativeMaintenance;
+import com.github.technus.tectech.thing.metaTileEntity.hatch.GT_MetaTileEntity_Hatch_DynamoMulti;
+import com.github.technus.tectech.thing.metaTileEntity.hatch.GT_MetaTileEntity_Hatch_DynamoTunnel;
+import com.github.technus.tectech.thing.metaTileEntity.hatch.GT_MetaTileEntity_Hatch_EnergyMulti;
+import com.github.technus.tectech.thing.metaTileEntity.hatch.GT_MetaTileEntity_Hatch_EnergyTunnel;
+import com.github.technus.tectech.thing.metaTileEntity.hatch.GT_MetaTileEntity_Hatch_Holder;
+import com.github.technus.tectech.thing.metaTileEntity.hatch.GT_MetaTileEntity_Hatch_InputData;
+import com.github.technus.tectech.thing.metaTileEntity.hatch.GT_MetaTileEntity_Hatch_InputDataItems;
+import com.github.technus.tectech.thing.metaTileEntity.hatch.GT_MetaTileEntity_Hatch_InputElemental;
+import com.github.technus.tectech.thing.metaTileEntity.hatch.GT_MetaTileEntity_Hatch_OutputData;
+import com.github.technus.tectech.thing.metaTileEntity.hatch.GT_MetaTileEntity_Hatch_OutputDataItems;
+import com.github.technus.tectech.thing.metaTileEntity.hatch.GT_MetaTileEntity_Hatch_OutputElemental;
+import com.github.technus.tectech.thing.metaTileEntity.hatch.GT_MetaTileEntity_Hatch_OverflowElemental;
+import com.github.technus.tectech.thing.metaTileEntity.hatch.GT_MetaTileEntity_Hatch_Param;
+import com.github.technus.tectech.thing.metaTileEntity.hatch.GT_MetaTileEntity_Hatch_ParamText;
+import com.github.technus.tectech.thing.metaTileEntity.hatch.GT_MetaTileEntity_Hatch_Rack;
+import com.github.technus.tectech.thing.metaTileEntity.hatch.GT_MetaTileEntity_Hatch_Uncertainty;
+import com.github.technus.tectech.thing.metaTileEntity.hatch.GT_MetaTileEntity_Hatch_WirelessMulti;
+import com.github.technus.tectech.thing.metaTileEntity.multi.GT_MetaTileEntity_EM_EyeOfHarmony;
+import com.github.technus.tectech.thing.metaTileEntity.multi.GT_MetaTileEntity_EM_annihilation;
+import com.github.technus.tectech.thing.metaTileEntity.multi.GT_MetaTileEntity_EM_computer;
+import com.github.technus.tectech.thing.metaTileEntity.multi.GT_MetaTileEntity_EM_crafting;
+import com.github.technus.tectech.thing.metaTileEntity.multi.GT_MetaTileEntity_EM_dataBank;
+import com.github.technus.tectech.thing.metaTileEntity.multi.GT_MetaTileEntity_EM_decay;
+import com.github.technus.tectech.thing.metaTileEntity.multi.GT_MetaTileEntity_EM_dequantizer;
+import com.github.technus.tectech.thing.metaTileEntity.multi.GT_MetaTileEntity_EM_infuser;
+import com.github.technus.tectech.thing.metaTileEntity.multi.GT_MetaTileEntity_EM_junction;
+import com.github.technus.tectech.thing.metaTileEntity.multi.GT_MetaTileEntity_EM_quantizer;
+import com.github.technus.tectech.thing.metaTileEntity.multi.GT_MetaTileEntity_EM_research;
+import com.github.technus.tectech.thing.metaTileEntity.multi.GT_MetaTileEntity_EM_scanner;
+import com.github.technus.tectech.thing.metaTileEntity.multi.GT_MetaTileEntity_EM_stabilizer;
+import com.github.technus.tectech.thing.metaTileEntity.multi.GT_MetaTileEntity_EM_switch;
+import com.github.technus.tectech.thing.metaTileEntity.multi.GT_MetaTileEntity_EM_transformer;
+import com.github.technus.tectech.thing.metaTileEntity.multi.GT_MetaTileEntity_EM_wormhole;
+import com.github.technus.tectech.thing.metaTileEntity.multi.GT_MetaTileEntity_TM_microwave;
+import com.github.technus.tectech.thing.metaTileEntity.multi.GT_MetaTileEntity_TM_teslaCoil;
 import com.github.technus.tectech.thing.metaTileEntity.multi.em_collider.GT_MetaTileEntity_EM_collider;
 import com.github.technus.tectech.thing.metaTileEntity.multi.em_machine.GT_MetaTileEntity_EM_machine;
-import com.github.technus.tectech.thing.metaTileEntity.pipe.*;
-import com.github.technus.tectech.thing.metaTileEntity.single.*;
-import cpw.mods.fml.common.Loader;
+import com.github.technus.tectech.thing.metaTileEntity.pipe.GT_MetaTileEntity_PipeBlock_Data;
+import com.github.technus.tectech.thing.metaTileEntity.pipe.GT_MetaTileEntity_PipeBlock_EM;
+import com.github.technus.tectech.thing.metaTileEntity.pipe.GT_MetaTileEntity_PipeBlock_Energy;
+import com.github.technus.tectech.thing.metaTileEntity.pipe.GT_MetaTileEntity_Pipe_Data;
+import com.github.technus.tectech.thing.metaTileEntity.pipe.GT_MetaTileEntity_Pipe_EM;
+import com.github.technus.tectech.thing.metaTileEntity.pipe.GT_MetaTileEntity_Pipe_Energy;
+import com.github.technus.tectech.thing.metaTileEntity.single.GT_MetaTileEntity_BuckConverter;
+import com.github.technus.tectech.thing.metaTileEntity.single.GT_MetaTileEntity_DataReader;
+import com.github.technus.tectech.thing.metaTileEntity.single.GT_MetaTileEntity_DebugPollutor;
+import com.github.technus.tectech.thing.metaTileEntity.single.GT_MetaTileEntity_DebugPowerGenerator;
+import com.github.technus.tectech.thing.metaTileEntity.single.GT_MetaTileEntity_DebugStructureWriter;
+import com.github.technus.tectech.thing.metaTileEntity.single.GT_MetaTileEntity_MicroController;
+import com.github.technus.tectech.thing.metaTileEntity.single.GT_MetaTileEntity_OwnerDetector;
+import com.github.technus.tectech.thing.metaTileEntity.single.GT_MetaTileEntity_TeslaCoil;
 
 /**
  * Created by danie_000 on 16.11.2016.
@@ -417,6 +787,240 @@ public class MachineLoader implements Runnable {
                         "hatch.energymulti64.tier.13",
                         "UXV 64A Energy Hatch",
                         13,
+                        64).getStackForm(1L));
+        // ===================================================================================================
+        // Multi AMP Wireless INPUTS
+        // ===================================================================================================
+        eM_energyWirelessMulti4_EV.set(
+                new GT_MetaTileEntity_Hatch_WirelessMulti(
+                        15065,
+                        "hatch.energywirelessmulti04.tier.04",
+                        "EV 4A Wireless Energy Hatch",
+                        4,
+                        4).getStackForm(1L));
+        eM_energyWirelessMulti16_EV.set(
+                new GT_MetaTileEntity_Hatch_WirelessMulti(
+                        15066,
+                        "hatch.energywirelessmulti16.tier.04",
+                        "EV 16A Wireless Energy Hatch",
+                        4,
+                        16).getStackForm(1L));
+        eM_energyWirelessMulti64_EV.set(
+                new GT_MetaTileEntity_Hatch_WirelessMulti(
+                        15067,
+                        "hatch.energywirelessmulti64.tier.04",
+                        "EV 64A Wireless Energy Hatch",
+                        4,
+                        64).getStackForm(1L));
+        eM_energyWirelessMulti4_IV.set(
+                new GT_MetaTileEntity_Hatch_WirelessMulti(
+                        15068,
+                        "hatch.energywirelessmulti04.tier.05",
+                        "IV 4A Wireless Energy Hatch",
+                        5,
+                        4).getStackForm(1L));
+        eM_energyWirelessMulti16_IV.set(
+                new GT_MetaTileEntity_Hatch_WirelessMulti(
+                        15069,
+                        "hatch.energywirelessmulti16.tier.05",
+                        "IV 16A Wireless Energy Hatch",
+                        5,
+                        16).getStackForm(1L));
+        eM_energyWirelessMulti64_IV.set(
+                new GT_MetaTileEntity_Hatch_WirelessMulti(
+                        15070,
+                        "hatch.energywirelessmulti64.tier.05",
+                        "IV 64A Wireless Energy Hatch",
+                        5,
+                        64).getStackForm(1L));
+        eM_energyWirelessMulti4_LuV.set(
+                new GT_MetaTileEntity_Hatch_WirelessMulti(
+                        15071,
+                        "hatch.energywirelessmulti04.tier.06",
+                        "LuV 4A Wireless Energy Hatch",
+                        6,
+                        4).getStackForm(1L));
+        eM_energyWirelessMulti16_LuV.set(
+                new GT_MetaTileEntity_Hatch_WirelessMulti(
+                        15072,
+                        "hatch.energywirelessmulti16.tier.06",
+                        "LuV 16A Wireless Energy Hatch",
+                        6,
+                        16).getStackForm(1L));
+        eM_energyWirelessMulti64_LuV.set(
+                new GT_MetaTileEntity_Hatch_WirelessMulti(
+                        15073,
+                        "hatch.energywirelessmulti64.tier.06",
+                        "LuV 64A Wireless Energy Hatch",
+                        6,
+                        64).getStackForm(1L));
+        eM_energyWirelessMulti4_ZPM.set(
+                new GT_MetaTileEntity_Hatch_WirelessMulti(
+                        15074,
+                        "hatch.energywirelessmulti04.tier.07",
+                        "ZPM 4A Wireless Energy Hatch",
+                        7,
+                        4).getStackForm(1L));
+        eM_energyWirelessMulti16_ZPM.set(
+                new GT_MetaTileEntity_Hatch_WirelessMulti(
+                        15075,
+                        "hatch.energywirelessmulti16.tier.07",
+                        "ZPM 16A Wireless Energy Hatch",
+                        7,
+                        16).getStackForm(1L));
+        eM_energyWirelessMulti64_ZPM.set(
+                new GT_MetaTileEntity_Hatch_WirelessMulti(
+                        15076,
+                        "hatch.energywirelessmulti64.tier.07",
+                        "ZPM 64A Wireless Energy Hatch",
+                        7,
+                        64).getStackForm(1L));
+        eM_energyWirelessMulti4_UV.set(
+                new GT_MetaTileEntity_Hatch_WirelessMulti(
+                        15077,
+                        "hatch.energywirelessmulti04.tier.08",
+                        "UV 4A Wireless Energy Hatch",
+                        8,
+                        4).getStackForm(1L));
+        eM_energyWirelessMulti16_UV.set(
+                new GT_MetaTileEntity_Hatch_WirelessMulti(
+                        15078,
+                        "hatch.energywirelessmulti16.tier.08",
+                        "UV 16A Wireless Energy Hatch",
+                        8,
+                        16).getStackForm(1L));
+        eM_energyWirelessMulti64_UV.set(
+                new GT_MetaTileEntity_Hatch_WirelessMulti(
+                        15079,
+                        "hatch.energywirelessmulti64.tier.08",
+                        "UV 64A Wireless Energy Hatch",
+                        8,
+                        64).getStackForm(1L));
+        eM_energyWirelessMulti4_UHV.set(
+                new GT_MetaTileEntity_Hatch_WirelessMulti(
+                        15080,
+                        "hatch.energywirelessmulti04.tier.09",
+                        "UHV 4A Wireless Energy Hatch",
+                        9,
+                        4).getStackForm(1L));
+        eM_energyWirelessMulti16_UHV.set(
+                new GT_MetaTileEntity_Hatch_WirelessMulti(
+                        15081,
+                        "hatch.energywirelessmulti16.tier.09",
+                        "UHV 16A Wireless Energy Hatch",
+                        9,
+                        16).getStackForm(1L));
+        eM_energyWirelessMulti64_UHV.set(
+                new GT_MetaTileEntity_Hatch_WirelessMulti(
+                        15082,
+                        "hatch.energywirelessmulti64.tier.09",
+                        "UHV 64A Wireless Energy Hatch",
+                        9,
+                        64).getStackForm(1L));
+        eM_energyWirelessMulti4_UEV.set(
+                new GT_MetaTileEntity_Hatch_WirelessMulti(
+                        15083,
+                        "hatch.energywirelessmulti04.tier.10",
+                        "UEV 4A Wireless Energy Hatch",
+                        10,
+                        4).getStackForm(1L));
+        eM_energyWirelessMulti16_UEV.set(
+                new GT_MetaTileEntity_Hatch_WirelessMulti(
+                        15084,
+                        "hatch.energywirelessmulti16.tier.10",
+                        "UEV 16A Wireless Energy Hatch",
+                        10,
+                        16).getStackForm(1L));
+        eM_energyWirelessMulti64_UEV.set(
+                new GT_MetaTileEntity_Hatch_WirelessMulti(
+                        15085,
+                        "hatch.energywirelessmulti64.tier.10",
+                        "UEV 64A Wireless Energy Hatch",
+                        10,
+                        64).getStackForm(1L));
+        eM_energyWirelessMulti4_UIV.set(
+                new GT_MetaTileEntity_Hatch_WirelessMulti(
+                        15086,
+                        "hatch.energywirelessmulti04.tier.11",
+                        "UIV 4A Wireless Energy Hatch",
+                        11,
+                        4).getStackForm(1L));
+        eM_energyWirelessMulti16_UIV.set(
+                new GT_MetaTileEntity_Hatch_WirelessMulti(
+                        15087,
+                        "hatch.energywirelessmulti16.tier.11",
+                        "UIV 16A Wireless Energy Hatch",
+                        11,
+                        16).getStackForm(1L));
+        eM_energyWirelessMulti64_UIV.set(
+                new GT_MetaTileEntity_Hatch_WirelessMulti(
+                        15088,
+                        "hatch.energywirelessmulti64.tier.11",
+                        "UIV 64A Wireless Energy Hatch",
+                        11,
+                        64).getStackForm(1L));
+        eM_energyWirelessMulti4_UMV.set(
+                new GT_MetaTileEntity_Hatch_WirelessMulti(
+                        15089,
+                        "hatch.energywirelessmulti04.tier.12",
+                        "UMV 4A Wireless Energy Hatch",
+                        12,
+                        4).getStackForm(1L));
+        eM_energyWirelessMulti16_UMV.set(
+                new GT_MetaTileEntity_Hatch_WirelessMulti(
+                        15090,
+                        "hatch.energywirelessmulti16.tier.12",
+                        "UMV 16A Wireless Energy Hatch",
+                        12,
+                        16).getStackForm(1L));
+        eM_energyWirelessMulti64_UMV.set(
+                new GT_MetaTileEntity_Hatch_WirelessMulti(
+                        15091,
+                        "hatch.energywirelessmulti64.tier.12",
+                        "UMV 64A Wireless Energy Hatch",
+                        12,
+                        64).getStackForm(1L));
+        eM_energyWirelessMulti4_UXV.set(
+                new GT_MetaTileEntity_Hatch_WirelessMulti(
+                        15092,
+                        "hatch.energywirelessmulti04.tier.13",
+                        "UXV 4A Wireless Energy Hatch",
+                        13,
+                        4).getStackForm(1L));
+        eM_energyWirelessMulti16_UXV.set(
+                new GT_MetaTileEntity_Hatch_WirelessMulti(
+                        15093,
+                        "hatch.energywirelessmulti16.tier.13",
+                        "UXV 16A Wireless Energy Hatch",
+                        13,
+                        16).getStackForm(1L));
+        eM_energyWirelessMulti64_UXV.set(
+                new GT_MetaTileEntity_Hatch_WirelessMulti(
+                        15094,
+                        "hatch.energywirelessmulti64.tier.13",
+                        "UXV 64A Wireless Energy Hatch",
+                        13,
+                        64).getStackForm(1L));
+        eM_energyWirelessMulti4_MAX.set(
+                new GT_MetaTileEntity_Hatch_WirelessMulti(
+                        15095,
+                        "hatch.energywirelessmulti04.tier.14",
+                        "MAX 4A Wireless Energy Hatch",
+                        14,
+                        4).getStackForm(1L));
+        eM_energyWirelessMulti16_MAX.set(
+                new GT_MetaTileEntity_Hatch_WirelessMulti(
+                        15096,
+                        "hatch.energywirelessmulti16.tier.14",
+                        "MAX 16A Wireless Energy Hatch",
+                        14,
+                        16).getStackForm(1L));
+        eM_energyWirelessMulti64_MAX.set(
+                new GT_MetaTileEntity_Hatch_WirelessMulti(
+                        15097,
+                        "hatch.energywirelessmulti64.tier.14",
+                        "MAX 64A Wireless Energy Hatch",
+                        14,
                         64).getStackForm(1L));
 
         // ===================================================================================================
@@ -1870,9 +2474,5 @@ public class MachineLoader implements Runnable {
         GT_MetaTileEntity_Hatch_Rack.run();
 
         GT_MetaTileEntity_Hatch_Capacitor.run();
-
-        if (!Loader.isModLoaded(Reference.DREAMCRAFT)) {
-            new NoDreamCraftMachineLoader().run();
-        }
     }
 }

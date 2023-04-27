@@ -7,7 +7,6 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.TreeMap;
 
 public final class EMNuclideIAEA {
@@ -132,11 +131,6 @@ public final class EMNuclideIAEA {
     }
 
     private void getMoreData(String[] cells) {
-        // if(DEBUG_MODE) {
-        // if (add(cells[14])) System.out.println(N + " " + Z);
-        // if (add(cells[17])) System.out.println(N + " " + Z);
-        // if (add(cells[20])) System.out.println(N + " " + Z);
-        // }
         new energeticState(
                 this,
                 getHalfTime(),
@@ -249,11 +243,6 @@ public final class EMNuclideIAEA {
                 nuclide.energeticStates = new TreeMap<>();
             }
             nuclide.energeticStates.put(energy, this);
-            // if(DEBUG_MODE) {
-            // if (add(cells[12])) System.out.println(nuclide.N + " " + nuclide.Z);
-            // if (add(cells[15])) System.out.println(nuclide.N + " " + nuclide.Z);
-            // if (add(cells[18])) System.out.println(nuclide.N + " " + nuclide.Z);
-            // }
             decaymodes = getDecaysFixed(
                     cells[12],
                     doubleOrNaN(cells[13], "chance 1", nuclide),
@@ -284,16 +273,6 @@ public final class EMNuclideIAEA {
             }
             return Double.NaN;
         }
-    }
-
-    private static HashSet<String> decays = new HashSet<>();
-
-    private static boolean add(String s) {
-        if (decays.add(s)) {
-            System.out.println(s);
-            return true;
-        }
-        return false;
     }
 
     private static iaeaDecay[] getDecaysFixed(String decay1, double chance1, String decay2, double chance2,

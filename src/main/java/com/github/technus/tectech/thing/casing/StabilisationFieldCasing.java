@@ -1,7 +1,8 @@
 package com.github.technus.tectech.thing.casing;
 
 import static com.github.technus.tectech.util.CommonValues.EOH_TIER_FANCY_NAMES;
-import static net.minecraft.util.EnumChatFormatting.*;
+import static net.minecraft.util.EnumChatFormatting.RESET;
+import static net.minecraft.util.EnumChatFormatting.WHITE;
 
 import java.util.List;
 
@@ -107,9 +108,8 @@ public class StabilisationFieldCasing extends GT_Block_Casings_Abstract {
         return getIcon(aSide, tMeta);
     }
 
-    @SuppressWarnings("unchecked")
     @Override
-    public void getSubBlocks(Item aItem, CreativeTabs par2CreativeTabs, List aList) {
+    public void getSubBlocks(Item aItem, CreativeTabs par2CreativeTabs, List<ItemStack> aList) {
         for (int i = 0; i < MAX_BLOCK_TIER; i++) {
             aList.add(new ItemStack(aItem, 1, i));
         }

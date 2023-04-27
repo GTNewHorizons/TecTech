@@ -1,6 +1,12 @@
 package com.github.technus.tectech.mechanics.data;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.NBTTagCompound;
@@ -81,7 +87,7 @@ public class ChunkDataHandler {
         } else if (!chunkMemory.isLoaded) {
             chunkMemory.isLoaded = true;
 
-            Set<String> tagsDuplicated = new HashSet(loadedKeys);
+            Set<String> tagsDuplicated = new HashSet<>(loadedKeys);
             tagsDuplicated.retainAll(chunkMemory.data.func_150296_c());
 
             if (tagsDuplicated.isEmpty()) {
@@ -198,7 +204,7 @@ public class ChunkDataHandler {
     public void registerChunkMetaDataHandler(IChunkMetaDataHandler handler) {
         metaDataHandlerHashMap.put(handler.getTagName(), handler);
         dimensionWiseMetaChunkData.put(handler.getTagName(), new HashMap<>());
-        Class clazz = handler.getClass();
+        Class<?> clazz = handler.getClass();
         try {
             if (clazz.getMethod("tickServer", HashMap.class, TickEvent.ServerTickEvent.class).getDeclaringClass()
                     != IChunkMetaDataHandler.class) {
@@ -333,6 +339,7 @@ public class ChunkDataHandler {
             return storageMeta.get(key);
         }
 
+        @SuppressWarnings("unlikely-arg-type")
         @Override
         public void clear() {
             storageMeta.entrySet().forEach(this::remove);

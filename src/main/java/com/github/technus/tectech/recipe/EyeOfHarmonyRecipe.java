@@ -3,11 +3,16 @@ package com.github.technus.tectech.recipe;
 import static com.github.technus.tectech.recipe.EyeOfHarmonyRecipeStorage.BILLION;
 import static com.google.common.math.IntMath.pow;
 import static gregtech.api.GregTech_API.getUnificatedOreDictStack;
+import static gregtech.api.enums.Mods.NewHorizonsCoreMod;
 import static gregtech.api.util.GT_ModHandler.getModItem;
 import static gregtech.api.util.GT_Utility.getPlasmaFuelValueInEUPerLiterFromMaterial;
 import static java.lang.Math.min;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -26,20 +31,23 @@ import gnu.trove.map.TMap;
 import gnu.trove.map.hash.TCustomHashMap;
 import gnu.trove.strategy.HashingStrategy;
 import gregtech.api.enums.Materials;
+import gregtech.api.enums.MaterialsUEVplus;
 import gregtech.api.enums.OrePrefixes;
 import gregtech.api.util.GT_OreDictUnificator;
 
 @SuppressWarnings("SpellCheckingInspection")
 public class EyeOfHarmonyRecipe {
 
-    static final FluidStack[] SPECIAL_FLUIDS = new FluidStack[] { Materials.WhiteDwarfMatter.getMolten(1152),
-            Materials.WhiteDwarfMatter.getMolten(1152), Materials.WhiteDwarfMatter.getMolten(4_608),
-            Materials.WhiteDwarfMatter.getMolten(18_432), Materials.BlackDwarfMatter.getMolten(1152),
-            Materials.BlackDwarfMatter.getMolten(4_608), Materials.BlackDwarfMatter.getMolten(18_432),
-            Materials.Universium.getMolten(1152), Materials.Universium.getMolten(4_608),
-            Materials.Universium.getMolten(18_432) };
+    static final FluidStack[] SPECIAL_FLUIDS = new FluidStack[] { MaterialsUEVplus.WhiteDwarfMatter.getMolten(1152),
+            MaterialsUEVplus.WhiteDwarfMatter.getMolten(1152), MaterialsUEVplus.WhiteDwarfMatter.getMolten(4_608),
+            MaterialsUEVplus.WhiteDwarfMatter.getMolten(18_432), MaterialsUEVplus.BlackDwarfMatter.getMolten(1152),
+            MaterialsUEVplus.BlackDwarfMatter.getMolten(4_608), MaterialsUEVplus.BlackDwarfMatter.getMolten(18_432),
+            MaterialsUEVplus.Universium.getMolten(1152), MaterialsUEVplus.Universium.getMolten(4_608),
+            MaterialsUEVplus.Universium.getMolten(18_432) };
 
-    HashingStrategy<ItemStack> itemStackHashingStrategy = new HashingStrategy<ItemStack>() {
+    HashingStrategy<ItemStack> itemStackHashingStrategy = new HashingStrategy<>() {
+
+        private static final long serialVersionUID = -3966004160368229212L;
 
         @Override
         public int computeHashCode(ItemStack stack) {
@@ -129,15 +137,26 @@ public class EyeOfHarmonyRecipe {
         }
         // End item processing.
 
-        // --- Output and process fluids of the recipe.
-        ArrayList<FluidStack> fluidStackArrayList = validPlasmaGenerator(materialList);
+        // --- Fluid handling ---
+        ArrayList<FluidStack> fluidStackArrayList = new ArrayList<>();
+
+        // If DeepDark then it should output all plasmas involved in making exotic catalyst.
+        if (rocketTier == 9) {
+            for (Materials material : VALID_PLASMAS) {
+                fluidStackArrayList.add(material.getPlasma(1));
+            }
+        } else {
+            // --- Output and process fluids of the recipe.
+            fluidStackArrayList.addAll(validPlasmaGenerator(materialList));
+        }
 
         for (FluidStack fluidStack : fluidStackArrayList) {
-            fluidStack.amount = (int) ((this.spacetimeCasingTierRequired + 1) * 1_000_000L);
+            fluidStack.amount = (int) ((this.spacetimeCasingTierRequired + 1) * 8_000_000L);
         }
 
         // Add a bonus fluid of compressed star matter.
-        fluidStackArrayList.add(Materials.RawStarMatter.getFluid((this.spacetimeCasingTierRequired + 1) * 100_000));
+        fluidStackArrayList
+                .add(MaterialsUEVplus.RawStarMatter.getFluid((this.spacetimeCasingTierRequired + 1) * 100_000));
 
         // Tier 0 & 1 - 576 White
         // Tier 2 - 2304 White
@@ -157,7 +176,7 @@ public class EyeOfHarmonyRecipe {
         fluidStackArrayList.add(SPECIAL_FLUIDS[spacetimeTier + 1]);
 
         outputFluids = fluidStackArrayList;
-        // End fluid processing.
+        // --- End fluid handling ---.
 
         this.hydrogenRequirement = hydrogenRequirement;
         this.heliumRequirement = heliumRequirement;
@@ -183,58 +202,58 @@ public class EyeOfHarmonyRecipe {
             case "EA":
                 return GT_OreDictUnificator.get(OrePrefixes.dust, Materials.Endstone, 1);
             case "Mo":
-                return getModItem("dreamcraft", "item.MoonStoneDust", 1);
+                return getModItem(NewHorizonsCoreMod.ID, "item.MoonStoneDust", 1);
             case "De":
-                return getModItem("dreamcraft", "item.DeimosStoneDust", 1);
+                return getModItem(NewHorizonsCoreMod.ID, "item.DeimosStoneDust", 1);
             case "Ma":
-                return getModItem("dreamcraft", "item.MarsStoneDust", 1);
+                return getModItem(NewHorizonsCoreMod.ID, "item.MarsStoneDust", 1);
             case "Ph":
-                return getModItem("dreamcraft", "item.PhobosStoneDust", 1);
+                return getModItem(NewHorizonsCoreMod.ID, "item.PhobosStoneDust", 1);
             case "As":
             case "KB":
-                return getModItem("dreamcraft", "item.AsteroidsStoneDust", 1);
+                return getModItem(NewHorizonsCoreMod.ID, "item.AsteroidsStoneDust", 1);
             case "Ca":
-                return getModItem("dreamcraft", "item.CallistoStoneDust", 1);
+                return getModItem(NewHorizonsCoreMod.ID, "item.CallistoStoneDust", 1);
             case "Ce":
-                return getModItem("dreamcraft", "item.CeresStoneDust", 1);
+                return getModItem(NewHorizonsCoreMod.ID, "item.CeresStoneDust", 1);
             case "Eu":
-                return getModItem("dreamcraft", "item.EuropaStoneDust", 1);
+                return getModItem(NewHorizonsCoreMod.ID, "item.EuropaStoneDust", 1);
             case "Ga":
-                return getModItem("dreamcraft", "item.GanymedeStoneDust", 1);
+                return getModItem(NewHorizonsCoreMod.ID, "item.GanymedeStoneDust", 1);
             case "Io":
-                return getModItem("dreamcraft", "item.IoStoneDust", 1);
+                return getModItem(NewHorizonsCoreMod.ID, "item.IoStoneDust", 1);
             case "Me":
-                return getModItem("dreamcraft", "item.MercuryStoneDust", 1);
+                return getModItem(NewHorizonsCoreMod.ID, "item.MercuryStoneDust", 1);
             case "Ve":
-                return getModItem("dreamcraft", "item.VenusStoneDust", 1);
+                return getModItem(NewHorizonsCoreMod.ID, "item.VenusStoneDust", 1);
             case "En":
-                return getModItem("dreamcraft", "item.EnceladusStoneDust", 1);
+                return getModItem(NewHorizonsCoreMod.ID, "item.EnceladusStoneDust", 1);
             case "Mi":
-                return getModItem("dreamcraft", "item.MirandaStoneDust", 1);
+                return getModItem(NewHorizonsCoreMod.ID, "item.MirandaStoneDust", 1);
             case "Ob":
-                return getModItem("dreamcraft", "item.OberonStoneDust", 1);
+                return getModItem(NewHorizonsCoreMod.ID, "item.OberonStoneDust", 1);
             case "Ti":
-                return getModItem("dreamcraft", "item.TitanStoneDust", 1);
+                return getModItem(NewHorizonsCoreMod.ID, "item.TitanStoneDust", 1);
             case "Pr":
-                return getModItem("dreamcraft", "item.ProteusStoneDust", 1);
+                return getModItem(NewHorizonsCoreMod.ID, "item.ProteusStoneDust", 1);
             case "Tr":
-                return getModItem("dreamcraft", "item.TritonStoneDust", 1);
+                return getModItem(NewHorizonsCoreMod.ID, "item.TritonStoneDust", 1);
             case "Ha":
-                return getModItem("dreamcraft", "item.HaumeaStoneDust", 1);
+                return getModItem(NewHorizonsCoreMod.ID, "item.HaumeaStoneDust", 1);
             case "MM":
-                return getModItem("dreamcraft", "item.MakeMakeStoneDust", 1);
+                return getModItem(NewHorizonsCoreMod.ID, "item.MakeMakeStoneDust", 1);
             case "Pl":
-                return getModItem("dreamcraft", "item.PlutoStoneDust", 1);
+                return getModItem(NewHorizonsCoreMod.ID, "item.PlutoStoneDust", 1);
             case "BE":
-                return getModItem("dreamcraft", "item.BarnardaEStoneDust", 1);
+                return getModItem(NewHorizonsCoreMod.ID, "item.BarnardaEStoneDust", 1);
             case "BF":
-                return getModItem("dreamcraft", "item.BarnardaFStoneDust", 1);
+                return getModItem(NewHorizonsCoreMod.ID, "item.BarnardaFStoneDust", 1);
             case "CB":
-                return getModItem("dreamcraft", "item.CentauriAStoneDust", 1);
+                return getModItem(NewHorizonsCoreMod.ID, "item.CentauriAStoneDust", 1);
             case "TE":
-                return getModItem("dreamcraft", "item.TCetiEStoneDust", 1);
+                return getModItem(NewHorizonsCoreMod.ID, "item.TCetiEStoneDust", 1);
             case "VB":
-                return getModItem("dreamcraft", "item.VegaBStoneDust", 1);
+                return getModItem(NewHorizonsCoreMod.ID, "item.VegaBStoneDust", 1);
             default:
                 return GT_OreDictUnificator.get(OrePrefixes.dust, Materials.Stone, 1);
         }
@@ -321,6 +340,8 @@ public class EyeOfHarmonyRecipe {
             QUATERNARY_MULTIPLIER };
 
     public static class HashMapHelper extends HashMap<Materials, Double> {
+
+        private static final long serialVersionUID = 2297018142561480614L;
 
         void add(Materials material, double value) {
 
@@ -446,7 +467,9 @@ public class EyeOfHarmonyRecipe {
             Materials.Oxygen,
             Materials.Tin).collect(Collectors.toList());
 
-    private static final HashMap<String, Long> plasmaEnergyMap = new HashMap<String, Long>() {
+    private static final HashMap<String, Long> plasmaEnergyMap = new HashMap<>() {
+
+        private static final long serialVersionUID = 7933945171103801933L;
 
         {
             VALID_PLASMAS.forEach(

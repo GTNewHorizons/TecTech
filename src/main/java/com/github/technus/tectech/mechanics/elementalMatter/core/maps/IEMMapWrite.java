@@ -1,7 +1,9 @@
 package com.github.technus.tectech.mechanics.elementalMatter.core.maps;
 
 import static com.github.technus.tectech.mechanics.elementalMatter.core.transformations.EMTransformationRegistry.EM_COUNT_EPSILON;
-import static com.github.technus.tectech.util.DoubleCount.*;
+import static com.github.technus.tectech.util.DoubleCount.add;
+import static com.github.technus.tectech.util.DoubleCount.sub;
+import static com.github.technus.tectech.util.DoubleCount.ulpSigned;
 
 import java.util.Map;
 
@@ -28,6 +30,7 @@ public interface IEMMapWrite<T extends IEMStack> extends IEMMapWriteExact<T> {
         return removeAmount(def, amountToConsume, amountRequired);
     }
 
+    @SuppressWarnings("unchecked")
     default boolean removeAmount(IEMDefinition def, double amountToConsume, double amountRequired) {
         T current = get(def);
         if (current != null) {
@@ -83,6 +86,7 @@ public interface IEMMapWrite<T extends IEMStack> extends IEMMapWriteExact<T> {
      * @param stack thing to put
      * @return new mapping or null if merging actually removed stuff
      */
+    @SuppressWarnings("unchecked")
     default T putUnify(T stack) {
         T target = get(stack.getDefinition());
         if (target == null) {
@@ -100,7 +104,7 @@ public interface IEMMapWrite<T extends IEMStack> extends IEMMapWriteExact<T> {
         }
     }
 
-    default void putUnifyAll(T... defs) {
+    default void putUnifyAll(@SuppressWarnings("unchecked") T... defs) {
         for (T def : defs) {
             putUnify(def);
         }

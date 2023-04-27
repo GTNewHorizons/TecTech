@@ -1,7 +1,14 @@
 package com.github.technus.tectech.thing.metaTileEntity.single;
 
-import static com.github.technus.tectech.mechanics.tesla.ITeslaConnectable.TeslaUtil.*;
-import static com.github.technus.tectech.thing.metaTileEntity.Textures.*;
+import static com.github.technus.tectech.mechanics.tesla.ITeslaConnectable.TeslaUtil.generateTeslaNodeMap;
+import static com.github.technus.tectech.mechanics.tesla.ITeslaConnectable.TeslaUtil.powerTeslaNodeMap;
+import static com.github.technus.tectech.mechanics.tesla.ITeslaConnectable.TeslaUtil.teslaSimpleNodeSetAdd;
+import static com.github.technus.tectech.mechanics.tesla.ITeslaConnectable.TeslaUtil.teslaSimpleNodeSetRemove;
+import static com.github.technus.tectech.thing.metaTileEntity.Textures.MACHINE_CASINGS_TT;
+import static com.github.technus.tectech.thing.metaTileEntity.Textures.OVERLAYS_ENERGY_OUT_MULTI_TT;
+import static com.github.technus.tectech.thing.metaTileEntity.Textures.OVERLAYS_ENERGY_OUT_POWER_TT;
+import static com.github.technus.tectech.thing.metaTileEntity.Textures.OVERLAYS_ENERGY_OUT_TT;
+import static com.github.technus.tectech.thing.metaTileEntity.Textures.TESLA_TRANSCEIVER_TOP_BA;
 import static com.github.technus.tectech.util.CommonValues.V;
 import static java.lang.Math.round;
 import static net.minecraft.util.StatCollector.translateToLocal;
@@ -73,7 +80,7 @@ public class GT_MetaTileEntity_TeslaCoil extends GT_MetaTileEntity_BasicBatteryB
         TT_Utility.setTier(aTier, this);
     }
 
-    public GT_MetaTileEntity_TeslaCoil(String aName, int aTier, String aDescription, ITexture[][][] aTextures,
+    public GT_MetaTileEntity_TeslaCoil(String aName, int aTier, String[] aDescription, ITexture[][][] aTextures,
             int aSlotCount) {
         super(aName, aTier, aDescription, aTextures, aSlotCount);
     }
@@ -209,7 +216,7 @@ public class GT_MetaTileEntity_TeslaCoil extends GT_MetaTileEntity_BasicBatteryB
 
     @Override
     public MetaTileEntity newMetaEntity(IGregTechTileEntity aTileEntity) {
-        return new GT_MetaTileEntity_TeslaCoil(mName, mTier, mDescription, mTextures, mInventory.length);
+        return new GT_MetaTileEntity_TeslaCoil(mName, mTier, mDescriptionArray, mTextures, mInventory.length);
     }
 
     @Override

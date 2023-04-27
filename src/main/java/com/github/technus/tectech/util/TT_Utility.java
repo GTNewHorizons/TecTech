@@ -6,7 +6,13 @@ import java.io.FileOutputStream;
 import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 import java.nio.charset.StandardCharsets;
-import java.util.*;
+import java.util.Formatter;
+import java.util.HashMap;
+import java.util.Locale;
+import java.util.Map;
+import java.util.SortedSet;
+import java.util.TreeSet;
+import java.util.UUID;
 import java.util.function.Function;
 
 import net.minecraft.entity.player.EntityPlayer;
@@ -375,6 +381,7 @@ public final class TT_Utility {
         return objects;
     }
 
+    @SafeVarargs
     public static <T> NBTTagCompound packNBT(Function<T, NBTTagCompound> converter, T... info) {
         NBTTagCompound nbt = new NBTTagCompound();
         nbt.setInteger("i", info.length);

@@ -1,13 +1,54 @@
 package com.github.technus.tectech.thing.metaTileEntity;
 
 import static gregtech.api.enums.Dyes.MACHINE_METAL;
-import static gregtech.api.enums.Textures.BlockIcons.*;
+import static gregtech.api.enums.Textures.BlockIcons.CustomIcon;
+import static gregtech.api.enums.Textures.BlockIcons.MACHINE_8V_BOTTOM;
+import static gregtech.api.enums.Textures.BlockIcons.MACHINE_8V_SIDE;
+import static gregtech.api.enums.Textures.BlockIcons.MACHINE_8V_TOP;
+import static gregtech.api.enums.Textures.BlockIcons.MACHINE_CASINGS;
+import static gregtech.api.enums.Textures.BlockIcons.MACHINE_EV_BOTTOM;
+import static gregtech.api.enums.Textures.BlockIcons.MACHINE_EV_SIDE;
+import static gregtech.api.enums.Textures.BlockIcons.MACHINE_EV_TOP;
+import static gregtech.api.enums.Textures.BlockIcons.MACHINE_HV_BOTTOM;
+import static gregtech.api.enums.Textures.BlockIcons.MACHINE_HV_SIDE;
+import static gregtech.api.enums.Textures.BlockIcons.MACHINE_HV_TOP;
+import static gregtech.api.enums.Textures.BlockIcons.MACHINE_IV_BOTTOM;
+import static gregtech.api.enums.Textures.BlockIcons.MACHINE_IV_SIDE;
+import static gregtech.api.enums.Textures.BlockIcons.MACHINE_IV_TOP;
+import static gregtech.api.enums.Textures.BlockIcons.MACHINE_LV_BOTTOM;
+import static gregtech.api.enums.Textures.BlockIcons.MACHINE_LV_SIDE;
+import static gregtech.api.enums.Textures.BlockIcons.MACHINE_LV_TOP;
+import static gregtech.api.enums.Textures.BlockIcons.MACHINE_LuV_BOTTOM;
+import static gregtech.api.enums.Textures.BlockIcons.MACHINE_LuV_SIDE;
+import static gregtech.api.enums.Textures.BlockIcons.MACHINE_LuV_TOP;
+import static gregtech.api.enums.Textures.BlockIcons.MACHINE_MAX_BOTTOM;
+import static gregtech.api.enums.Textures.BlockIcons.MACHINE_MAX_SIDE;
+import static gregtech.api.enums.Textures.BlockIcons.MACHINE_MAX_TOP;
+import static gregtech.api.enums.Textures.BlockIcons.MACHINE_MV_BOTTOM;
+import static gregtech.api.enums.Textures.BlockIcons.MACHINE_MV_SIDE;
+import static gregtech.api.enums.Textures.BlockIcons.MACHINE_MV_TOP;
+import static gregtech.api.enums.Textures.BlockIcons.MACHINE_UV_BOTTOM;
+import static gregtech.api.enums.Textures.BlockIcons.MACHINE_UV_SIDE;
+import static gregtech.api.enums.Textures.BlockIcons.MACHINE_UV_TOP;
+import static gregtech.api.enums.Textures.BlockIcons.MACHINE_ZPM_BOTTOM;
+import static gregtech.api.enums.Textures.BlockIcons.MACHINE_ZPM_SIDE;
+import static gregtech.api.enums.Textures.BlockIcons.MACHINE_ZPM_TOP;
+import static gregtech.api.enums.Textures.BlockIcons.OVERLAYS_ENERGY_IN;
+import static gregtech.api.enums.Textures.BlockIcons.OVERLAYS_ENERGY_IN_MULTI;
+import static gregtech.api.enums.Textures.BlockIcons.OVERLAYS_ENERGY_OUT;
+import static gregtech.api.enums.Textures.BlockIcons.OVERLAYS_ENERGY_OUT_MULTI;
+import static gregtech.api.enums.Textures.BlockIcons.OVERLAY_ENERGY_IN;
+import static gregtech.api.enums.Textures.BlockIcons.OVERLAY_ENERGY_IN_MULTI;
+import static gregtech.api.enums.Textures.BlockIcons.OVERLAY_ENERGY_ON_WIRELESS;
+import static gregtech.api.enums.Textures.BlockIcons.OVERLAY_ENERGY_OUT;
+import static gregtech.api.enums.Textures.BlockIcons.OVERLAY_ENERGY_OUT_MULTI;
 
 import gregtech.api.enums.Dyes;
 import gregtech.api.interfaces.IIconContainer;
 import gregtech.api.interfaces.ITexture;
 import gregtech.api.objects.GT_RenderedTexture;
 import gregtech.api.objects.GT_SidedTexture;
+import gregtech.api.render.TextureFactory;
 
 public class Textures {
 
@@ -15,6 +56,10 @@ public class Textures {
     private static final IIconContainer OVERLAY_ENERGY_OUT_POWER = new CustomIcon("iconsets/OVERLAY_ENERGY_OUT_POWER");
     private static final IIconContainer OVERLAY_ENERGY_IN_LASER = new CustomIcon("iconsets/OVERLAY_ENERGY_IN_LASER");
     private static final IIconContainer OVERLAY_ENERGY_OUT_LASER = new CustomIcon("iconsets/OVERLAY_ENERGY_OUT_LASER");
+    private static final IIconContainer OVERLAY_ENERGY_ON_WIRELESS_4A = new CustomIcon(
+            "iconsets/OVERLAY_ENERGY_ON_WIRELESS_4A");
+    private static final IIconContainer OVERLAY_ENERGY_ON_WIRELESS_16A = new CustomIcon(
+            "iconsets/OVERLAY_ENERGY_ON_WIRELESS_16A");
     private static final IIconContainer MACHINE_UEV_SIDE = new CustomIcon("iconsets/MACHINE_UEV_SIDE");
     private static final IIconContainer MACHINE_UIV_SIDE = new CustomIcon("iconsets/MACHINE_UIV_SIDE");
     private static final IIconContainer MACHINE_UMV_SIDE = new CustomIcon("iconsets/MACHINE_UMV_SIDE");
@@ -173,6 +218,56 @@ public class Textures {
                     new GT_RenderedTexture(OVERLAY_ENERGY_OUT_LASER, new short[] { 100, 100, 245, 0 }),
                     new GT_RenderedTexture(OVERLAY_ENERGY_OUT_LASER, new short[] { 80, 80, 245, 0 }),
                     new GT_RenderedTexture(OVERLAY_ENERGY_OUT_LASER, new short[] { 60, 60, 245, 0 }), };
+    public static final ITexture[] OVERLAYS_ENERGY_IN_WIRELESS_MULTI_4A = {
+            TextureFactory.of(OVERLAY_ENERGY_ON_WIRELESS_4A, new short[] { 255, 255, 255, 0 }),
+            TextureFactory.of(OVERLAY_ENERGY_ON_WIRELESS_4A, new short[] { 255, 255, 255, 0 }),
+            TextureFactory.of(OVERLAY_ENERGY_ON_WIRELESS_4A, new short[] { 255, 255, 255, 0 }),
+            TextureFactory.of(OVERLAY_ENERGY_ON_WIRELESS_4A, new short[] { 255, 255, 255, 0 }),
+            TextureFactory.of(OVERLAY_ENERGY_ON_WIRELESS_4A, new short[] { 255, 255, 255, 0 }),
+            TextureFactory.of(OVERLAY_ENERGY_ON_WIRELESS_4A, new short[] { 255, 255, 255, 0 }),
+            TextureFactory.of(OVERLAY_ENERGY_ON_WIRELESS_4A, new short[] { 255, 255, 255, 0 }),
+            TextureFactory.of(OVERLAY_ENERGY_ON_WIRELESS_4A, new short[] { 255, 255, 255, 0 }),
+            TextureFactory.of(OVERLAY_ENERGY_ON_WIRELESS_4A, new short[] { 255, 255, 255, 0 }),
+            TextureFactory.of(OVERLAY_ENERGY_ON_WIRELESS_4A, new short[] { 255, 255, 255, 0 }),
+            TextureFactory.of(OVERLAY_ENERGY_ON_WIRELESS_4A, new short[] { 255, 255, 255, 0 }),
+            TextureFactory.of(OVERLAY_ENERGY_ON_WIRELESS_4A, new short[] { 255, 255, 255, 0 }),
+            TextureFactory.of(OVERLAY_ENERGY_ON_WIRELESS_4A, new short[] { 255, 255, 255, 0 }),
+            TextureFactory.of(OVERLAY_ENERGY_ON_WIRELESS_4A, new short[] { 255, 255, 255, 0 }),
+            TextureFactory.of(OVERLAY_ENERGY_ON_WIRELESS_4A, new short[] { 255, 255, 255, 0 }) };
+
+    public static final ITexture[] OVERLAYS_ENERGY_IN_WIRELESS_MULTI_16A = {
+            TextureFactory.of(OVERLAY_ENERGY_ON_WIRELESS_16A, new short[] { 255, 255, 255, 0 }),
+            TextureFactory.of(OVERLAY_ENERGY_ON_WIRELESS_16A, new short[] { 255, 255, 255, 0 }),
+            TextureFactory.of(OVERLAY_ENERGY_ON_WIRELESS_16A, new short[] { 255, 255, 255, 0 }),
+            TextureFactory.of(OVERLAY_ENERGY_ON_WIRELESS_16A, new short[] { 255, 255, 255, 0 }),
+            TextureFactory.of(OVERLAY_ENERGY_ON_WIRELESS_16A, new short[] { 255, 255, 255, 0 }),
+            TextureFactory.of(OVERLAY_ENERGY_ON_WIRELESS_16A, new short[] { 255, 255, 255, 0 }),
+            TextureFactory.of(OVERLAY_ENERGY_ON_WIRELESS_16A, new short[] { 255, 255, 255, 0 }),
+            TextureFactory.of(OVERLAY_ENERGY_ON_WIRELESS_16A, new short[] { 255, 255, 255, 0 }),
+            TextureFactory.of(OVERLAY_ENERGY_ON_WIRELESS_16A, new short[] { 255, 255, 255, 0 }),
+            TextureFactory.of(OVERLAY_ENERGY_ON_WIRELESS_16A, new short[] { 255, 255, 255, 0 }),
+            TextureFactory.of(OVERLAY_ENERGY_ON_WIRELESS_16A, new short[] { 255, 255, 255, 0 }),
+            TextureFactory.of(OVERLAY_ENERGY_ON_WIRELESS_16A, new short[] { 255, 255, 255, 0 }),
+            TextureFactory.of(OVERLAY_ENERGY_ON_WIRELESS_16A, new short[] { 255, 255, 255, 0 }),
+            TextureFactory.of(OVERLAY_ENERGY_ON_WIRELESS_16A, new short[] { 255, 255, 255, 0 }),
+            TextureFactory.of(OVERLAY_ENERGY_ON_WIRELESS_16A, new short[] { 255, 255, 255, 0 }) };
+
+    public static final ITexture[] OVERLAYS_ENERGY_IN_WIRELESS_MULTI_64A = {
+            TextureFactory.of(OVERLAY_ENERGY_ON_WIRELESS, new short[] { 25, 43, 255, 0 }),
+            TextureFactory.of(OVERLAY_ENERGY_ON_WIRELESS, new short[] { 25, 43, 255, 0 }),
+            TextureFactory.of(OVERLAY_ENERGY_ON_WIRELESS, new short[] { 25, 43, 255, 0 }),
+            TextureFactory.of(OVERLAY_ENERGY_ON_WIRELESS, new short[] { 25, 43, 255, 0 }),
+            TextureFactory.of(OVERLAY_ENERGY_ON_WIRELESS, new short[] { 25, 43, 255, 0 }),
+            TextureFactory.of(OVERLAY_ENERGY_ON_WIRELESS, new short[] { 25, 43, 255, 0 }),
+            TextureFactory.of(OVERLAY_ENERGY_ON_WIRELESS, new short[] { 25, 43, 255, 0 }),
+            TextureFactory.of(OVERLAY_ENERGY_ON_WIRELESS, new short[] { 25, 43, 255, 0 }),
+            TextureFactory.of(OVERLAY_ENERGY_ON_WIRELESS, new short[] { 25, 43, 255, 0 }),
+            TextureFactory.of(OVERLAY_ENERGY_ON_WIRELESS, new short[] { 25, 43, 255, 0 }),
+            TextureFactory.of(OVERLAY_ENERGY_ON_WIRELESS, new short[] { 25, 43, 255, 0 }),
+            TextureFactory.of(OVERLAY_ENERGY_ON_WIRELESS, new short[] { 25, 43, 255, 0 }),
+            TextureFactory.of(OVERLAY_ENERGY_ON_WIRELESS, new short[] { 25, 43, 255, 0 }),
+            TextureFactory.of(OVERLAY_ENERGY_ON_WIRELESS, new short[] { 25, 43, 255, 0 }),
+            TextureFactory.of(OVERLAY_ENERGY_ON_WIRELESS, new short[] { 25, 43, 255, 0 }) };
 
     public static ITexture[][] MACHINE_CASINGS_TT = new ITexture[15][17];
 

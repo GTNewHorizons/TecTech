@@ -1,6 +1,7 @@
 package com.github.technus.tectech;
 
 import static com.github.technus.tectech.loader.TecTechConfig.DEBUG_MODE;
+import static gregtech.api.enums.Mods.COFHCore;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
@@ -32,10 +33,14 @@ import com.github.technus.tectech.recipe.EyeOfHarmonyRecipeStorage;
 import com.github.technus.tectech.util.XSTR;
 
 import cpw.mods.fml.common.FMLCommonHandler;
-import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.SidedProxy;
-import cpw.mods.fml.common.event.*;
+import cpw.mods.fml.common.event.FMLInitializationEvent;
+import cpw.mods.fml.common.event.FMLLoadCompleteEvent;
+import cpw.mods.fml.common.event.FMLPostInitializationEvent;
+import cpw.mods.fml.common.event.FMLPreInitializationEvent;
+import cpw.mods.fml.common.event.FMLServerAboutToStartEvent;
+import cpw.mods.fml.common.event.FMLServerStartingEvent;
 import eu.usrv.yamcore.auxiliary.IngameErrorLog;
 import eu.usrv.yamcore.auxiliary.LogHelper;
 import gregtech.GT_Mod;
@@ -132,7 +137,7 @@ public class TecTech {
 
     @Mod.EventHandler
     public void Load(FMLInitializationEvent event) {
-        hasCOFH = Loader.isModLoaded(Reference.COFHCORE);
+        hasCOFH = COFHCore.isModLoaded();
 
         if (configTecTech.DISABLE_MATERIAL_LOADING_FFS) {
             try {
@@ -190,7 +195,7 @@ public class TecTech {
                     }
 
                     @Override
-                    public boolean addAll(Collection c) {
+                    public boolean addAll(Collection<?> c) {
                         return false;
                     }
 
@@ -198,20 +203,21 @@ public class TecTech {
                     public void clear() {}
 
                     @Override
-                    public boolean retainAll(Collection c) {
+                    public boolean retainAll(Collection<?> c) {
                         return false;
                     }
 
                     @Override
-                    public boolean removeAll(Collection c) {
+                    public boolean removeAll(Collection<?> c) {
                         return false;
                     }
 
                     @Override
-                    public boolean containsAll(Collection c) {
+                    public boolean containsAll(Collection<?> c) {
                         return false;
                     }
 
+                    @SuppressWarnings("unchecked")
                     @Override
                     public Object[] toArray(Object[] a) {
                         return new Object[0];

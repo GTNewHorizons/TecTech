@@ -5,7 +5,10 @@ import static com.github.technus.tectech.mechanics.elementalMatter.core.transfor
 import static com.github.technus.tectech.thing.casing.GT_Block_CasingsTT.textureOffset;
 import static com.github.technus.tectech.thing.casing.GT_Block_CasingsTT.texturePage;
 import static com.github.technus.tectech.thing.casing.TT_Container_Casings.sBlockCasingsTT;
-import static com.github.technus.tectech.thing.metaTileEntity.multi.base.LedStatus.*;
+import static com.github.technus.tectech.thing.metaTileEntity.multi.base.LedStatus.STATUS_OK;
+import static com.github.technus.tectech.thing.metaTileEntity.multi.base.LedStatus.STATUS_TOO_HIGH;
+import static com.github.technus.tectech.thing.metaTileEntity.multi.base.LedStatus.STATUS_TOO_LOW;
+import static com.github.technus.tectech.thing.metaTileEntity.multi.base.LedStatus.STATUS_WRONG;
 import static com.github.technus.tectech.util.DoubleCount.add;
 import static com.gtnewhorizon.structurelib.structure.StructureUtility.ofBlock;
 import static com.gtnewhorizon.structurelib.structure.StructureUtility.transpose;
@@ -484,11 +487,13 @@ public class GT_MetaTileEntity_EM_collider extends GT_MetaTileEntity_MultiblockB
                                                                                                           // bigger
                                                                                                           // first
                 colliderHandler = FUSE_HANDLERS.get(
-                        (stack2.getDefinition().getMatterMassType() << 16) | stack.getDefinition().getMatterMassType());
+                        (long) (stack2.getDefinition().getMatterMassType() << 16)
+                                | stack.getDefinition().getMatterMassType());
                 if (handleRecipe(stack2, map, colliderHandler)) return 0;
             } else {
                 colliderHandler = FUSE_HANDLERS.get(
-                        (stack.getDefinition().getMatterMassType() << 16) | stack2.getDefinition().getMatterMassType());
+                        (long) (stack.getDefinition().getMatterMassType() << 16)
+                                | stack2.getDefinition().getMatterMassType());
                 if (handleRecipe(stack2, map, colliderHandler)) return 0;
             }
             for (EMInstanceStack newStack : map.valuesToArray()) {
@@ -498,8 +503,7 @@ public class GT_MetaTileEntity_EM_collider extends GT_MetaTileEntity_MultiblockB
             outputEM = new EMInstanceStackMap[] { map };
 
             partner.stack = stack = null;
-            // System.out.println("check = " + check);
-            // System.out.println("preMass-map.getMass() = " + (preMass - map.getMass()));
+
             return check ? preMass - map.getMass() : Math.min(preMass - map.getMass(), 0);
         }
         return 0;
@@ -517,19 +521,19 @@ public class GT_MetaTileEntity_EM_collider extends GT_MetaTileEntity_MultiblockB
                                                                                                           // bigger
                                                                                                           // first
                 colliderHandler = FUSE_HANDLERS.get(
-                        (stack2.getDefinition().getMatterMassType() << 16) | stack.getDefinition().getMatterMassType());
+                        (long) (stack2.getDefinition().getMatterMassType() << 16)
+                                | stack.getDefinition().getMatterMassType());
                 if (handleRecipe(stack2, map, colliderHandler)) return 0;
             } else {
                 colliderHandler = FUSE_HANDLERS.get(
-                        (stack.getDefinition().getMatterMassType() << 16) | stack2.getDefinition().getMatterMassType());
+                        (long) (stack.getDefinition().getMatterMassType() << 16)
+                                | stack2.getDefinition().getMatterMassType());
                 if (handleRecipe(stack2, map, colliderHandler)) return 0;
             }
-            // System.out.println("outputEM[0].getMass() = " + outputEM[0].getMass());
             outputEM = new EMInstanceStackMap[] { map };
 
             partner.stack = stack = null;
-            // System.out.println("check = " + check);
-            // System.out.println("preMass-map.getMass() = " + (preMass - map.getMass()));
+
             return Math.min(preMass - map.getMass(), 0);
         }
         return 0;

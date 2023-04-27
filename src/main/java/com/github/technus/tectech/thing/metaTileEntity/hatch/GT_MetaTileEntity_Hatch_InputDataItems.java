@@ -1,7 +1,9 @@
 package com.github.technus.tectech.thing.metaTileEntity.hatch;
 
 import static com.github.technus.tectech.recipe.TT_recipeAdder.nullItem;
-import static com.github.technus.tectech.thing.metaTileEntity.hatch.GT_MetaTileEntity_Hatch_DataConnector.*;
+import static com.github.technus.tectech.thing.metaTileEntity.hatch.GT_MetaTileEntity_Hatch_DataConnector.EM_D_ACTIVE;
+import static com.github.technus.tectech.thing.metaTileEntity.hatch.GT_MetaTileEntity_Hatch_DataConnector.EM_D_CONN;
+import static com.github.technus.tectech.thing.metaTileEntity.hatch.GT_MetaTileEntity_Hatch_DataConnector.EM_D_SIDES;
 import static com.github.technus.tectech.util.CommonValues.MOVE_AT;
 import static gregtech.api.enums.Dyes.MACHINE_METAL;
 import static net.minecraft.util.StatCollector.translateToLocal;
@@ -42,7 +44,7 @@ public class GT_MetaTileEntity_Hatch_InputDataItems extends GT_MetaTileEntity_Ha
         TT_Utility.setTier(aTier, this);
     }
 
-    public GT_MetaTileEntity_Hatch_InputDataItems(String aName, int aTier, String aDescription,
+    public GT_MetaTileEntity_Hatch_InputDataItems(String aName, int aTier, String[] aDescription,
             ITexture[][][] aTextures) {
         super(aName, aTier, aDescription, aTextures);
     }
@@ -77,7 +79,7 @@ public class GT_MetaTileEntity_Hatch_InputDataItems extends GT_MetaTileEntity_Ha
 
     @Override
     public MetaTileEntity newMetaEntity(IGregTechTileEntity aTileEntity) {
-        return new GT_MetaTileEntity_Hatch_InputDataItems(this.mName, this.mTier, mDescription, this.mTextures);
+        return new GT_MetaTileEntity_Hatch_InputDataItems(this.mName, this.mTier, mDescriptionArray, this.mTextures);
     }
 
     @Override
@@ -218,15 +220,9 @@ public class GT_MetaTileEntity_Hatch_InputDataItems extends GT_MetaTileEntity_Ha
 
     @Override
     public String[] getDescription() {
-        return new String[] { CommonValues.TEC_MARK_EM, translateToLocal("gt.blockmachines.hatch.datainass.desc.0"), // ItemStack
-                                                                                                                     // Data
-                                                                                                                     // Input
-                                                                                                                     // for
-                                                                                                                     // Multiblocks
-                translateToLocal("gt.blockmachines.hatch.datainass.desc.1"), // High speed fibre optics connector.
-                EnumChatFormatting.AQUA + translateToLocal("gt.blockmachines.hatch.datainass.desc.2") // Must be painted
-                                                                                                      // to work
-        };
+        return new String[] { CommonValues.TEC_MARK_EM, translateToLocal("gt.blockmachines.hatch.datainass.desc.0"),
+                translateToLocal("gt.blockmachines.hatch.datainass.desc.1"),
+                EnumChatFormatting.AQUA + translateToLocal("gt.blockmachines.hatch.datainass.desc.2") };
     }
 
     @Override

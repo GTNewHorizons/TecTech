@@ -30,11 +30,12 @@ import cpw.mods.fml.common.Optional;
 import dan200.computercraft.api.filesystem.IMount;
 import dan200.computercraft.api.filesystem.IWritableMount;
 import dan200.computercraft.api.media.IMedia;
+import gregtech.api.enums.Mods;
 import gregtech.api.interfaces.metatileentity.IMetaTileEntity;
 import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
 
 @Optional.InterfaceList({ @Optional.Interface(iface = "dan200.computercraft.api.media.IMedia", modid = "ComputerCraft"),
-        @Optional.Interface(iface = "li.cil.oc.api.fs.FileSystem", modid = "OpenComputers") })
+        @Optional.Interface(iface = "li.cil.oc.api.fs.FileSystem", modid = Mods.Names.OPEN_COMPUTERS) })
 public class AvrProgrammer extends Item implements IMedia {
 
     public static AvrProgrammer INSTANCE = new AvrProgrammer();
@@ -117,7 +118,7 @@ public class AvrProgrammer extends Item implements IMedia {
     }
 
     @Override
-    public void addInformation(ItemStack aStack, EntityPlayer ep, List aList, boolean boo) {
+    public void addInformation(ItemStack aStack, EntityPlayer ep, List<String> aList, boolean boo) {
         if (aStack.stackTagCompound.hasKey("avr")) {
             NBTTagCompound avr = aStack.stackTagCompound.getCompoundTag("avr");
             aList.add(translateToLocal("item.em.programmer.desc.0") + ": " + avr.getInteger("programCounter")); // Current
@@ -214,7 +215,7 @@ public class AvrProgrammer extends Item implements IMedia {
     }
 
     @Override
-    public void getSubItems(Item item, CreativeTabs tab, List list) {
+    public void getSubItems(Item item, CreativeTabs tab, List<ItemStack> list) {
         ItemStack stack = new ItemStack(item, 1, 0);
         stack.setTagCompound(new NBTTagCompound());
         list.add(stack);
