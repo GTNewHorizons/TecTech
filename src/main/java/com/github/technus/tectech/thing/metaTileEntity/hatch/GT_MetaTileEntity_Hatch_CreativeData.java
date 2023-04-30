@@ -5,6 +5,7 @@ import static net.minecraft.util.StatCollector.translateToLocal;
 
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumChatFormatting;
+import net.minecraftforge.common.util.ForgeDirection;
 
 import com.github.technus.tectech.mechanics.dataTransport.QuantumDataPacket;
 import com.github.technus.tectech.mechanics.pipe.IConnectsToDataPipe;
@@ -16,8 +17,6 @@ import gregtech.api.interfaces.ITexture;
 import gregtech.api.interfaces.metatileentity.IMetaTileEntity;
 import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
 import gregtech.api.metatileentity.MetaTileEntity;
-import gregtech.api.util.GT_Utility;
-import net.minecraftforge.common.util.ForgeDirection;
 
 /**
  * Created by danie_000 on 27.10.2016.
@@ -108,10 +107,9 @@ public class GT_MetaTileEntity_Hatch_CreativeData extends GT_MetaTileEntity_Hatc
             return (IConnectsToDataPipe) meta;
         } else if (meta instanceof GT_MetaTileEntity_Hatch_InputData
                 && ((GT_MetaTileEntity_Hatch_InputData) meta).getColorization() == color
-                && ((GT_MetaTileEntity_Hatch_InputData) meta)
-                        .canConnectData(base.getFrontFacing().getOpposite())) {
-                            return (IConnectsToDataPipe) meta;
-                        }
+                && ((GT_MetaTileEntity_Hatch_InputData) meta).canConnectData(base.getFrontFacing().getOpposite())) {
+                    return (IConnectsToDataPipe) meta;
+                }
         return null;
     }
 

@@ -4,21 +4,21 @@ import static com.github.technus.tectech.mechanics.tesla.ITeslaConnectable.Tesla
 import static ic2.api.info.Info.DMG_ELECTRIC;
 
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraftforge.common.util.ForgeDirection;
 
 import com.github.technus.tectech.mechanics.tesla.TeslaCoverConnection;
 
 import gregtech.api.interfaces.tileentity.ICoverable;
 import gregtech.api.util.GT_CoverBehavior;
 import gregtech.api.util.GT_Utility;
-import net.minecraftforge.common.util.ForgeDirection;
 
 public class GT_Cover_TM_TeslaCoil extends GT_CoverBehavior {
 
     public GT_Cover_TM_TeslaCoil() {}
 
     @Override
-    public int doCoverThings(ForgeDirection side, byte aInputRedstone, int aCoverID, int aCoverVariable, ICoverable aTileEntity,
-            long aTimer) {
+    public int doCoverThings(ForgeDirection side, byte aInputRedstone, int aCoverID, int aCoverVariable,
+            ICoverable aTileEntity, long aTimer) {
         // Only do stuff if we're on top and have power
         if (side == ForgeDirection.UP || aTileEntity.getEUCapacity() > 0) {
             // Makes sure we're on the list

@@ -2,12 +2,13 @@ package com.github.technus.tectech.thing.metaTileEntity.hatch;
 
 import static net.minecraft.util.StatCollector.translateToLocal;
 
+import net.minecraftforge.common.util.ForgeDirection;
+
 import com.github.technus.tectech.util.TT_Utility;
 
 import gregtech.api.interfaces.ITexture;
 import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
 import gregtech.api.metatileentity.MetaTileEntity;
-import net.minecraftforge.common.util.ForgeDirection;
 
 /**
  * Created by danie_000 on 27.10.2016.

@@ -60,8 +60,8 @@ public class GT_MetaTileEntity_TM_proccessingStack extends GT_MetaTileEntity_Mul
      * translateToLocal("gt.blockmachines.multimachine.tm.proccessingStack.desc.0"), EnumChatFormatting.AQUA.toString()
      * + EnumChatFormatting.BOLD + translateToLocal("gt.blockmachines.multimachine.tm.proccessingStack.desc.1"),
      * EnumChatFormatting.BLUE + translateToLocal("gt.blockmachines.multimachine.tm.proccessingStack.desc.2"), }; }
-     * @Override public ITexture[] getTexture(IGregTechTileEntity aBaseMetaTileEntity, ForgeDirection side, byte aFacing, byte
-     * colorIndex, boolean aActive, boolean aRedstone) { if (side == facing) { return new
+     * @Override public ITexture[] getTexture(IGregTechTileEntity aBaseMetaTileEntity, ForgeDirection side, byte
+     * aFacing, byte colorIndex, boolean aActive, boolean aRedstone) { if (side == facing) { return new
      * ITexture[]{Textures.BlockIcons.casingTexturePages[0][49], new TT_RenderedExtendedFacingTexture(aActive ?
      * Textures.BlockIcons.OVERLAY_FRONT_ELECTRIC_BLAST_FURNACE_ACTIVE :
      * Textures.BlockIcons.OVERLAY_FRONT_ELECTRIC_BLAST_FURNACE)}; } else if (side ==

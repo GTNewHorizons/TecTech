@@ -6,6 +6,7 @@ import static com.github.technus.tectech.util.CommonValues.V;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.EnumChatFormatting;
+import net.minecraftforge.common.util.ForgeDirection;
 
 import com.github.technus.tectech.util.TT_Utility;
 
@@ -17,7 +18,6 @@ import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
 import gregtech.api.metatileentity.MetaTileEntity;
 import gregtech.api.metatileentity.implementations.GT_MetaTileEntity_BasicMachine;
 import gregtech.api.objects.GT_RenderedTexture;
-import net.minecraftforge.common.util.ForgeDirection;
 
 /**
  * Created by Tec on 23.03.2017.
@@ -60,8 +60,8 @@ public class GT_MetaTileEntity_DataReader extends GT_MetaTileEntity_BasicMachine
     }
 
     @Override
-    public ITexture[] getTexture(IGregTechTileEntity aBaseMetaTileEntity, ForgeDirection side, ForgeDirection facing, int colorIndex,
-            boolean aActive, boolean aRedstone) {
+    public ITexture[] getTexture(IGregTechTileEntity aBaseMetaTileEntity, ForgeDirection side, ForgeDirection facing,
+            int colorIndex, boolean aActive, boolean aRedstone) {
         if (aBaseMetaTileEntity.getWorld() == null) {
             if (side == facing) {
                 return new ITexture[] { MACHINE_CASINGS_TT[mTier][colorIndex + 1],

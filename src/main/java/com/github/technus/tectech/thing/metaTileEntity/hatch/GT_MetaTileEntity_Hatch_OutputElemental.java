@@ -2,6 +2,8 @@ package com.github.technus.tectech.thing.metaTileEntity.hatch;
 
 import static net.minecraft.util.StatCollector.translateToLocal;
 
+import net.minecraftforge.common.util.ForgeDirection;
+
 import com.github.technus.tectech.thing.metaTileEntity.pipe.GT_MetaTileEntity_Pipe_EM;
 import com.github.technus.tectech.util.TT_Utility;
 
@@ -9,8 +11,6 @@ import gregtech.api.interfaces.ITexture;
 import gregtech.api.interfaces.metatileentity.IMetaTileEntity;
 import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
 import gregtech.api.metatileentity.MetaTileEntity;
-import gregtech.api.util.GT_Utility;
-import net.minecraftforge.common.util.ForgeDirection;
 
 /**
  * Created by danie_000 on 27.10.2016.

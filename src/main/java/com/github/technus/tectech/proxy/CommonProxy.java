@@ -6,10 +6,10 @@ import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
+import net.minecraftforge.common.util.ForgeDirection;
 
 import cpw.mods.fml.common.network.IGuiHandler;
 import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
-import net.minecraftforge.common.util.ForgeDirection;
 
 public class CommonProxy implements IGuiHandler {
 
