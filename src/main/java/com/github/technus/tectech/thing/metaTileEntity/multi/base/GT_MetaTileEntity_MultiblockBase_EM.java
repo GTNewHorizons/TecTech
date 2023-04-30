@@ -518,8 +518,8 @@ public abstract class GT_MetaTileEntity_MultiblockBase_EM
      * @return
      */
     @Override
-    public ITexture[] getTexture(IGregTechTileEntity aBaseMetaTileEntity, ForgeDirection side, ForgeDirection facing, int colorIndex,
-            boolean aActive, boolean aRedstone) {
+    public ITexture[] getTexture(IGregTechTileEntity aBaseMetaTileEntity, ForgeDirection side, ForgeDirection facing,
+            int colorIndex, boolean aActive, boolean aRedstone) {
         if (side == facing) {
             return new ITexture[] { Textures.BlockIcons.casingTexturePages[texturePage][4],
                     new TT_RenderedExtendedFacingTexture(aActive ? ScreenON : ScreenOFF) };

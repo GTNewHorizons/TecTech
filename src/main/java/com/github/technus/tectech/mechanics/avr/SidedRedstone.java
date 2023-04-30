@@ -1,12 +1,14 @@
 package com.github.technus.tectech.mechanics.avr;
 
+import net.minecraftforge.common.util.ForgeDirection;
+
 import com.github.technus.avrClone.AvrCore;
 import com.github.technus.avrClone.registerPackages.IInterrupt;
 import com.github.technus.avrClone.registerPackages.IRegister;
 import com.github.technus.avrClone.registerPackages.IRegisterBit;
 import com.github.technus.avrClone.registerPackages.RegisterPackageSync;
+
 import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
-import net.minecraftforge.common.util.ForgeDirection;
 
 public class SidedRedstone extends RegisterPackageSync<IGregTechTileEntity, SidedRedstone> {
 

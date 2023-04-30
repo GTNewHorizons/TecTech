@@ -30,7 +30,6 @@ import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
 import gregtech.api.metatileentity.BaseMetaPipeEntity;
 import gregtech.api.metatileentity.MetaPipeEntity;
 import gregtech.api.objects.GT_RenderedTexture;
-import gregtech.api.util.GT_Utility;
 import gregtech.common.GT_Client;
 
 /**
@@ -76,12 +75,14 @@ public class GT_MetaTileEntity_Pipe_Data extends MetaPipeEntity implements IConn
     }
 
     @Override
-    public boolean allowPutStack(IGregTechTileEntity iGregTechTileEntity, int i, ForgeDirection side, ItemStack itemStack) {
+    public boolean allowPutStack(IGregTechTileEntity iGregTechTileEntity, int i, ForgeDirection side,
+            ItemStack itemStack) {
         return false;
     }
 
     @Override
-    public boolean allowPullStack(IGregTechTileEntity iGregTechTileEntity, int i, ForgeDirection side, ItemStack itemStack) {
+    public boolean allowPullStack(IGregTechTileEntity iGregTechTileEntity, int i, ForgeDirection side,
+            ItemStack itemStack) {
         return false;
     }
 
@@ -204,8 +205,7 @@ public class GT_MetaTileEntity_Pipe_Data extends MetaPipeEntity implements IConn
             } else if (next instanceof IGregTechTileEntity) {
                 IMetaTileEntity meta = ((IGregTechTileEntity) next).getMetaTileEntity();
                 if (meta instanceof IConnectsToDataPipe connecsToPipe && meta != source) {
-                    if (meta instanceof GT_MetaTileEntity_Pipe_Data pipeData
-                            && pipeData.connectionCount == 2) {
+                    if (meta instanceof GT_MetaTileEntity_Pipe_Data pipeData && pipeData.connectionCount == 2) {
                         pipeData.markUsed();
                         return connecsToPipe;
                     }

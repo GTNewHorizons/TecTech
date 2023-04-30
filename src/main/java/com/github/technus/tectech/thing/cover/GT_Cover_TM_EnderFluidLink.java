@@ -38,7 +38,8 @@ public class GT_Cover_TM_EnderFluidLink extends GT_CoverBehavior {
 
     public GT_Cover_TM_EnderFluidLink() {}
 
-    private void transferFluid(IFluidHandler source, ForgeDirection side, IFluidHandler target, ForgeDirection tSide, int amount) {
+    private void transferFluid(IFluidHandler source, ForgeDirection side, IFluidHandler target, ForgeDirection tSide,
+            int amount) {
         FluidStack fluidStack = source.drain(side, amount, false);
 
         if (fluidStack != null) {
@@ -56,8 +57,8 @@ public class GT_Cover_TM_EnderFluidLink extends GT_CoverBehavior {
     }
 
     @Override
-    public int doCoverThings(ForgeDirection side, byte aInputRedstone, int aCoverID, int aCoverVariable, ICoverable aTileEntity,
-            long aTimer) {
+    public int doCoverThings(ForgeDirection side, byte aInputRedstone, int aCoverID, int aCoverVariable,
+            ICoverable aTileEntity, long aTimer) {
         if ((aTileEntity instanceof IFluidHandler)) {
             IFluidHandler fluidHandlerSelf = (IFluidHandler) aTileEntity;
             IFluidHandler fluidHandlerEnder = getEnderFluidContainer(getEnderLinkTag((IFluidHandler) aTileEntity));
@@ -77,12 +78,14 @@ public class GT_Cover_TM_EnderFluidLink extends GT_CoverBehavior {
     }
 
     @Override
-    public boolean letsFluidIn(ForgeDirection side, int aCoverID, int aCoverVariable, Fluid aFluid, ICoverable aTileEntity) {
+    public boolean letsFluidIn(ForgeDirection side, int aCoverID, int aCoverVariable, Fluid aFluid,
+            ICoverable aTileEntity) {
         return true;
     }
 
     @Override
-    public boolean letsFluidOut(ForgeDirection side, int aCoverID, int aCoverVariable, Fluid aFluid, ICoverable aTileEntity) {
+    public boolean letsFluidOut(ForgeDirection side, int aCoverID, int aCoverVariable, Fluid aFluid,
+            ICoverable aTileEntity) {
         return true;
     }
 

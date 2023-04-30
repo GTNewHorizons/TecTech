@@ -17,8 +17,8 @@ import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.FakePlayer;
-
 import net.minecraftforge.common.util.ForgeDirection;
+
 import org.apache.commons.lang3.reflect.FieldUtils;
 
 import com.github.technus.tectech.Reference;

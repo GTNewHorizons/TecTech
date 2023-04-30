@@ -6,6 +6,7 @@ import static com.github.technus.tectech.thing.metaTileEntity.single.GT_MetaTile
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraftforge.common.util.ForgeDirection;
 
 import com.github.technus.avrClone.AvrCore;
 import com.github.technus.avrClone.instructions.ExecutionEvent;
@@ -26,7 +27,6 @@ import gregtech.api.interfaces.metatileentity.IMetaTileEntity;
 import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
 import gregtech.api.metatileentity.implementations.GT_MetaTileEntity_TieredMachineBlock;
 import gregtech.api.objects.GT_RenderedTexture;
-import net.minecraftforge.common.util.ForgeDirection;
 
 public class GT_MetaTileEntity_MicroController extends GT_MetaTileEntity_TieredMachineBlock {
 
@@ -160,18 +160,20 @@ public class GT_MetaTileEntity_MicroController extends GT_MetaTileEntity_TieredM
     }
 
     @Override
-    public boolean allowPullStack(IGregTechTileEntity iGregTechTileEntity, int i, ForgeDirection side, ItemStack itemStack) {
+    public boolean allowPullStack(IGregTechTileEntity iGregTechTileEntity, int i, ForgeDirection side,
+            ItemStack itemStack) {
         return true;
     }
 
     @Override
-    public boolean allowPutStack(IGregTechTileEntity iGregTechTileEntity, int i, ForgeDirection side, ItemStack itemStack) {
+    public boolean allowPutStack(IGregTechTileEntity iGregTechTileEntity, int i, ForgeDirection side,
+            ItemStack itemStack) {
         return true;
     }
 
     @Override
-    public ITexture[] getTexture(IGregTechTileEntity aBaseMetaTileEntity, ForgeDirection side, ForgeDirection facing, int colorIndex,
-            boolean aActive, boolean aRedstone) {
+    public ITexture[] getTexture(IGregTechTileEntity aBaseMetaTileEntity, ForgeDirection side, ForgeDirection facing,
+            int colorIndex, boolean aActive, boolean aRedstone) {
         if (aBaseMetaTileEntity.getWorld() == null) {
             if (side == facing) {
                 return new ITexture[] { MACHINE_CASINGS_TT[mTier][colorIndex + 1],
