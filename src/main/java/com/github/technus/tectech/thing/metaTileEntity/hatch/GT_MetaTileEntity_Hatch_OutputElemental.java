@@ -10,6 +10,7 @@ import gregtech.api.interfaces.metatileentity.IMetaTileEntity;
 import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
 import gregtech.api.metatileentity.MetaTileEntity;
 import gregtech.api.util.GT_Utility;
+import net.minecraftforge.common.util.ForgeDirection;
 
 /**
  * Created by danie_000 on 27.10.2016.
@@ -33,12 +34,12 @@ public class GT_MetaTileEntity_Hatch_OutputElemental extends GT_MetaTileEntity_H
     }
 
     @Override
-    public boolean isOutputFacing(byte aSide) {
-        return aSide == getBaseMetaTileEntity().getFrontFacing();
+    public boolean isOutputFacing(ForgeDirection side) {
+        return side == getBaseMetaTileEntity().getFrontFacing();
     }
 
     @Override
-    public boolean isInputFacing(byte aSide) {
+    public boolean isInputFacing(ForgeDirection side) {
         return false;
     }
 
@@ -53,8 +54,8 @@ public class GT_MetaTileEntity_Hatch_OutputElemental extends GT_MetaTileEntity_H
         if (color < 0) {
             return;
         }
-        byte front = aBaseMetaTileEntity.getFrontFacing();
-        byte opposite = GT_Utility.getOppositeSide(front);
+        final ForgeDirection front = aBaseMetaTileEntity.getFrontFacing();
+        final ForgeDirection opposite = front.getOpposite();
         for (byte dist = 1; dist < 16; dist++) {
             IGregTechTileEntity tGTTileEntity = aBaseMetaTileEntity
                     .getIGregTechTileEntityAtSideAndDistance(front, dist);
@@ -87,7 +88,7 @@ public class GT_MetaTileEntity_Hatch_OutputElemental extends GT_MetaTileEntity_H
     }
 
     @Override
-    public boolean canConnect(byte side) {
+    public boolean canConnect(ForgeDirection side) {
         return isOutputFacing(side);
     }
 }

@@ -42,6 +42,7 @@ import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
 import gregtech.api.util.GT_Multiblock_Tooltip_Builder;
 import gregtech.api.util.GT_Recipe;
 import gregtech.api.util.GT_Utility;
+import net.minecraftforge.common.util.ForgeDirection;
 
 /**
  * Created by danie_000 on 17.12.2016.
@@ -261,14 +262,14 @@ public class GT_MetaTileEntity_TM_microwave extends GT_MetaTileEntity_Multiblock
     }
 
     @Override
-    public ITexture[] getTexture(IGregTechTileEntity aBaseMetaTileEntity, byte aSide, byte aFacing, byte aColorIndex,
+    public ITexture[] getTexture(IGregTechTileEntity aBaseMetaTileEntity, ForgeDirection side, ForgeDirection facing, int colorIndex,
             boolean aActive, boolean aRedstone) {
-        if (aSide == aFacing) {
+        if (side == facing) {
             return new ITexture[] { Textures.BlockIcons.casingTexturePages[0][49],
                     new TT_RenderedExtendedFacingTexture(
                             aActive ? Textures.BlockIcons.OVERLAY_FRONT_ELECTRIC_BLAST_FURNACE_ACTIVE
                                     : Textures.BlockIcons.OVERLAY_FRONT_ELECTRIC_BLAST_FURNACE) };
-        } else if (aSide == GT_Utility.getOppositeSide(aFacing)) {
+        } else if (side == facing.getOpposite()) {
             return new ITexture[] { Textures.BlockIcons.casingTexturePages[0][49],
                     aActive ? Textures.BlockIcons.casingTexturePages[0][52]
                             : Textures.BlockIcons.casingTexturePages[0][53] };

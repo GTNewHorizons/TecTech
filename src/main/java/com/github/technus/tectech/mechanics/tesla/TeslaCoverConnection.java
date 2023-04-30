@@ -5,6 +5,7 @@ import static com.github.technus.tectech.mechanics.tesla.ITeslaConnectable.Tesla
 import com.google.common.base.Objects;
 import com.gtnewhorizon.structurelib.util.Vec3Impl;
 import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
+import net.minecraftforge.common.util.ForgeDirection;
 
 public class TeslaCoverConnection implements ITeslaConnectableSimple {
 
@@ -55,7 +56,7 @@ public class TeslaCoverConnection implements ITeslaConnectableSimple {
         boolean output = false;
 
         if (!IGT.isDead()) {
-            output = IGT.injectEnergyUnits((byte) 1, teslaVoltageInjected, 1L) > 0L;
+            output = IGT.injectEnergyUnits(ForgeDirection.UP, teslaVoltageInjected, 1L) > 0L;
         } else {
             teslaSimpleNodeSetRemove(this);
         }

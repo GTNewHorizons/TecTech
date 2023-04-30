@@ -7,6 +7,7 @@ import com.github.technus.tectech.util.TT_Utility;
 import gregtech.api.interfaces.ITexture;
 import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
 import gregtech.api.metatileentity.MetaTileEntity;
+import net.minecraftforge.common.util.ForgeDirection;
 
 /**
  * Created by danie_000 on 27.10.2016.
@@ -29,12 +30,12 @@ public class GT_MetaTileEntity_Hatch_InputElemental extends GT_MetaTileEntity_Ha
     }
 
     @Override
-    public boolean isInputFacing(byte aSide) {
-        return aSide == getBaseMetaTileEntity().getFrontFacing();
+    public boolean isInputFacing(ForgeDirection side) {
+        return side == getBaseMetaTileEntity().getFrontFacing();
     }
 
     @Override
-    public boolean isOutputFacing(byte aSide) {
+    public boolean isOutputFacing(ForgeDirection side) {
         return false;
     }
 
@@ -44,7 +45,7 @@ public class GT_MetaTileEntity_Hatch_InputElemental extends GT_MetaTileEntity_Ha
     }
 
     @Override
-    public boolean canConnect(byte side) {
+    public boolean canConnect(ForgeDirection side) {
         return isInputFacing(side);
     }
 }

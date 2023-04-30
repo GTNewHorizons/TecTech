@@ -17,6 +17,7 @@ import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
 import gregtech.api.metatileentity.MetaTileEntity;
 import gregtech.api.metatileentity.implementations.GT_MetaTileEntity_BasicMachine;
 import gregtech.api.objects.GT_RenderedTexture;
+import net.minecraftforge.common.util.ForgeDirection;
 
 /**
  * Created by Tec on 23.03.2017.
@@ -59,23 +60,23 @@ public class GT_MetaTileEntity_DataReader extends GT_MetaTileEntity_BasicMachine
     }
 
     @Override
-    public ITexture[] getTexture(IGregTechTileEntity aBaseMetaTileEntity, byte aSide, byte aFacing, byte aColorIndex,
+    public ITexture[] getTexture(IGregTechTileEntity aBaseMetaTileEntity, ForgeDirection side, ForgeDirection facing, int colorIndex,
             boolean aActive, boolean aRedstone) {
         if (aBaseMetaTileEntity.getWorld() == null) {
-            if (aSide == aFacing) {
-                return new ITexture[] { MACHINE_CASINGS_TT[mTier][aColorIndex + 1],
+            if (side == facing) {
+                return new ITexture[] { MACHINE_CASINGS_TT[mTier][colorIndex + 1],
                         aActive ? READER_ONLINE : READER_OFFLINE };
             }
-            return new ITexture[] { MACHINE_CASINGS_TT[mTier][aColorIndex + 1] };
+            return new ITexture[] { MACHINE_CASINGS_TT[mTier][colorIndex + 1] };
         }
-        if (aSide == mMainFacing) {
-            return new ITexture[] { MACHINE_CASINGS_TT[mTier][aColorIndex + 1],
+        if (side == mMainFacing) {
+            return new ITexture[] { MACHINE_CASINGS_TT[mTier][colorIndex + 1],
                     aActive ? READER_ONLINE : READER_OFFLINE };
-        } else if (aSide == aFacing) {
-            return new ITexture[] { MACHINE_CASINGS_TT[mTier][aColorIndex + 1],
+        } else if (side == facing) {
+            return new ITexture[] { MACHINE_CASINGS_TT[mTier][colorIndex + 1],
                     new GT_RenderedTexture(Textures.BlockIcons.OVERLAY_PIPE_OUT) };
         }
-        return new ITexture[] { MACHINE_CASINGS_TT[mTier][aColorIndex + 1] };
+        return new ITexture[] { MACHINE_CASINGS_TT[mTier][colorIndex + 1] };
     }
 
     @Override
@@ -120,13 +121,13 @@ public class GT_MetaTileEntity_DataReader extends GT_MetaTileEntity_BasicMachine
     }
 
     @Override
-    public boolean isInputFacing(byte aSide) {
-        return aSide != getBaseMetaTileEntity().getFrontFacing();
+    public boolean isInputFacing(ForgeDirection side) {
+        return side != getBaseMetaTileEntity().getFrontFacing();
     }
 
     @Override
-    public boolean isOutputFacing(byte aSide) {
-        return aSide != getBaseMetaTileEntity().getFrontFacing();
+    public boolean isOutputFacing(ForgeDirection side) {
+        return side != getBaseMetaTileEntity().getFrontFacing();
     }
 
     @Override

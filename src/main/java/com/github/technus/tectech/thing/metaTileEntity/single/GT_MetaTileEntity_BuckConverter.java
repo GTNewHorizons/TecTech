@@ -36,6 +36,7 @@ import gregtech.api.metatileentity.MetaTileEntity;
 import gregtech.api.metatileentity.implementations.GT_MetaTileEntity_TieredMachineBlock;
 import gregtech.api.objects.GT_RenderedTexture;
 import gregtech.api.util.GT_Utility;
+import net.minecraftforge.common.util.ForgeDirection;
 
 public class GT_MetaTileEntity_BuckConverter extends GT_MetaTileEntity_TieredMachineBlock
         implements IAddUIWidgets, IAddGregtechLogo {
@@ -75,11 +76,11 @@ public class GT_MetaTileEntity_BuckConverter extends GT_MetaTileEntity_TieredMac
     }
 
     @Override
-    public ITexture[] getTexture(IGregTechTileEntity aBaseMetaTileEntity, byte aSide, byte aFacing, byte aColorIndex,
+    public ITexture[] getTexture(IGregTechTileEntity aBaseMetaTileEntity, ForgeDirection side, ForgeDirection facing, int colorIndex,
             boolean aActive, boolean aRedstone) {
-        return new ITexture[] { MACHINE_CASINGS_TT[mTier][aColorIndex + 1], aSide == aFacing
+        return new ITexture[] { MACHINE_CASINGS_TT[mTier][colorIndex + 1], side == facing
                 ? (aActive ? BUCK_ACTIVE : BUCK)
-                : (aSide == GT_Utility.getOppositeSide(aFacing) ? OVERLAYS_ENERGY_IN_POWER_TT[mTier]
+                : (side == facing.getOpposite() ? OVERLAYS_ENERGY_IN_POWER_TT[mTier]
                         : (aActive ? OVERLAYS_ENERGY_OUT_POWER_TT[mTier] : OVERLAYS_ENERGY_IN_POWER_TT[mTier])) };
     }
 
@@ -89,12 +90,12 @@ public class GT_MetaTileEntity_BuckConverter extends GT_MetaTileEntity_TieredMac
     }
 
     @Override
-    public boolean allowPutStack(IGregTechTileEntity iGregTechTileEntity, int i, byte b, ItemStack itemStack) {
+    public boolean allowPutStack(IGregTechTileEntity iGregTechTileEntity, int i, ForgeDirection side, ItemStack itemStack) {
         return false;
     }
 
     @Override
-    public boolean allowPullStack(IGregTechTileEntity iGregTechTileEntity, int i, byte b, ItemStack itemStack) {
+    public boolean allowPullStack(IGregTechTileEntity iGregTechTileEntity, int i, ForgeDirection side, ItemStack itemStack) {
         return false;
     }
 
@@ -123,7 +124,7 @@ public class GT_MetaTileEntity_BuckConverter extends GT_MetaTileEntity_TieredMac
     }
 
     @Override
-    public boolean isFacingValid(byte aFacing) {
+    public boolean isFacingValid(ForgeDirection facing) {
         return true;
     }
 
@@ -148,14 +149,14 @@ public class GT_MetaTileEntity_BuckConverter extends GT_MetaTileEntity_TieredMac
     }
 
     @Override
-    public boolean isInputFacing(byte aSide) {
-        return aSide == getBaseMetaTileEntity().getBackFacing();
+    public boolean isInputFacing(ForgeDirection side) {
+        return side == getBaseMetaTileEntity().getBackFacing();
     }
 
     @Override
-    public boolean isOutputFacing(byte aSide) {
-        return getBaseMetaTileEntity().isActive() && aSide != getBaseMetaTileEntity().getFrontFacing()
-                && aSide != getBaseMetaTileEntity().getBackFacing();
+    public boolean isOutputFacing(ForgeDirection side) {
+        return getBaseMetaTileEntity().isActive() && side != getBaseMetaTileEntity().getFrontFacing()
+                && side != getBaseMetaTileEntity().getBackFacing();
     }
 
     @Override

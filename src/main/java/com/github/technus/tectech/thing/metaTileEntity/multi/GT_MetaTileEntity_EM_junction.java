@@ -124,7 +124,7 @@ public class GT_MetaTileEntity_EM_junction extends GT_MetaTileEntity_MultiblockB
     @Override
     public boolean checkMachine_EM(IGregTechTileEntity iGregTechTileEntity, ItemStack itemStack) {
         int meta = iGregTechTileEntity
-                .getMetaIDAtSideAndDistance(GT_Utility.getOppositeSide(iGregTechTileEntity.getFrontFacing()), 2);
+                .getMetaIDAtSideAndDistance(iGregTechTileEntity.getFrontFacing().getOpposite(), 2);
         if (meta == 4) {
             return structureCheck_EM("main", 1, 1, 0);
         } else if (meta == 5) {

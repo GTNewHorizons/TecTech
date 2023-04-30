@@ -37,6 +37,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.world.World;
 
+import net.minecraftforge.common.util.ForgeDirection;
 import org.apache.commons.lang3.reflect.FieldUtils;
 
 import com.github.technus.tectech.recipe.TT_recipe;
@@ -564,9 +565,9 @@ public class GT_MetaTileEntity_EM_research extends GT_MetaTileEntity_MultiblockB
     }
 
     @Override
-    public ITexture[] getTexture(IGregTechTileEntity aBaseMetaTileEntity, byte aSide, byte aFacing, byte aColorIndex,
+    public ITexture[] getTexture(IGregTechTileEntity aBaseMetaTileEntity, ForgeDirection side, ForgeDirection facing, int colorIndex,
             boolean aActive, boolean aRedstone) {
-        if (aSide == aFacing) {
+        if (side == facing) {
             return new ITexture[] { Textures.BlockIcons.casingTexturePages[texturePage][3],
                     new TT_RenderedExtendedFacingTexture(
                             aActive ? GT_MetaTileEntity_MultiblockBase_EM.ScreenON

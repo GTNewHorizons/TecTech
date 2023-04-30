@@ -17,6 +17,7 @@ import gregtech.api.interfaces.metatileentity.IMetaTileEntity;
 import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
 import gregtech.api.metatileentity.MetaTileEntity;
 import gregtech.api.util.GT_Utility;
+import net.minecraftforge.common.util.ForgeDirection;
 
 public class GT_MetaTileEntity_Hatch_OutputDataItems
         extends GT_MetaTileEntity_Hatch_DataConnector<InventoryDataPacket> {
@@ -44,7 +45,7 @@ public class GT_MetaTileEntity_Hatch_OutputDataItems
     }
 
     @Override
-    public boolean isFacingValid(byte aFacing) {
+    public boolean isFacingValid(ForgeDirection facing) {
         return true;
     }
 
@@ -58,12 +59,12 @@ public class GT_MetaTileEntity_Hatch_OutputDataItems
     }
 
     @Override
-    public boolean allowPullStack(IGregTechTileEntity aBaseMetaTileEntity, int aIndex, byte aSide, ItemStack aStack) {
+    public boolean allowPullStack(IGregTechTileEntity aBaseMetaTileEntity, int aIndex, ForgeDirection side, ItemStack aStack) {
         return false;
     }
 
     @Override
-    public boolean allowPutStack(IGregTechTileEntity aBaseMetaTileEntity, int aIndex, byte aSide, ItemStack aStack) {
+    public boolean allowPutStack(IGregTechTileEntity aBaseMetaTileEntity, int aIndex, ForgeDirection side, ItemStack aStack) {
         return false;
     }
 
@@ -73,12 +74,12 @@ public class GT_MetaTileEntity_Hatch_OutputDataItems
     }
 
     @Override
-    public boolean isOutputFacing(byte aSide) {
-        return aSide == getBaseMetaTileEntity().getFrontFacing();
+    public boolean isOutputFacing(ForgeDirection side) {
+        return side == getBaseMetaTileEntity().getFrontFacing();
     }
 
     @Override
-    public boolean isInputFacing(byte aSide) {
+    public boolean isInputFacing(ForgeDirection side) {
         return false;
     }
 
@@ -88,12 +89,12 @@ public class GT_MetaTileEntity_Hatch_OutputDataItems
     }
 
     @Override
-    public boolean isDataInputFacing(byte side) {
+    public boolean isDataInputFacing(ForgeDirection side) {
         return isInputFacing(side);
     }
 
     @Override
-    public boolean canConnectData(byte side) {
+    public boolean canConnectData(ForgeDirection side) {
         return isOutputFacing(side);
     }
 
@@ -130,7 +131,7 @@ public class GT_MetaTileEntity_Hatch_OutputDataItems
         } else if (meta instanceof GT_MetaTileEntity_Hatch_InputDataItems
                 && ((GT_MetaTileEntity_Hatch_InputDataItems) meta).getColorization() == color
                 && ((GT_MetaTileEntity_Hatch_InputDataItems) meta)
-                        .canConnectData(GT_Utility.getOppositeSide(base.getFrontFacing()))) {
+                        .canConnectData(base.getFrontFacing().getOpposite())) {
                             return (IConnectsToDataPipe) meta;
                         }
         return null;
