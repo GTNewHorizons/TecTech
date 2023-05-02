@@ -1222,6 +1222,10 @@ public class GT_MetaTileEntity_EM_EyeOfHarmony extends GT_MetaTileEntity_Multibl
     private double successChance;
 
     private void outputFailedChance() {
+        if (currentRecipe == null) {
+            return;
+        }
+
         // 2^Tier spacetime released upon recipe failure.
         mOutputFluids = new FluidStack[] { MaterialsUEVplus.SpaceTime.getMolten(
                 (long) (successChance * MOLTEN_SPACETIME_PER_FAILURE_TIER
