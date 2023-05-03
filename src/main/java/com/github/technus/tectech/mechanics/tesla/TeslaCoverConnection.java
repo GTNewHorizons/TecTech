@@ -4,6 +4,7 @@ import static com.github.technus.tectech.mechanics.tesla.ITeslaConnectable.Tesla
 
 import com.google.common.base.Objects;
 import com.gtnewhorizon.structurelib.util.Vec3Impl;
+
 import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
 
 public class TeslaCoverConnection implements ITeslaConnectableSimple {
