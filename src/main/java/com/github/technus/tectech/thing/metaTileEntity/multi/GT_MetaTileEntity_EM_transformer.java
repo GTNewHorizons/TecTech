@@ -42,7 +42,7 @@ public class GT_MetaTileEntity_EM_transformer extends GT_MetaTileEntity_Multiblo
         implements ISurvivalConstructable {
 
     @Override
-    public void onFirstTick_EM (IGregTechTileEntity aBaseMetaTileEntity) {
+    public void onFirstTick_EM(IGregTechTileEntity aBaseMetaTileEntity) {
         aBaseMetaTileEntity.disableWorking();
     }
 
