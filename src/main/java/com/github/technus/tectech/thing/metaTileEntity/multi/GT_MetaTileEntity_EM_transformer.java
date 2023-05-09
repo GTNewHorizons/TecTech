@@ -43,7 +43,7 @@ public class GT_MetaTileEntity_EM_transformer extends GT_MetaTileEntity_Multiblo
 
     @Override
     public void onFirstTick_EM(IGregTechTileEntity aBaseMetaTileEntity) {
-        if (!this.mMachine) {
+        if (!mMachine) {
             aBaseMetaTileEntity.disableWorking();
         }
     }
