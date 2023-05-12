@@ -2594,6 +2594,9 @@ public class ResearchStationAssemblyLine implements Runnable {
         ItemStack largeShirabonPlate = TinkersGregworks.isModLoaded()
                 ? TGregUtils.newItemStack(Materials.get("Shirabon"), PartTypes.LargePlate, 1)
                 : GT_OreDictUnificator.get("plateDenseShirabon", 1);
+        ItemStack largeInfinityPlate = TinkersGregworks.isModLoaded()
+                ? TGregUtils.newItemStack(Materials.get("Infinity"), PartTypes.LargePlate, 1)
+                : GT_OreDictUnificator.get("plateDenseInfinity", 1);
 
         final FluidStack[] specialFluid = new FluidStack[] { MaterialsUEVplus.SpaceTime.getMolten(1_440),
                 MaterialsUEVplus.SpaceTime.getMolten(1_440), MaterialsUEVplus.SpaceTime.getMolten(1_440),
@@ -2674,8 +2677,7 @@ public class ResearchStationAssemblyLine implements Runnable {
                             // Large Shirabon Plate
                             largeShirabonPlate,
                             // Large Infinity Plate
-                            getModItem(TinkerConstruct.ID, "heavyPlate", 1, 1669),
-
+                            largeInfinityPlate,
                             // UV Solar panel
                             getModItem(SuperSolarPanels.ID, "PhotonicSolarPanel", 1, 0),
                             ItemList.Quantum_Chest_IV.get(1),
@@ -3166,8 +3168,7 @@ public class ResearchStationAssemblyLine implements Runnable {
                             // Large Shirabon Plate
                             largeShirabonPlate,
                             // Large Infinity Plate
-                            getModItem(TinkerConstruct.ID, "heavyPlate", 1, 1669),
-
+                            largeInfinityPlate,
                             // UV Solar panel
                             getModItem(SuperSolarPanels.ID, "PhotonicSolarPanel", 1, 0),
                             // Ultimate Time Anomaly.
