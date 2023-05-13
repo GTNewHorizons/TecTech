@@ -2595,7 +2595,7 @@ public class ResearchStationAssemblyLine implements Runnable {
                 ? TGregUtils.newItemStack(Materials.get("Shirabon"), PartTypes.LargePlate, 1)
                 : GT_OreDictUnificator.get("plateDenseShirabon", 1);
         ItemStack largeInfinityPlate = TinkersGregworks.isModLoaded()
-                ? TGregUtils.newItemStack(Materials.get("Infinity"), PartTypes.LargePlate, 1)
+                ? TGregUtils.newItemStack(Materials.Infinity, PartTypes.LargePlate, 1)
                 : GT_OreDictUnificator.get("plateDenseInfinity", 1);
 
         final FluidStack[] specialFluid = new FluidStack[] { MaterialsUEVplus.SpaceTime.getMolten(1_440),
