@@ -956,7 +956,7 @@ public class GT_MetaTileEntity_EM_EyeOfHarmony extends GT_MetaTileEntity_Multibl
                 .addInfo(TOOLTIP_BAR)
                 .addInfo("This multiblock can be overclocked by placing a programmed circuit into the input bus.")
                 .addInfo(
-                        "Each OC halves recipe time and increases startup cost by " + GREEN
+                        "Each OC halves recipe time and increases startup cost by a factor of " + GREEN
                                 + "log4.4(overclockAmount + 1) + 1"
                                 + RESET
                                 + GRAY
