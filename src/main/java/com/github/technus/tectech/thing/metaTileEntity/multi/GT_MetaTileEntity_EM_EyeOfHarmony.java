@@ -956,7 +956,13 @@ public class GT_MetaTileEntity_EM_EyeOfHarmony extends GT_MetaTileEntity_Multibl
                 .addInfo(TOOLTIP_BAR)
                 .addInfo("This multiblock can be overclocked by placing a programmed circuit into the input bus.")
                 .addInfo(
-                        "E.g. A circuit of 2 will provide 2 OCs, 16x EU consumed and 0.25x the time. All outputs are equal.")
+                        "Each OC halves recipe time and increases startup cost by " + GREEN
+                                + "log4.4(overclockAmount + 1) + 1"
+                                + RESET
+                                + GRAY
+                                + ".")
+                .addInfo(
+                        "E.g. A circuit of 2 will provide 2 OCs, 1.74x EU consumed and 0.25x the time. All outputs are equal.")
                 .addInfo(TOOLTIP_BAR)
                 .addInfo(
                         "If a recipe fails the EOH will output " + GREEN
@@ -1131,7 +1137,9 @@ public class GT_MetaTileEntity_EM_EyeOfHarmony extends GT_MetaTileEntity_Multibl
         startEU = recipeObject.getEUStartCost();
 
         // Remove EU from the users network.
-        if (!addEUToGlobalEnergyMap(userUUID, (long) (-startEU * pow(4, currentCircuitMultiplier)))) {
+        if (!addEUToGlobalEnergyMap(
+                userUUID,
+                (long) (-startEU * (Math.log(currentCircuitMultiplier + 1) / Math.log(4.4) + 1)))) {
             return false;
         }
 
@@ -1355,10 +1363,10 @@ public class GT_MetaTileEntity_EM_EyeOfHarmony extends GT_MetaTileEntity_Multibl
                                 + RESET
                                 + " L");
             }
-            long euPerTick = (long) -(startEU * pow(4, currentCircuitMultiplier)
+            long euPerTick = (long) (startEU * (Math.log(currentCircuitMultiplier + 1) / Math.log(4.4) + 1)
                     - euOutput * (1 - ((TOTAL_CASING_TIERS_WITH_POWER_PENALTY - stabilisationFieldMetadata)
                             * STABILITY_INCREASE_PROBABILITY_DECREASE_YIELD_PER_TIER)))
-                    / maxProgresstime();
+                    / -maxProgresstime();
             if (abs(euPerTick) < LongMath.pow(10, 12)) {
                 str.add("Estimated EU/t: " + RED + formatNumbers(euPerTick) + RESET + " EU/t");
             } else {
