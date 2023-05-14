@@ -955,9 +955,14 @@ public class GT_MetaTileEntity_EM_EyeOfHarmony extends GT_MetaTileEntity_Multibl
                         "is avaliable the items/fluids will be " + UNDERLINE + DARK_RED + "voided" + RESET + GRAY + ".")
                 .addInfo(TOOLTIP_BAR)
                 .addInfo("This multiblock can be overclocked by placing a programmed circuit into the input bus.")
+                .addInfo("Each OC halves recipe time and multiplies startup cost by a factor of:")
+                .addInfo(GREEN + "(log4.4(overclockAmount + 1) + 1) * 0.77^overclockAmount")
                 .addInfo(
-                        "E.g. A circuit of 2 will provide 2 OCs, 16x EU consumed and 0.25x the time. All outputs are equal.")
-                .addInfo(TOOLTIP_BAR)
+                        "Furthermore, each OC decreases the power output by a factor of " + RED
+                                + "0.77^overclockAmount"
+                                + GRAY
+                                + ".")
+                .addInfo("All item and fluid output chances & amounts per recipe are unaffected.").addInfo(TOOLTIP_BAR)
                 .addInfo(
                         "If a recipe fails the EOH will output " + GREEN
                                 + "successChance * "
@@ -1131,7 +1136,10 @@ public class GT_MetaTileEntity_EM_EyeOfHarmony extends GT_MetaTileEntity_Multibl
         startEU = recipeObject.getEUStartCost();
 
         // Remove EU from the users network.
-        if (!addEUToGlobalEnergyMap(userUUID, (long) (-startEU * pow(4, currentCircuitMultiplier)))) {
+        if (!addEUToGlobalEnergyMap(
+                userUUID,
+                (long) (-startEU * (Math.log(currentCircuitMultiplier + 1) / Math.log(4.4) + 1)
+                        * pow(0.77, currentCircuitMultiplier)))) {
             return false;
         }
 
@@ -1151,7 +1159,7 @@ public class GT_MetaTileEntity_EM_EyeOfHarmony extends GT_MetaTileEntity_Multibl
         successChance = recipeChanceCalculator();
 
         // Determine EU recipe output.
-        euOutput = recipeObject.getEUOutput();
+        euOutput = (long) (recipeObject.getEUOutput() * pow(0.77, currentCircuitMultiplier));
 
         // Reduce internal storage by hydrogen and helium quantity required for recipe.
         validFluidMap.put(Materials.Hydrogen.getGas(1), 0L);
@@ -1355,10 +1363,11 @@ public class GT_MetaTileEntity_EM_EyeOfHarmony extends GT_MetaTileEntity_Multibl
                                 + RESET
                                 + " L");
             }
-            long euPerTick = (long) -(startEU * pow(4, currentCircuitMultiplier)
+            long euPerTick = (long) (startEU * (Math.log(currentCircuitMultiplier + 1) / Math.log(4.4) + 1)
+                    * pow(0.77, currentCircuitMultiplier)
                     - euOutput * (1 - ((TOTAL_CASING_TIERS_WITH_POWER_PENALTY - stabilisationFieldMetadata)
                             * STABILITY_INCREASE_PROBABILITY_DECREASE_YIELD_PER_TIER)))
-                    / maxProgresstime();
+                    / -maxProgresstime();
             if (abs(euPerTick) < LongMath.pow(10, 12)) {
                 str.add("Estimated EU/t: " + RED + formatNumbers(euPerTick) + RESET + " EU/t");
             } else {
