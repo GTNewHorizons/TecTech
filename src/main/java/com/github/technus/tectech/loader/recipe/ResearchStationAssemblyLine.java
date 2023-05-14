@@ -2593,7 +2593,7 @@ public class ResearchStationAssemblyLine implements Runnable {
         Fluid solderUEV = FluidRegistry.getFluid("molten.mutatedlivingsolder") != null
                 ? FluidRegistry.getFluid("molten.mutatedlivingsolder")
                 : FluidRegistry.getFluid("molten.solderingalloy");
-        if (Loader.isModLoaded("TinkersGregworks")) {
+        if (TinkersGregworks.isModLoaded()) {
             largeShirabonPlate = TGregUtils.newItemStack(Materials.get("Shirabon"), PartTypes.LargePlate, 1);
             largeInfinityPlate = TGregUtils.newItemStack(Materials.get("Infinity"), PartTypes.LargePlate, 1);
             largeBedrockiumPlate = TGregUtils.newItemStack(Materials.get("Bedrockium"), PartTypes.LargePlate, 1);
