@@ -15,7 +15,6 @@ import com.github.technus.tectech.thing.metaTileEntity.pipe.GT_MetaTileEntity_Pi
 import com.github.technus.tectech.util.CommonValues;
 import com.github.technus.tectech.util.TT_Utility;
 
-import gregtech.api.enums.GT_Values;
 import gregtech.api.interfaces.ITexture;
 import gregtech.api.interfaces.metatileentity.IMetaTileEntity;
 import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
