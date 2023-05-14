@@ -164,9 +164,9 @@ public class GT_MetaTileEntity_Pipe_Energy extends MetaPipeEntity implements ICo
                         // }
                     }
                     if (tTileEntity instanceof PowerLogicHost) {
-                        PowerLogic logic = ((PowerLogicHost) tTileEntity).getPowerLogic(b1);
-                        if (logic != null) {
-                            mConnections |= 1 << b0;
+                        PowerLogic logic = ((PowerLogicHost) tTileEntity).getPowerLogic(oppositeSide);
+                        if (logic != null && logic.canUseLaser()) {
+                            mConnections |= 1 << side.ordinal();
                             connectionCount++;
                             continue;
                         }

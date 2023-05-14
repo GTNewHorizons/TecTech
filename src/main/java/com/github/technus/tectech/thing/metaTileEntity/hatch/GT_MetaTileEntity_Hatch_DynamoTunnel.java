@@ -200,7 +200,7 @@ public class GT_MetaTileEntity_Hatch_DynamoTunnel extends GT_MetaTileEntity_Hatc
                     }
                 } else {
                     if (tGTTileEntity instanceof PowerLogicHost) {
-                        PowerLogic logic = ((PowerLogicHost) tGTTileEntity).getPowerLogic(GT_Values.SIDE_UNKNOWN);
+                        PowerLogic logic = ((PowerLogicHost) tGTTileEntity).getPowerLogic(opposite);
                         if (logic == null || !logic.canUseLaser() || opposite != tGTTileEntity.getFrontFacing()) {
                             return;
                         }
