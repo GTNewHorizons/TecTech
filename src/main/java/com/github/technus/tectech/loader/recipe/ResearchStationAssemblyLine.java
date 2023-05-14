@@ -2596,8 +2596,7 @@ public class ResearchStationAssemblyLine implements Runnable {
             largeShirabonPlate = TGregUtils.newItemStack(Materials.get("Shirabon"), PartTypes.LargePlate, 1);
             largeInfinityPlate = TGregUtils.newItemStack(Materials.Infinity, PartTypes.LargePlate, 1);
             largeBedrockiumPlate = TGregUtils.newItemStack(Materials.Bedrockium, PartTypes.LargePlate, 1);
-            largeCosmicNeutroniumPlate = TGregUtils
-                    .newItemStack(Materials.CosmicNeutronium, PartTypes.LargePlate, 1);
+            largeCosmicNeutroniumPlate = TGregUtils.newItemStack(Materials.CosmicNeutronium, PartTypes.LargePlate, 1);
         } else {
             largeShirabonPlate = GT_OreDictUnificator.get("plateDenseShirabon", 1);
             largeInfinityPlate = GT_OreDictUnificator.get("plateDenseInfinity", 1);
