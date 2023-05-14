@@ -98,6 +98,7 @@ public class GT_MetaTileEntity_EM_EyeOfHarmony extends GT_MetaTileEntity_Multibl
     private static final double TIME_ACCEL_DECREASE_CHANCE_PER_TIER = 0.1;
     // % Increase in recipe chance and % decrease in yield per tier.
     private static final double STABILITY_INCREASE_PROBABILITY_DECREASE_YIELD_PER_TIER = 0.05;
+    private static final double LOG_BASE_CONSTANT = Math.log(4.4);
 
     private static final int TOTAL_CASING_TIERS_WITH_POWER_PENALTY = 8;
 
@@ -746,7 +747,7 @@ public class GT_MetaTileEntity_EM_EyeOfHarmony extends GT_MetaTileEntity_Multibl
 
     private double hydrogenOverflowProbabilityAdjustment;
     private double heliumOverflowProbabilityAdjustment;
-    private static final long TICKS_BETWEEN_HATCH_DRAIN = EOH_DEBUG_MODE ? 10 : 50;
+    private static final long TICKS_BETWEEN_HATCH_DRAIN = EOH_DEBUG_MODE ? 10 : 20;
 
     private List<ItemStackLong> outputItems = new ArrayList<>();
 
@@ -1138,7 +1139,7 @@ public class GT_MetaTileEntity_EM_EyeOfHarmony extends GT_MetaTileEntity_Multibl
         // Remove EU from the users network.
         if (!addEUToGlobalEnergyMap(
                 userUUID,
-                (long) (-startEU * (Math.log(currentCircuitMultiplier + 1) / Math.log(4.4) + 1)
+                (long) (-startEU * (Math.log(currentCircuitMultiplier + 1) / LOG_BASE_CONSTANT + 1)
                         * pow(0.77, currentCircuitMultiplier)))) {
             return false;
         }
@@ -1363,7 +1364,7 @@ public class GT_MetaTileEntity_EM_EyeOfHarmony extends GT_MetaTileEntity_Multibl
                                 + RESET
                                 + " L");
             }
-            long euPerTick = (long) (startEU * (Math.log(currentCircuitMultiplier + 1) / Math.log(4.4) + 1)
+            long euPerTick = (long) (startEU * (Math.log(currentCircuitMultiplier + 1) / LOG_BASE_CONSTANT + 1)
                     * pow(0.77, currentCircuitMultiplier)
                     - euOutput * (1 - ((TOTAL_CASING_TIERS_WITH_POWER_PENALTY - stabilisationFieldMetadata)
                             * STABILITY_INCREASE_PROBABILITY_DECREASE_YIELD_PER_TIER)))
