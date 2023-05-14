@@ -2671,8 +2671,8 @@ public class ResearchStationAssemblyLine implements Runnable {
                             GT_OreDictUnificator.get(OrePrefixes.block, Materials.Neutronium, 64),
                             GT_OreDictUnificator.get(OrePrefixes.nanite, Materials.Neutronium, 48),
                             // Large Bedrockium Plate
-                            getModItem(TinkerConstruct.ID, "heavyPlate", 1, 315),
-                            largeCosmicNeutroniumPlate, largeShirabonPlate, largeInfinityPlate,
+                            getModItem(TinkerConstruct.ID, "heavyPlate", 1, 315), largeCosmicNeutroniumPlate,
+                            largeShirabonPlate, largeInfinityPlate,
                             // UV Solar panel
                             getModItem(SuperSolarPanels.ID, "PhotonicSolarPanel", 1, 0),
                             ItemList.Quantum_Chest_IV.get(1),
@@ -3156,8 +3156,8 @@ public class ResearchStationAssemblyLine implements Runnable {
                             GT_OreDictUnificator.get(OrePrefixes.block, Materials.Neutronium, 64),
                             GT_OreDictUnificator.get(OrePrefixes.nanite, Materials.Neutronium, 48),
                             // Large Bedrockium Plate
-                            getModItem(TinkerConstruct.ID, "heavyPlate", 1, 315),
-                            largeCosmicNeutroniumPlate, largeShirabonPlate, largeInfinityPlate,
+                            getModItem(TinkerConstruct.ID, "heavyPlate", 1, 315), largeCosmicNeutroniumPlate,
+                            largeShirabonPlate, largeInfinityPlate,
                             // UV Solar panel
                             getModItem(SuperSolarPanels.ID, "PhotonicSolarPanel", 1, 0),
                             // Ultimate Time Anomaly.
