@@ -2591,12 +2591,13 @@ public class ResearchStationAssemblyLine implements Runnable {
         Fluid solderUEV = FluidRegistry.getFluid("molten.mutatedlivingsolder") != null
                 ? FluidRegistry.getFluid("molten.mutatedlivingsolder")
                 : FluidRegistry.getFluid("molten.solderingalloy");
-        if (TinkersGregworks.isModLoaded()) {
+        if (TinkersGregworks.isModLoaded() && GoodGenerator.isModLoaded()) {
+            addEOHRecipes();
             largeShirabonPlate = TGregUtils.newItemStack(Materials.get("Shirabon"), PartTypes.LargePlate, 1);
-            largeInfinityPlate = TGregUtils.newItemStack(Materials.get("Infinity"), PartTypes.LargePlate, 1);
-            largeBedrockiumPlate = TGregUtils.newItemStack(Materials.get("Bedrockium"), PartTypes.LargePlate, 1);
+            largeInfinityPlate = TGregUtils.newItemStack(Materials.Infinity, PartTypes.LargePlate, 1);
+            largeBedrockiumPlate = TGregUtils.newItemStack(Materials.Bedrockium, PartTypes.LargePlate, 1);
             largeCosmicNeutroniumPlate = TGregUtils
-                    .newItemStack(Materials.get("CosmicNeutronium"), PartTypes.LargePlate, 1);
+                    .newItemStack(Materials.CosmicNeutronium, PartTypes.LargePlate, 1);
         } else {
             largeShirabonPlate = GT_OreDictUnificator.get("plateDenseShirabon", 1);
             largeInfinityPlate = GT_OreDictUnificator.get("plateDenseInfinity", 1);
@@ -2674,15 +2675,7 @@ public class ResearchStationAssemblyLine implements Runnable {
                             getModItem(Avaritia.ID, "Resource_Block", 64, 0),
                             GT_OreDictUnificator.get(OrePrefixes.block, Materials.Neutronium, 64),
                             GT_OreDictUnificator.get(OrePrefixes.nanite, Materials.Neutronium, 48),
-
-                            // Large Bedrockium Plate
-                            largeBedrockiumPlate,
-                            // Large Cosmic Neutronium Plate
-                            largeCosmicNeutroniumPlate,
-                            // Large Shirabon Plate
-                            largeShirabonPlate,
-                            // Large Infinity Plate
-                            largeInfinityPlate,
+                            largeBedrockiumPlate, largeCosmicNeutroniumPlate, largeShirabonPlate, largeInfinityPlate,
                             // UV Solar panel
                             getModItem(SuperSolarPanels.ID, "PhotonicSolarPanel", 1, 0),
                             ItemList.Quantum_Chest_IV.get(1),
@@ -3165,15 +3158,7 @@ public class ResearchStationAssemblyLine implements Runnable {
                             getModItem(Avaritia.ID, "Resource_Block", 64, 0),
                             GT_OreDictUnificator.get(OrePrefixes.block, Materials.Neutronium, 64),
                             GT_OreDictUnificator.get(OrePrefixes.nanite, Materials.Neutronium, 48),
-
-                            // Large Bedrockium Plate
-                            largeBedrockiumPlate,
-                            // Large Cosmic Neutronium Plate
-                            largeCosmicNeutroniumPlate,
-                            // Large Shirabon Plate
-                            largeShirabonPlate,
-                            // Large Infinity Plate
-                            largeInfinityPlate,
+                            largeBedrockiumPlate, largeCosmicNeutroniumPlate, largeShirabonPlate, largeInfinityPlate,
                             // UV Solar panel
                             getModItem(SuperSolarPanels.ID, "PhotonicSolarPanel", 1, 0),
                             // Ultimate Time Anomaly.
