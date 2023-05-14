@@ -53,6 +53,7 @@ public class ResearchStationAssemblyLine implements Runnable {
         itemPartsUIVAsslineRecipes();
         itemPartsUMVAsslineRecipes();
         itemPartsUXVAsslineRecipes();
+        addEOHRecipes();
 
         addWirelessEnergyRecipes();
 
@@ -2592,7 +2593,6 @@ public class ResearchStationAssemblyLine implements Runnable {
                 ? FluidRegistry.getFluid("molten.mutatedlivingsolder")
                 : FluidRegistry.getFluid("molten.solderingalloy");
         if (TinkersGregworks.isModLoaded() && GoodGenerator.isModLoaded()) {
-            addEOHRecipes();
             largeShirabonPlate = TGregUtils.newItemStack(Materials.get("Shirabon"), PartTypes.LargePlate, 1);
             largeInfinityPlate = TGregUtils.newItemStack(Materials.Infinity, PartTypes.LargePlate, 1);
             largeBedrockiumPlate = TGregUtils.newItemStack(Materials.Bedrockium, PartTypes.LargePlate, 1);
