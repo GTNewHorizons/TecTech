@@ -2674,14 +2674,9 @@ public class ResearchStationAssemblyLine implements Runnable {
                             getModItem(Avaritia.ID, "Resource_Block", 64, 0),
                             GT_OreDictUnificator.get(OrePrefixes.block, Materials.Neutronium, 64),
                             GT_OreDictUnificator.get(OrePrefixes.nanite, Materials.Neutronium, 48),
-
-                            // Large Bedrockium Plate
                             largeBedrockiumPlate,
-                            // Large Cosmic Neutronium Plate
                             largeCosmicNeutroniumPlate,
-                            // Large Shirabon Plate
                             largeShirabonPlate,
-                            // Large Infinity Plate
                             largeInfinityPlate,
                             // UV Solar panel
                             getModItem(SuperSolarPanels.ID, "PhotonicSolarPanel", 1, 0),
@@ -3165,14 +3160,9 @@ public class ResearchStationAssemblyLine implements Runnable {
                             getModItem(Avaritia.ID, "Resource_Block", 64, 0),
                             GT_OreDictUnificator.get(OrePrefixes.block, Materials.Neutronium, 64),
                             GT_OreDictUnificator.get(OrePrefixes.nanite, Materials.Neutronium, 48),
-
-                            // Large Bedrockium Plate
                             largeBedrockiumPlate,
-                            // Large Cosmic Neutronium Plate
                             largeCosmicNeutroniumPlate,
-                            // Large Shirabon Plate
                             largeShirabonPlate,
-                            // Large Infinity Plate
                             largeInfinityPlate,
                             // UV Solar panel
                             getModItem(SuperSolarPanels.ID, "PhotonicSolarPanel", 1, 0),
