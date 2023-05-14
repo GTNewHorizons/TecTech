@@ -23,11 +23,9 @@ import static gregtech.api.enums.Mods.NewHorizonsCoreMod;
 import static gregtech.api.enums.Mods.SGCraft;
 import static gregtech.api.enums.Mods.SuperSolarPanels;
 import static gregtech.api.enums.Mods.Thaumcraft;
-import static gregtech.api.enums.Mods.TinkerConstruct;
 import static gregtech.api.enums.Mods.TinkersGregworks;
 import static gregtech.api.util.GT_ModHandler.getModItem;
 
-import cpw.mods.fml.common.Loader;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
@@ -36,6 +34,7 @@ import net.minecraftforge.fluids.FluidStack;
 import com.github.technus.tectech.recipe.TT_recipeAdder;
 import com.github.technus.tectech.thing.CustomItemList;
 
+import cpw.mods.fml.common.Loader;
 import gregtech.api.enums.*;
 import gregtech.api.util.GT_ModHandler;
 import gregtech.api.util.GT_OreDictUnificator;
@@ -2588,7 +2587,7 @@ public class ResearchStationAssemblyLine implements Runnable {
 
     private void addEOHRecipes() {
 
-        ItemStack largeShirabonPlate,largeInfinityPlate, largeBedrockiumPlate, largeCosmicNeutroniumPlate;
+        ItemStack largeShirabonPlate, largeInfinityPlate, largeBedrockiumPlate, largeCosmicNeutroniumPlate;
 
         Fluid solderUEV = FluidRegistry.getFluid("molten.mutatedlivingsolder") != null
                 ? FluidRegistry.getFluid("molten.mutatedlivingsolder")
@@ -2597,12 +2596,13 @@ public class ResearchStationAssemblyLine implements Runnable {
             largeShirabonPlate = TGregUtils.newItemStack(Materials.get("Shirabon"), PartTypes.LargePlate, 1);
             largeInfinityPlate = TGregUtils.newItemStack(Materials.get("Infinity"), PartTypes.LargePlate, 1);
             largeBedrockiumPlate = TGregUtils.newItemStack(Materials.get("Bedrockium"), PartTypes.LargePlate, 1);
-            largeCosmicNeutroniumPlate = TGregUtils.newItemStack(Materials.get("CosmicNeutronium"), PartTypes.LargePlate, 1);
+            largeCosmicNeutroniumPlate = TGregUtils
+                    .newItemStack(Materials.get("CosmicNeutronium"), PartTypes.LargePlate, 1);
         } else {
             largeShirabonPlate = GT_OreDictUnificator.get("plateDenseShirabon", 1);
             largeInfinityPlate = GT_OreDictUnificator.get("plateDenseInfinity", 1);
             largeBedrockiumPlate = GT_OreDictUnificator.get("plateDenseBedrockium", 1);
-            largeCosmicNeutroniumPlate= GT_OreDictUnificator.get("plateDenseCosmicNeutronium", 1);
+            largeCosmicNeutroniumPlate = GT_OreDictUnificator.get("plateDenseCosmicNeutronium", 1);
         }
         final FluidStack[] specialFluid = new FluidStack[] { MaterialsUEVplus.SpaceTime.getMolten(1_440),
                 MaterialsUEVplus.SpaceTime.getMolten(1_440), MaterialsUEVplus.SpaceTime.getMolten(1_440),
