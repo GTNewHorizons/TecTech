@@ -53,11 +53,9 @@ public class ResearchStationAssemblyLine implements Runnable {
         itemPartsUIVAsslineRecipes();
         itemPartsUMVAsslineRecipes();
         itemPartsUXVAsslineRecipes();
-        addEOHRecipes();
-
         addWirelessEnergyRecipes();
 
-        if (TinkersGregworks.isModLoaded()) {
+        if (TinkersGregworks.isModLoaded() && GoodGenerator.isModLoaded()) {
             addEOHRecipes();
         }
 
