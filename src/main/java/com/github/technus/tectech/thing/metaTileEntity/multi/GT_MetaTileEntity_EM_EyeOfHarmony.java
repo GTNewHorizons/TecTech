@@ -955,7 +955,7 @@ public class GT_MetaTileEntity_EM_EyeOfHarmony extends GT_MetaTileEntity_Multibl
                         "is avaliable the items/fluids will be " + UNDERLINE + DARK_RED + "voided" + RESET + GRAY + ".")
                 .addInfo(TOOLTIP_BAR)
                 .addInfo("This multiblock can be overclocked by placing a programmed circuit into the input bus.")
-                .addInfo("Each OC halves recipe time and increases startup cost by a factor of:")
+                .addInfo("Each OC halves recipe time and multiplies startup cost by a factor of:")
                 .addInfo(GREEN + "(log4.4(overclockAmount + 1) + 1) * 0.77^overclockAmount")
                 .addInfo(
                         "Furthermore, each OC decreases the power output by a factor of " + RED
