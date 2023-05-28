@@ -25,6 +25,7 @@ import static gregtech.api.enums.Mods.SuperSolarPanels;
 import static gregtech.api.enums.Mods.Thaumcraft;
 import static gregtech.api.enums.Mods.TinkersGregworks;
 import static gregtech.api.util.GT_ModHandler.getModItem;
+import static gregtech.api.util.GT_RecipeBuilder.MINUTES;
 
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.Fluid;
@@ -866,8 +867,8 @@ public class ResearchStationAssemblyLine implements Runnable {
                             new FluidStack(FluidRegistry.getFluid("molten.californium"), 36864),
                             Materials.NaquadahEnriched.getMolten(36864L) },
                     ItemList.Machine_Multi_PlasmaForge.get(1),
-                    72000,
-                    32_000_000);
+                    5 * MINUTES,
+                    (int) TierEU.RECIPE_UIV);
 
             // Dimensional bridge.
             TT_recipeAdder.addResearchableAssemblylineRecipe(
