@@ -704,7 +704,7 @@ public class ResearchStationAssemblyLine implements Runnable {
                 CustomItemList.eM_energyTunnel7_UV.get(1),
                 32_000_000,
                 4096,
-                32_000_000,
+                (int) TierEU.UIV,
                 1,
                 new Object[] { CustomItemList.eM_energyTunnel7_UV.get(32),
                         new Object[] { OrePrefixes.circuit.get(Materials.Piko), 32L },
@@ -723,8 +723,8 @@ public class ResearchStationAssemblyLine implements Runnable {
                         MaterialsUEVplus.ExcitedDTRC.getFluid(2_048_000),
                         MaterialsUEVplus.ExcitedDTEC.getFluid(2_048_000), },
                 ItemList.Machine_Multi_TranscendentPlasmaMixer.get(1),
-                36_000,
-                32_000_000);
+                5 * MINUTES,
+                (int) TierEU.UIV);
 
         // Stargate Recipes
         if (EternalSingularity.isModLoaded() && SGCraft.isModLoaded()) {
