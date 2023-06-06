@@ -975,7 +975,7 @@ public class GT_MetaTileEntity_EM_EyeOfHarmony extends GT_MetaTileEntity_Multibl
                                 + "L of molten")
                 .addInfo(
                         MaterialsUEVplus.SpaceTime.getLocalizedNameForItem("%material")
-                                + " instead of fluid/item outputs and output as much EU as a succesful recipe.")
+                                + " instead of fluid/item outputs and output as much EU as a successful recipe.")
                 .addInfo(TOOLTIP_BAR).addInfo("Animations can be disabled by using a screwdriver on the multiblock.")
                 .addSeparator().addStructureInfo("Eye of Harmony structure is too complex! See schematic for details.")
                 .addStructureInfo(
