@@ -32,6 +32,7 @@ import static com.github.technus.tectech.thing.CustomItemList.Machine_Multi_EMju
 import static com.github.technus.tectech.thing.CustomItemList.Machine_Multi_EMmachine;
 import static com.github.technus.tectech.thing.CustomItemList.Machine_Multi_EssentiaToEM;
 import static com.github.technus.tectech.thing.CustomItemList.Machine_Multi_EyeOfHarmony;
+import static com.github.technus.tectech.thing.CustomItemList.Machine_Multi_ForgeOfGods;
 import static com.github.technus.tectech.thing.CustomItemList.Machine_Multi_Infuser;
 import static com.github.technus.tectech.thing.CustomItemList.Machine_Multi_MatterToEM;
 import static com.github.technus.tectech.thing.CustomItemList.Machine_Multi_Microwave;
@@ -355,6 +356,7 @@ import com.github.technus.tectech.thing.metaTileEntity.hatch.GT_MetaTileEntity_H
 import com.github.technus.tectech.thing.metaTileEntity.hatch.GT_MetaTileEntity_Hatch_Uncertainty;
 import com.github.technus.tectech.thing.metaTileEntity.hatch.GT_MetaTileEntity_Hatch_WirelessMulti;
 import com.github.technus.tectech.thing.metaTileEntity.multi.GT_MetaTileEntity_EM_EyeOfHarmony;
+import com.github.technus.tectech.thing.metaTileEntity.multi.GT_MetaTileEntity_EM_ForgeOfGods;
 import com.github.technus.tectech.thing.metaTileEntity.multi.GT_MetaTileEntity_EM_annihilation;
 import com.github.technus.tectech.thing.metaTileEntity.multi.GT_MetaTileEntity_EM_computer;
 import com.github.technus.tectech.thing.metaTileEntity.multi.GT_MetaTileEntity_EM_crafting;

@@ -12,6 +12,7 @@ import com.github.technus.tectech.thing.block.ReactorSimBlock;
 import com.github.technus.tectech.thing.block.TileEyeOfHarmony;
 import com.github.technus.tectech.thing.casing.GT_Block_CasingsBA0;
 import com.github.technus.tectech.thing.casing.GT_Block_CasingsTT;
+import com.github.technus.tectech.thing.casing.GravitonModulationCasing;
 import com.github.technus.tectech.thing.casing.SpacetimeCompressionFieldCasing;
 import com.github.technus.tectech.thing.casing.StabilisationFieldCasing;
 import com.github.technus.tectech.thing.casing.TT_Container_Casings;

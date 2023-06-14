@@ -20,6 +20,7 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.StatCollector;
+import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.oredict.OreDictionary;
@@ -3109,9 +3110,9 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
     }
 
     @Override
-    public ITexture[] getTexture(IGregTechTileEntity aBaseMetaTileEntity, byte aSide, byte aFacing, byte aColorIndex,
-            boolean aActive, boolean aRedstone) {
-        if (aSide == aFacing) {
+    public ITexture[] getTexture(IGregTechTileEntity aBaseMetaTileEntity, ForgeDirection side, ForgeDirection facing,
+            int colorIndex, boolean aActive, boolean aRedstone) {
+        if (side == facing) {
             return new ITexture[] { Textures.BlockIcons.casingTexturePages[texturePage][12],
                     new TT_RenderedExtendedFacingTexture(aActive ? ScreenON : ScreenOFF) };
         }
@@ -3344,9 +3345,9 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
     private final Map<FluidStack, Integer> validFuelMap = new HashMap<FluidStack, Integer>() {
 
         {
-            put(Materials.DimensionallyTranscendentResidue.getFluid(1), 2500);
-            put(Materials.WhiteDwarfMatter.getMolten(1), 5);
-            put(Materials.BlackDwarfMatter.getMolten(1), 3);
+            put(MaterialsUEVplus.DimensionallyTranscendentResidue.getFluid(1), 2500);
+            put(MaterialsUEVplus.WhiteDwarfMatter.getMolten(1), 5);
+            put(MaterialsUEVplus.BlackDwarfMatter.getMolten(1), 3);
         }
     };
 
@@ -3489,7 +3490,7 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
     }
 
     @Override
-    public final void onScrewdriverRightClick(byte aSide, EntityPlayer aPlayer, float aX, float aY, float aZ) {
+    public final void onScrewdriverRightClick(ForgeDirection side, EntityPlayer aPlayer, float aX, float aY, float aZ) {
         inputSeparation = !inputSeparation;
         GT_Utility.sendChatToPlayer(
                 aPlayer,
