@@ -3447,7 +3447,7 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
         }
 
         // Make sure there are 2 input hatches.
-        if (mInputHatches.size() != 2) {
+        if (mInputHatches.size() != 1) {
             return false;
         }
 
