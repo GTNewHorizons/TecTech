@@ -71,7 +71,6 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
     private String userUUID = "";
     protected static final String STRUCTURE_PIECE_MAIN = "main";
 
-
     public int survivalConstruct(ItemStack stackSize, int elementBudget, IItemSource source, EntityPlayerMP actor) {
         if (mMachine) return -1;
         int realBudget = elementBudget >= 200 ? elementBudget : Math.min(200, elementBudget * 5); // 200 blocks max per
@@ -81,59 +80,56 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
 
     @Override
     public IStructureDefinition<GT_MetaTileEntity_EM_ForgeOfGods> getStructure_EM() {
-        return STRUCTURE_DEFINITION ;
+        return STRUCTURE_DEFINITION;
     }
+
     public static final IStructureDefinition<GT_MetaTileEntity_EM_ForgeOfGods> STRUCTURE_DEFINITION = IStructureDefinition
             .<GT_MetaTileEntity_EM_ForgeOfGods>builder()
-            .addShape(
-                    "main",
-                    transpose( ForgeofGodsStructureString.godForge))
+            .addShape("main", transpose(ForgeofGodsStructureString.godForge))
 
-
-                            .addElement(
-                                    'A',
-                                    buildHatchAdder(GT_MetaTileEntity_EM_ForgeOfGods.class)
-                                            .atLeast(InputHatch, OutputHatch, InputBus, OutputBus).casingIndex(texturePage << 7).dot(1)
-                                            .buildAndChain(sBlockCasingsBA0, 12))
-                            .addElement('B', ofBlock(sBlockCasingsTT, 11)).addElement('C', ofBlock(sBlockCasingsTT, 12))
-                            .addElement(
-                                    'D',
-                                    ofBlocksTiered(
-                                            (block, meta) -> block == GregTech_API.sSolenoidCoilCasings ? meta : -1,
-                                            ImmutableList.of(
-                                                    Pair.of(GregTech_API.sSolenoidCoilCasings, 7),
-                                                    Pair.of(GregTech_API.sSolenoidCoilCasings, 8),
-                                                    Pair.of(GregTech_API.sSolenoidCoilCasings, 9),
-                                                    Pair.of(GregTech_API.sSolenoidCoilCasings, 10)),
-                                            -1,
-                                            (t, meta) -> t.solenoidCoilMetadata = meta,
-                                            t -> t.solenoidCoilMetadata))
-                            .addElement(
-                                    'E',
-                                    ofBlocksTiered(
-                                            (block, meta) -> block == TT_Container_Casings.SpacetimeCompressionFieldGenerators ? meta
-                                                    : -1,
-                                            ImmutableList.of(
-                                                    Pair.of(TT_Container_Casings.SpacetimeCompressionFieldGenerators, 0),
-                                                    Pair.of(TT_Container_Casings.SpacetimeCompressionFieldGenerators, 1),
-                                                    Pair.of(TT_Container_Casings.SpacetimeCompressionFieldGenerators, 2),
-                                                    Pair.of(TT_Container_Casings.SpacetimeCompressionFieldGenerators, 3),
-                                                    Pair.of(TT_Container_Casings.SpacetimeCompressionFieldGenerators, 4),
-                                                    Pair.of(TT_Container_Casings.SpacetimeCompressionFieldGenerators, 5),
-                                                    Pair.of(TT_Container_Casings.SpacetimeCompressionFieldGenerators, 6),
-                                                    Pair.of(TT_Container_Casings.SpacetimeCompressionFieldGenerators, 7),
-                                                    Pair.of(TT_Container_Casings.SpacetimeCompressionFieldGenerators, 8)),
-                                            -1,
-                                            (t, meta) -> t.spacetimeCompressionFieldMetadata = meta,
-                                            t -> t.spacetimeCompressionFieldMetadata))
-                            .addElement(
-                                    'F',
-                                    buildHatchAdder(GT_MetaTileEntity_EM_ForgeOfGods.class)
-                                            .hatchClass(GT_MetaTileEntity_Hatch_Input.class)
-                                            .adder(GT_MetaTileEntity_EM_ForgeOfGods::addFuelInputToMachineList)
-                                            .casingIndex(texturePage << 7).dot(2).buildAndChain(sBlockCasingsBA0, 12))
-                            .build();
-
+            .addElement(
+                    'A',
+                    buildHatchAdder(GT_MetaTileEntity_EM_ForgeOfGods.class)
+                            .atLeast(InputHatch, OutputHatch, InputBus, OutputBus).casingIndex(texturePage << 7).dot(1)
+                            .buildAndChain(sBlockCasingsBA0, 12))
+            .addElement('B', ofBlock(sBlockCasingsTT, 11)).addElement('C', ofBlock(sBlockCasingsTT, 12))
+            .addElement(
+                    'D',
+                    ofBlocksTiered(
+                            (block, meta) -> block == GregTech_API.sSolenoidCoilCasings ? meta : -1,
+                            ImmutableList.of(
+                                    Pair.of(GregTech_API.sSolenoidCoilCasings, 7),
+                                    Pair.of(GregTech_API.sSolenoidCoilCasings, 8),
+                                    Pair.of(GregTech_API.sSolenoidCoilCasings, 9),
+                                    Pair.of(GregTech_API.sSolenoidCoilCasings, 10)),
+                            -1,
+                            (t, meta) -> t.solenoidCoilMetadata = meta,
+                            t -> t.solenoidCoilMetadata))
+            .addElement(
+                    'E',
+                    ofBlocksTiered(
+                            (block, meta) -> block == TT_Container_Casings.SpacetimeCompressionFieldGenerators ? meta
+                                    : -1,
+                            ImmutableList.of(
+                                    Pair.of(TT_Container_Casings.SpacetimeCompressionFieldGenerators, 0),
+                                    Pair.of(TT_Container_Casings.SpacetimeCompressionFieldGenerators, 1),
+                                    Pair.of(TT_Container_Casings.SpacetimeCompressionFieldGenerators, 2),
+                                    Pair.of(TT_Container_Casings.SpacetimeCompressionFieldGenerators, 3),
+                                    Pair.of(TT_Container_Casings.SpacetimeCompressionFieldGenerators, 4),
+                                    Pair.of(TT_Container_Casings.SpacetimeCompressionFieldGenerators, 5),
+                                    Pair.of(TT_Container_Casings.SpacetimeCompressionFieldGenerators, 6),
+                                    Pair.of(TT_Container_Casings.SpacetimeCompressionFieldGenerators, 7),
+                                    Pair.of(TT_Container_Casings.SpacetimeCompressionFieldGenerators, 8)),
+                            -1,
+                            (t, meta) -> t.spacetimeCompressionFieldMetadata = meta,
+                            t -> t.spacetimeCompressionFieldMetadata))
+            .addElement(
+                    'F',
+                    buildHatchAdder(GT_MetaTileEntity_EM_ForgeOfGods.class)
+                            .hatchClass(GT_MetaTileEntity_Hatch_Input.class)
+                            .adder(GT_MetaTileEntity_EM_ForgeOfGods::addFuelInputToMachineList)
+                            .casingIndex(texturePage << 7).dot(2).buildAndChain(sBlockCasingsBA0, 12))
+            .build();
 
     public GT_MetaTileEntity_EM_ForgeOfGods(int aID, String aName, String aNameRegional) {
         super(aID, aName, aNameRegional);
@@ -186,7 +182,7 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
 
     @Override
     public ITexture[] getTexture(IGregTechTileEntity aBaseMetaTileEntity, ForgeDirection side, ForgeDirection facing,
-                                 int colorIndex, boolean aActive, boolean aRedstone) {
+            int colorIndex, boolean aActive, boolean aRedstone) {
         if (side == facing) {
             return new ITexture[] { Textures.BlockIcons.casingTexturePages[texturePage][12],
                     new TT_RenderedExtendedFacingTexture(aActive ? ScreenON : ScreenOFF) };
