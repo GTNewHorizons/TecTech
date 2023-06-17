@@ -15,15 +15,14 @@ import com.gtnewhorizon.structurelib.structure.StructureUtility;
 import gregtech.api.enums.Textures;
 import gregtech.api.interfaces.IGlobalWirelessEnergy;
 import gregtech.api.interfaces.ITexture;
+import gregtech.api.interfaces.metatileentity.IMetaTileEntity;
 import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
 import gregtech.api.util.GT_StructureUtility;
 
-public abstract class GT_MetaTileEntity_EM_BaseModule extends GT_MetaTileEntity_MultiblockBase_EM
+public class GT_MetaTileEntity_EM_BaseModule extends GT_MetaTileEntity_MultiblockBase_EM
         implements IGlobalWirelessEnergy {
 
-    protected final int tier;
-    protected final int moduleTier;
-    protected final int minSCTier;
+    protected final int tier = getTier();
     protected boolean isConnected = false;
     private String userUUID = "";
 
@@ -44,12 +43,17 @@ public abstract class GT_MetaTileEntity_EM_BaseModule extends GT_MetaTileEntity_
                             12))
             .build();
 
-    protected GT_MetaTileEntity_EM_BaseModule(int ID, String name, String nameRegional, int tier, int moduleTier,
-            int minSCTier) {
-        super(ID, name, nameRegional);
-        this.tier = tier;
-        this.moduleTier = moduleTier;
-        this.minSCTier = minSCTier;
+    public GT_MetaTileEntity_EM_BaseModule(int aID, String aName, String aNameRegional) {
+        super(aID, aName, aNameRegional);
+    }
+
+    public GT_MetaTileEntity_EM_BaseModule(String aName) {
+        super(aName);
+    }
+
+    @Override
+    public IMetaTileEntity newMetaEntity(IGregTechTileEntity aTileEntity) {
+        return new GT_MetaTileEntity_EM_BaseModule(mName) {};
     }
 
     @Override
@@ -96,10 +100,6 @@ public abstract class GT_MetaTileEntity_EM_BaseModule extends GT_MetaTileEntity_
 
     public int getTier() {
         return tier;
-    }
-
-    public int getNeededSCTier() {
-        return minSCTier;
     }
 
     @Override
@@ -155,5 +155,4 @@ public abstract class GT_MetaTileEntity_EM_BaseModule extends GT_MetaTileEntity_
         }
         return new ITexture[] { Textures.BlockIcons.getCasingTextureForId(texturePage << 7) };
     }
-
 }
