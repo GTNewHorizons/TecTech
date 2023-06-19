@@ -14,7 +14,8 @@ import java.util.*;
 
 import javax.annotation.Nullable;
 
-import com.github.technus.tectech.thing.metaTileEntity.multi.godforge_modules.GT_MetaTileEntity_EM_SmeltingModule;
+import com.github.technus.tectech.thing.metaTileEntity.multi.godforge_modules.GT_MetaTileEntity_EM_BaseModule;
+import gregtech.api.interfaces.IHatchElement;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -63,6 +64,7 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
 
     Parameters.Group.ParameterIn[] parallelParameter;
     static Parameters.Group.ParameterIn[] fuelConsumptionParameter;
+    public ArrayList<GT_MetaTileEntity_EM_BaseModule> moduleHatches = new ArrayList<>();
 
     private int spacetimeCompressionFieldMetadata = -1;
     private int solenoidCoilMetadata = -1;
@@ -130,6 +132,13 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
                             .hatchClass(GT_MetaTileEntity_Hatch_Input.class)
                             .adder(GT_MetaTileEntity_EM_ForgeOfGods::addFuelInputToMachineList)
                             .casingIndex(texturePage << 7).dot(2).buildAndChain(sBlockCasingsBA0, 12))
+            .addElement(
+                    'G',
+                    GT_HatchElementBuilder.<GT_MetaTileEntity_EM_ForgeOfGods>builder()
+                            .atLeast(moduleElement.Module)
+                            .casingIndex(texturePage << 7)
+                            .dot(2)
+                            .buildAndChain(sBlockCasingsBA0, 12))
             .build();
 
     public GT_MetaTileEntity_EM_ForgeOfGods(int aID, String aName, String aNameRegional) {
@@ -544,6 +553,50 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
             userUUID = String.valueOf(getBaseMetaTileEntity().getOwnerUuid());
             String userName = getBaseMetaTileEntity().getOwnerName();
             strongCheckOrAddUser(userUUID, userName);
+        }
+    }
+
+    public boolean addModuleToMachineList(IGregTechTileEntity aTileEntity, int aBaseCasingIndex) {
+        if (aTileEntity == null) {
+            return false;
+        }
+        IMetaTileEntity aMetaTileEntity = aTileEntity.getMetaTileEntity();
+        if (aMetaTileEntity == null) {
+            return false;
+        }
+        if (aMetaTileEntity instanceof GT_MetaTileEntity_EM_BaseModule) {
+            return moduleHatches.add((GT_MetaTileEntity_EM_BaseModule) aMetaTileEntity);
+        }
+        return false;
+    }
+
+    public enum moduleElement implements IHatchElement<GT_MetaTileEntity_EM_ForgeOfGods> {
+
+        Module(GT_MetaTileEntity_EM_ForgeOfGods::addModuleToMachineList, GT_MetaTileEntity_EM_BaseModule.class) {
+
+            @Override
+            public long count(GT_MetaTileEntity_EM_ForgeOfGods tileEntity) {
+                return tileEntity.moduleHatches.size();
+            }
+        };
+
+        private final List<Class<? extends IMetaTileEntity>> mteClasses;
+        private final IGT_HatchAdder<GT_MetaTileEntity_EM_ForgeOfGods> adder;
+
+        @SafeVarargs
+        moduleElement(IGT_HatchAdder<GT_MetaTileEntity_EM_ForgeOfGods> adder,
+                             Class<? extends IMetaTileEntity>... mteClasses) {
+            this.mteClasses = Collections.unmodifiableList(Arrays.asList(mteClasses));
+            this.adder = adder;
+        }
+
+        @Override
+        public List<? extends Class<? extends IMetaTileEntity>> mteClasses() {
+            return mteClasses;
+        }
+
+        public IGT_HatchAdder<? super GT_MetaTileEntity_EM_ForgeOfGods> adder() {
+            return adder;
         }
     }
 
