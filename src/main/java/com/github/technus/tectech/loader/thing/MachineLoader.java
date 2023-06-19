@@ -4,6 +4,9 @@ import static com.github.technus.tectech.mechanics.elementalMatter.core.transfor
 import static com.github.technus.tectech.thing.CustomItemList.*;
 import static com.github.technus.tectech.util.CommonValues.V;
 
+import com.github.technus.tectech.thing.metaTileEntity.multi.godforge_modules.GT_MetaTileEntity_EM_MoltenModule;
+import com.github.technus.tectech.thing.metaTileEntity.multi.godforge_modules.GT_MetaTileEntity_EM_PlasmaModule;
+import com.github.technus.tectech.thing.metaTileEntity.multi.godforge_modules.GT_MetaTileEntity_EM_quark_gluon_plasma;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 
@@ -1929,6 +1932,15 @@ public class MachineLoader implements Runnable {
                         .getStackForm(1L));
         Machine_Multi_SmeltingModule.set(
                 new GT_MetaTileEntity_EM_SmeltingModule(15412, "multimachine.em.smelting_module", "Smelting Module")
+                        .getStackForm(1L));
+        Machine_Multi_MoltenModule.set(
+                new GT_MetaTileEntity_EM_MoltenModule(15413, "multimachine.em.molten_module", "Molten Module")
+                        .getStackForm(1L));
+        Machine_Multi_PlasmaModule.set(
+                new GT_MetaTileEntity_EM_PlasmaModule(15414, "multimachine.em.plasma_module", "Plasma Module")
+                        .getStackForm(1L));
+        Machine_Multi_QuarkGluonPlasmaModule.set(
+                new GT_MetaTileEntity_EM_quark_gluon_plasma(15415, "multimachine.em.quark_gluon_plasma_module", "Quark Gluon Plasma Module")
                         .getStackForm(1L));
 
         // ===================================================================================================
