@@ -2,6 +2,7 @@ package com.github.technus.tectech.thing.metaTileEntity.multi.godforge_modules;
 
 import static com.github.technus.tectech.thing.casing.GT_Block_CasingsTT.texturePage;
 
+import gregtech.api.metatileentity.implementations.GT_MetaTileEntity_Hatch_InputBus;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.FluidStack;
@@ -19,6 +20,8 @@ import gregtech.api.interfaces.metatileentity.IMetaTileEntity;
 import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
 import gregtech.api.util.*;
 
+import java.util.ArrayList;
+
 public class GT_MetaTileEntity_EM_SmeltingModule extends GT_MetaTileEntity_EM_BaseModule
         implements IGlobalWirelessEnergy {
 
@@ -27,7 +30,6 @@ public class GT_MetaTileEntity_EM_SmeltingModule extends GT_MetaTileEntity_EM_Ba
     Parameters.Group.ParameterIn[] parallelParameter;
     private int solenoidCoilMetadata = -1;
     protected boolean isConnected = false;
-    private String userUUID = "";
 
     public GT_MetaTileEntity_EM_SmeltingModule(int aID, String aName, String aNameRegional) {
         super(aID, aName, aNameRegional);
@@ -36,6 +38,30 @@ public class GT_MetaTileEntity_EM_SmeltingModule extends GT_MetaTileEntity_EM_Ba
     @Override
     public IMetaTileEntity newMetaEntity(IGregTechTileEntity aTileEntity) {
         return new GT_MetaTileEntity_EM_BaseModule(mName) {};
+    }
+
+    @Override
+    public boolean checkRecipe_EM(ItemStack aStack) {
+        ItemStack[] tInputs;
+        FluidStack[] tFluids = this.getStoredFluids().toArray(new FluidStack[0]);
+
+        if (inputSeparation) {
+            ArrayList<ItemStack> tInputList = new ArrayList<>();
+            for (GT_MetaTileEntity_Hatch_InputBus tHatch : mInputBusses) {
+                IGregTechTileEntity tInputBus = tHatch.getBaseMetaTileEntity();
+                for (int i = tInputBus.getSizeInventory() - 1; i >= 0; i--) {
+                    if (tInputBus.getStackInSlot(i) != null) tInputList.add(tInputBus.getStackInSlot(i));
+                }
+                tInputs = tInputList.toArray(new ItemStack[0]);
+
+                if (processRecipe(tInputs, tFluids)) return true;
+                else tInputList.clear();
+            }
+        } else {
+            tInputs = getStoredInputs().toArray(new ItemStack[0]);
+            return processRecipe(tInputs, tFluids);
+        }
+        return false;
     }
 
     private boolean processRecipe(ItemStack[] aItemInputs, FluidStack[] aFluidInputs) {
@@ -80,44 +106,7 @@ public class GT_MetaTileEntity_EM_SmeltingModule extends GT_MetaTileEntity_EM_Ba
         return true;
     }
 
-    @Override
-    public void onPostTick(IGregTechTileEntity aBaseMetaTileEntity, long aTick) {
-        if (aBaseMetaTileEntity.isServerSide() && isConnected) {
-            super.onPostTick(aBaseMetaTileEntity, aTick);
-            if (aTick % 400 == 0) fixAllIssues();
-            if (mEfficiency < 0) mEfficiency = 0;
-            if (aBaseMetaTileEntity.getStoredEU() <= 0 && mMaxProgresstime > 0) {
-                stopMachine();
-            }
-        }
-    }
 
-    @Override
-    public boolean drainEnergyInput(long EUtEffective, long Amperes) {
-        long EU_drain = EUtEffective * Amperes;
-        if (EU_drain == 0L) {
-            return true;
-        } else {
-            if (EU_drain > 0L) {
-                EU_drain = -EU_drain;
-            }
-            return addEUToGlobalEnergyMap(userUUID, EU_drain);
-        }
-    }
-
-    public int getTier() {
-        return tier;
-    }
-
-    @Override
-    public boolean isSimpleMachine() {
-        return true;
-    }
-
-    @Override
-    public boolean willExplodeInRain() {
-        return false;
-    }
 
     @Override
     public ITexture[] getTexture(IGregTechTileEntity aBaseMetaTileEntity, ForgeDirection side, ForgeDirection facing,
@@ -139,27 +128,6 @@ public class GT_MetaTileEntity_EM_SmeltingModule extends GT_MetaTileEntity_EM_Ba
         return !eSafeVoid;
     }
 
-    public void connect() {
-        isConnected = true;
-    }
-
-    public void disconnect() {
-        isConnected = false;
-    }
-
-    protected void fixAllIssues() {
-        mWrench = true;
-        mScrewdriver = true;
-        mSoftHammer = true;
-        mHardHammer = true;
-        mSolderingTool = true;
-        mCrowbar = true;
-    }
-
-    @Override
-    public long getMaxInputVoltage() {
-        return gregtech.api.enums.GT_Values.V[tier];
-    }
 
     @Override
     public void onPreTick(IGregTechTileEntity aBaseMetaTileEntity, long aTick) {
