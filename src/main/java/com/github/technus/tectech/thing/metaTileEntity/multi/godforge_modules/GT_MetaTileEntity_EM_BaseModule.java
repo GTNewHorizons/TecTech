@@ -24,7 +24,7 @@ public class GT_MetaTileEntity_EM_BaseModule extends GT_MetaTileEntity_Multibloc
 
     protected final int tier = getTier();
     protected boolean isConnected = false;
-    private String userUUID = "";
+    protected String userUUID = "";
 
     private static final String STRUCTURE_PIECE_MAIN = "main";
     private static final IStructureDefinition<GT_MetaTileEntity_EM_BaseModule> STRUCTURE_DEFINITION = StructureDefinition
