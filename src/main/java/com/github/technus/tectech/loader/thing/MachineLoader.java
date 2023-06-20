@@ -4,9 +4,6 @@ import static com.github.technus.tectech.mechanics.elementalMatter.core.transfor
 import static com.github.technus.tectech.thing.CustomItemList.*;
 import static com.github.technus.tectech.util.CommonValues.V;
 
-import com.github.technus.tectech.thing.metaTileEntity.multi.godforge_modules.GT_MetaTileEntity_EM_MoltenModule;
-import com.github.technus.tectech.thing.metaTileEntity.multi.godforge_modules.GT_MetaTileEntity_EM_PlasmaModule;
-import com.github.technus.tectech.thing.metaTileEntity.multi.godforge_modules.GT_MetaTileEntity_EM_quark_gluon_plasma;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 
@@ -33,6 +30,7 @@ import com.github.technus.tectech.thing.metaTileEntity.hatch.GT_MetaTileEntity_H
 import com.github.technus.tectech.thing.metaTileEntity.hatch.GT_MetaTileEntity_Hatch_Uncertainty;
 import com.github.technus.tectech.thing.metaTileEntity.hatch.GT_MetaTileEntity_Hatch_WirelessMulti;
 import com.github.technus.tectech.thing.metaTileEntity.multi.GT_MetaTileEntity_EM_EyeOfHarmony;
+import com.github.technus.tectech.thing.metaTileEntity.multi.GT_MetaTileEntity_EM_ForgeOfGods;
 import com.github.technus.tectech.thing.metaTileEntity.multi.GT_MetaTileEntity_EM_annihilation;
 import com.github.technus.tectech.thing.metaTileEntity.multi.GT_MetaTileEntity_EM_computer;
 import com.github.technus.tectech.thing.metaTileEntity.multi.GT_MetaTileEntity_EM_crafting;
@@ -52,7 +50,10 @@ import com.github.technus.tectech.thing.metaTileEntity.multi.GT_MetaTileEntity_T
 import com.github.technus.tectech.thing.metaTileEntity.multi.GT_MetaTileEntity_TM_teslaCoil;
 import com.github.technus.tectech.thing.metaTileEntity.multi.em_collider.GT_MetaTileEntity_EM_collider;
 import com.github.technus.tectech.thing.metaTileEntity.multi.em_machine.GT_MetaTileEntity_EM_machine;
+import com.github.technus.tectech.thing.metaTileEntity.multi.godforge_modules.GT_MetaTileEntity_EM_MoltenModule;
+import com.github.technus.tectech.thing.metaTileEntity.multi.godforge_modules.GT_MetaTileEntity_EM_PlasmaModule;
 import com.github.technus.tectech.thing.metaTileEntity.multi.godforge_modules.GT_MetaTileEntity_EM_SmeltingModule;
+import com.github.technus.tectech.thing.metaTileEntity.multi.godforge_modules.GT_MetaTileEntity_EM_quark_gluon_plasma;
 import com.github.technus.tectech.thing.metaTileEntity.pipe.GT_MetaTileEntity_PipeBlock_Data;
 import com.github.technus.tectech.thing.metaTileEntity.pipe.GT_MetaTileEntity_PipeBlock_EM;
 import com.github.technus.tectech.thing.metaTileEntity.pipe.GT_MetaTileEntity_PipeBlock_Energy;
@@ -67,7 +68,6 @@ import com.github.technus.tectech.thing.metaTileEntity.single.GT_MetaTileEntity_
 import com.github.technus.tectech.thing.metaTileEntity.single.GT_MetaTileEntity_MicroController;
 import com.github.technus.tectech.thing.metaTileEntity.single.GT_MetaTileEntity_OwnerDetector;
 import com.github.technus.tectech.thing.metaTileEntity.single.GT_MetaTileEntity_TeslaCoil;
-import com.github.technus.tectech.thing.metaTileEntity.multi.GT_MetaTileEntity_EM_ForgeOfGods;
 
 /**
  * Created by danie_000 on 16.11.2016.
@@ -1940,8 +1940,10 @@ public class MachineLoader implements Runnable {
                 new GT_MetaTileEntity_EM_PlasmaModule(15414, "multimachine.em.plasma_module", "Plasma Module")
                         .getStackForm(1L));
         Machine_Multi_QuarkGluonPlasmaModule.set(
-                new GT_MetaTileEntity_EM_quark_gluon_plasma(15415, "multimachine.em.quark_gluon_plasma_module", "Quark Gluon Plasma Module")
-                        .getStackForm(1L));
+                new GT_MetaTileEntity_EM_quark_gluon_plasma(
+                        15415,
+                        "multimachine.em.quark_gluon_plasma_module",
+                        "Quark Gluon Plasma Module").getStackForm(1L));
 
         // ===================================================================================================
         // Hatches

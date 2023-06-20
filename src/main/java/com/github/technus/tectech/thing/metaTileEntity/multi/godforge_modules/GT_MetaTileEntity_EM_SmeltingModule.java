@@ -2,7 +2,8 @@ package com.github.technus.tectech.thing.metaTileEntity.multi.godforge_modules;
 
 import static com.github.technus.tectech.thing.casing.GT_Block_CasingsTT.texturePage;
 
-import gregtech.api.metatileentity.implementations.GT_MetaTileEntity_Hatch_InputBus;
+import java.util.ArrayList;
+
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.FluidStack;
@@ -18,18 +19,15 @@ import gregtech.api.interfaces.IGlobalWirelessEnergy;
 import gregtech.api.interfaces.ITexture;
 import gregtech.api.interfaces.metatileentity.IMetaTileEntity;
 import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
+import gregtech.api.metatileentity.implementations.GT_MetaTileEntity_Hatch_InputBus;
 import gregtech.api.util.*;
-
-import java.util.ArrayList;
 
 public class GT_MetaTileEntity_EM_SmeltingModule extends GT_MetaTileEntity_EM_BaseModule
         implements IGlobalWirelessEnergy {
 
-    protected final int tier = getTier();
-
     Parameters.Group.ParameterIn[] parallelParameter;
     private int solenoidCoilMetadata = -1;
-    protected boolean isConnected = false;
+    private int currentParallel = 0;
 
     public GT_MetaTileEntity_EM_SmeltingModule(int aID, String aName, String aNameRegional) {
         super(aID, aName, aNameRegional);
@@ -64,7 +62,7 @@ public class GT_MetaTileEntity_EM_SmeltingModule extends GT_MetaTileEntity_EM_Ba
         return false;
     }
 
-    private boolean processRecipe(ItemStack[] aItemInputs, FluidStack[] aFluidInputs) {
+    public boolean processRecipe(ItemStack[] aItemInputs, FluidStack[] aFluidInputs) {
         // Reset outputs and progress stats
         this.lEUt = 0;
         this.mMaxProgresstime = 0;
@@ -76,9 +74,8 @@ public class GT_MetaTileEntity_EM_SmeltingModule extends GT_MetaTileEntity_EM_Ba
         byte tTier = (byte) Math.max(1, GT_Utility.getTier(tVoltage));
         long tEnergy = maxParallel * tVoltage;
 
-        GT_Recipe tRecipe = GT_Recipe.GT_Recipe_Map.sBlastRecipes.findRecipe(
+        GT_Recipe tRecipe = this.getRecipeMap().findRecipe(
                 getBaseMetaTileEntity(),
-                false,
                 false,
                 gregtech.api.enums.GT_Values.V[tTier],
                 aFluidInputs,
@@ -94,19 +91,47 @@ public class GT_MetaTileEntity_EM_SmeltingModule extends GT_MetaTileEntity_EM_Ba
             return false;
         }
 
-        GT_OverclockCalculator calculator = new GT_OverclockCalculator().setRecipeEUt(tRecipe.mEUt)
-                .setEUt(gregtech.api.enums.GT_Values.V[tTier] * helper.getCurrentParallel())
-                .setDuration(tRecipe.mDuration).setParallel((int) Math.floor(helper.getCurrentParallel())).calculate();
+        this.mEfficiency = (10000 - (getIdealStatus() - getRepairStatus()) * 1000);
+        this.mEfficiencyIncrease = 10000;
 
-        lEUt = -calculator.getConsumption();
+        GT_OverclockCalculator calculator = new GT_OverclockCalculator().setRecipeEUt(tRecipe.mEUt).setEUt(tVoltage)
+                .setDuration(tRecipe.mDuration).setAmperage(helper.getCurrentParallel())
+                .setParallel(helper.getCurrentParallel()).calculate();
+
+        long EUt = -calculator.getConsumption();
         mMaxProgresstime = (int) Math.ceil(calculator.getDuration() * helper.getDurationMultiplier());
-        mEfficiency = 10000;
-        mEfficiencyIncrease = 10000;
+
+        if (!addEUToGlobalEnergyMap(userUUID, EUt * mMaxProgresstime)) {
+            stopMachine();
+            return false;
+        }
+
         mOutputItems = helper.getItemOutputs();
+        mOutputFluids = helper.getFluidOutputs();
+
+        ArrayList<ItemStack> ItemOutputs = new ArrayList<>();
+        ArrayList<FluidStack> FluidOutputs = new ArrayList<>();
+        currentParallel = helper.getCurrentParallel();
+        {}
+        {
+            for (int i = 0; i < mOutputItems.length + mOutputFluids.length; i++) {
+                if (i < tRecipe.mOutputs.length) {
+                    ItemStack aItem = tRecipe.getOutput(i).copy();
+                    aItem.stackSize *= currentParallel;
+                    ItemOutputs.add(aItem);
+                } else {
+                    FluidStack aFluid = tRecipe.getFluidOutput(i - tRecipe.mOutputs.length).copy();
+                    aFluid.amount *= currentParallel;
+                    FluidOutputs.add(aFluid);
+                }
+            }
+        }
+
+        mOutputItems = ItemOutputs.toArray(new ItemStack[0]);
+        mOutputFluids = FluidOutputs.toArray(new FluidStack[0]);
+        updateSlots();
         return true;
     }
-
-
 
     @Override
     public ITexture[] getTexture(IGregTechTileEntity aBaseMetaTileEntity, ForgeDirection side, ForgeDirection facing,
@@ -118,26 +143,6 @@ public class GT_MetaTileEntity_EM_SmeltingModule extends GT_MetaTileEntity_EM_Ba
                                     : GT_MetaTileEntity_MultiblockBase_EM.ScreenOFF) };
         }
         return new ITexture[] { Textures.BlockIcons.getCasingTextureForId(texturePage << 7) };
-    }
-
-    public boolean protectsExcessItem() {
-        return !eSafeVoid;
-    }
-
-    public boolean protectsExcessFluid() {
-        return !eSafeVoid;
-    }
-
-
-    @Override
-    public void onPreTick(IGregTechTileEntity aBaseMetaTileEntity, long aTick) {
-        super.onPreTick(aBaseMetaTileEntity, aTick);
-
-        if (aTick == 1) {
-            userUUID = String.valueOf(getBaseMetaTileEntity().getOwnerUuid());
-            String userName = getBaseMetaTileEntity().getOwnerName();
-            strongCheckOrAddUser(userUUID, userName);
-        }
     }
 
     @Override

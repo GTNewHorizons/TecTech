@@ -5,7 +5,6 @@ import static com.github.technus.tectech.thing.casing.TT_Container_Casings.sBloc
 import static com.github.technus.tectech.thing.casing.TT_Container_Casings.sBlockCasingsTT;
 import static com.gtnewhorizon.structurelib.structure.StructureUtility.*;
 import static gregtech.api.enums.GT_HatchElement.*;
-import static gregtech.api.util.GT_OreDictUnificator.getAssociation;
 import static gregtech.api.util.GT_StructureUtility.buildHatchAdder;
 import static gregtech.api.util.GT_Utility.formatNumbers;
 import static net.minecraft.util.StatCollector.translateToLocal;
@@ -14,8 +13,6 @@ import java.util.*;
 
 import javax.annotation.Nullable;
 
-import com.github.technus.tectech.thing.metaTileEntity.multi.godforge_modules.GT_MetaTileEntity_EM_BaseModule;
-import gregtech.api.interfaces.IHatchElement;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -32,6 +29,7 @@ import org.apache.commons.lang3.tuple.Pair;
 import com.github.technus.tectech.thing.casing.TT_Container_Casings;
 import com.github.technus.tectech.thing.metaTileEntity.multi.base.*;
 import com.github.technus.tectech.thing.metaTileEntity.multi.base.render.TT_RenderedExtendedFacingTexture;
+import com.github.technus.tectech.thing.metaTileEntity.multi.godforge_modules.GT_MetaTileEntity_EM_BaseModule;
 import com.github.technus.tectech.util.CommonValues;
 import com.google.common.collect.ImmutableList;
 import com.gtnewhorizon.structurelib.alignment.constructable.IConstructable;
@@ -44,13 +42,13 @@ import cpw.mods.fml.relauncher.SideOnly;
 import gregtech.api.GregTech_API;
 import gregtech.api.enums.*;
 import gregtech.api.interfaces.IGlobalWirelessEnergy;
+import gregtech.api.interfaces.IHatchElement;
 import gregtech.api.interfaces.ITexture;
 import gregtech.api.interfaces.metatileentity.IMetaTileEntity;
 import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
 import gregtech.api.metatileentity.implementations.GT_MetaTileEntity_Hatch;
 import gregtech.api.metatileentity.implementations.GT_MetaTileEntity_Hatch_Input;
 import gregtech.api.metatileentity.implementations.GT_MetaTileEntity_Hatch_InputBus;
-import gregtech.api.objects.ItemData;
 import gregtech.api.util.*;
 import gregtech.common.tileentities.machines.GT_MetaTileEntity_Hatch_OutputBus_ME;
 import gregtech.common.tileentities.machines.GT_MetaTileEntity_Hatch_Output_ME;
@@ -134,11 +132,8 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
                             .casingIndex(texturePage << 7).dot(2).buildAndChain(sBlockCasingsBA0, 12))
             .addElement(
                     'G',
-                    GT_HatchElementBuilder.<GT_MetaTileEntity_EM_ForgeOfGods>builder()
-                            .atLeast(moduleElement.Module)
-                            .casingIndex(texturePage << 7)
-                            .dot(2)
-                            .buildAndChain(sBlockCasingsBA0, 12))
+                    GT_HatchElementBuilder.<GT_MetaTileEntity_EM_ForgeOfGods>builder().atLeast(moduleElement.Module)
+                            .casingIndex(texturePage << 7).dot(2).buildAndChain(sBlockCasingsBA0, 12))
             .build();
 
     public GT_MetaTileEntity_EM_ForgeOfGods(int aID, String aName, String aNameRegional) {
@@ -153,6 +148,7 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
     public IMetaTileEntity newMetaEntity(IGregTechTileEntity aTileEntity) {
         return new GT_MetaTileEntity_EM_ForgeOfGods(mName);
     }
+
     @Override
     public GT_Multiblock_Tooltip_Builder createTooltip() {
         final GT_Multiblock_Tooltip_Builder tt = new GT_Multiblock_Tooltip_Builder();
@@ -298,58 +294,8 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
         ArrayList<ItemStack> ItemOutputs = new ArrayList<>();
         ArrayList<FluidStack> FluidOutputs = new ArrayList<>();
         currentParallel = helper.getCurrentParallel();
-
-        if (fuelConsumptionParameter[0].get() >= 5 && fuelConsumptionParameter[0].get() < 10) {
-            for (int i = 0; i < mOutputItems.length; i++) {
-                FluidStack foundFluid = tryConvertItemStackToFluidMaterial(tRecipe.getOutput(i));
-                ItemData data = getAssociation(tRecipe.getOutput(i));
-                Materials mat = data == null ? null : data.mMaterial.mMaterial;
-                if (i < tRecipe.mOutputs.length) {
-                    if (foundFluid != null) {
-                        FluidOutputs.add(foundFluid);
-                    } else if (mat.getMolten(0) != null) {
-                        FluidOutputs.add(mat.getMolten(tRecipe.getOutput(i).stackSize * 144L * currentParallel));
-                    } else if (mat.getFluid(0) != null) {
-                        FluidOutputs.add(mat.getFluid(tRecipe.getOutput(i).stackSize * 1000L * currentParallel));
-                    } else {
-                        ItemStack aItem = tRecipe.getOutput(i);
-                        ItemOutputs.add(GT_Utility.copyAmountUnsafe((long) aItem.stackSize * currentParallel, aItem));
-                    }
-                    for (int j = 0; j < mOutputFluids.length; j++) {
-                        FluidOutputs.add(tRecipe.getFluidOutput(j));
-                    }
-                } else {
-                    FluidStack aFluid = tRecipe.getFluidOutput(i - tRecipe.mOutputs.length);
-                    FluidOutputs.add(new FluidStack(aFluid, aFluid.amount * currentParallel));
-                }
-            }
-        } else if (fuelConsumptionParameter[0].get() >= 10) {
-            for (int i = 0; i < mOutputItems.length; i++) {
-                FluidStack foundPlasma = tryConvertItemStackToFluidMaterial(tRecipe.getOutput(i));
-                ItemData data = getAssociation(tRecipe.getOutput(i));
-                Materials mat = data == null ? null : data.mMaterial.mMaterial;
-                if (i < tRecipe.mOutputs.length) {
-                    if (foundPlasma != null) {
-                        FluidOutputs.add(foundPlasma);
-                    } else if (mat.getPlasma(0) != null) {
-                        FluidOutputs.add(mat.getPlasma(tRecipe.getOutput(i).stackSize * 144L * currentParallel));
-                    } else if (mat.getMolten(0) != null) {
-                        FluidOutputs.add(mat.getMolten(tRecipe.getOutput(i).stackSize * 144L * currentParallel));
-                    } else if (mat.getFluid(0) != null) {
-                        FluidOutputs.add(mat.getFluid(tRecipe.getOutput(i).stackSize * 1000L * currentParallel));
-                    } else {
-                        ItemStack aItem = tRecipe.getOutput(i);
-                        ItemOutputs.add(GT_Utility.copyAmountUnsafe((long) aItem.stackSize * currentParallel, aItem));
-                    }
-                    for (int j = 0; j < mOutputFluids.length; j++) {
-                        FluidOutputs.add(tRecipe.getFluidOutput(j));
-                    }
-                } else {
-                    FluidStack aFluid = tRecipe.getFluidOutput(i - tRecipe.mOutputs.length);
-                    FluidOutputs.add(new FluidStack(aFluid, aFluid.amount * currentParallel));
-                }
-            }
-        } else {
+        {}
+        {
             for (int i = 0; i < mOutputItems.length + mOutputFluids.length; i++) {
                 if (i < tRecipe.mOutputs.length) {
                     ItemStack aItem = tRecipe.getOutput(i).copy();
@@ -584,7 +530,7 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
 
         @SafeVarargs
         moduleElement(IGT_HatchAdder<GT_MetaTileEntity_EM_ForgeOfGods> adder,
-                             Class<? extends IMetaTileEntity>... mteClasses) {
+                Class<? extends IMetaTileEntity>... mteClasses) {
             this.mteClasses = Collections.unmodifiableList(Arrays.asList(mteClasses));
             this.adder = adder;
         }
