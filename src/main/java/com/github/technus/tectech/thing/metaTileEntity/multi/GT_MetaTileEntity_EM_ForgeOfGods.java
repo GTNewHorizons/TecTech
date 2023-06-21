@@ -67,6 +67,7 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
     private int spacetimeCompressionFieldMetadata = -1;
     private int solenoidCoilMetadata = -1;
     private int currentParallel = 0;
+    private static final int MODULE_CHECK_INTERVAL = 100;
 
     private GT_MetaTileEntity_Hatch_Input fuelInputHatch;
     private String userUUID = "";
@@ -501,6 +502,31 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
         }
     }
 
+    @Override
+    public void onPostTick(IGregTechTileEntity aBaseMetaTileEntity, long aTick) {
+        super.onPostTick(aBaseMetaTileEntity, aTick);
+        if (aBaseMetaTileEntity.isServerSide()) {
+            // Connect modules
+            if (getBaseMetaTileEntity().isAllowedToWork()) {
+                if (aTick % MODULE_CHECK_INTERVAL == 0) {
+                    if (moduleHatches.size() > 0) {
+                        for (GT_MetaTileEntity_EM_BaseModule module : moduleHatches) {
+                            module.connect();
+                        }
+                    }
+                }
+            } else {
+                if (moduleHatches.size() > 0) {
+                    for (GT_MetaTileEntity_EM_BaseModule module : moduleHatches) {
+                        module.disconnect();
+                    }
+                }
+            }
+            if (mEfficiency < 0) mEfficiency = 0;
+            fixAllMaintenance();
+        }
+    }
+
     public boolean addModuleToMachineList(IGregTechTileEntity aTileEntity, int aBaseCasingIndex) {
         if (aTileEntity == null) {
             return false;
@@ -565,6 +591,15 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
         GT_Utility.sendChatToPlayer(
                 aPlayer,
                 StatCollector.translateToLocal("GT5U.machines.separatebus") + " " + inputSeparation);
+    }
+
+    protected void fixAllMaintenance() {
+        mWrench = true;
+        mScrewdriver = true;
+        mSoftHammer = true;
+        mHardHammer = true;
+        mSolderingTool = true;
+        mCrowbar = true;
     }
 
     @Override
