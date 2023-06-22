@@ -193,20 +193,11 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
     @Override
     protected void parametersInstantiation_EM() {
         super.parametersInstantiation_EM();
-        parallelParameter = new Parameters.Group.ParameterIn[1];
         fuelConsumptionParameter = new Parameters.Group.ParameterIn[1];
-        parallelParameter[0] = parametrization.getGroup(0, false)
-                .makeInParameter(0, 1, PARALLEL_PARAM_NAME, PARALLEL_AMOUNT);
         fuelConsumptionParameter[0] = parametrization.getGroup(0, false)
                 .makeInParameter(1, 1, FUEL_CONSUMPTION_PARAM_NAME, FUEL_CONSUMPTION_VALUE);
     }
 
-    // Parallel parameter localisation
-    private static final INameFunction<GT_MetaTileEntity_EM_ForgeOfGods> PARALLEL_PARAM_NAME = (base,
-            p) -> translateToLocal("gt.blockmachines.multimachine.FOG.parallel");
-    // Parallel parameter value
-    private static final IStatusFunction<GT_MetaTileEntity_EM_ForgeOfGods> PARALLEL_AMOUNT = (base, p) -> LedStatus
-            .fromLimitsInclusiveOuterBoundary(p.get(), 1, 0, getMaxParallels(), getMaxParallels());
 
     // Fuel consumption parameter localisation
     private static final INameFunction<GT_MetaTileEntity_EM_ForgeOfGods> FUEL_CONSUMPTION_PARAM_NAME = (base,
