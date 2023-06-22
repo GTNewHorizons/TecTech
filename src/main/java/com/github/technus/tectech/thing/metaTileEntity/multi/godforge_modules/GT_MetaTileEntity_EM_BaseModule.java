@@ -96,11 +96,11 @@ public class GT_MetaTileEntity_EM_BaseModule extends GT_MetaTileEntity_Multibloc
             // Prevents things like AnyCopper or AnyIron from messing the search up.
             if (strippedOreDict.contains("Any")) continue;
 
-            if (fuelConsumptionParameter[0].get() < 10) {
+            if (fuelConsumptionParameter.get() < 10) {
                 return FluidRegistry.getFluidStack(
                         "molten." + strippedOreDict.toLowerCase(),
                         (int) (orePrefix.mMaterialAmount / (GT_Values.M / 144)) * input.stackSize);
-            } else if (fuelConsumptionParameter[0].get() >= 10) {
+            } else if (fuelConsumptionParameter.get() >= 10) {
                 return FluidRegistry.getFluidStack(
                         "plasma." + strippedOreDict.toLowerCase(),
                         (int) (orePrefix.mMaterialAmount / (GT_Values.M / 144)) * input.stackSize);
