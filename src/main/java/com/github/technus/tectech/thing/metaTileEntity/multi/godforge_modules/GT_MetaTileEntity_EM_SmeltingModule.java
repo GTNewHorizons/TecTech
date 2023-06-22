@@ -1,6 +1,11 @@
 package com.github.technus.tectech.thing.metaTileEntity.multi.godforge_modules;
 
 import static com.github.technus.tectech.thing.casing.GT_Block_CasingsTT.texturePage;
+import static gregtech.api.util.GT_Utility.formatNumbers;
+import static net.minecraft.util.EnumChatFormatting.GREEN;
+import static net.minecraft.util.EnumChatFormatting.RED;
+import static net.minecraft.util.EnumChatFormatting.RESET;
+import static net.minecraft.util.EnumChatFormatting.YELLOW;
 import static net.minecraft.util.StatCollector.translateToLocal;
 
 import java.util.ArrayList;
@@ -27,6 +32,8 @@ public class GT_MetaTileEntity_EM_SmeltingModule extends GT_MetaTileEntity_EM_Ba
         implements IGlobalWirelessEnergy {
 
     private int solenoidCoilMetadata = 7;
+    private static long EUt = 0;
+    private static long currentParallel = 0;
     Parameters.Group.ParameterIn parallelParam;
 
     public GT_MetaTileEntity_EM_SmeltingModule(int aID, String aName, String aNameRegional) {
@@ -69,6 +76,8 @@ public class GT_MetaTileEntity_EM_SmeltingModule extends GT_MetaTileEntity_EM_Ba
     public boolean processRecipe(ItemStack[] aItemInputs, FluidStack[] aFluidInputs) {
         // Reset outputs and progress stats
         this.lEUt = 0;
+        EUt = 0;
+        currentParallel = 0;
         this.mMaxProgresstime = 0;
         this.mOutputItems = new ItemStack[] {};
         this.mOutputFluids = new FluidStack[] {};
@@ -99,6 +108,8 @@ public class GT_MetaTileEntity_EM_SmeltingModule extends GT_MetaTileEntity_EM_Ba
             return false;
         }
 
+        currentParallel = helper.getCurrentParallel();
+
         this.mEfficiency = 10000;
         this.mEfficiencyIncrease = 10000;
 
@@ -106,7 +117,7 @@ public class GT_MetaTileEntity_EM_SmeltingModule extends GT_MetaTileEntity_EM_Ba
                 .setDuration(tRecipe.mDuration).setAmperage(helper.getCurrentParallel())
                 .setParallel(helper.getCurrentParallel()).calculate();
 
-        long EUt = -calculator.getConsumption();
+        EUt = -calculator.getConsumption();
         mMaxProgresstime = (int) Math.ceil(calculator.getDuration() * helper.getDurationMultiplier());
 
         if (!addEUToGlobalEnergyMap(userUUID, EUt * mMaxProgresstime)) {
@@ -122,8 +133,12 @@ public class GT_MetaTileEntity_EM_SmeltingModule extends GT_MetaTileEntity_EM_Ba
     @Override
     protected void parametersInstantiation_EM() {
         super.parametersInstantiation_EM();
-        Parameters.Group param_0 = parametrization.getGroup(0, false);;
-        parallelParam = param_0.makeInParameter(0, 1, PARALLEL_PARAM_NAME, PARALLEL_AMOUNT);
+        Parameters.Group param_0 = parametrization.getGroup(0, false);
+        parallelParam = param_0.makeInParameter(
+                0,
+                GT_MetaTileEntity_EM_ForgeOfGods.getMaxParallels(),
+                PARALLEL_PARAM_NAME,
+                PARALLEL_AMOUNT);
     }
 
     private static final INameFunction<GT_MetaTileEntity_EM_SmeltingModule> PARALLEL_PARAM_NAME = (base,
@@ -146,6 +161,24 @@ public class GT_MetaTileEntity_EM_SmeltingModule extends GT_MetaTileEntity_EM_Ba
                                     : GT_MetaTileEntity_MultiblockBase_EM.ScreenOFF) };
         }
         return new ITexture[] { Textures.BlockIcons.getCasingTextureForId(texturePage << 7) };
+    }
+
+    @Override
+    public String[] getInfoData() {
+        ArrayList<String> str = new ArrayList<>();
+        str.add(
+                "Progress: " + GREEN
+                        + GT_Utility.formatNumbers(mProgresstime / 20)
+                        + RESET
+                        + " s / "
+                        + YELLOW
+                        + GT_Utility.formatNumbers(mMaxProgresstime / 20)
+                        + RESET
+                        + " s");
+        str.add("Currently using: " + RED + formatNumbers(-EUt) + RESET + " EU/t");
+        str.add(YELLOW + "Max Parallel: " + RESET + formatNumbers(GT_MetaTileEntity_EM_ForgeOfGods.getMaxParallels()));
+        str.add(YELLOW + "Current Parallel: " + RESET + formatNumbers(currentParallel));
+        return str.toArray(new String[0]);
     }
 
     @Override
