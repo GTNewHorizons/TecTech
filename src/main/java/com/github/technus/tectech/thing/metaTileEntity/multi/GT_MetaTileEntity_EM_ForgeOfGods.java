@@ -55,8 +55,7 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
     private static Textures.BlockIcons.CustomIcon ScreenOFF;
     private static Textures.BlockIcons.CustomIcon ScreenON;
 
-    Parameters.Group.ParameterIn[] parallelParameter;
-    public static Parameters.Group.ParameterIn[] fuelConsumptionParameter;
+    public static Parameters.Group.ParameterIn fuelConsumptionParameter;
     public ArrayList<GT_MetaTileEntity_EM_BaseModule> moduleHatches = new ArrayList<>();
 
     private static int spacetimeCompressionFieldMetadata = -1;
@@ -193,11 +192,13 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
     @Override
     protected void parametersInstantiation_EM() {
         super.parametersInstantiation_EM();
-        fuelConsumptionParameter = new Parameters.Group.ParameterIn[1];
-        fuelConsumptionParameter[0] = parametrization.getGroup(0, false)
-                .makeInParameter(1, 1, FUEL_CONSUMPTION_PARAM_NAME, FUEL_CONSUMPTION_VALUE);
+        Parameters.Group param_0 = parametrization.getGroup(0, false);
+        fuelConsumptionParameter = param_0.makeInParameter(
+                0,
+                1,
+                FUEL_CONSUMPTION_PARAM_NAME,
+                FUEL_CONSUMPTION_VALUE);
     }
-
 
     // Fuel consumption parameter localisation
     private static final INameFunction<GT_MetaTileEntity_EM_ForgeOfGods> FUEL_CONSUMPTION_PARAM_NAME = (base,
@@ -250,7 +251,7 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
             FluidStack fluidInHatch = fuelInputHatch.getFluid();
             // Iterate over valid fluids and drain them
             for (FluidStack validFluid : validFuelMap.keySet()) {
-                int drainAmount = (int) (validFuelMap.get(validFluid) * fuelConsumptionParameter[0].get());
+                int drainAmount = (int) (validFuelMap.get(validFluid) * fuelConsumptionParameter.get());
                 if (fluidInHatch.isFluidEqual(validFluid)) {
                     FluidStack tFluid = new FluidStack(validFluid, drainAmount);
                     FluidStack tLiquid = fuelInputHatch.drain(tFluid.amount, true);
@@ -433,6 +434,16 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
         GT_Utility.sendChatToPlayer(
                 aPlayer,
                 StatCollector.translateToLocal("GT5U.machines.separatebus") + " " + inputSeparation);
+    }
+
+    @Override
+    public void onRemoval() {
+        if (moduleHatches != null && moduleHatches.size() > 0) {
+            for (GT_MetaTileEntity_EM_BaseModule module : moduleHatches) {
+                module.disconnect();
+            }
+        }
+        super.onRemoval();
     }
 
     protected void fixAllMaintenance() {
