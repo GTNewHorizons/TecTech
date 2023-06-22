@@ -115,31 +115,29 @@ public class GT_MetaTileEntity_EM_PlasmaModule extends GT_MetaTileEntity_EM_Base
         ArrayList<ItemStack> ItemOutputs = new ArrayList<>();
         ArrayList<FluidStack> FluidOutputs = new ArrayList<>();
         currentParallel = helper.getCurrentParallel();
-        if (fuelConsumptionParameter[0].get() >= 10) {
-            for (int i = 0; i < mOutputItems.length; i++) {
-                FluidStack foundPlasma = tryConvertItemStackToFluidMaterial(tRecipe.getOutput(i));
-                ItemData data = getAssociation(tRecipe.getOutput(i));
-                Materials mat = data == null ? null : data.mMaterial.mMaterial;
-                if (i < tRecipe.mOutputs.length) {
-                    if (foundPlasma != null) {
-                        FluidOutputs.add(foundPlasma);
-                    } else if (mat.getPlasma(0) != null) {
-                        FluidOutputs.add(mat.getPlasma(tRecipe.getOutput(i).stackSize * 144L * currentParallel));
-                    } else if (mat.getMolten(0) != null) {
-                        FluidOutputs.add(mat.getMolten(tRecipe.getOutput(i).stackSize * 144L * currentParallel));
-                    } else if (mat.getFluid(0) != null) {
-                        FluidOutputs.add(mat.getFluid(tRecipe.getOutput(i).stackSize * 1000L * currentParallel));
-                    } else {
-                        ItemStack aItem = tRecipe.getOutput(i);
-                        ItemOutputs.add(GT_Utility.copyAmountUnsafe((long) aItem.stackSize * currentParallel, aItem));
-                    }
-                    for (int j = 0; j < mOutputFluids.length; j++) {
-                        FluidOutputs.add(tRecipe.getFluidOutput(j));
-                    }
+        for (int i = 0; i < mOutputItems.length; i++) {
+            FluidStack foundPlasma = tryConvertItemStackToFluidMaterial(tRecipe.getOutput(i));
+            ItemData data = getAssociation(tRecipe.getOutput(i));
+            Materials mat = data == null ? null : data.mMaterial.mMaterial;
+            if (i < tRecipe.mOutputs.length) {
+                if (foundPlasma != null) {
+                    FluidOutputs.add(foundPlasma);
+                } else if (mat.getPlasma(0) != null) {
+                    FluidOutputs.add(mat.getPlasma(tRecipe.getOutput(i).stackSize * 144L * currentParallel));
+                } else if (mat.getMolten(0) != null) {
+                    FluidOutputs.add(mat.getMolten(tRecipe.getOutput(i).stackSize * 144L * currentParallel));
+                } else if (mat.getFluid(0) != null) {
+                    FluidOutputs.add(mat.getFluid(tRecipe.getOutput(i).stackSize * 1000L * currentParallel));
                 } else {
-                    FluidStack aFluid = tRecipe.getFluidOutput(i - tRecipe.mOutputs.length);
-                    FluidOutputs.add(new FluidStack(aFluid, aFluid.amount * currentParallel));
+                    ItemStack aItem = tRecipe.getOutput(i);
+                    ItemOutputs.add(GT_Utility.copyAmountUnsafe((long) aItem.stackSize * currentParallel, aItem));
                 }
+                for (int j = 0; j < mOutputFluids.length; j++) {
+                    FluidOutputs.add(tRecipe.getFluidOutput(j));
+                }
+            } else {
+                FluidStack aFluid = tRecipe.getFluidOutput(i - tRecipe.mOutputs.length);
+                FluidOutputs.add(new FluidStack(aFluid, aFluid.amount * currentParallel));
             }
         }
         mOutputItems = ItemOutputs.toArray(new ItemStack[0]);
