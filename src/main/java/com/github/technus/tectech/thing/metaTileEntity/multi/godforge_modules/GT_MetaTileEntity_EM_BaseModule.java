@@ -73,9 +73,6 @@ public class GT_MetaTileEntity_EM_BaseModule extends GT_MetaTileEntity_Multibloc
             super.onPostTick(aBaseMetaTileEntity, aTick);
             if (aTick % 400 == 0) fixAllIssues();
             if (mEfficiency < 0) mEfficiency = 0;
-            if (aBaseMetaTileEntity.getStoredEU() <= 0 && mMaxProgresstime > 0) {
-                stopMachine();
-            }
         }
     }
 

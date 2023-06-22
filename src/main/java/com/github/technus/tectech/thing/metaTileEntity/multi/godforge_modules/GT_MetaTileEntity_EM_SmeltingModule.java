@@ -27,7 +27,6 @@ public class GT_MetaTileEntity_EM_SmeltingModule extends GT_MetaTileEntity_EM_Ba
         implements IGlobalWirelessEnergy {
 
     private int solenoidCoilMetadata = 7;
-    private int currentParallel = 0;
     Parameters.Group.ParameterIn parallelParam;
 
     public GT_MetaTileEntity_EM_SmeltingModule(int aID, String aName, String aNameRegional) {
@@ -86,6 +85,10 @@ public class GT_MetaTileEntity_EM_SmeltingModule extends GT_MetaTileEntity_EM_Ba
                 aFluidInputs,
                 aItemInputs);
 
+        if (tRecipe == null) {
+            return false;
+        }
+
         GT_ParallelHelper helper = new GT_ParallelHelper().setRecipe(tRecipe).setItemInputs(aItemInputs)
                 .setFluidInputs(aFluidInputs).setAvailableEUt(tEnergy).setMaxParallel(maxParallel).enableConsumption()
                 .enableOutputCalculation();
@@ -96,7 +99,7 @@ public class GT_MetaTileEntity_EM_SmeltingModule extends GT_MetaTileEntity_EM_Ba
             return false;
         }
 
-        this.mEfficiency = (10000 - (getIdealStatus() - getRepairStatus()) * 1000);
+        this.mEfficiency = 10000;
         this.mEfficiencyIncrease = 10000;
 
         GT_OverclockCalculator calculator = new GT_OverclockCalculator().setRecipeEUt(tRecipe.mEUt).setEUt(tVoltage)
@@ -113,25 +116,6 @@ public class GT_MetaTileEntity_EM_SmeltingModule extends GT_MetaTileEntity_EM_Ba
 
         mOutputItems = helper.getItemOutputs();
         mOutputFluids = helper.getFluidOutputs();
-
-        ArrayList<ItemStack> ItemOutputs = new ArrayList<>();
-        ArrayList<FluidStack> FluidOutputs = new ArrayList<>();
-        currentParallel = helper.getCurrentParallel();
-        for (int i = 0; i < mOutputItems.length + mOutputFluids.length; i++) {
-            if (i < tRecipe.mOutputs.length) {
-                ItemStack aItem = tRecipe.getOutput(i).copy();
-                aItem.stackSize *= currentParallel;
-                ItemOutputs.add(aItem);
-            } else {
-                FluidStack aFluid = tRecipe.getFluidOutput(i - tRecipe.mOutputs.length).copy();
-                aFluid.amount *= currentParallel;
-                FluidOutputs.add(aFluid);
-            }
-        }
-
-        mOutputItems = ItemOutputs.toArray(new ItemStack[0]);
-        mOutputFluids = FluidOutputs.toArray(new FluidStack[0]);
-        updateSlots();
         return true;
     }
 
