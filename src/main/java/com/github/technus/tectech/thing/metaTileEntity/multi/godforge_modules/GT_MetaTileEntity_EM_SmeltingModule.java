@@ -1,6 +1,7 @@
 package com.github.technus.tectech.thing.metaTileEntity.multi.godforge_modules;
 
 import static com.github.technus.tectech.thing.casing.GT_Block_CasingsTT.texturePage;
+import static net.minecraft.util.StatCollector.translateToLocal;
 
 import java.util.ArrayList;
 
@@ -8,8 +9,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.FluidStack;
 
-import com.github.technus.tectech.thing.metaTileEntity.multi.base.GT_MetaTileEntity_MultiblockBase_EM;
-import com.github.technus.tectech.thing.metaTileEntity.multi.base.Parameters;
+import com.github.technus.tectech.thing.metaTileEntity.multi.GT_MetaTileEntity_EM_ForgeOfGods;
+import com.github.technus.tectech.thing.metaTileEntity.multi.base.*;
 import com.github.technus.tectech.thing.metaTileEntity.multi.base.render.TT_RenderedExtendedFacingTexture;
 import com.github.technus.tectech.util.CommonValues;
 
@@ -25,17 +26,21 @@ import gregtech.api.util.*;
 public class GT_MetaTileEntity_EM_SmeltingModule extends GT_MetaTileEntity_EM_BaseModule
         implements IGlobalWirelessEnergy {
 
-    Parameters.Group.ParameterIn[] parallelParameter;
-    private int solenoidCoilMetadata = -1;
+    private int solenoidCoilMetadata = 7;
     private int currentParallel = 0;
+    Parameters.Group.ParameterIn parallelParam;
 
     public GT_MetaTileEntity_EM_SmeltingModule(int aID, String aName, String aNameRegional) {
         super(aID, aName, aNameRegional);
     }
 
+    public GT_MetaTileEntity_EM_SmeltingModule(String aName) {
+        super(aName);
+    }
+
     @Override
     public IMetaTileEntity newMetaEntity(IGregTechTileEntity aTileEntity) {
-        return new GT_MetaTileEntity_EM_BaseModule(mName) {};
+        return new GT_MetaTileEntity_EM_SmeltingModule(mName) {};
     }
 
     @Override
@@ -68,7 +73,7 @@ public class GT_MetaTileEntity_EM_SmeltingModule extends GT_MetaTileEntity_EM_Ba
         this.mMaxProgresstime = 0;
         this.mOutputItems = new ItemStack[] {};
         this.mOutputFluids = new FluidStack[] {};
-        int maxParallel = (int) parallelParameter[0].get();
+        int maxParallel = (int) parallelParam.get();
 
         long tVoltage = TierEU.MAX * (long) Math.pow(4, (solenoidCoilMetadata - 7));
         byte tTier = (byte) Math.max(1, GT_Utility.getTier(tVoltage));
@@ -112,18 +117,15 @@ public class GT_MetaTileEntity_EM_SmeltingModule extends GT_MetaTileEntity_EM_Ba
         ArrayList<ItemStack> ItemOutputs = new ArrayList<>();
         ArrayList<FluidStack> FluidOutputs = new ArrayList<>();
         currentParallel = helper.getCurrentParallel();
-        {}
-        {
-            for (int i = 0; i < mOutputItems.length + mOutputFluids.length; i++) {
-                if (i < tRecipe.mOutputs.length) {
-                    ItemStack aItem = tRecipe.getOutput(i).copy();
-                    aItem.stackSize *= currentParallel;
-                    ItemOutputs.add(aItem);
-                } else {
-                    FluidStack aFluid = tRecipe.getFluidOutput(i - tRecipe.mOutputs.length).copy();
-                    aFluid.amount *= currentParallel;
-                    FluidOutputs.add(aFluid);
-                }
+        for (int i = 0; i < mOutputItems.length + mOutputFluids.length; i++) {
+            if (i < tRecipe.mOutputs.length) {
+                ItemStack aItem = tRecipe.getOutput(i).copy();
+                aItem.stackSize *= currentParallel;
+                ItemOutputs.add(aItem);
+            } else {
+                FluidStack aFluid = tRecipe.getFluidOutput(i - tRecipe.mOutputs.length).copy();
+                aFluid.amount *= currentParallel;
+                FluidOutputs.add(aFluid);
             }
         }
 
@@ -132,6 +134,23 @@ public class GT_MetaTileEntity_EM_SmeltingModule extends GT_MetaTileEntity_EM_Ba
         updateSlots();
         return true;
     }
+
+    @Override
+    protected void parametersInstantiation_EM() {
+        super.parametersInstantiation_EM();
+        Parameters.Group param_0 = parametrization.getGroup(0, false);;
+        parallelParam = param_0.makeInParameter(0, 1, PARALLEL_PARAM_NAME, PARALLEL_AMOUNT);
+    }
+
+    private static final INameFunction<GT_MetaTileEntity_EM_SmeltingModule> PARALLEL_PARAM_NAME = (base,
+            p) -> translateToLocal("gt.blockmachines.multimachine.FOG.parallel");
+    private static final IStatusFunction<GT_MetaTileEntity_EM_SmeltingModule> PARALLEL_AMOUNT = (base, p) -> LedStatus
+            .fromLimitsInclusiveOuterBoundary(
+                    p.get(),
+                    1,
+                    0,
+                    GT_MetaTileEntity_EM_ForgeOfGods.getMaxParallels(),
+                    GT_MetaTileEntity_EM_ForgeOfGods.getMaxParallels());
 
     @Override
     public ITexture[] getTexture(IGregTechTileEntity aBaseMetaTileEntity, ForgeDirection side, ForgeDirection facing,
