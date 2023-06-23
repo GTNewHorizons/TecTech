@@ -153,12 +153,12 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
 
     @Override
     public ITexture[] getTexture(IGregTechTileEntity aBaseMetaTileEntity, ForgeDirection side, ForgeDirection facing,
-                                 int colorIndex, boolean aActive, boolean aRedstone) {
+            int colorIndex, boolean aActive, boolean aRedstone) {
         if (side == facing) {
-            return new ITexture[]{Textures.BlockIcons.casingTexturePages[texturePage][12],
-                    new TT_RenderedExtendedFacingTexture(aActive ? ScreenON : ScreenOFF)};
+            return new ITexture[] { Textures.BlockIcons.casingTexturePages[texturePage][12],
+                    new TT_RenderedExtendedFacingTexture(aActive ? ScreenON : ScreenOFF) };
         }
-        return new ITexture[]{Textures.BlockIcons.casingTexturePages[texturePage][12]};
+        return new ITexture[] { Textures.BlockIcons.casingTexturePages[texturePage][12] };
     }
 
     @Override
@@ -170,10 +170,10 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
 
     // Fuel consumption parameter localisation
     private static final INameFunction<GT_MetaTileEntity_EM_ForgeOfGods> FUEL_CONSUMPTION_PARAM_NAME = (base,
-                                                                                                        p) -> translateToLocal("gt.blockmachines.multimachine.FOG.fuelconsumption");
+            p) -> translateToLocal("gt.blockmachines.multimachine.FOG.fuelconsumption");
     // Fuel consumption parameter value
     private static final IStatusFunction<GT_MetaTileEntity_EM_ForgeOfGods> FUEL_CONSUMPTION_VALUE = (base,
-                                                                                                     p) -> LedStatus.fromLimitsInclusiveOuterBoundary(p.get(), 0, 0, 10, 10);
+            p) -> LedStatus.fromLimitsInclusiveOuterBoundary(p.get(), 0, 0, 10, 10);
 
     @Override
     public void construct(ItemStack stackSize, boolean hintsOnly) {
@@ -355,6 +355,7 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
     public enum moduleElement implements IHatchElement<GT_MetaTileEntity_EM_ForgeOfGods> {
 
         Module(GT_MetaTileEntity_EM_ForgeOfGods::addModuleToMachineList, GT_MetaTileEntity_EM_BaseModule.class) {
+
             @Override
             public long count(GT_MetaTileEntity_EM_ForgeOfGods tileEntity) {
                 return tileEntity.moduleHatches.size();
@@ -366,7 +367,7 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
 
         @SafeVarargs
         moduleElement(IGT_HatchAdder<GT_MetaTileEntity_EM_ForgeOfGods> adder,
-                      Class<? extends IMetaTileEntity>... mteClasses) {
+                Class<? extends IMetaTileEntity>... mteClasses) {
             this.mteClasses = Collections.unmodifiableList(Arrays.asList(mteClasses));
             this.adder = adder;
         }
@@ -448,22 +449,19 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
         return GT_Recipe.GT_Recipe_Map.sBlastRecipes;
     }
 
-
     @Override
     public GT_Multiblock_Tooltip_Builder createTooltip() {
         final GT_Multiblock_Tooltip_Builder tt = new GT_Multiblock_Tooltip_Builder();
         tt.addMachineType("Material Manipulator") // Machine Type:
                 .addInfo("Controller block for the Forge of Gods") // Controller
-                .addInfo("Uses a Star to to manipulate metals")
-                .addSeparator().beginStructureBlock(1, 4, 2, false)
+                .addInfo("Uses a Star to to manipulate metals").addSeparator().beginStructureBlock(1, 4, 2, false)
                 .addStructureInfo("Output bus/hatch has to be the ME variant")
                 .addStructureInfo("Dot 2 of Input Hatch is the Fuel Input Hatch")
-                .addInputHatch("Any Infinite Spacetime Casing", 1)
-                .addInputHatch("Any Infinite Spacetime Casing", 2) // Fuel Input Hatch
-                .addInputBus("Any Infinite Spacetime Casing",1)
-                .addOutputBus("Any Infinite Spacetime Casing",1)
-                .addOutputHatch("Any Infinite Spacetime Casing",1)
-                .toolTipFinisher(CommonValues.TEC_MARK_EM);
+                .addInputHatch("Any Infinite Spacetime Casing", 1).addInputHatch("Any Infinite Spacetime Casing", 2) // Fuel
+                                                                                                                     // Input
+                                                                                                                     // Hatch
+                .addInputBus("Any Infinite Spacetime Casing", 1).addOutputBus("Any Infinite Spacetime Casing", 1)
+                .addOutputHatch("Any Infinite Spacetime Casing", 1).toolTipFinisher(CommonValues.TEC_MARK_EM);
         return tt;
     }
 
