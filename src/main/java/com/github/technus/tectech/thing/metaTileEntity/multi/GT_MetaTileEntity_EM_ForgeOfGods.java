@@ -192,8 +192,8 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
     @Override
     protected void parametersInstantiation_EM() {
         super.parametersInstantiation_EM();
-        Parameters.Group param_0 = parametrization.getGroup(0, false);
-        fuelConsumptionParameter = param_0.makeInParameter(
+        Parameters.Group param_2 = parametrization.getGroup(0, false);
+        fuelConsumptionParameter = param_2.makeInParameter(
                 0,
                 1,
                 FUEL_CONSUMPTION_PARAM_NAME,
