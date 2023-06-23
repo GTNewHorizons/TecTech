@@ -45,6 +45,7 @@ public class BaseRecipeLoader {
         if (GTPlusPlus.isModLoaded()) {
             new GtppAtomLoader().setTransformations(transformationInfo);
         }
+        new ForgeOfGods().run();
         // todo: Move those recipes in NHCore
         if (NewHorizonsCoreMod.isModLoaded()) {
             new Assembler().run();
