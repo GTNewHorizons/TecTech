@@ -9,6 +9,7 @@ import static net.minecraft.util.EnumChatFormatting.DARK_RED;
 import static net.minecraft.util.EnumChatFormatting.RESET;
 import static net.minecraft.util.StatCollector.translateToLocal;
 
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -280,6 +281,23 @@ public class TT_recipe extends GT_Recipe {
                 "",
                 true,
                 false);
+
+        public static final GT_Recipe_Map sGodforgePlasmaRecipes = new Forge_of_Gods_plasma_recipe_map(
+                new HashSet<>(15000),
+                "gt.recipe.fog_plasma",
+                "Stellar Plasmafier",
+                null,
+                "gregtech:textures/gui/basicmachines/Default",
+                1,
+                0,
+                1,
+                1,
+                1,
+                "",
+                1,
+                "",
+                true,
+                true);
         public static ArrayList<GT_Recipe_AssemblyLine> sAssemblylineRecipes = new ArrayList<>();
 
         public GT_Recipe_MapTT(Collection<GT_Recipe> aRecipeList, String aUnlocalizedName, String aLocalName,
@@ -432,6 +450,44 @@ public class TT_recipe extends GT_Recipe {
 
         public Collection<T> recipeList() {
             return mRecipeMap.values();
+        }
+    }
+
+    public static class Forge_of_Gods_plasma_recipe_map extends GT_Recipe_Map {
+
+        public Forge_of_Gods_plasma_recipe_map(Collection<GT_Recipe> aRecipeList, String aUnlocalizedName,
+                String aLocalName, String aNEIName, String aNEIGUIPath, int aUsualInputCount, int aUsualOutputCount,
+                int aMinimalInputItems, int aMinimalInputFluids, int aAmperage, String aNEISpecialValuePre,
+                int aNEISpecialValueMultiplier, String aNEISpecialValuePost, boolean aShowVoltageAmperageInNEI,
+                boolean aNEIAllowed) {
+            super(
+                    aRecipeList,
+                    aUnlocalizedName,
+                    aLocalName,
+                    aNEIName,
+                    aNEIGUIPath,
+                    aUsualInputCount,
+                    aUsualOutputCount,
+                    aMinimalInputItems,
+                    aMinimalInputFluids,
+                    aAmperage,
+                    aNEISpecialValuePre,
+                    aNEISpecialValueMultiplier,
+                    aNEISpecialValuePost,
+                    aShowVoltageAmperageInNEI,
+                    aNEIAllowed);
+            useModularUI(true);
+            setUsualFluidInputCount(1);
+            setUsualFluidOutputCount(1);
+            setProgressBarPos(86, 44);
+            setNEITransferRect(
+                    new Rectangle(
+                            progressBarPos.x - (16 / 2),
+                            progressBarPos.y,
+                            progressBarSize.width + 16,
+                            progressBarSize.height));
+            setLogoPos(145, 70);
+            setNEIBackgroundSize(172, 90);
         }
     }
 
