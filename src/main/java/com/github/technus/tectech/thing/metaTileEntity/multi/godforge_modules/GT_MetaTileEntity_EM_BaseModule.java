@@ -109,7 +109,7 @@ public class GT_MetaTileEntity_EM_BaseModule extends GT_MetaTileEntity_Multibloc
         return null;
     }
 
-    private static String findBestPrefix(String oreDict) {
+    protected static String findBestPrefix(String oreDict) {
         int longestPrefixLength = 0;
         String matchingPrefix = null;
         for (OrePrefixes prefix : OrePrefixes.values()) {

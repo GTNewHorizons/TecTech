@@ -2,21 +2,24 @@ package com.github.technus.tectech.thing.metaTileEntity.multi.godforge_modules;
 
 import static com.github.technus.tectech.thing.casing.GT_Block_CasingsTT.texturePage;
 import static gregtech.api.util.GT_OreDictUnificator.getAssociation;
+import static gregtech.api.util.GT_Utility.formatNumbers;
+import static net.minecraft.util.EnumChatFormatting.*;
+import static net.minecraft.util.EnumChatFormatting.RESET;
+import static net.minecraft.util.StatCollector.translateToLocal;
 
 import java.util.ArrayList;
 
+import com.github.technus.tectech.thing.metaTileEntity.multi.GT_MetaTileEntity_EM_ForgeOfGods;
+import com.github.technus.tectech.thing.metaTileEntity.multi.base.*;
+import gregtech.api.enums.*;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 
-import com.github.technus.tectech.thing.metaTileEntity.multi.base.GT_MetaTileEntity_MultiblockBase_EM;
-import com.github.technus.tectech.thing.metaTileEntity.multi.base.Parameters;
 import com.github.technus.tectech.thing.metaTileEntity.multi.base.render.TT_RenderedExtendedFacingTexture;
 import com.github.technus.tectech.util.CommonValues;
 
-import gregtech.api.enums.Materials;
-import gregtech.api.enums.Textures;
-import gregtech.api.enums.TierEU;
 import gregtech.api.interfaces.IGlobalWirelessEnergy;
 import gregtech.api.interfaces.ITexture;
 import gregtech.api.interfaces.metatileentity.IMetaTileEntity;
@@ -24,21 +27,29 @@ import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
 import gregtech.api.metatileentity.implementations.GT_MetaTileEntity_Hatch_InputBus;
 import gregtech.api.objects.ItemData;
 import gregtech.api.util.*;
+import net.minecraftforge.oredict.OreDictionary;
+
+import javax.annotation.Nullable;
 
 public class GT_MetaTileEntity_EM_PlasmaModule extends GT_MetaTileEntity_EM_BaseModule
         implements IGlobalWirelessEnergy {
 
-    Parameters.Group.ParameterIn[] parallelParameter;
-    private int solenoidCoilMetadata = -1;
-    private int currentParallel = 0;
+    Parameters.Group.ParameterIn parallelParam;
+    private int solenoidCoilMetadata = 7;
+    private static long EUt = 0;
+    private static int currentParallel = 0;
 
     public GT_MetaTileEntity_EM_PlasmaModule(int aID, String aName, String aNameRegional) {
         super(aID, aName, aNameRegional);
     }
 
+    public GT_MetaTileEntity_EM_PlasmaModule(String aName) {
+        super(aName);
+    }
+
     @Override
     public IMetaTileEntity newMetaEntity(IGregTechTileEntity aTileEntity) {
-        return new GT_MetaTileEntity_EM_BaseModule(mName) {};
+        return new GT_MetaTileEntity_EM_PlasmaModule(mName) {};
     }
 
     @Override
@@ -68,10 +79,12 @@ public class GT_MetaTileEntity_EM_PlasmaModule extends GT_MetaTileEntity_EM_Base
     public boolean processRecipe(ItemStack[] aItemInputs, FluidStack[] aFluidInputs) {
         // Reset outputs and progress stats
         this.lEUt = 0;
+        EUt = 0;
+        currentParallel = 0;
         this.mMaxProgresstime = 0;
         this.mOutputItems = new ItemStack[] {};
         this.mOutputFluids = new FluidStack[] {};
-        int maxParallel = (int) parallelParameter[0].get();
+        int maxParallel = (int) parallelParam.get();
 
         long tVoltage = TierEU.MAX * (long) Math.pow(4, (solenoidCoilMetadata - 7));
         byte tTier = (byte) Math.max(1, GT_Utility.getTier(tVoltage));
@@ -83,6 +96,10 @@ public class GT_MetaTileEntity_EM_PlasmaModule extends GT_MetaTileEntity_EM_Base
                 gregtech.api.enums.GT_Values.V[tTier],
                 aFluidInputs,
                 aItemInputs);
+
+        if (tRecipe == null) {
+            return false;
+        }
 
         GT_ParallelHelper helper = new GT_ParallelHelper().setRecipe(tRecipe).setItemInputs(aItemInputs)
                 .setFluidInputs(aFluidInputs).setAvailableEUt(tEnergy).setMaxParallel(maxParallel).enableConsumption()
@@ -101,7 +118,7 @@ public class GT_MetaTileEntity_EM_PlasmaModule extends GT_MetaTileEntity_EM_Base
                 .setDuration(tRecipe.mDuration).setAmperage(helper.getCurrentParallel())
                 .setParallel(helper.getCurrentParallel()).calculate();
 
-        long EUt = -calculator.getConsumption();
+        EUt = -calculator.getConsumption();
         mMaxProgresstime = (int) Math.ceil(calculator.getDuration() * helper.getDurationMultiplier());
 
         if (!addEUToGlobalEnergyMap(userUUID, EUt * mMaxProgresstime)) {
@@ -147,6 +164,27 @@ public class GT_MetaTileEntity_EM_PlasmaModule extends GT_MetaTileEntity_EM_Base
     }
 
     @Override
+    protected void parametersInstantiation_EM() {
+        super.parametersInstantiation_EM();
+        Parameters.Group param_1 = parametrization.getGroup(0, false);
+        parallelParam = param_1.makeInParameter(
+                0,
+                GT_MetaTileEntity_EM_ForgeOfGods.getMaxParallels(),
+                PARALLEL_PARAM_NAME,
+                PARALLEL_AMOUNT);
+    }
+
+    private static final INameFunction<GT_MetaTileEntity_EM_PlasmaModule> PARALLEL_PARAM_NAME = (base,
+                                                                                                   p) -> translateToLocal("gt.blockmachines.multimachine.FOG.parallel");
+    private static final IStatusFunction<GT_MetaTileEntity_EM_PlasmaModule> PARALLEL_AMOUNT = (base, p) -> LedStatus
+            .fromLimitsInclusiveOuterBoundary(
+                    p.get(),
+                    1,
+                    0,
+                    GT_MetaTileEntity_EM_ForgeOfGods.getMaxParallels(),
+                    GT_MetaTileEntity_EM_ForgeOfGods.getMaxParallels());
+
+    @Override
     public ITexture[] getTexture(IGregTechTileEntity aBaseMetaTileEntity, ForgeDirection side, ForgeDirection facing,
             int colorIndex, boolean aActive, boolean aRedstone) {
         if (side == facing) {
@@ -157,6 +195,52 @@ public class GT_MetaTileEntity_EM_PlasmaModule extends GT_MetaTileEntity_EM_Base
         }
         return new ITexture[] { Textures.BlockIcons.getCasingTextureForId(texturePage << 7) };
     }
+
+    @Nullable
+    public static FluidStack tryConvertItemStackToFluidMaterial(ItemStack input) {
+        ArrayList<String> oreDicts = new ArrayList<>();
+        for (int id : OreDictionary.getOreIDs(input)) {
+            oreDicts.add(OreDictionary.getOreName(id));
+        }
+
+        for (String dict : oreDicts) {
+            OrePrefixes orePrefix;
+            try {
+                orePrefix = OrePrefixes.valueOf(findBestPrefix(dict));
+            } catch (Exception e) {
+                continue;
+            }
+
+            String strippedOreDict = dict.substring(orePrefix.toString().length());
+
+            // Prevents things like AnyCopper or AnyIron from messing the search up.
+            if (strippedOreDict.contains("Any")) continue;
+
+                return FluidRegistry.getFluidStack(
+                        "plasma." + strippedOreDict.toLowerCase(),
+                        (int) (orePrefix.mMaterialAmount / (GT_Values.M / 144)) * input.stackSize);
+        }
+        return null;
+    }
+
+    @Override
+    public String[] getInfoData() {
+        ArrayList<String> str = new ArrayList<>();
+        str.add(
+                "Progress: " + GREEN
+                        + GT_Utility.formatNumbers(mProgresstime / 20)
+                        + RESET
+                        + " s / "
+                        + YELLOW
+                        + GT_Utility.formatNumbers(mMaxProgresstime / 20)
+                        + RESET
+                        + " s");
+        str.add("Currently using: " + RED + formatNumbers(-EUt) + RESET + " EU/t");
+        str.add(YELLOW + "Max Parallel: " + RESET + formatNumbers(GT_MetaTileEntity_EM_ForgeOfGods.getMaxParallels()));
+        str.add(YELLOW + "Current Parallel: " + RESET + formatNumbers(currentParallel));
+        return str.toArray(new String[0]);
+    }
+
 
     @Override
     public GT_Multiblock_Tooltip_Builder createTooltip() {
