@@ -46,7 +46,7 @@ public class GT_MetaTileEntity_EM_SmeltingModule extends GT_MetaTileEntity_EM_Ba
 
     @Override
     public IMetaTileEntity newMetaEntity(IGregTechTileEntity aTileEntity) {
-        return new GT_MetaTileEntity_EM_SmeltingModule(mName) {};
+        return new GT_MetaTileEntity_EM_SmeltingModule(mName);
     }
 
     @Override
@@ -127,6 +127,7 @@ public class GT_MetaTileEntity_EM_SmeltingModule extends GT_MetaTileEntity_EM_Ba
 
         mOutputItems = helper.getItemOutputs();
         mOutputFluids = helper.getFluidOutputs();
+        updateSlots();
         return true;
     }
 

@@ -64,7 +64,7 @@ public class GT_MetaTileEntity_EM_BaseModule extends GT_MetaTileEntity_Multibloc
 
     @Override
     public IMetaTileEntity newMetaEntity(IGregTechTileEntity aTileEntity) {
-        return new GT_MetaTileEntity_EM_BaseModule(mName) {};
+        return new GT_MetaTileEntity_EM_BaseModule(mName);
     }
 
     @Override

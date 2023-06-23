@@ -49,7 +49,7 @@ public class GT_MetaTileEntity_EM_MoltenModule extends GT_MetaTileEntity_EM_Base
 
     @Override
     public IMetaTileEntity newMetaEntity(IGregTechTileEntity aTileEntity) {
-        return new GT_MetaTileEntity_EM_MoltenModule(mName) {};
+        return new GT_MetaTileEntity_EM_MoltenModule(mName);
     }
 
     @Override

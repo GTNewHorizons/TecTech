@@ -34,7 +34,7 @@ public class GT_MetaTileEntity_EM_quark_gluon_plasma extends GT_MetaTileEntity_E
 
     @Override
     public IMetaTileEntity newMetaEntity(IGregTechTileEntity aTileEntity) {
-        return new GT_MetaTileEntity_EM_BaseModule(mName) {};
+        return new GT_MetaTileEntity_EM_BaseModule(mName);
     }
 
     @Override
