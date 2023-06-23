@@ -2,6 +2,7 @@ package com.github.technus.tectech.thing.metaTileEntity.multi.godforge_modules;
 
 import static com.github.technus.tectech.thing.casing.GT_Block_CasingsTT.texturePage;
 import static com.github.technus.tectech.thing.metaTileEntity.multi.GT_MetaTileEntity_EM_ForgeOfGods.fuelConsumptionParameter;
+import static com.github.technus.tectech.thing.metaTileEntity.multi.GT_MetaTileEntity_EM_ForgeOfGods.getMaxParallels;
 
 import java.util.ArrayList;
 
@@ -99,11 +100,11 @@ public class GT_MetaTileEntity_EM_BaseModule extends GT_MetaTileEntity_Multibloc
             if (fuelConsumptionParameter.get() < 10) {
                 return FluidRegistry.getFluidStack(
                         "molten." + strippedOreDict.toLowerCase(),
-                        (int) (orePrefix.mMaterialAmount / (GT_Values.M / 144)) * input.stackSize);
+                        (int) (orePrefix.mMaterialAmount / (GT_Values.M / 144)) * getMaxParallels());
             } else if (fuelConsumptionParameter.get() >= 10) {
                 return FluidRegistry.getFluidStack(
                         "plasma." + strippedOreDict.toLowerCase(),
-                        (int) (orePrefix.mMaterialAmount / (GT_Values.M / 144)) * input.stackSize);
+                        (int) (orePrefix.mMaterialAmount / (GT_Values.M / 144)) * getMaxParallels());
             }
         }
         return null;

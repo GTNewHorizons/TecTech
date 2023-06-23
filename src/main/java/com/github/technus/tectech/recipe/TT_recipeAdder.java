@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 
+import gregtech.api.GregTech_API;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
@@ -450,19 +451,27 @@ public class TT_recipeAdder extends GT_RecipeAdder {
         return true;
     }
 
-    public static boolean addFOGPlasmaRecipe(ItemStack[] itemInputs, FluidStack[] fluidInputs,
-            FluidStack[] fluidOutputs, int machineDuration, int machineEUt) {
+    public static boolean addFOGPlasmaRecipe(ItemStack[] itemInputs,
+                                             FluidStack[] fluidOutputs, int machineDuration, int machineEUt) {
         if (itemInputs == null) {
-            itemInputs = nullItem;
+            itemInputs = null;
         }
 
-        if (fluidInputs == null) {
-            fluidInputs = nullFluid;
-        }
 
         TT_recipe.GT_Recipe_MapTT.sGodforgePlasmaRecipes
-                .addRecipe(false, itemInputs, null, null, fluidInputs, fluidOutputs, machineDuration, machineEUt, 0);
+                .addRecipe(false, itemInputs, null, null, null, fluidOutputs, machineDuration, machineEUt, 0);
         return true;
     }
 
+    public static boolean addFOGPlasmaRecipe(FluidStack[] afluidInputs,
+                                             FluidStack[] fluidOutputs, int machineDuration, int machineEUt) {
+
+        if (afluidInputs == null) {
+            afluidInputs = null;
+        }
+
+        TT_recipe.GT_Recipe_MapTT.sGodforgePlasmaRecipes
+                .addRecipe(false, null, null, null, afluidInputs, fluidOutputs, machineDuration, machineEUt, 0);
+        return true;
+    }
 }

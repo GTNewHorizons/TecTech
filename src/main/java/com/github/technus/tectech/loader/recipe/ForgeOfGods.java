@@ -4,6 +4,8 @@ import static com.github.technus.tectech.recipe.TT_recipeAdder.nullFluid;
 import static com.github.technus.tectech.recipe.TT_recipeAdder.nullItem;
 import static gregtech.api.util.GT_RecipeBuilder.SECONDS;
 
+import gregtech.api.util.GT_Utility;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
 
@@ -18,13 +20,11 @@ public class ForgeOfGods implements Runnable {
     public void run() {
         TT_recipeAdder.addFOGPlasmaRecipe(
                 new ItemStack[] { Materials.Tritanium.getDust(1) },
-                nullFluid,
                 new FluidStack[] { Materials.Tritanium.getPlasma(144) },
                 1 * SECONDS,
                 (int) TierEU.RECIPE_MAX);
 
         TT_recipeAdder.addFOGPlasmaRecipe(
-                nullItem,
                 new FluidStack[] { Materials.Helium.getGas(1000) },
                 new FluidStack[] { Materials.Helium.getPlasma(1000) },
                 1 * SECONDS,
