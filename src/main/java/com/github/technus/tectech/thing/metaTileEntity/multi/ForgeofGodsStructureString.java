@@ -2214,7 +2214,7 @@ public abstract class ForgeofGodsStructureString {
                     "                                                                     ",
                     "                                                                     ",
                     "                                                                     " },
-            { "                           CCCC~CCC                                  ",
+            { "                           CCCC~CCC G                                 ",
                     "                        CCC DDDDDDDCCCCC                             ",
                     "                     CCCDDDDDDDDDDDDDDD CCC                          ",
                     "                    C DDDDDDDDDDDDDDDDDDDD CC                        ",

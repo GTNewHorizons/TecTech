@@ -193,11 +193,7 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
     protected void parametersInstantiation_EM() {
         super.parametersInstantiation_EM();
         Parameters.Group param_2 = parametrization.getGroup(0, false);
-        fuelConsumptionParameter = param_2.makeInParameter(
-                0,
-                1,
-                FUEL_CONSUMPTION_PARAM_NAME,
-                FUEL_CONSUMPTION_VALUE);
+        fuelConsumptionParameter = param_2.makeInParameter(0, 1, FUEL_CONSUMPTION_PARAM_NAME, FUEL_CONSUMPTION_VALUE);
     }
 
     // Fuel consumption parameter localisation
@@ -473,7 +469,7 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
     }
 
     public static int getMaxParallels() {
-        return (int) Math.pow(4, spacetimeCompressionFieldMetadata + 1);
+        return (int) (1024 * (Math.pow(2, spacetimeCompressionFieldMetadata)));
     }
 
     @Override

@@ -9,17 +9,20 @@ import static net.minecraft.util.StatCollector.translateToLocal;
 
 import java.util.ArrayList;
 
-import com.github.technus.tectech.thing.metaTileEntity.multi.GT_MetaTileEntity_EM_ForgeOfGods;
-import com.github.technus.tectech.thing.metaTileEntity.multi.base.*;
-import gregtech.api.enums.*;
+import javax.annotation.Nullable;
+
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.oredict.OreDictionary;
 
+import com.github.technus.tectech.thing.metaTileEntity.multi.GT_MetaTileEntity_EM_ForgeOfGods;
+import com.github.technus.tectech.thing.metaTileEntity.multi.base.*;
 import com.github.technus.tectech.thing.metaTileEntity.multi.base.render.TT_RenderedExtendedFacingTexture;
 import com.github.technus.tectech.util.CommonValues;
 
+import gregtech.api.enums.*;
 import gregtech.api.interfaces.IGlobalWirelessEnergy;
 import gregtech.api.interfaces.ITexture;
 import gregtech.api.interfaces.metatileentity.IMetaTileEntity;
@@ -27,9 +30,6 @@ import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
 import gregtech.api.metatileentity.implementations.GT_MetaTileEntity_Hatch_InputBus;
 import gregtech.api.objects.ItemData;
 import gregtech.api.util.*;
-import net.minecraftforge.oredict.OreDictionary;
-
-import javax.annotation.Nullable;
 
 public class GT_MetaTileEntity_EM_PlasmaModule extends GT_MetaTileEntity_EM_BaseModule
         implements IGlobalWirelessEnergy {
@@ -175,7 +175,7 @@ public class GT_MetaTileEntity_EM_PlasmaModule extends GT_MetaTileEntity_EM_Base
     }
 
     private static final INameFunction<GT_MetaTileEntity_EM_PlasmaModule> PARALLEL_PARAM_NAME = (base,
-                                                                                                   p) -> translateToLocal("gt.blockmachines.multimachine.FOG.parallel");
+            p) -> translateToLocal("gt.blockmachines.multimachine.FOG.parallel");
     private static final IStatusFunction<GT_MetaTileEntity_EM_PlasmaModule> PARALLEL_AMOUNT = (base, p) -> LedStatus
             .fromLimitsInclusiveOuterBoundary(
                     p.get(),
@@ -216,9 +216,9 @@ public class GT_MetaTileEntity_EM_PlasmaModule extends GT_MetaTileEntity_EM_Base
             // Prevents things like AnyCopper or AnyIron from messing the search up.
             if (strippedOreDict.contains("Any")) continue;
 
-                return FluidRegistry.getFluidStack(
-                        "plasma." + strippedOreDict.toLowerCase(),
-                        (int) (orePrefix.mMaterialAmount / (GT_Values.M / 144)) * input.stackSize);
+            return FluidRegistry.getFluidStack(
+                    "plasma." + strippedOreDict.toLowerCase(),
+                    (int) (orePrefix.mMaterialAmount / (GT_Values.M / 144)) * currentParallel);
         }
         return null;
     }
@@ -240,7 +240,6 @@ public class GT_MetaTileEntity_EM_PlasmaModule extends GT_MetaTileEntity_EM_Base
         str.add(YELLOW + "Current Parallel: " + RESET + formatNumbers(currentParallel));
         return str.toArray(new String[0]);
     }
-
 
     @Override
     public GT_Multiblock_Tooltip_Builder createTooltip() {
