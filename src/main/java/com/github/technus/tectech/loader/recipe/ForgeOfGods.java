@@ -1,11 +1,7 @@
 package com.github.technus.tectech.loader.recipe;
 
-import static com.github.technus.tectech.recipe.TT_recipeAdder.nullFluid;
-import static com.github.technus.tectech.recipe.TT_recipeAdder.nullItem;
 import static gregtech.api.util.GT_RecipeBuilder.SECONDS;
 
-import gregtech.api.util.GT_Utility;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
 
