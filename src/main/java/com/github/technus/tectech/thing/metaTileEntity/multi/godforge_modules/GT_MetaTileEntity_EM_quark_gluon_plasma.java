@@ -32,9 +32,13 @@ public class GT_MetaTileEntity_EM_quark_gluon_plasma extends GT_MetaTileEntity_E
         super(aID, aName, aNameRegional);
     }
 
+    public GT_MetaTileEntity_EM_quark_gluon_plasma(String aName) {
+        super(aName);
+    }
+
     @Override
     public IMetaTileEntity newMetaEntity(IGregTechTileEntity aTileEntity) {
-        return new GT_MetaTileEntity_EM_BaseModule(mName);
+        return new GT_MetaTileEntity_EM_quark_gluon_plasma(mName);
     }
 
     @Override
