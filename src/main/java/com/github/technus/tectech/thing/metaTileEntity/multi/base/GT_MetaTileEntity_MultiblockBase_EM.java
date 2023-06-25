@@ -310,10 +310,13 @@ public abstract class GT_MetaTileEntity_MultiblockBase_EM
      * Checks Recipes (when all machine is complete and can work)
      * <p>
      * can get/set Parameters here also
+     * 
+     * @deprecated Use {@link #createProcessingLogic()} ()} or {@link #checkProcessing_EM()}
      *
      * @param itemStack item in the controller
      * @return is recipe is valid
      */
+    @Deprecated
     public boolean checkRecipe_EM(ItemStack itemStack) {
         return false;
     }
