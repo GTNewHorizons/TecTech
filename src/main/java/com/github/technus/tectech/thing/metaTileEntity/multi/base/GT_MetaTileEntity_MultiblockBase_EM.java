@@ -323,6 +323,10 @@ public abstract class GT_MetaTileEntity_MultiblockBase_EM
 
     @NotNull
     protected CheckRecipeResult checkProcessing_EM() {
+        if (processingLogic == null) {
+            return checkRecipe_EM(getControllerSlot()) ? CheckRecipeResultRegistry.SUCCESSFUL
+                    : CheckRecipeResultRegistry.NO_RECIPE;
+        }
         return super.checkProcessing();
     }
 
@@ -1115,10 +1119,6 @@ public abstract class GT_MetaTileEntity_MultiblockBase_EM
     @Override
     public CheckRecipeResult checkProcessing() {
         hatchesStatusUpdate_EM();
-        if (processingLogic == null) {
-            return checkRecipe_EM(getControllerSlot()) ? CheckRecipeResultRegistry.SUCCESSFUL
-                    : CheckRecipeResultRegistry.NO_RECIPE;
-        }
         CheckRecipeResult result = checkProcessing_EM();
         hatchesStatusUpdate_EM();
         return result;
@@ -1315,7 +1315,7 @@ public abstract class GT_MetaTileEntity_MultiblockBase_EM
                                     mEfficiencyIncrease = 0;
 
                                     if (aBaseMetaTileEntity.isAllowedToWork()) {
-                                        if (checkRecipe(mInventory[1])) {
+                                        if (checkRecipe()) {
                                             mEfficiency = Math.max(
                                                     0,
                                                     min(
@@ -1335,7 +1335,7 @@ public abstract class GT_MetaTileEntity_MultiblockBase_EM
                               // }
                         } else if (RECIPE_AT == Tick || aBaseMetaTileEntity.hasWorkJustBeenEnabled()) {
                             if (aBaseMetaTileEntity.isAllowedToWork()) {
-                                if (checkRecipe(mInventory[1])) {
+                                if (checkRecipe()) {
                                     mEfficiency = Math.max(
                                             0,
                                             min(

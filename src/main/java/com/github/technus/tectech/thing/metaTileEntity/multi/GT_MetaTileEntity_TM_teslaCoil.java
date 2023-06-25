@@ -595,18 +595,17 @@ public class GT_MetaTileEntity_TM_teslaCoil extends GT_MetaTileEntity_Multiblock
         checkPlasmaBoost();
 
         if (!histHighSetting.getStatus(false).isOk || !histLowSetting.getStatus(false).isOk)
-            return SimpleCheckRecipeResult.ofFailure("tt.gui.text.invalid_hysteresis");
+            return SimpleCheckRecipeResult.ofFailure("invalid_hysteresis");
         if (!transferRadiusTowerSetting.getStatus(false).isOk || !transferRadiusTransceiverSetting.getStatus(false).isOk
                 || !transferRadiusCoverUltimateSetting.getStatus(false).isOk)
-            return SimpleCheckRecipeResult.ofFailure("tt.gui.text.invalid_transfer_radius");
+            return SimpleCheckRecipeResult.ofFailure("invalid_transfer_radius");
         if (!outputVoltageSetting.getStatus(false).isOk)
-            return SimpleCheckRecipeResult.ofFailure("tt.gui.text.invalid_voltage_setting");
+            return SimpleCheckRecipeResult.ofFailure("invalid_voltage_setting");
         if (!outputCurrentSetting.getStatus(false).isOk)
-            return SimpleCheckRecipeResult.ofFailure("tt.gui.text.invalid_current_setting");
-        if (!sortTimeMinSetting.getStatus(false).isOk)
-            return SimpleCheckRecipeResult.ofFailure("tt.gui.text.invalid_time_setting");
+            return SimpleCheckRecipeResult.ofFailure("invalid_current_setting");
+        if (!sortTimeMinSetting.getStatus(false).isOk) return SimpleCheckRecipeResult.ofFailure("invalid_time_setting");
         if (!overDriveSetting.getStatus(false).isOk)
-            return SimpleCheckRecipeResult.ofFailure("tt.gui.text.invalid_overdrive_setting");
+            return SimpleCheckRecipeResult.ofFailure("invalid_overdrive_setting");
 
         mEfficiencyIncrease = 10000;
         mMaxProgresstime = 20;
@@ -627,7 +626,7 @@ public class GT_MetaTileEntity_TM_teslaCoil extends GT_MetaTileEntity_Multiblock
         if (vTier < 0) {
             // Returning true to allow for 'passive running'
             outputVoltageMax = 0;
-            return SimpleCheckRecipeResult.ofSuccess("tt.gui.text.routing");
+            return SimpleCheckRecipeResult.ofSuccess("routing");
         } else if (vTier > mTier && getEUVar() > 0) {
             explodeMultiblock();
         }
@@ -649,7 +648,7 @@ public class GT_MetaTileEntity_TM_teslaCoil extends GT_MetaTileEntity_Multiblock
                 energyCapacity += capacitorData[2];
             }
         }
-        return SimpleCheckRecipeResult.ofSuccess("tt.gui.text.routing");
+        return SimpleCheckRecipeResult.ofSuccess("routing");
     }
 
     @Override

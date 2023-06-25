@@ -244,7 +244,7 @@ public class GT_MetaTileEntity_EM_computer extends GT_MetaTileEntity_MultiblockB
         double overClockRatio = overclock.get();
         double overVoltageRatio = overvolt.get();
         if (Double.isNaN(overClockRatio) || Double.isNaN(overVoltageRatio)) {
-            return SimpleCheckRecipeResult.ofFailure("tt.gui.text.no_computing");
+            return SimpleCheckRecipeResult.ofFailure("no_computing");
         }
         if (overclock.getStatus(true).isOk && overvolt.getStatus(true).isOk) {
             float eut = V[8] * (float) overVoltageRatio * (float) overClockRatio;
@@ -252,7 +252,7 @@ public class GT_MetaTileEntity_EM_computer extends GT_MetaTileEntity_MultiblockB
                 mEUt = -(int) eut;
             } else {
                 mEUt = -(int) V[8];
-                return SimpleCheckRecipeResult.ofFailure("tt.gui.text.no_computing");
+                return SimpleCheckRecipeResult.ofFailure("no_computing");
             }
             short thingsActive = 0;
             int rackComputation;
@@ -286,7 +286,7 @@ public class GT_MetaTileEntity_EM_computer extends GT_MetaTileEntity_MultiblockB
                 mEfficiencyIncrease = 10000;
                 maxCurrentTemp.set(maxTemp);
                 availableData.set(eAvailableData);
-                return SimpleCheckRecipeResult.ofSuccess("tt.gui.text.computing");
+                return SimpleCheckRecipeResult.ofSuccess("computing");
             } else {
                 eAvailableData = 0;
                 mEUt = -(int) V[8];
@@ -295,10 +295,10 @@ public class GT_MetaTileEntity_EM_computer extends GT_MetaTileEntity_MultiblockB
                 mEfficiencyIncrease = 10000;
                 maxCurrentTemp.set(maxTemp);
                 availableData.set(eAvailableData);
-                return SimpleCheckRecipeResult.ofSuccess("tt.gui.text.no_computing");
+                return SimpleCheckRecipeResult.ofSuccess("no_computing");
             }
         }
-        return SimpleCheckRecipeResult.ofFailure("tt.gui.text.no_computing");
+        return SimpleCheckRecipeResult.ofFailure("no_computing");
     }
 
     @Override

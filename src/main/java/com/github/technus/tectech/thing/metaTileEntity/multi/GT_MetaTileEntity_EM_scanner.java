@@ -274,7 +274,7 @@ public class GT_MetaTileEntity_EM_scanner extends GT_MetaTileEntity_MultiblockBa
                     eRequiredData = (short) (scannerRecipe.mSpecialValue >>> 16);
                     eAmpereFlow = (short) (scannerRecipe.mSpecialValue & 0xFFFF);
                     mEUt = scannerRecipe.mEUt;
-                    return SimpleCheckRecipeResult.ofSuccess("tt.gui.text.researching");
+                    return SimpleCheckRecipeResult.ofSuccess("researching");
                 }
             } else if (CustomItemList.scanContainer.isStackEqual(controllerStack, false, true)) {
                 eRecipe = null;
@@ -308,7 +308,7 @@ public class GT_MetaTileEntity_EM_scanner extends GT_MetaTileEntity_MultiblockBa
                     computationRemaining = computationRequired *= 20;
                     mMaxProgresstime = 20; // const
                     mEfficiencyIncrease = 10000;
-                    return SimpleCheckRecipeResult.ofSuccess("tt.gui.text.researching");
+                    return SimpleCheckRecipeResult.ofSuccess("researching");
                 }
             } else {
                 return CheckRecipeResultRegistry.NO_DATA_STICKS;
@@ -316,7 +316,7 @@ public class GT_MetaTileEntity_EM_scanner extends GT_MetaTileEntity_MultiblockBa
         }
         objectResearched = null;
         computationRemaining = 0;
-        return SimpleCheckRecipeResult.ofFailure("tt.gui.text.no_research_item");
+        return SimpleCheckRecipeResult.ofFailure("no_research_item");
     }
 
     @Override

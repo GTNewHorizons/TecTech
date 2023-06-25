@@ -148,9 +148,9 @@ public class GT_MetaTileEntity_EM_dataBank extends GT_MetaTileEntity_MultiblockB
             eAmpereFlow = 1 + eStacksDataOutputs.size() * eDataAccessHatches.size();
             mMaxProgresstime = 20;
             mEfficiencyIncrease = 10000;
-            return SimpleCheckRecipeResult.ofSuccess("tt.gui.text.providing_data");
+            return SimpleCheckRecipeResult.ofSuccess("providing_data");
         }
-        return SimpleCheckRecipeResult.ofFailure("tt.gui.text.no_data");
+        return SimpleCheckRecipeResult.ofFailure("no_data");
     }
 
     @Override

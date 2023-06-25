@@ -137,7 +137,7 @@ public class GT_MetaTileEntity_TM_microwave extends GT_MetaTileEntity_Multiblock
     public CheckRecipeResult checkProcessing_EM() {
         hasBeenPausedThisCycle = false;
         if ((int) powerSetting.get() < 300 || timerSetting.get() <= 0 || timerSetting.get() > 3000) {
-            return SimpleCheckRecipeResult.ofFailure("tt.gui.text.invalid_timer");
+            return SimpleCheckRecipeResult.ofFailure("invalid_timer");
         }
         if (remainingTime.get() <= 0) {
             remainingTime.set(timerSetting.get());
@@ -147,7 +147,7 @@ public class GT_MetaTileEntity_TM_microwave extends GT_MetaTileEntity_Multiblock
         eAmpereFlow = 1;
         mMaxProgresstime = 20;
         mEfficiencyIncrease = 10000;
-        return SimpleCheckRecipeResult.ofSuccess("tt.gui.text.microwaving");
+        return SimpleCheckRecipeResult.ofSuccess("microwaving");
     }
 
     @Override

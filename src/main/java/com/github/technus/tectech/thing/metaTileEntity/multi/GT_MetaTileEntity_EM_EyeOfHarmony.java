@@ -1080,7 +1080,7 @@ public class GT_MetaTileEntity_EM_EyeOfHarmony extends GT_MetaTileEntity_Multibl
     protected CheckRecipeResult checkProcessing_EM() {
         ItemStack controllerStack = getControllerSlot();
         if (controllerStack == null) {
-            return SimpleCheckRecipeResult.ofFailure("tt.gui.text.no_planet_block");
+            return SimpleCheckRecipeResult.ofFailure("no_planet_block");
         }
 
         lagPreventer++;
@@ -1124,12 +1124,12 @@ public class GT_MetaTileEntity_EM_EyeOfHarmony extends GT_MetaTileEntity_Multibl
         // Debug mode, overwrites the required fluids to initiate the recipe to 100L of each.
         if (EOH_DEBUG_MODE) {
             if ((getHydrogenStored() < 100) || (getHeliumStored() < 100)) {
-                return SimpleCheckRecipeResult.ofFailure("tt.gui.text.no_hydrogen");
+                return SimpleCheckRecipeResult.ofFailure("no_hydrogen");
             }
         } else {
             if ((getHydrogenStored() < currentRecipe.getHydrogenRequirement())
                     || (getHeliumStored() < currentRecipe.getHeliumRequirement())) {
-                return SimpleCheckRecipeResult.ofFailure("tt.gui.text.no_helium");
+                return SimpleCheckRecipeResult.ofFailure("no_helium");
             }
         }
 

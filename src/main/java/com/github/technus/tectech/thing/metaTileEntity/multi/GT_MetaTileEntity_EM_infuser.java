@@ -172,11 +172,11 @@ public class GT_MetaTileEntity_EM_infuser extends GT_MetaTileEntity_MultiblockBa
                 } else {
                     mEfficiencyIncrease = 10000;
                     mMaxProgresstime = 20;
-                    return SimpleCheckRecipeResult.ofSuccess("tt.gui.text.charging");
+                    return SimpleCheckRecipeResult.ofSuccess("charging");
                 }
             }
         }
-        return SimpleCheckRecipeResult.ofFailure("tt.gui.text.no_chargeable_item");
+        return SimpleCheckRecipeResult.ofFailure("no_chargeable_item");
     }
 
     @Override

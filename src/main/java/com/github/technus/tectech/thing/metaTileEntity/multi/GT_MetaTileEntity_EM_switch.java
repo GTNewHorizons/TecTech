@@ -138,9 +138,9 @@ public class GT_MetaTileEntity_EM_switch extends GT_MetaTileEntity_MultiblockBas
             eAmpereFlow = 1 + (thingsActive >> 2);
             mMaxProgresstime = 20;
             mEfficiencyIncrease = 10000;
-            return SimpleCheckRecipeResult.ofSuccess("tt.gui.text.routing");
+            return SimpleCheckRecipeResult.ofSuccess("routing");
         }
-        return SimpleCheckRecipeResult.ofFailure("tt.gui.text.no_routing");
+        return SimpleCheckRecipeResult.ofFailure("no_routing");
     }
 
     @Override

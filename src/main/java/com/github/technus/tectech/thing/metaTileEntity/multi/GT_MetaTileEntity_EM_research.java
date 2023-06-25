@@ -363,7 +363,7 @@ public class GT_MetaTileEntity_EM_research extends GT_MetaTileEntity_MultiblockB
                         machineType = assembly;
                         tRecipe = assRecipe;
                         // if found
-                        if (iterateRecipes()) return SimpleCheckRecipeResult.ofSuccess("tt.gui.text.researching");
+                        if (iterateRecipes()) return SimpleCheckRecipeResult.ofSuccess("researching");
                     }
                 }
             } else if (ItemList.Tool_DataOrb.isStackEqual(controllerStack, false, true)) {
@@ -372,7 +372,7 @@ public class GT_MetaTileEntity_EM_research extends GT_MetaTileEntity_MultiblockB
                         aRecipe = assRecipeTT;
                         machineType = machine;
                         // if found
-                        if (iterateRecipes()) return SimpleCheckRecipeResult.ofSuccess("tt.gui.text.researching");
+                        if (iterateRecipes()) return SimpleCheckRecipeResult.ofSuccess("researching");
                     }
                 }
                 for (TT_recipe.TT_assLineRecipe assRecipeTT : TT_recipe.TT_Recipe_Map.sCrafterRecipes.recipeList()) {
@@ -380,7 +380,7 @@ public class GT_MetaTileEntity_EM_research extends GT_MetaTileEntity_MultiblockB
                         aRecipe = assRecipeTT;
                         machineType = crafter;
                         // if found
-                        if (iterateRecipes()) return SimpleCheckRecipeResult.ofSuccess("tt.gui.text.researching");
+                        if (iterateRecipes()) return SimpleCheckRecipeResult.ofSuccess("researching");
                     }
                 }
             } else {
@@ -392,7 +392,7 @@ public class GT_MetaTileEntity_EM_research extends GT_MetaTileEntity_MultiblockB
         for (GT_MetaTileEntity_Hatch_Holder r : eHolders) {
             r.getBaseMetaTileEntity().setActive(false);
         }
-        return SimpleCheckRecipeResult.ofFailure("tt.gui.text.no_research_item");
+        return SimpleCheckRecipeResult.ofFailure("no_research_item");
     }
 
     @Override
