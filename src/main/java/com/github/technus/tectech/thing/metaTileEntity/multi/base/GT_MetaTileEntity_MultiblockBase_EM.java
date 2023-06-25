@@ -37,6 +37,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.FluidStack;
 
+import org.jetbrains.annotations.NotNull;
 import org.lwjgl.opengl.GL11;
 
 import com.github.technus.tectech.Reference;
@@ -105,6 +106,8 @@ import gregtech.api.metatileentity.implementations.GT_MetaTileEntity_Hatch_Muffl
 import gregtech.api.metatileentity.implementations.GT_MetaTileEntity_Hatch_Output;
 import gregtech.api.metatileentity.implementations.GT_MetaTileEntity_Hatch_OutputBus;
 import gregtech.api.metatileentity.implementations.GT_MetaTileEntity_MultiBlockBase;
+import gregtech.api.recipe.check.CheckRecipeResult;
+import gregtech.api.recipe.check.CheckRecipeResultRegistry;
 import gregtech.api.util.GT_HatchElementBuilder;
 import gregtech.api.util.GT_Multiblock_Tooltip_Builder;
 import gregtech.api.util.GT_Recipe;
@@ -313,6 +316,11 @@ public abstract class GT_MetaTileEntity_MultiblockBase_EM
      */
     public boolean checkRecipe_EM(ItemStack itemStack) {
         return false;
+    }
+
+    @NotNull
+    protected CheckRecipeResult checkProcessing_EM() {
+        return super.checkProcessing();
     }
 
     /**
@@ -1096,6 +1104,19 @@ public abstract class GT_MetaTileEntity_MultiblockBase_EM
         startRecipeProcessing();
         boolean result = checkRecipe_EM(itemStack); // if had no - set default params
         endRecipeProcessing();
+        hatchesStatusUpdate_EM();
+        return result;
+    }
+
+    @NotNull
+    @Override
+    public CheckRecipeResult checkProcessing() {
+        hatchesStatusUpdate_EM();
+        if (processingLogic == null) {
+            return checkRecipe_EM(getControllerSlot()) ? CheckRecipeResultRegistry.SUCCESSFUL
+                    : CheckRecipeResultRegistry.NO_RECIPE;
+        }
+        CheckRecipeResult result = checkProcessing_EM();
         hatchesStatusUpdate_EM();
         return result;
     }
