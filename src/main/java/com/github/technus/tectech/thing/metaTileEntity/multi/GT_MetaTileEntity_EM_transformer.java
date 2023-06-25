@@ -123,7 +123,7 @@ public class GT_MetaTileEntity_EM_transformer extends GT_MetaTileEntity_Multiblo
         }
         eAmpereFlow = 0;
         mEUt = 0;
-        return ePowerPass ? SimpleCheckRecipeResult.ofSuccess("tt.gui.text.routing_power")
+        return ePowerPass ? SimpleCheckRecipeResult.ofSuccess("tt.gui.text.routing")
                 : SimpleCheckRecipeResult.ofFailure("tt.gui.text.no_routing");
     }
 
