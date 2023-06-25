@@ -942,6 +942,8 @@ gt.blockmachines.debug.tt.writer.desc.0=Scans Blocks Around
 gt.blockmachines.debug.tt.writer.desc.1=Prints Multiblock NonTE structure check code
 gt.blockmachines.debug.tt.writer.desc.2=ABC axises aligned to machine front
 
+tt.gui.text.computing=§aComputing
+tt.gui.text.no_computing=§7Can't compute
 tt.gui.text.no_planet_block=§7Missing planet block
 tt.gui.text.no_helium=§7Not enough Helium
 tt.gui.text.no_hydrogen=§7Not enough Hydrogen
