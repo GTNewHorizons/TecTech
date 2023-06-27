@@ -453,7 +453,7 @@ public class TT_recipeAdder extends GT_RecipeAdder {
     public static boolean addFOGPlasmaRecipe(ItemStack[] itemInputs, FluidStack[] fluidOutputs, int machineDuration,
             int machineEUt) {
         if (itemInputs == null) {
-            itemInputs = null;
+            itemInputs = nullItem;
         }
 
         TT_recipe.GT_Recipe_MapTT.sGodforgePlasmaRecipes
@@ -465,7 +465,7 @@ public class TT_recipeAdder extends GT_RecipeAdder {
             int machineEUt) {
 
         if (afluidInputs == null) {
-            afluidInputs = null;
+            afluidInputs = nullFluid;
         }
 
         TT_recipe.GT_Recipe_MapTT.sGodforgePlasmaRecipes
