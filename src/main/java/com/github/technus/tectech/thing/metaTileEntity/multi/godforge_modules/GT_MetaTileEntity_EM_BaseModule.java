@@ -1,18 +1,13 @@
 package com.github.technus.tectech.thing.metaTileEntity.multi.godforge_modules;
 
 import static com.github.technus.tectech.thing.casing.GT_Block_CasingsTT.texturePage;
-import static com.github.technus.tectech.thing.metaTileEntity.multi.GT_MetaTileEntity_EM_ForgeOfGods.fuelConsumptionParameter;
-import static com.github.technus.tectech.thing.metaTileEntity.multi.GT_MetaTileEntity_EM_ForgeOfGods.getMaxParallels;
 
-import java.util.ArrayList;
-
-import javax.annotation.Nullable;
-
+import gregtech.api.util.GT_Utility;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.StatCollector;
 import net.minecraftforge.common.util.ForgeDirection;
-import net.minecraftforge.fluids.FluidRegistry;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.oredict.OreDictionary;
 
 import com.github.technus.tectech.thing.casing.TT_Container_Casings;
 import com.github.technus.tectech.thing.metaTileEntity.multi.base.*;
@@ -21,7 +16,6 @@ import com.gtnewhorizon.structurelib.structure.IStructureDefinition;
 import com.gtnewhorizon.structurelib.structure.StructureDefinition;
 import com.gtnewhorizon.structurelib.structure.StructureUtility;
 
-import gregtech.api.enums.GT_Values;
 import gregtech.api.enums.OrePrefixes;
 import gregtech.api.enums.Textures;
 import gregtech.api.interfaces.IGlobalWirelessEnergy;
@@ -77,38 +71,6 @@ public class GT_MetaTileEntity_EM_BaseModule extends GT_MetaTileEntity_Multibloc
         }
     }
 
-    @Nullable
-    public static FluidStack tryConvertItemStackToFluidMaterial(ItemStack input) {
-        ArrayList<String> oreDicts = new ArrayList<>();
-        for (int id : OreDictionary.getOreIDs(input)) {
-            oreDicts.add(OreDictionary.getOreName(id));
-        }
-
-        for (String dict : oreDicts) {
-            OrePrefixes orePrefix;
-            try {
-                orePrefix = OrePrefixes.valueOf(findBestPrefix(dict));
-            } catch (Exception e) {
-                continue;
-            }
-
-            String strippedOreDict = dict.substring(orePrefix.toString().length());
-
-            // Prevents things like AnyCopper or AnyIron from messing the search up.
-            if (strippedOreDict.contains("Any")) continue;
-
-            if (fuelConsumptionParameter.get() < 10) {
-                return FluidRegistry.getFluidStack(
-                        "molten." + strippedOreDict.toLowerCase(),
-                        (int) (orePrefix.mMaterialAmount / (GT_Values.M / 144)) * getMaxParallels());
-            } else if (fuelConsumptionParameter.get() >= 10) {
-                return FluidRegistry.getFluidStack(
-                        "plasma." + strippedOreDict.toLowerCase(),
-                        (int) (orePrefix.mMaterialAmount / (GT_Values.M / 144)) * getMaxParallels());
-            }
-        }
-        return null;
-    }
 
     protected static String findBestPrefix(String oreDict) {
         int longestPrefixLength = 0;
@@ -193,6 +155,26 @@ public class GT_MetaTileEntity_EM_BaseModule extends GT_MetaTileEntity_Multibloc
             userUUID = String.valueOf(getBaseMetaTileEntity().getOwnerUuid());
             String userName = getBaseMetaTileEntity().getOwnerName();
             strongCheckOrAddUser(userUUID, userName);
+        }
+    }
+
+    protected boolean inputSeparation = false;
+    protected static String INPUT_SEPARATION_NBT_KEY = "inputSeparation";
+
+    @Override
+    public final void onScrewdriverRightClick(ForgeDirection side, EntityPlayer aPlayer, float aX, float aY, float aZ) {
+        inputSeparation = !inputSeparation;
+        GT_Utility.sendChatToPlayer(
+                aPlayer,
+                StatCollector.translateToLocal("GT5U.machines.separatebus") + " " + inputSeparation);
+    }
+
+
+    @Override
+    public void loadNBTData(NBTTagCompound aNBT) {
+        super.loadNBTData(aNBT);
+        if (!aNBT.hasKey(INPUT_SEPARATION_NBT_KEY)) {
+            inputSeparation = aNBT.getBoolean("separateBusses");
         }
     }
 
