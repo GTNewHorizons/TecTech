@@ -34,6 +34,7 @@ public class GT_MetaTileEntity_EM_MoltenModule extends GT_MetaTileEntity_EM_Base
         implements IGlobalWirelessEnergy {
 
     Parameters.Group.ParameterIn parallelParam;
+    Parameters.Group.ParameterIn batchParam;
     private int solenoidCoilMetadata = 7;
     private static long EUt = 0;
     private static int currentParallel = 0;
@@ -104,6 +105,8 @@ public class GT_MetaTileEntity_EM_MoltenModule extends GT_MetaTileEntity_EM_Base
                 .setFluidInputs(aFluidInputs).setAvailableEUt(tEnergy).setMaxParallel(maxParallel).enableConsumption()
                 .enableOutputCalculation();
 
+        helper.enableBatchMode((int) batchParam.get());
+
         helper.build();
 
         if (helper.getCurrentParallel() == 0) {
@@ -117,7 +120,7 @@ public class GT_MetaTileEntity_EM_MoltenModule extends GT_MetaTileEntity_EM_Base
                 .setDuration(tRecipe.mDuration).setAmperage(helper.getCurrentParallel())
                 .setParallel(helper.getCurrentParallel()).calculate();
 
-        EUt = -calculator.getConsumption();
+        EUt = (long) (-calculator.getConsumption() / helper.getDurationMultiplier());
         mMaxProgresstime = (int) Math.ceil(calculator.getDuration() * helper.getDurationMultiplier());
 
         if (!addEUToGlobalEnergyMap(userUUID, EUt * mMaxProgresstime)) {
@@ -169,6 +172,12 @@ public class GT_MetaTileEntity_EM_MoltenModule extends GT_MetaTileEntity_EM_Base
                 GT_MetaTileEntity_EM_ForgeOfGods.getMaxParallels(),
                 PARALLEL_PARAM_NAME,
                 PARALLEL_AMOUNT);
+        Parameters.Group param_4 = parametrization.getGroup(0, false);
+        batchParam = param_4.makeInParameter(
+                1,
+                1,
+                BATCH_PARAM_NAME,
+                BATCH_SIZE);
     }
 
     private static final INameFunction<GT_MetaTileEntity_EM_MoltenModule> PARALLEL_PARAM_NAME = (base,
@@ -180,6 +189,15 @@ public class GT_MetaTileEntity_EM_MoltenModule extends GT_MetaTileEntity_EM_Base
                     0,
                     GT_MetaTileEntity_EM_ForgeOfGods.getMaxParallels(),
                     GT_MetaTileEntity_EM_ForgeOfGods.getMaxParallels());
+    private static final INameFunction<GT_MetaTileEntity_EM_MoltenModule> BATCH_PARAM_NAME = (base,
+                                                                                                 p) -> translateToLocal("gt.blockmachines.multimachine.FOG.batch");
+    private static final IStatusFunction<GT_MetaTileEntity_EM_MoltenModule> BATCH_SIZE = (base, p) -> LedStatus
+            .fromLimitsInclusiveOuterBoundary(
+                    p.get(),
+                    1,
+                    0,
+                    128,
+                    128);
 
     @Override
     public ITexture[] getTexture(IGregTechTileEntity aBaseMetaTileEntity, ForgeDirection side, ForgeDirection facing,
