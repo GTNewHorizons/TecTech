@@ -855,6 +855,7 @@ achievement.gt.graviton_flow_modulator.7=Tipler Graviton Flow Modulator
 achievement.gt.graviton_flow_modulator.8=Hyperion Graviton Flow Modulator
 
 gt.blockmachines.multimachine.FOG.parallel=Parallel
+gt.blockmachines.multimachine.FOG.batch=Batch Size
 gt.blockmachines.multimachine.FOG.fuelconsumption=Stellar Fuel Consumption Factor
 
 # Optical Circuits
