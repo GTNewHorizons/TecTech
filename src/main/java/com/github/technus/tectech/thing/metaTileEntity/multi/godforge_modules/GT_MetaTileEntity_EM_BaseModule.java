@@ -2,7 +2,6 @@ package com.github.technus.tectech.thing.metaTileEntity.multi.godforge_modules;
 
 import static com.github.technus.tectech.thing.casing.GT_Block_CasingsTT.texturePage;
 
-import gregtech.api.util.GT_Utility;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -24,6 +23,7 @@ import gregtech.api.interfaces.metatileentity.IMetaTileEntity;
 import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
 import gregtech.api.util.GT_Recipe;
 import gregtech.api.util.GT_StructureUtility;
+import gregtech.api.util.GT_Utility;
 
 public class GT_MetaTileEntity_EM_BaseModule extends GT_MetaTileEntity_MultiblockBase_EM
         implements IGlobalWirelessEnergy {
@@ -70,7 +70,6 @@ public class GT_MetaTileEntity_EM_BaseModule extends GT_MetaTileEntity_Multibloc
             if (mEfficiency < 0) mEfficiency = 0;
         }
     }
-
 
     protected static String findBestPrefix(String oreDict) {
         int longestPrefixLength = 0;
@@ -168,7 +167,6 @@ public class GT_MetaTileEntity_EM_BaseModule extends GT_MetaTileEntity_Multibloc
                 aPlayer,
                 StatCollector.translateToLocal("GT5U.machines.separatebus") + " " + inputSeparation);
     }
-
 
     @Override
     public void loadNBTData(NBTTagCompound aNBT) {
