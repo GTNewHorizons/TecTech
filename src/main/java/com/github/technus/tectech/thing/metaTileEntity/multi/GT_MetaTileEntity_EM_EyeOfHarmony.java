@@ -1122,15 +1122,12 @@ public class GT_MetaTileEntity_EM_EyeOfHarmony extends GT_MetaTileEntity_Multibl
         }
 
         // Debug mode, overwrites the required fluids to initiate the recipe to 100L of each.
-        if (EOH_DEBUG_MODE) {
-            if ((getHydrogenStored() < 100) || (getHeliumStored() < 100)) {
-                return SimpleCheckRecipeResult.ofFailure("no_hydrogen");
-            }
-        } else {
-            if ((getHydrogenStored() < currentRecipe.getHydrogenRequirement())
-                    || (getHeliumStored() < currentRecipe.getHeliumRequirement())) {
-                return SimpleCheckRecipeResult.ofFailure("no_helium");
-            }
+        if ((EOH_DEBUG_MODE && getHydrogenStored() < 100)
+                || (getHydrogenStored() < currentRecipe.getHydrogenRequirement())) {
+            return SimpleCheckRecipeResult.ofFailure("no_hydrogen");
+        }
+        if ((EOH_DEBUG_MODE && getHeliumStored() < 100) || (getHeliumStored() < currentRecipe.getHeliumRequirement())) {
+            return SimpleCheckRecipeResult.ofFailure("no_helium");
         }
 
         if (spacetimeCompressionFieldMetadata == -1) {
@@ -1147,13 +1144,10 @@ public class GT_MetaTileEntity_EM_EyeOfHarmony extends GT_MetaTileEntity_Multibl
         startEU = recipeObject.getEUStartCost();
 
         // Remove EU from the users network.
-        if (!addEUToGlobalEnergyMap(
-                userUUID,
-                (long) (-startEU * (Math.log(currentCircuitMultiplier + 1) / LOG_BASE_CONSTANT + 1)
-                        * pow(0.77, currentCircuitMultiplier)))) {
-            return CheckRecipeResultRegistry.insufficientPower(
-                    (long) (-startEU * (Math.log(currentCircuitMultiplier + 1) / LOG_BASE_CONSTANT + 1)
-                            * pow(0.77, currentCircuitMultiplier)));
+        long usedEU = (long) (-startEU * (Math.log(currentCircuitMultiplier + 1) / LOG_BASE_CONSTANT + 1)
+                * pow(0.77, currentCircuitMultiplier));
+        if (!addEUToGlobalEnergyMap(userUUID, usedEU)) {
+            return CheckRecipeResultRegistry.insufficientPower(usedEU);
         }
 
         mMaxProgresstime = recipeProcessTimeCalculator(

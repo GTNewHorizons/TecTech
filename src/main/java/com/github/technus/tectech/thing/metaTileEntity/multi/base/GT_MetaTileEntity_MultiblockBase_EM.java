@@ -1117,7 +1117,7 @@ public abstract class GT_MetaTileEntity_MultiblockBase_EM
 
     @NotNull
     @Override
-    public CheckRecipeResult checkProcessing() {
+    public final CheckRecipeResult checkProcessing() {
         hatchesStatusUpdate_EM();
         CheckRecipeResult result = checkProcessing_EM();
         hatchesStatusUpdate_EM();

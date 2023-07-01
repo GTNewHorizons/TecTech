@@ -57,6 +57,7 @@ import gregtech.api.metatileentity.MetaTileEntity;
 import gregtech.api.metatileentity.implementations.GT_MetaTileEntity_Hatch;
 import gregtech.api.metatileentity.implementations.GT_MetaTileEntity_MultiBlockBase;
 import gregtech.api.recipe.check.CheckRecipeResult;
+import gregtech.api.recipe.check.CheckRecipeResultRegistry;
 import gregtech.api.recipe.check.SimpleCheckRecipeResult;
 import gregtech.api.util.GT_Multiblock_Tooltip_Builder;
 import gregtech.api.util.IGT_HatchAdder;
@@ -252,7 +253,7 @@ public class GT_MetaTileEntity_EM_computer extends GT_MetaTileEntity_MultiblockB
                 mEUt = -(int) eut;
             } else {
                 mEUt = -(int) V[8];
-                return SimpleCheckRecipeResult.ofFailure("no_computing");
+                return CheckRecipeResultRegistry.POWER_OVERFLOW;
             }
             short thingsActive = 0;
             int rackComputation;
