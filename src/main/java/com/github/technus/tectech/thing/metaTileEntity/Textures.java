@@ -269,6 +269,23 @@ public class Textures {
             TextureFactory.of(OVERLAY_ENERGY_ON_WIRELESS, new short[] { 25, 43, 255, 0 }),
             TextureFactory.of(OVERLAY_ENERGY_ON_WIRELESS, new short[] { 25, 43, 255, 0 }) };
 
+    public static final ITexture[] OVERLAYS_ENERGY_IN_WIRELESS_LASER = {
+            TextureFactory.of(OVERLAY_ENERGY_ON_WIRELESS, new short[] { 255, 86, 25, 0 }),
+            TextureFactory.of(OVERLAY_ENERGY_ON_WIRELESS, new short[] { 255, 86, 25, 0 }),
+            TextureFactory.of(OVERLAY_ENERGY_ON_WIRELESS, new short[] { 255, 86, 25, 0 }),
+            TextureFactory.of(OVERLAY_ENERGY_ON_WIRELESS, new short[] { 255, 86, 25, 0 }),
+            TextureFactory.of(OVERLAY_ENERGY_ON_WIRELESS, new short[] { 255, 86, 25, 0 }),
+            TextureFactory.of(OVERLAY_ENERGY_ON_WIRELESS, new short[] { 255, 86, 25, 0 }),
+            TextureFactory.of(OVERLAY_ENERGY_ON_WIRELESS, new short[] { 255, 86, 25, 0 }),
+            TextureFactory.of(OVERLAY_ENERGY_ON_WIRELESS, new short[] { 255, 86, 25, 0 }),
+            TextureFactory.of(OVERLAY_ENERGY_ON_WIRELESS, new short[] { 255, 86, 25, 0 }),
+            TextureFactory.of(OVERLAY_ENERGY_ON_WIRELESS, new short[] { 255, 86, 25, 0 }),
+            TextureFactory.of(OVERLAY_ENERGY_ON_WIRELESS, new short[] { 255, 86, 25, 0 }),
+            TextureFactory.of(OVERLAY_ENERGY_ON_WIRELESS, new short[] { 255, 86, 25, 0 }),
+            TextureFactory.of(OVERLAY_ENERGY_ON_WIRELESS, new short[] { 255, 86, 25, 0 }),
+            TextureFactory.of(OVERLAY_ENERGY_ON_WIRELESS, new short[] { 255, 86, 25, 0 }),
+            TextureFactory.of(OVERLAY_ENERGY_ON_WIRELESS, new short[] { 255, 86, 25, 0 }) };
+
     public static ITexture[][] MACHINE_CASINGS_TT = new ITexture[15][17];
 
     public static ITexture TESLA_TRANSCEIVER_TOP_BA = new GT_RenderedTexture(TESLA_TRANSCEIVER_TOP);
