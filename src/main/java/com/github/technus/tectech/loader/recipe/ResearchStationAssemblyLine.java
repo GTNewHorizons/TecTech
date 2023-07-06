@@ -3176,6 +3176,11 @@ public class ResearchStationAssemblyLine implements Runnable {
                 CustomItemList.eM_energyMulti64_UIV.get(1), CustomItemList.eM_energyMulti64_UMV.get(1),
                 CustomItemList.eM_energyMulti64_UXV.get(1) };
 
+        ItemStack[] laserTargets_UXV = { CustomItemList.eM_energyTunnel1_UXV.get(1),
+                CustomItemList.eM_energyTunnel2_UXV.get(1), CustomItemList.eM_energyTunnel3_UXV.get(1),
+                CustomItemList.eM_energyTunnel4_UXV.get(1), CustomItemList.eM_energyTunnel5_UXV.get(1),
+                CustomItemList.eM_energyTunnel6_UXV.get(1), CustomItemList.eM_energyTunnel7_UXV.get(1) };
+
         ItemStack[] dynamoHatches = { ItemList.Hatch_Dynamo_ULV.get(1), ItemList.Hatch_Dynamo_LV.get(1),
                 ItemList.Hatch_Dynamo_MV.get(1), ItemList.Hatch_Dynamo_HV.get(1), ItemList.Hatch_Dynamo_EV.get(1),
                 ItemList.Hatch_Dynamo_IV.get(1), ItemList.Hatch_Dynamo_LuV.get(1), ItemList.Hatch_Dynamo_ZPM.get(1),
@@ -3232,6 +3237,12 @@ public class ResearchStationAssemblyLine implements Runnable {
                 CustomItemList.eM_energyWirelessMulti64_UHV.get(1), CustomItemList.eM_energyWirelessMulti64_UEV.get(1),
                 CustomItemList.eM_energyWirelessMulti64_UIV.get(1), CustomItemList.eM_energyWirelessMulti64_UMV.get(1),
                 CustomItemList.eM_energyWirelessMulti64_UXV.get(1) };
+
+        ItemStack[] wirelessLasers = { CustomItemList.eM_energyWirelessTunnel1_UXV.get(1),
+                CustomItemList.eM_energyWirelessTunnel2_UXV.get(1), CustomItemList.eM_energyWirelessTunnel3_UXV.get(1),
+                CustomItemList.eM_energyWirelessTunnel4_UXV.get(1), CustomItemList.eM_energyWirelessTunnel5_UXV.get(1),
+                CustomItemList.eM_energyWirelessTunnel6_UXV.get(1),
+                CustomItemList.eM_energyWirelessTunnel7_UXV.get(1) };
 
         ItemStack[] wirelessDynamos = { ItemList.Wireless_Dynamo_Energy_ULV.get(1),
                 ItemList.Wireless_Dynamo_Energy_LV.get(1), ItemList.Wireless_Dynamo_Energy_MV.get(1),
@@ -3327,11 +3338,39 @@ public class ResearchStationAssemblyLine implements Runnable {
                             CustomItemList.eM_Power.get(64),
                             GT_OreDictUnificator.get(OrePrefixes.wireGt01, MaterialsUEVplus.SpaceTime, 64),
                             GT_OreDictUnificator.get("plateTripleShirabon", 64L),
-                            GT_OreDictUnificator.get("plateDenseMetastableOganesson", 4),
-                            circuitsTierPlusTwo[i + 4], ItemList.EnergisedTesseract.get(1) },
+                            GT_OreDictUnificator.get("plateDenseMetastableOganesson", 4), circuitsTierPlusTwo[i + 4],
+                            ItemList.EnergisedTesseract.get(1) },
                     new FluidStack[] { new FluidStack(solderUEV, 1_296 * 64),
                             MaterialsUEVplus.ExcitedDTEC.getFluid(500L * 64) },
                     wirelessHatches_64A[i],
+                    recipeDurationTicks,
+                    recipeEuPerTick);
+        }
+
+        // ------------------------ Wireless UXV Lasers ------------------------
+
+        for (int i = 0; i < wirelessLasers.length; i++) {
+
+            TT_recipeAdder.addResearchableAssemblylineRecipe(
+                    laserTargets_UXV[i],
+                    totalComputation * 64,
+                    compPerSecond * 64,
+                    researchEuPerTick * 4,
+                    researchAmperage * 16,
+                    new Object[] { laserTargets_UXV[i], getModItem(GoodGenerator.ID, "compactFusionCoil", 1, 4),
+                            // Dyson Swarm Module Deployment Unit Superconducting Magnet
+                            getModItem(GalaxySpace.ID, "dysonswarmparts", 1, 4),
+                            CustomItemList.Machine_Multi_Transformer.get(1), CustomItemList.eM_Power.get(64),
+                            GT_OreDictUnificator.get(OrePrefixes.wireGt16, MaterialsUEVplus.SpaceTime, 64),
+                            GT_OreDictUnificator.get(OrePrefixes.plateDense, MaterialsUEVplus.Eternity, 32),
+                            GT_OreDictUnificator.get(
+                                    OrePrefixes.plateDense,
+                                    MaterialsUEVplus.MagnetohydrodynamicallyConstrainedStarMatter,
+                                    16),
+                            circuitsTierPlusTwo[i + 4], ItemList.EnergisedTesseract.get(1) },
+                    new FluidStack[] { new FluidStack(solderUEV, 1_296 * 64 * 4),
+                            MaterialsUEVplus.ExcitedDTSC.getFluid(500L * 64) },
+                    wirelessLasers[i],
                     recipeDurationTicks,
                     recipeEuPerTick);
         }
