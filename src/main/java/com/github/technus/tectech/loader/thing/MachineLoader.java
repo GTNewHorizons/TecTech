@@ -305,6 +305,13 @@ import static com.github.technus.tectech.thing.CustomItemList.eM_energyWirelessM
 import static com.github.technus.tectech.thing.CustomItemList.eM_energyWirelessMulti64_UV;
 import static com.github.technus.tectech.thing.CustomItemList.eM_energyWirelessMulti64_UXV;
 import static com.github.technus.tectech.thing.CustomItemList.eM_energyWirelessMulti64_ZPM;
+import static com.github.technus.tectech.thing.CustomItemList.eM_energyWirelessTunnel1_UXV;
+import static com.github.technus.tectech.thing.CustomItemList.eM_energyWirelessTunnel2_UXV;
+import static com.github.technus.tectech.thing.CustomItemList.eM_energyWirelessTunnel3_UXV;
+import static com.github.technus.tectech.thing.CustomItemList.eM_energyWirelessTunnel4_UXV;
+import static com.github.technus.tectech.thing.CustomItemList.eM_energyWirelessTunnel5_UXV;
+import static com.github.technus.tectech.thing.CustomItemList.eM_energyWirelessTunnel6_UXV;
+import static com.github.technus.tectech.thing.CustomItemList.eM_energyWirelessTunnel7_UXV;
 import static com.github.technus.tectech.thing.CustomItemList.eM_in_UEV;
 import static com.github.technus.tectech.thing.CustomItemList.eM_in_UHV;
 import static com.github.technus.tectech.thing.CustomItemList.eM_in_UIV;
@@ -1023,6 +1030,55 @@ public class MachineLoader implements Runnable {
                         14,
                         64).getStackForm(1L));
 
+        eM_energyWirelessTunnel1_UXV.set(
+                new GT_MetaTileEntity_Hatch_WirelessMulti(
+                        15500,
+                        "hatch.energywirelesstunnel1.tier.13",
+                        "UXV 256A Wireless Energy Hatch",
+                        13,
+                        256).getStackForm(1L));
+        eM_energyWirelessTunnel2_UXV.set(
+                new GT_MetaTileEntity_Hatch_WirelessMulti(
+                        15501,
+                        "hatch.energywirelesstunnel2.tier.13",
+                        "UXV 1024A Wireless Energy Hatch",
+                        13,
+                        1024).getStackForm(1L));
+        eM_energyWirelessTunnel3_UXV.set(
+                new GT_MetaTileEntity_Hatch_WirelessMulti(
+                        15502,
+                        "hatch.energywirelesstunnel3.tier.13",
+                        "UXV 4096A Wireless Energy Hatch",
+                        13,
+                        4096).getStackForm(1L));
+        eM_energyWirelessTunnel4_UXV.set(
+                new GT_MetaTileEntity_Hatch_WirelessMulti(
+                        15503,
+                        "hatch.energywirelesstunnel4.tier.13",
+                        "UXV 16384A Wireless Energy Hatch",
+                        13,
+                        16384).getStackForm(1L));
+        eM_energyWirelessTunnel5_UXV.set(
+                new GT_MetaTileEntity_Hatch_WirelessMulti(
+                        15504,
+                        "hatch.energywirelesstunnel5.tier.13",
+                        "UXV 65536A Wireless Energy Hatch",
+                        13,
+                        65536).getStackForm(1L));
+        eM_energyWirelessTunnel6_UXV.set(
+                new GT_MetaTileEntity_Hatch_WirelessMulti(
+                        15505,
+                        "hatch.energywirelesstunnel6.tier.13",
+                        "UXV 262144A Wireless Energy Hatch",
+                        13,
+                        262144).getStackForm(1L));
+        eM_energyWirelessTunnel7_UXV.set(
+                new GT_MetaTileEntity_Hatch_WirelessMulti(
+                        15506,
+                        "hatch.energywirelesstunnel7.tier.13",
+                        "UXV 1048576A Wireless Energy Hatch",
+                        13,
+                        1048576).getStackForm(1L));
         // ===================================================================================================
         // Multi AMP Laser INPUTS
         // ===================================================================================================
