@@ -29,7 +29,8 @@ import gregtech.api.util.GT_Utility;
 public class GT_MetaTileEntity_Hatch_DynamoTunnel extends GT_MetaTileEntity_Hatch_DynamoMulti
         implements IConnectsToEnergyTunnel {
 
-    public GT_MetaTileEntity_Hatch_DynamoTunnel(int ID, String unlocalisedName, String localisedName, int tier, int amps) {
+    public GT_MetaTileEntity_Hatch_DynamoTunnel(int ID, String unlocalisedName, String localisedName, int tier,
+            int amps) {
         super(
                 ID,
                 unlocalisedName,
