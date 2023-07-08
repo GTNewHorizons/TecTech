@@ -198,6 +198,8 @@ public abstract class GT_MetaTileEntity_MultiblockBase_EM
     // if u need to force some things to be fixed - u might need to override doRandomMaintenanceDamage
     protected byte minRepairStatus = 3;
 
+    public boolean isNeededMaintenanceChecks = true;
+
     // is power pass cover present
     public boolean ePowerPassCover = false;
 
@@ -3234,4 +3236,14 @@ public abstract class GT_MetaTileEntity_MultiblockBase_EM
     }
 
     // endregion
+
+    public void turnOffMaintenance() {
+        mWrench = true;
+        mScrewdriver = true;
+        mSoftHammer = true;
+        mHardHammer = true;
+        mSolderingTool = true;
+        mCrowbar = true;
+        isNeededMaintenanceChecks = false;
+    }
 }
