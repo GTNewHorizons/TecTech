@@ -288,12 +288,12 @@ achievement.gt.blockmachines.hatch.energywirelessmulti16.tier.14.desc=Multi Amp 
 achievement.gt.blockmachines.hatch.energywirelessmulti64.tier.14.desc=Multi Amp Wireless Energy!
 
 gt.blockmachines.hatch.energywirelesstunnel1.tier.13.name=UXV 256A Wireless Energy Hatch
-gt.blockmachines.hatch.energywirelesstunnel2.tier.13.name=UXV 1024A Wireless Energy Hatch
-gt.blockmachines.hatch.energywirelesstunnel3.tier.13.name=UXV 4096A Wireless Energy Hatch
-gt.blockmachines.hatch.energywirelesstunnel4.tier.13.name=UXV 16384A Wireless Energy Hatch
-gt.blockmachines.hatch.energywirelesstunnel5.tier.13.name=UXV 65536A Wireless Energy Hatch
-gt.blockmachines.hatch.energywirelesstunnel6.tier.13.name=UXV 262144A Wireless Energy Hatch
-gt.blockmachines.hatch.energywirelesstunnel7.tier.13.name=UXV 1048576A Wireless Energy Hatch
+gt.blockmachines.hatch.energywirelesstunnel2.tier.13.name=UXV 1,024A Wireless Energy Hatch
+gt.blockmachines.hatch.energywirelesstunnel3.tier.13.name=UXV 4,096A Wireless Energy Hatch
+gt.blockmachines.hatch.energywirelesstunnel4.tier.13.name=UXV 16,384A Wireless Energy Hatch
+gt.blockmachines.hatch.energywirelesstunnel5.tier.13.name=UXV 65,536A Wireless Energy Hatch
+gt.blockmachines.hatch.energywirelesstunnel6.tier.13.name=UXV 262,144A Wireless Energy Hatch
+gt.blockmachines.hatch.energywirelesstunnel7.tier.13.name=UXV 1,048,576A Wireless Energy Hatch
 
 achievement.gt.blockmachines.hatch.energywirelesstunnel1.tier.13.desc=High Amp Wireless Energy at last!
 achievement.gt.blockmachines.hatch.energywirelesstunnel2.tier.13.desc=High Amp Wireless Energy at last!
