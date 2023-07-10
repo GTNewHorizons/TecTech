@@ -20,6 +20,9 @@ public class RenderForgeOfGods extends TileEntitySpecialRenderer {
     public static final ResourceLocation STAR_LAYER_2 = new ResourceLocation(MODID, "models/StarLayer2.png");
     public static IModelCustom starModel;
     private static IModelCustom spaceModel;
+    private static final float RED = 180 / 255f;
+    private static final float GREEN = 180 / 255f;
+    private static final float BLUE = 255 / 255f;
 
     public RenderForgeOfGods() {
         starModel = AdvancedModelLoader.loadModel(new ResourceLocation(MODID, "models/Star.obj"));
@@ -61,7 +64,7 @@ public class RenderForgeOfGods extends TileEntitySpecialRenderer {
         final float scale = 0.01f * 17.5f;
         GL11.glScalef(scale, scale, scale);
 
-        GL11.glColor4f(222, 243, 250, 1);
+        GL11.glColor4f(222 / 255f, 243 / 255f, 250 / 255f, 255 / 255f);
 
         spaceModel.renderAll();
         GL11.glDisable(GL11.GL_BLEND);
@@ -106,13 +109,14 @@ public class RenderForgeOfGods extends TileEntitySpecialRenderer {
         }
 
         // Set color and alpha of the star layer
-        GL11.glColor4f(210 / 255.0f, 233 / 255.0f, 252 / 255.0f, alpha);
+        GL11.glColor4f(RED, GREEN, BLUE, alpha);
 
         // Spin the star
         GL11.glRotatef((0.03f * FOGRenderTile.angle * FOGRenderTile.getRenderRotationSpeed()) % 360.0f, 0F, 0F, 1F);
 
         starModel.renderAll();
         GL11.glDisable(GL11.GL_BLEND);
+        GL11.glDisable(GL11.GL_CULL_FACE);
         GL11.glDepthMask(true);
         GL11.glEnable(GL11.GL_LIGHTING);
 

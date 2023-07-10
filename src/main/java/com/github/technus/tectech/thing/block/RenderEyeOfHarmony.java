@@ -24,6 +24,9 @@ public class RenderEyeOfHarmony extends TileEntitySpecialRenderer {
     public static final ResourceLocation STAR_LAYER_2 = new ResourceLocation(MODID, "models/StarLayer2.png");
     public static IModelCustom starModel;
     private static IModelCustom spaceModel;
+    private static final float RED = 255 / 255f;
+    private static final float GREEN = 127 / 255f;
+    private static final float BLUE = 60 / 255f;
 
     public RenderEyeOfHarmony() {
         starModel = AdvancedModelLoader.loadModel(new ResourceLocation(MODID, "models/Star.obj"));
@@ -155,7 +158,7 @@ public class RenderEyeOfHarmony extends TileEntitySpecialRenderer {
         }
 
         // Set colour and alpha (transparency) of the star layer.
-        GL11.glColor4f(1, 1, 1, alpha);
+        GL11.glColor4f(RED, GREEN, BLUE, alpha);
 
         // Spin the star around according to the multi time dilation tier.
         GL11.glRotatef((0.03f * EOHRenderTile.angle * EOHRenderTile.getRotationSpeed()) % 360.0f, 0F, 0F, 1F);
