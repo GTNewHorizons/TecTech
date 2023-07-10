@@ -2,6 +2,7 @@ package com.github.technus.tectech.proxy;
 
 import static com.github.technus.tectech.TecTech.RANDOM;
 import static com.github.technus.tectech.thing.casing.TT_Container_Casings.eyeOfHarmonyRenderBlock;
+import static com.github.technus.tectech.thing.casing.TT_Container_Casings.forgeOfGodsRenderBlock;
 import static gregtech.api.enums.Mods.OpenModularTurrets;
 
 import net.minecraft.client.Minecraft;
@@ -21,10 +22,13 @@ import com.github.technus.tectech.compatibility.openmodularturrets.TT_turret_loa
 import com.github.technus.tectech.thing.block.QuantumGlassBlock;
 import com.github.technus.tectech.thing.block.QuantumGlassRender;
 import com.github.technus.tectech.thing.block.RenderEyeOfHarmony;
+import com.github.technus.tectech.thing.block.RenderForgeOfGods;
 import com.github.technus.tectech.thing.block.TileEyeOfHarmony;
+import com.github.technus.tectech.thing.block.TileForgeOfGods;
 import com.github.technus.tectech.thing.item.DebugElementalInstanceContainer_EM;
 import com.github.technus.tectech.thing.item.ElementalDefinitionContainer_EM;
 import com.github.technus.tectech.thing.item.RenderEyeOfHarmonyItem;
+import com.github.technus.tectech.thing.item.RenderForgeOfGodsItem;
 import com.github.technus.tectech.thing.item.renderElemental.RenderElementalName;
 import com.gtnewhorizon.structurelib.entity.fx.WeightlessParticleFX;
 
@@ -46,12 +50,15 @@ public class ClientProxy extends CommonProxy {
                 .registerItemRenderer(DebugElementalInstanceContainer_EM.INSTANCE, RenderElementalName.INSTANCE);
         MinecraftForgeClient
                 .registerItemRenderer(Item.getItemFromBlock(eyeOfHarmonyRenderBlock), new RenderEyeOfHarmonyItem());
+        MinecraftForgeClient
+                .registerItemRenderer(Item.getItemFromBlock(forgeOfGodsRenderBlock), new RenderForgeOfGodsItem());
 
         if (OpenModularTurrets.isModLoaded()) {
             new TT_turret_loader().run();
         }
 
         ClientRegistry.bindTileEntitySpecialRenderer(TileEyeOfHarmony.class, new RenderEyeOfHarmony());
+        ClientRegistry.bindTileEntitySpecialRenderer(TileForgeOfGods.class, new RenderForgeOfGods());
     }
 
     @Override

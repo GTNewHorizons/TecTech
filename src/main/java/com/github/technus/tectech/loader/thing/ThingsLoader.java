@@ -10,6 +10,7 @@ import com.github.technus.tectech.compatibility.openmodularturrets.blocks.turret
 import com.github.technus.tectech.thing.block.QuantumGlassBlock;
 import com.github.technus.tectech.thing.block.ReactorSimBlock;
 import com.github.technus.tectech.thing.block.TileEyeOfHarmony;
+import com.github.technus.tectech.thing.block.TileForgeOfGods;
 import com.github.technus.tectech.thing.casing.GT_Block_CasingsBA0;
 import com.github.technus.tectech.thing.casing.GT_Block_CasingsTT;
 import com.github.technus.tectech.thing.casing.GravitonModulationCasing;
@@ -42,6 +43,7 @@ public class ThingsLoader implements Runnable {
     public void run() {
 
         GameRegistry.registerTileEntity(TileEyeOfHarmony.class, MODID + ":EyeOfHarmonyRenderBlock");
+        GameRegistry.registerTileEntity(TileForgeOfGods.class, MODID + ":ForgeOfGodsRenderBlock");
 
         if (Textures.BlockIcons.casingTexturePages[tectechTexturePage1] == null) {
             Textures.BlockIcons.casingTexturePages[tectechTexturePage1] = new ITexture[128];
