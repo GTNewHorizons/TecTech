@@ -16,8 +16,8 @@ public class ForgeOfGods implements Runnable {
     public void run() {
 
         // GT solid to plasma recipes
-        ItemStack[] solids = { Materials.Tritanium.getDust(1), Materials.Aluminium.getDust(1)};
-        FluidStack[] solid_plasmas = { Materials.Tritanium.getPlasma(144), Materials.Aluminium.getPlasma(144)};
+        ItemStack[] solids = { Materials.Tritanium.getDust(1), Materials.Aluminium.getDust(1) };
+        FluidStack[] solid_plasmas = { Materials.Tritanium.getPlasma(144), Materials.Aluminium.getPlasma(144) };
 
         for (int i = 0; i < solids.length; i++) {
             TT_recipeAdder.addFOGPlasmaRecipe(
@@ -28,8 +28,8 @@ public class ForgeOfGods implements Runnable {
         }
 
         // GT fluid to plasma recipes
-        FluidStack[] fluids = { Materials.Helium.getGas(1000)};
-        FluidStack[] fluid_plasmas = { Materials.Helium.getPlasma(1000)};
+        FluidStack[] fluids = { Materials.Helium.getGas(1000) };
+        FluidStack[] fluid_plasmas = { Materials.Helium.getPlasma(1000) };
 
         for (int i = 0; i < fluids.length; i++) {
             TT_recipeAdder.addFOGPlasmaRecipe(
