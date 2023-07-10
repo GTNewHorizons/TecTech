@@ -50,12 +50,10 @@ public class RenderForgeOfGods extends TileEntitySpecialRenderer {
 
     public static void renderOuterSpaceShell() {
 
-
         GL11.glPushMatrix();
 
         GL11.glDisable(GL11.GL_LIGHTING);
         GL11.glEnable(GL11.GL_BLEND);
-
 
         FMLClientHandler.instance().getClient().getTextureManager()
                 .bindTexture(new ResourceLocation(MODID, "models/spaceLayer.png"));
@@ -78,7 +76,6 @@ public class RenderForgeOfGods extends TileEntitySpecialRenderer {
     private void renderStarLayer(TileForgeOfGods FOGRenderTile, int layer, ResourceLocation texture, float alpha) {
 
         GL11.glPushMatrix();
-
 
         GL11.glDisable(GL11.GL_LIGHTING);
         GL11.glEnable(GL11.GL_CULL_FACE);
