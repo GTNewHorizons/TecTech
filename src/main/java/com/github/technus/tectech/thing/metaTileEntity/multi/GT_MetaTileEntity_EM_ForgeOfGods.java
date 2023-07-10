@@ -23,6 +23,7 @@ import net.minecraftforge.fluids.FluidStack;
 import org.apache.commons.lang3.tuple.Pair;
 
 import com.github.technus.tectech.thing.casing.TT_Container_Casings;
+import com.github.technus.tectech.thing.gui.TecTechUITextures;
 import com.github.technus.tectech.thing.metaTileEntity.multi.base.*;
 import com.github.technus.tectech.thing.metaTileEntity.multi.base.render.TT_RenderedExtendedFacingTexture;
 import com.github.technus.tectech.thing.metaTileEntity.multi.godforge_modules.GT_MetaTileEntity_EM_BaseModule;
@@ -32,11 +33,18 @@ import com.gtnewhorizon.structurelib.alignment.constructable.IConstructable;
 import com.gtnewhorizon.structurelib.alignment.constructable.ISurvivalConstructable;
 import com.gtnewhorizon.structurelib.structure.IItemSource;
 import com.gtnewhorizon.structurelib.structure.IStructureDefinition;
+import com.gtnewhorizons.modularui.api.drawable.IDrawable;
+import com.gtnewhorizons.modularui.api.drawable.UITexture;
+import com.gtnewhorizons.modularui.api.screen.ModularWindow;
+import com.gtnewhorizons.modularui.api.screen.UIBuildContext;
+import com.gtnewhorizons.modularui.api.widget.Widget;
+import com.gtnewhorizons.modularui.common.widget.*;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import gregtech.api.GregTech_API;
 import gregtech.api.enums.*;
+import gregtech.api.gui.modularui.GT_UITextures;
 import gregtech.api.interfaces.IGlobalWirelessEnergy;
 import gregtech.api.interfaces.IHatchElement;
 import gregtech.api.interfaces.ITexture;
@@ -447,6 +455,51 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
     @Override
     public GT_Recipe.GT_Recipe_Map getRecipeMap() {
         return GT_Recipe.GT_Recipe_Map.sBlastRecipes;
+    }
+
+    @Override
+    public void addUIWidgets(ModularWindow.Builder builder, UIBuildContext buildContext) {
+        if (doesBindPlayerInventory()) {
+            builder.widget(
+                    new DrawableWidget().setDrawable(TecTechUITextures.BACKGROUND_SCREEN_BLUE).setPos(4, 4)
+                            .setSize(190, 91));
+        } else {
+            builder.widget(
+                    new DrawableWidget().setDrawable(TecTechUITextures.BACKGROUND_SCREEN_BLUE_NO_INVENTORY).setPos(4, 4)
+                            .setSize(190, 171));
+        }
+        if (doesBindPlayerInventory()) {
+            builder.widget(
+                    new DrawableWidget().setDrawable(TecTechUITextures.PICTURE_HEAT_SINK_SMALL).setPos(173, 185)
+                            .setSize(18, 6));
+        }
+        buildContext.addSyncedWindow(10, this::createConfigurationWindow);
+        builder.widget(
+                new ButtonWidget().setOnClick(
+                        (clickData, widget) -> { if (!widget.isClient()) widget.getContext().openSyncedWindow(10); })
+                        .setSize(18, 18).setBackground(() -> {
+                            List<UITexture> button = new ArrayList<>();
+                            button.add(TecTechUITextures.BUTTON_CELESTIAL_32x32);
+                            button.add(TecTechUITextures.OVERLAY_BUTTON_ARROW_BLUE_UP);
+                            return button.toArray(new IDrawable[0]);
+                        }).addTooltip("Path of Celestial Transcendence").setPos(173, 167))
+                .widget(
+                        new DrawableWidget().setDrawable(TecTechUITextures.PICTURE_HEAT_SINK_SMALL).setPos(173, 185)
+                                .setSize(18, 6));
+
+        Widget powerSwitchButton = createPowerSwitchButton();
+        builder.widget(powerSwitchButton)
+                .widget(new FakeSyncWidget.BooleanSyncer(() -> getBaseMetaTileEntity().isAllowedToWork(), val -> {
+                    if (val) getBaseMetaTileEntity().enableWorking();
+                    else getBaseMetaTileEntity().disableWorking();
+                }));
+    }
+
+    protected ModularWindow createConfigurationWindow(final EntityPlayer player) {
+        ModularWindow.Builder builder = ModularWindow.builder(200, 160);
+        builder.setBackground(GT_UITextures.BACKGROUND_SINGLEBLOCK_DEFAULT);
+        builder.setGuiTint(getGUIColorization());
+        return builder.build();
     }
 
     @Override

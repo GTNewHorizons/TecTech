@@ -20,6 +20,7 @@ public class TecTechUITextures {
     public static final UITexture BUTTON_STANDARD_16x16 = UITexture.fullImage(MODID, "gui/button/standard_16x16");
     public static final UITexture BUTTON_STANDARD_LIGHT_16x16 = UITexture
             .fullImage(MODID, "gui/button/standard_light_16x16");
+    public static final UITexture BUTTON_CELESTIAL_32x32 = UITexture.fullImage(MODID, "gui/button/celestial");
 
     public static final UITexture OVERLAY_BUTTON_POWER_SWITCH_DISABLED = UITexture
             .fullImage(MODID, "gui/overlay_button/power_switch_disabled");
@@ -60,6 +61,8 @@ public class TecTechUITextures {
             .fullImage(MODID, "gui/overlay_button/parametrizer_c");
     public static final UITexture OVERLAY_BUTTON_PARAMETRIZER_IF = UITexture
             .fullImage(MODID, "gui/overlay_button/parametrizer_if");
+    public static final UITexture OVERLAY_BUTTON_ARROW_BLUE_UP = UITexture
+            .fullImage(MODID, "gui/overlay_button/arrow_blue_up");
 
     public static final UITexture OVERLAY_SLOT_RACK = UITexture.fullImage(MODID, "gui/overlay_slot/rack");
     public static final UITexture OVERLAY_SLOT_MESH = UITexture.fullImage(MODID, "gui/overlay_slot/mesh");
