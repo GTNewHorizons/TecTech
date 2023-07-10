@@ -1,6 +1,7 @@
 package com.github.technus.tectech.thing.metaTileEntity.multi;
 
 import static com.github.technus.tectech.thing.casing.GT_Block_CasingsTT.texturePage;
+import static com.github.technus.tectech.thing.casing.TT_Container_Casings.forgeOfGodsRenderBlock;
 import static com.github.technus.tectech.thing.casing.TT_Container_Casings.sBlockCasingsBA0;
 import static com.github.technus.tectech.thing.casing.TT_Container_Casings.sBlockCasingsTT;
 import static com.gtnewhorizon.structurelib.structure.StructureUtility.*;
@@ -14,6 +15,7 @@ import java.util.*;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.StatCollector;
@@ -22,6 +24,7 @@ import net.minecraftforge.fluids.FluidStack;
 
 import org.apache.commons.lang3.tuple.Pair;
 
+import com.github.technus.tectech.thing.block.TileForgeOfGods;
 import com.github.technus.tectech.thing.casing.TT_Container_Casings;
 import com.github.technus.tectech.thing.gui.TecTechUITextures;
 import com.github.technus.tectech.thing.metaTileEntity.multi.base.*;
@@ -255,25 +258,22 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
         }
 
         // Check if there is 1 output bus, and it is a ME output bus.
-        {
-            if (mOutputBusses.size() != 1) {
-                return false;
-            }
 
-            if (!(mOutputBusses.get(0) instanceof GT_MetaTileEntity_Hatch_OutputBus_ME)) {
-                return false;
-            }
+        if (mOutputBusses.size() != 1) {
+            return false;
+        }
+
+        if (!(mOutputBusses.get(0) instanceof GT_MetaTileEntity_Hatch_OutputBus_ME)) {
+            return false;
         }
 
         // Check if there is 1 output hatch, and they are ME output hatches.
-        {
-            if (mOutputHatches.size() != 1) {
-                return false;
-            }
+        if (mOutputHatches.size() != 1) {
+            return false;
+        }
 
-            if (!(mOutputHatches.get(0) instanceof GT_MetaTileEntity_Hatch_Output_ME)) {
-                return false;
-            }
+        if (!(mOutputHatches.get(0) instanceof GT_MetaTileEntity_Hatch_Output_ME)) {
+            return false;
         }
 
         // Check there is 1 input bus.
@@ -282,14 +282,13 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
         }
 
         // Make sure there are no energy hatches.
-        {
-            if (mEnergyHatches.size() > 0) {
-                return false;
-            }
 
-            if (mExoticEnergyHatches.size() > 0) {
-                return false;
-            }
+        if (mEnergyHatches.size() > 0) {
+            return false;
+        }
+
+        if (mExoticEnergyHatches.size() > 0) {
+            return false;
         }
 
         // Make sure there are 2 input hatches.
@@ -390,6 +389,29 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
         }
     }
 
+    private void createRenderBlock() {
+
+        IGregTechTileEntity gregTechTileEntity = this.getBaseMetaTileEntity();
+
+        int x = gregTechTileEntity.getXCoord();
+        int y = gregTechTileEntity.getYCoord();
+        int z = gregTechTileEntity.getZCoord();
+
+        double xOffset = 16 * getExtendedFacing().getRelativeBackInWorld().offsetX;
+        double zOffset = 16 * getExtendedFacing().getRelativeBackInWorld().offsetZ;
+        double yOffset = 16 * getExtendedFacing().getRelativeBackInWorld().offsetY;
+
+        this.getBaseMetaTileEntity().getWorld()
+                .setBlock((int) (x + xOffset), (int) (y + yOffset), (int) (z + zOffset), Blocks.air);
+        this.getBaseMetaTileEntity().getWorld()
+                .setBlock((int) (x + xOffset), (int) (y + yOffset), (int) (z + zOffset), forgeOfGodsRenderBlock);
+        TileForgeOfGods rendererTileEntity = (TileForgeOfGods) this.getBaseMetaTileEntity().getWorld()
+                .getTileEntity((int) (x + xOffset), (int) (y + yOffset), (int) (z + zOffset));
+
+        rendererTileEntity.setRenderSize(20);
+        rendererTileEntity.setRenderRotationSpeed(5);
+    }
+
     protected boolean inputSeparation = false;
     protected static String INPUT_SEPARATION_NBT_KEY = "inputSeparation";
 
@@ -410,6 +432,7 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
         GT_Utility.sendChatToPlayer(
                 aPlayer,
                 StatCollector.translateToLocal("GT5U.machines.separatebus") + " " + inputSeparation);
+        createRenderBlock();
     }
 
     @Override
