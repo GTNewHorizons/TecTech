@@ -28,6 +28,7 @@ import static net.minecraft.util.EnumChatFormatting.RED;
 import static net.minecraft.util.EnumChatFormatting.RESET;
 import static net.minecraft.util.EnumChatFormatting.UNDERLINE;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -1144,10 +1145,10 @@ public class GT_MetaTileEntity_EM_EyeOfHarmony extends GT_MetaTileEntity_Multibl
         startEU = recipeObject.getEUStartCost();
 
         // Remove EU from the users network.
-        long usedEU = (long) (-startEU * (Math.log(currentCircuitMultiplier + 1) / LOG_BASE_CONSTANT + 1)
-                * pow(0.77, currentCircuitMultiplier));
+        BigInteger usedEU = BigInteger.valueOf(-startEU)
+                .multiply(BigInteger.valueOf(4).pow((int) currentCircuitMultiplier));
         if (!addEUToGlobalEnergyMap(userUUID, usedEU)) {
-            return CheckRecipeResultRegistry.insufficientPower(usedEU);
+            return SimpleCheckRecipeResult.ofFailure("insufficient_power_no_val");
         }
 
         mMaxProgresstime = recipeProcessTimeCalculator(
@@ -1166,7 +1167,7 @@ public class GT_MetaTileEntity_EM_EyeOfHarmony extends GT_MetaTileEntity_Multibl
         successChance = recipeChanceCalculator();
 
         // Determine EU recipe output.
-        euOutput = (long) (recipeObject.getEUOutput() * pow(0.77, currentCircuitMultiplier));
+        euOutput = recipeObject.getEUOutput();
 
         // Reduce internal storage by hydrogen and helium quantity required for recipe.
         validFluidMap.put(Materials.Hydrogen.getGas(1), 0L);
@@ -1370,17 +1371,20 @@ public class GT_MetaTileEntity_EM_EyeOfHarmony extends GT_MetaTileEntity_Multibl
                                 + RESET
                                 + " L");
             }
-            long euPerTick = (long) (startEU * (Math.log(currentCircuitMultiplier + 1) / LOG_BASE_CONSTANT + 1)
-                    * pow(0.77, currentCircuitMultiplier)
-                    - euOutput * (1 - ((TOTAL_CASING_TIERS_WITH_POWER_PENALTY - stabilisationFieldMetadata)
-                            * STABILITY_INCREASE_PROBABILITY_DECREASE_YIELD_PER_TIER)))
-                    / -maxProgresstime();
-            if (abs(euPerTick) < LongMath.pow(10, 12)) {
+            BigInteger euPerTick = BigInteger.valueOf(-startEU)
+                    .multiply(BigInteger.valueOf(4).pow((int) currentCircuitMultiplier))
+                    .subtract(
+                            BigInteger.valueOf(
+                                    euOutput * (long) (1
+                                            - ((TOTAL_CASING_TIERS_WITH_POWER_PENALTY - stabilisationFieldMetadata)
+                                                    * STABILITY_INCREASE_PROBABILITY_DECREASE_YIELD_PER_TIER))))
+                    .divide(BigInteger.valueOf(-maxProgresstime()));
+            if (abs(euPerTick.longValue()) < LongMath.pow(10, 12)) {
                 str.add("Estimated EU/t: " + RED + formatNumbers(euPerTick) + RESET + " EU/t");
             } else {
                 str.add(
                         "Estimated EU/t: " + RED
-                                + ReadableNumberConverter.INSTANCE.toWideReadableForm(euPerTick)
+                                + ReadableNumberConverter.INSTANCE.toWideReadableForm(euPerTick.longValue())
                                 + RESET
                                 + " EU/t");
             }

@@ -979,6 +979,7 @@ GT5U.gui.text.invalid_voltage_setting=§7Invalid voltage setting
 GT5U.gui.text.invalid_current_setting=§7Invalid current setting
 GT5U.gui.text.invalid_time_setting=§7Invalid time setting
 GT5U.gui.text.invalid_overdrive_setting=§7Invalid overdrive setting
+GT5U.gui.text.insufficient_power_no_val=§7Insufficient power
 
 #Keywords and phrases
 #Example: ID:3
