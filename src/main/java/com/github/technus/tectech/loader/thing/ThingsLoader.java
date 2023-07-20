@@ -27,6 +27,7 @@ import com.github.technus.tectech.thing.item.TeslaCoilCapacitor;
 import com.github.technus.tectech.thing.item.TeslaCoilComponent;
 import com.github.technus.tectech.thing.item.TeslaCoilCover;
 import com.github.technus.tectech.thing.item.TeslaStaff;
+import com.github.technus.tectech.thing.item.AstralArrayFabricator;
 
 import cpw.mods.fml.common.registry.GameRegistry;
 import gregtech.api.enums.Textures;
@@ -89,6 +90,7 @@ public class ThingsLoader implements Runnable {
         TecTech.LOGGER.info("Useful Items registered");
 
         TeslaCoilComponent.run();
+        AstralArrayFabricator.run();
         TecTech.LOGGER.info("Crafting Components registered");
 
         ElementalDefinitionContainer_EM.run();

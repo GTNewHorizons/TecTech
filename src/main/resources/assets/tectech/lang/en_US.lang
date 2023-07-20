@@ -101,6 +101,12 @@ item.tm.powerpassupgradecover.desc.0=Add power pass functionality to TecTech Mul
 item.tm.powerpassupgradecover.desc.1=Active transformer in a can??
 item.tm.powerpassupgradecover.desc.2=Chain them up like Christmas lights!
 
+item.tm.itemAstralArrayFabricator.name=Astral Array Fabricator
+item.tm.itemAstralArrayFabricator.desc0=Parallel dimensions?!
+item.tm.itemAstralArrayFabricator.desc1=Device capable of enhancing the Eye of Harmony's spatial compression,
+item.tm.itemAstralArrayFabricator.desc2=reaching transdimensional levels.
+item.tm.itemAstralArrayFabricator.desc3=Allows recipe parallelism.
+
 #Death Messages
 death.attack.microwaving=%1$s was dehydrated by radiation.
 death.attack.microwaving.player=%1$s was dehydrated by radiation while fighting %2$s.
