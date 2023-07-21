@@ -16,6 +16,7 @@ import com.github.technus.tectech.thing.casing.SpacetimeCompressionFieldCasing;
 import com.github.technus.tectech.thing.casing.StabilisationFieldCasing;
 import com.github.technus.tectech.thing.casing.TT_Container_Casings;
 import com.github.technus.tectech.thing.casing.TimeAccelerationFieldCasing;
+import com.github.technus.tectech.thing.item.AstralArrayFabricator;
 import com.github.technus.tectech.thing.item.DebugElementalInstanceContainer_EM;
 import com.github.technus.tectech.thing.item.ElementalDefinitionContainer_EM;
 import com.github.technus.tectech.thing.item.ElementalDefinitionScanStorage_EM;
@@ -27,7 +28,6 @@ import com.github.technus.tectech.thing.item.TeslaCoilCapacitor;
 import com.github.technus.tectech.thing.item.TeslaCoilComponent;
 import com.github.technus.tectech.thing.item.TeslaCoilCover;
 import com.github.technus.tectech.thing.item.TeslaStaff;
-import com.github.technus.tectech.thing.item.AstralArrayFabricator;
 
 import cpw.mods.fml.common.registry.GameRegistry;
 import gregtech.api.enums.Textures;
