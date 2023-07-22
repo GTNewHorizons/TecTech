@@ -1,6 +1,7 @@
 package com.github.technus.tectech.thing.metaTileEntity.multi;
 
 import static com.github.technus.tectech.TecTech.eyeOfHarmonyRecipeStorage;
+import static com.github.technus.tectech.thing.CustomItemList.astralArrayFabricator;
 import static com.github.technus.tectech.thing.casing.GT_Block_CasingsTT.texturePage;
 import static com.github.technus.tectech.thing.casing.TT_Container_Casings.eyeOfHarmonyRenderBlock;
 import static com.github.technus.tectech.thing.casing.TT_Container_Casings.sBlockCasingsBA0;
@@ -103,7 +104,7 @@ public class GT_MetaTileEntity_EM_EyeOfHarmony extends GT_MetaTileEntity_Multibl
     private static final double TIME_ACCEL_DECREASE_CHANCE_PER_TIER = 0.1;
     // % Increase in recipe chance and % decrease in yield per tier.
     private static final double STABILITY_INCREASE_PROBABILITY_DECREASE_YIELD_PER_TIER = 0.05;
-    private static final double LOG_BASE_CONSTANT = Math.log(4.4);
+    private static final double LOG_BASE_CONSTANT = Math.log(1.7);
 
     private static final int TOTAL_CASING_TIERS_WITH_POWER_PENALTY = 8;
 
@@ -1075,6 +1076,10 @@ public class GT_MetaTileEntity_EM_EyeOfHarmony extends GT_MetaTileEntity_Multibl
     // Check for recipe every recipeCheckInterval ticks.
     private static final long RECIPE_CHECK_INTERVAL = 3 * 20;
     private long currentCircuitMultiplier = 0;
+    private long astralArrayAmount = 0;
+    private long parallelAmount = 1;
+    private long parallelExponent = 1;
+    private BigInteger usedEU = BigInteger.ZERO;
 
     @Override
     @NotNull
@@ -1087,6 +1092,7 @@ public class GT_MetaTileEntity_EM_EyeOfHarmony extends GT_MetaTileEntity_Multibl
         lagPreventer++;
         if (lagPreventer < RECIPE_CHECK_INTERVAL) {
             lagPreventer = 0;
+            astralArrayAmount = 0;
             // No item in multi gui slot.
 
             currentRecipe = eyeOfHarmonyRecipeStorage.recipeLookUp(controllerStack);
@@ -1122,6 +1128,20 @@ public class GT_MetaTileEntity_EM_EyeOfHarmony extends GT_MetaTileEntity_Multibl
             currentCircuitMultiplier = 0;
         }
 
+        for (int i = 0; i < mInputBusses.get(0).getSizeInventory(); i++) {
+            if (mInputBusses.get(0).getStackInSlot(i) != null
+                    && mInputBusses.get(0).getStackInSlot(i).isItemEqual(astralArrayFabricator.get(1))) {
+                astralArrayAmount += (long) clamp(mInputBusses.get(0).getStackInSlot(i).stackSize, 0, 64);
+            }
+        }
+
+        if (astralArrayAmount != 0) {
+            parallelExponent = (long) Math.floor(Math.log(astralArrayAmount) / LOG_BASE_CONSTANT);
+            parallelAmount = (long) pow(2, parallelExponent);
+        } else {
+            parallelAmount = 1;
+        }
+
         // Debug mode, overwrites the required fluids to initiate the recipe to 100L of each.
         if ((EOH_DEBUG_MODE && getHydrogenStored() < 100)
                 || (getHydrogenStored() < currentRecipe.getHydrogenRequirement())) {
@@ -1142,11 +1162,26 @@ public class GT_MetaTileEntity_EM_EyeOfHarmony extends GT_MetaTileEntity_Multibl
                     .insufficientMachineTier((int) recipeObject.getSpacetimeCasingTierRequired());
         }
 
+        // Calculate multiplier used it power calulations
+        long parallelMultiplier = (long) ((1.225 * parallelAmount + 0.019 * pow(2, 1.7 * parallelExponent)) * 1000);
+
+        // Determine EU recipe input
         startEU = recipeObject.getEUStartCost();
 
+        // Determine EU recipe output
+        euOutput = recipeObject.getEUOutput();
+
+        // Calculate actual EU cost
+        if (parallelAmount == 1) {
+            usedEU = BigInteger.valueOf(-startEU).multiply(BigInteger.valueOf(4).pow((int) currentCircuitMultiplier));
+        } else {
+            startEU /= parallelExponent + 8;
+            euOutput /= parallelExponent + 8;
+            usedEU = BigInteger.valueOf(-startEU).multiply(BigInteger.valueOf(4).pow((int) currentCircuitMultiplier))
+                    .multiply(BigInteger.valueOf(parallelMultiplier)).divide(BigInteger.valueOf(1000));
+        }
+
         // Remove EU from the users network.
-        BigInteger usedEU = BigInteger.valueOf(-startEU)
-                .multiply(BigInteger.valueOf(4).pow((int) currentCircuitMultiplier));
         if (!addEUToGlobalEnergyMap(userUUID, usedEU)) {
             return SimpleCheckRecipeResult.ofFailure("insufficient_power_no_val");
         }
@@ -1165,9 +1200,6 @@ public class GT_MetaTileEntity_EM_EyeOfHarmony extends GT_MetaTileEntity_Multibl
         }
 
         successChance = recipeChanceCalculator();
-
-        // Determine EU recipe output.
-        euOutput = recipeObject.getEUOutput();
 
         // Reduce internal storage by hydrogen and helium quantity required for recipe.
         validFluidMap.put(Materials.Hydrogen.getGas(1), 0L);
@@ -1275,8 +1307,9 @@ public class GT_MetaTileEntity_EM_EyeOfHarmony extends GT_MetaTileEntity_Multibl
         // Output power with stabilization factor (5% loss per tier below gallifreyan)
         addEUToGlobalEnergyMap(
                 userUUID,
-                (long) (euOutput * (1 - ((TOTAL_CASING_TIERS_WITH_POWER_PENALTY - stabilisationFieldMetadata)
-                        * STABILITY_INCREASE_PROBABILITY_DECREASE_YIELD_PER_TIER))));
+                (long) (euOutput * parallelAmount
+                        * (1 - ((TOTAL_CASING_TIERS_WITH_POWER_PENALTY - stabilisationFieldMetadata)
+                                * STABILITY_INCREASE_PROBABILITY_DECREASE_YIELD_PER_TIER))));
         startEU = 0;
         euOutput = 0;
 
@@ -1355,8 +1388,10 @@ public class GT_MetaTileEntity_EM_EyeOfHarmony extends GT_MetaTileEntity_Multibl
             str.add(GOLD + "---------------------- Other Stats ---------------");
             str.add("Recipe Success Chance: " + RED + formatNumbers(100 * successChance) + RESET + "%");
             str.add("Recipe Yield: " + RED + formatNumbers(100 * recipeYieldCalculator()) + RESET + "%");
+            str.add("Astral Array Fabricators detected: " + RED + formatNumbers(astralArrayAmount));
+            str.add("Total Parallel: " + RED + formatNumbers(parallelAmount));
             str.add(
-                    "EU Output: " + RED
+                    "EU Output per parallel: " + RED
                             + formatNumbers(
                                     euOutput * (1
                                             - ((TOTAL_CASING_TIERS_WITH_POWER_PENALTY - stabilisationFieldMetadata)
@@ -1371,14 +1406,12 @@ public class GT_MetaTileEntity_EM_EyeOfHarmony extends GT_MetaTileEntity_Multibl
                                 + RESET
                                 + " L");
             }
-            BigInteger euPerTick = BigInteger.valueOf(-startEU)
-                    .multiply(BigInteger.valueOf(4).pow((int) currentCircuitMultiplier))
-                    .subtract(
-                            BigInteger.valueOf(
-                                    euOutput * (long) (1
-                                            - ((TOTAL_CASING_TIERS_WITH_POWER_PENALTY - stabilisationFieldMetadata)
-                                                    * STABILITY_INCREASE_PROBABILITY_DECREASE_YIELD_PER_TIER))))
-                    .divide(BigInteger.valueOf(-maxProgresstime()));
+            BigInteger euPerTick = (BigInteger
+                    .valueOf(
+                            euOutput * (long) (1 - ((TOTAL_CASING_TIERS_WITH_POWER_PENALTY - stabilisationFieldMetadata)
+                                    * STABILITY_INCREASE_PROBABILITY_DECREASE_YIELD_PER_TIER)))
+                    .multiply(BigInteger.valueOf(parallelAmount)).subtract(usedEU.abs()))
+                            .divide(BigInteger.valueOf(maxProgresstime()));
             if (abs(euPerTick.longValue()) < LongMath.pow(10, 12)) {
                 str.add("Estimated EU/t: " + RED + formatNumbers(euPerTick) + RESET + " EU/t");
             } else {
