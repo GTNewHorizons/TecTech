@@ -979,6 +979,7 @@ GT5U.gui.text.no_data=§7Can't output data
 GT5U.gui.text.no_planet_block=§7Missing planet block
 GT5U.gui.text.no_helium=§7Not enough Helium
 GT5U.gui.text.no_hydrogen=§7Not enough Hydrogen
+GT5U.gui.text.no_stellar_plasma=§7Not enough Stellar Plasma
 GT5U.gui.text.invalid_hysteresis=§7Invalid hysteresis settings
 GT5U.gui.text.invalid_transfer_radius=§7Invalid transfer radius settings
 GT5U.gui.text.invalid_voltage_setting=§7Invalid voltage setting

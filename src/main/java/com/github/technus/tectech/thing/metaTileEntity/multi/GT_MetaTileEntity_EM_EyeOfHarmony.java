@@ -753,21 +753,25 @@ public class GT_MetaTileEntity_EM_EyeOfHarmony extends GT_MetaTileEntity_Multibl
 
     private double hydrogenOverflowProbabilityAdjustment;
     private double heliumOverflowProbabilityAdjustment;
+    private double stellarPlasmaOverflowProbabilityAdjustment;
     private static final long TICKS_BETWEEN_HATCH_DRAIN = EOH_DEBUG_MODE ? 10 : 20;
 
     private List<ItemStackLong> outputItems = new ArrayList<>();
 
-    private void calculateHydrogenHeliumInputExcessValues(final long hydrogenRecipeRequirement,
+    private void calculateInputFluidExcessValues(final long hydrogenRecipeRequirement,
             final long heliumRecipeRequirement) {
 
         double hydrogenStored = validFluidMap.get(Materials.Hydrogen.getGas(1L));
         double heliumStored = validFluidMap.get(Materials.Helium.getGas(1L));
+        double stellarPlasmaStored = validFluidMap.get(MaterialsUEVplus.RawStarMatter.getFluid(1L));
 
         double hydrogenExcessPercentage = hydrogenStored / hydrogenRecipeRequirement - 1;
         double heliumExcessPercentage = heliumStored / heliumRecipeRequirement - 1;
+        double stellarPlasmaExcessPercentage = stellarPlasmaStored / (heliumRecipeRequirement * (9 / 1_000_000f)) - 1;
 
         hydrogenOverflowProbabilityAdjustment = 1 - exp(-pow(30 * hydrogenExcessPercentage, 2));
         heliumOverflowProbabilityAdjustment = 1 - exp(-pow(30 * heliumExcessPercentage, 2));
+        stellarPlasmaOverflowProbabilityAdjustment = 1 - exp(-pow(30 * stellarPlasmaExcessPercentage, 2));
     }
 
     private double recipeChanceCalculator() {
@@ -775,7 +779,8 @@ public class GT_MetaTileEntity_EM_EyeOfHarmony extends GT_MetaTileEntity_Multibl
                 - timeAccelerationFieldMetadata * TIME_ACCEL_DECREASE_CHANCE_PER_TIER
                 + stabilisationFieldMetadata * STABILITY_INCREASE_PROBABILITY_DECREASE_YIELD_PER_TIER
                 - hydrogenOverflowProbabilityAdjustment
-                - heliumOverflowProbabilityAdjustment;
+                - heliumOverflowProbabilityAdjustment
+                - stellarPlasmaOverflowProbabilityAdjustment;
 
         return clamp(chance, 0.0, 1.0);
     }
@@ -787,6 +792,7 @@ public class GT_MetaTileEntity_EM_EyeOfHarmony extends GT_MetaTileEntity_Multibl
     private double recipeYieldCalculator() {
         double yield = 1.0 - hydrogenOverflowProbabilityAdjustment
                 - heliumOverflowProbabilityAdjustment
+                - stellarPlasmaOverflowProbabilityAdjustment
                 - stabilisationFieldMetadata * STABILITY_INCREASE_PROBABILITY_DECREASE_YIELD_PER_TIER;
 
         return clamp(yield, 0.0, 1.0);
@@ -1047,6 +1053,7 @@ public class GT_MetaTileEntity_EM_EyeOfHarmony extends GT_MetaTileEntity_Multibl
         {
             put(Materials.Hydrogen.getGas(1), 0L);
             put(Materials.Helium.getGas(1), 0L);
+            put(MaterialsUEVplus.RawStarMatter.getFluid(1), 0L);
         }
     };
 
@@ -1118,6 +1125,10 @@ public class GT_MetaTileEntity_EM_EyeOfHarmony extends GT_MetaTileEntity_Multibl
         return validFluidMap.get(Materials.Helium.getGas(1));
     }
 
+    private long getStellarPlasmaStored() {
+        return validFluidMap.get(MaterialsUEVplus.RawStarMatter.getFluid(1));
+    }
+
     public CheckRecipeResult processRecipe(EyeOfHarmonyRecipe recipeObject) {
 
         // Get circuit damage, clamp it and then use it later for overclocking.
@@ -1149,6 +1160,12 @@ public class GT_MetaTileEntity_EM_EyeOfHarmony extends GT_MetaTileEntity_Multibl
         }
         if ((EOH_DEBUG_MODE && getHeliumStored() < 100) || (getHeliumStored() < currentRecipe.getHeliumRequirement())) {
             return SimpleCheckRecipeResult.ofFailure("no_helium");
+        }
+        if (parallelAmount > 1) {
+            if ((EOH_DEBUG_MODE && getStellarPlasmaStored() < 100)
+                    || (getStellarPlasmaStored() < currentRecipe.getHeliumRequirement() * (9 / 1_000_000f))) {
+                return SimpleCheckRecipeResult.ofFailure("no_stellarPlasma");
+            }
         }
 
         if (spacetimeCompressionFieldMetadata == -1) {
@@ -1190,20 +1207,20 @@ public class GT_MetaTileEntity_EM_EyeOfHarmony extends GT_MetaTileEntity_Multibl
                 recipeObject.getRecipeTimeInTicks(),
                 recipeObject.getSpacetimeCasingTierRequired());
 
-        calculateHydrogenHeliumInputExcessValues(
-                recipeObject.getHydrogenRequirement(),
-                recipeObject.getHeliumRequirement());
+        calculateInputFluidExcessValues(recipeObject.getHydrogenRequirement(), recipeObject.getHeliumRequirement());
 
         if (EOH_DEBUG_MODE) {
             hydrogenOverflowProbabilityAdjustment = 0;
             heliumOverflowProbabilityAdjustment = 0;
+            stellarPlasmaOverflowProbabilityAdjustment = 0;
         }
 
         successChance = recipeChanceCalculator();
 
-        // Reduce internal storage by hydrogen and helium quantity required for recipe.
+        // Reduce internal storage by input fluid quantity required for recipe.
         validFluidMap.put(Materials.Hydrogen.getGas(1), 0L);
         validFluidMap.put(Materials.Helium.getGas(1), 0L);
+        validFluidMap.put(MaterialsUEVplus.RawStarMatter.getFluid(1), 0L);
 
         double yield = recipeYieldCalculator();
         if (EOH_DEBUG_MODE) {
