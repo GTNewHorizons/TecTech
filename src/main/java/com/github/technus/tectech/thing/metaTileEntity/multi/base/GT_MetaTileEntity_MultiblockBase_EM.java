@@ -27,7 +27,6 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import gregtech.common.tileentities.machines.IDualInputHatch;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.IIconRegister;
@@ -115,6 +114,7 @@ import gregtech.api.util.GT_Recipe;
 import gregtech.api.util.GT_Utility;
 import gregtech.api.util.IGT_HatchAdder;
 import gregtech.common.GT_Pollution;
+import gregtech.common.tileentities.machines.IDualInputHatch;
 
 /**
  * Created by danie_000 on 27.10.2016.
