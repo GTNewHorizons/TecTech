@@ -16,6 +16,9 @@ public class TecTechUITextures {
             .fullImage(MODID, "gui/background/screen_blue_parametrizer_txt");
     public static final UITexture BACKGROUND_SCREEN_BLUE_NO_INVENTORY = UITexture
             .fullImage(MODID, "gui/background/screen_blue_no_inventory");
+    public static final UITexture BACKGROUND_STAR = UITexture.fullImage(MODID, "gui/background/star");
+    public static final UITexture BACKGROUND_GLOW_ORANGE = UITexture.fullImage(MODID, "gui/background/orange_glow");
+    public static final UITexture BACKGROUND_GLOW_PURPLE = UITexture.fullImage(MODID, "gui/background/purple_glow");
 
     public static final UITexture BUTTON_STANDARD_16x16 = UITexture.fullImage(MODID, "gui/button/standard_16x16");
     public static final UITexture BUTTON_STANDARD_LIGHT_16x16 = UITexture
