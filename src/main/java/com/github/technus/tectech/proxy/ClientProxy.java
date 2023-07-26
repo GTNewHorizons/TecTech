@@ -35,6 +35,7 @@ import cpw.mods.fml.client.registry.ClientRegistry;
 import cpw.mods.fml.client.registry.RenderingRegistry;
 import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
 
+@SuppressWarnings("unused")
 public class ClientProxy extends CommonProxy {
 
     @Override
@@ -100,11 +101,6 @@ public class ClientProxy extends CommonProxy {
                 0,
                 0,
                 0);
-    }
-
-    @Override
-    public Object getClientGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) {
-        return null;
     }
 
     @Override
