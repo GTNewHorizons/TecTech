@@ -1,6 +1,6 @@
 package com.github.technus.tectech.thing.item;
 
-import static com.github.technus.tectech.thing.item.ContainerItem.StarRenderUtility.renderStar;
+import static com.github.technus.tectech.thing.item.ContainerItem.EOH_RenderingUtils.renderStar;
 
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.client.IItemRenderer;
