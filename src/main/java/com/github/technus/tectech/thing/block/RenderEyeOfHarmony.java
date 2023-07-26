@@ -1,6 +1,7 @@
 package com.github.technus.tectech.thing.block;
 
 import static com.github.technus.tectech.Reference.MODID;
+import static com.github.technus.tectech.thing.item.ContainerItem.StarRenderUtility.renderStar;
 import static java.lang.Math.pow;
 
 import net.minecraft.block.Block;
@@ -10,6 +11,7 @@ import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IIcon;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.client.IItemRenderer;
 import net.minecraftforge.client.model.AdvancedModelLoader;
 import net.minecraftforge.client.model.IModelCustom;
 
@@ -46,9 +48,7 @@ public class RenderEyeOfHarmony extends TileEntitySpecialRenderer {
             renderOrbitObjects(EOHRenderTile);
 
             // Render star stuff.
-            renderStarLayer(EOHRenderTile, 0, STAR_LAYER_0, 1.0f);
-            renderStarLayer(EOHRenderTile, 1, STAR_LAYER_1, 0.4f);
-            renderStarLayer(EOHRenderTile, 2, STAR_LAYER_2, 0.2f);
+            renderStar(IItemRenderer.ItemRenderType.INVENTORY);
 
             GL11.glPopMatrix();
         }

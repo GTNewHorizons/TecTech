@@ -17,8 +17,8 @@ import com.github.technus.tectech.thing.casing.StabilisationFieldCasing;
 import com.github.technus.tectech.thing.casing.TT_Container_Casings;
 import com.github.technus.tectech.thing.casing.TimeAccelerationFieldCasing;
 import com.github.technus.tectech.thing.item.*;
-
 import com.github.technus.tectech.thing.item.ContainerItem.ContainerItem;
+
 import cpw.mods.fml.common.registry.GameRegistry;
 import gregtech.api.enums.Textures;
 import gregtech.api.interfaces.ITexture;

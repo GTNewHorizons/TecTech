@@ -1,9 +1,9 @@
 package com.github.technus.tectech.thing.item.ContainerItem;
 
+import static com.github.technus.tectech.thing.item.ContainerItem.StarRenderUtility.renderStar;
+
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.client.IItemRenderer;
-
-import static com.github.technus.tectech.thing.item.ContainerItem.StarRenderUtility.renderStar;
 
 public class ContainerItemRenderer implements IItemRenderer {
 

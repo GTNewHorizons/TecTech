@@ -1,12 +1,14 @@
 package com.github.technus.tectech.thing.item.ContainerItem;
 
-import cpw.mods.fml.client.FMLClientHandler;
-import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.client.IItemRenderer;
-import org.lwjgl.opengl.GL11;
-
 import static com.github.technus.tectech.thing.block.RenderEyeOfHarmony.*;
 import static java.lang.Math.pow;
+
+import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.client.IItemRenderer;
+
+import org.lwjgl.opengl.GL11;
+
+import cpw.mods.fml.client.FMLClientHandler;
 
 public abstract class StarRenderUtility {
 
@@ -14,10 +16,11 @@ public abstract class StarRenderUtility {
         GL11.glPushMatrix();
 
         if (type == IItemRenderer.ItemRenderType.INVENTORY) GL11.glRotated(180, 0, 1, 0);
-        else if (type == IItemRenderer.ItemRenderType.EQUIPPED || type == IItemRenderer.ItemRenderType.EQUIPPED_FIRST_PERSON) {
-            GL11.glTranslated(0.5, 0.5, 0.5);
-            if (type == IItemRenderer.ItemRenderType.EQUIPPED) GL11.glRotated(90, 0, 1, 0);
-        }
+        else if (type == IItemRenderer.ItemRenderType.EQUIPPED
+                || type == IItemRenderer.ItemRenderType.EQUIPPED_FIRST_PERSON) {
+                    GL11.glTranslated(0.5, 0.5, 0.5);
+                    if (type == IItemRenderer.ItemRenderType.EQUIPPED) GL11.glRotated(90, 0, 1, 0);
+                }
 
         // Render star stuff.
         renderStarLayer(0, STAR_LAYER_0, 1.0f);
