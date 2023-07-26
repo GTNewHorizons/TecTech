@@ -4,6 +4,8 @@ import static com.github.technus.tectech.TecTech.RANDOM;
 import static com.github.technus.tectech.thing.casing.TT_Container_Casings.eyeOfHarmonyRenderBlock;
 import static gregtech.api.enums.Mods.OpenModularTurrets;
 
+import com.github.technus.tectech.thing.item.ContainerItem.ContainerItem;
+import com.github.technus.tectech.thing.item.ContainerItem.ContainerItemRenderer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityClientPlayerMP;
 import net.minecraft.client.gui.GuiNewChat;
@@ -47,6 +49,10 @@ public class ClientProxy extends CommonProxy {
         MinecraftForgeClient
                 .registerItemRenderer(Item.getItemFromBlock(eyeOfHarmonyRenderBlock), new RenderEyeOfHarmonyItem());
 
+
+        MinecraftForgeClient.registerItemRenderer(ContainerItem.item, new ContainerItemRenderer());
+
+
         if (OpenModularTurrets.isModLoaded()) {
             new TT_turret_loader().run();
         }
@@ -70,50 +76,6 @@ public class ClientProxy extends CommonProxy {
                 0);
         particle.setRBGColorF(0, 0.6F * RANDOM.nextFloat(), 0.8f);
         Minecraft.getMinecraft().effectRenderer.addEffect(particle);
-    }
-
-    @Override
-    public void pollutor_particle(IGregTechTileEntity aMuffler, ForgeDirection facing) {
-        float xPos = facing.offsetX * 0.76F + aMuffler.getXCoord() + 0.25F;
-        float yPos = facing.offsetY * 0.76F + aMuffler.getYCoord() + 0.25F;
-        float zPos = facing.offsetZ * 0.76F + aMuffler.getZCoord() + 0.25F;
-
-        float ySpd = facing.offsetY * 0.1F + 0.2F + 0.1F * (float) RANDOM.nextGaussian();
-        float xSpd;
-        float zSpd;
-
-        if (facing.offsetY == -1) {
-            float temp = RANDOM.nextFloat() * 2 * (float) Math.PI;
-            xSpd = (float) Math.sin(temp) * 0.1F * (float) RANDOM.nextGaussian();
-            zSpd = (float) Math.cos(temp) * 0.1F * (float) RANDOM.nextGaussian();
-        } else {
-            xSpd = facing.offsetX * (0.1F + 0.2F * (float) RANDOM.nextGaussian());
-            zSpd = facing.offsetZ * (0.1F + 0.2F * (float) RANDOM.nextGaussian());
-        }
-        aMuffler.getWorld().spawnParticle(
-                "largesmoke",
-                xPos + RANDOM.nextFloat() * 0.5F,
-                yPos + RANDOM.nextFloat() * 0.5F,
-                zPos + RANDOM.nextFloat() * 0.5F,
-                xSpd,
-                ySpd,
-                zSpd);
-        aMuffler.getWorld().spawnParticle(
-                "largesmoke",
-                xPos + RANDOM.nextFloat() * 0.5F,
-                yPos + RANDOM.nextFloat() * 0.5F,
-                zPos + RANDOM.nextFloat() * 0.5F,
-                xSpd,
-                ySpd,
-                zSpd);
-        aMuffler.getWorld().spawnParticle(
-                "largesmoke",
-                xPos + RANDOM.nextFloat() * 0.5F,
-                yPos + RANDOM.nextFloat() * 0.5F,
-                zPos + RANDOM.nextFloat() * 0.5F,
-                xSpd,
-                ySpd,
-                zSpd);
     }
 
     @Override

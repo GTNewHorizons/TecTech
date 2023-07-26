@@ -137,7 +137,6 @@ public class GT_MetaTileEntity_DebugPollutor extends GT_MetaTileEntity_TieredMac
             for (final ForgeDirection side : ForgeDirection.VALID_DIRECTIONS) {
                 if (side != aBaseMetaTileEntity.getFrontFacing()) {
                     TecTech.proxy.em_particle(aBaseMetaTileEntity, side);
-                    TecTech.proxy.pollutor_particle(aBaseMetaTileEntity, side);
                 }
             }
         }

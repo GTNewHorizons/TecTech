@@ -16,18 +16,9 @@ import com.github.technus.tectech.thing.casing.SpacetimeCompressionFieldCasing;
 import com.github.technus.tectech.thing.casing.StabilisationFieldCasing;
 import com.github.technus.tectech.thing.casing.TT_Container_Casings;
 import com.github.technus.tectech.thing.casing.TimeAccelerationFieldCasing;
-import com.github.technus.tectech.thing.item.DebugElementalInstanceContainer_EM;
-import com.github.technus.tectech.thing.item.ElementalDefinitionContainer_EM;
-import com.github.technus.tectech.thing.item.ElementalDefinitionScanStorage_EM;
-import com.github.technus.tectech.thing.item.EnderFluidLinkCover;
-import com.github.technus.tectech.thing.item.EuMeterGT;
-import com.github.technus.tectech.thing.item.ParametrizerMemoryCard;
-import com.github.technus.tectech.thing.item.PowerPassUpgradeCover;
-import com.github.technus.tectech.thing.item.TeslaCoilCapacitor;
-import com.github.technus.tectech.thing.item.TeslaCoilComponent;
-import com.github.technus.tectech.thing.item.TeslaCoilCover;
-import com.github.technus.tectech.thing.item.TeslaStaff;
+import com.github.technus.tectech.thing.item.*;
 
+import com.github.technus.tectech.thing.item.ContainerItem.ContainerItem;
 import cpw.mods.fml.common.registry.GameRegistry;
 import gregtech.api.enums.Textures;
 import gregtech.api.interfaces.ITexture;
@@ -90,6 +81,8 @@ public class ThingsLoader implements Runnable {
 
         TeslaCoilComponent.run();
         TecTech.LOGGER.info("Crafting Components registered");
+
+        ContainerItem.run();
 
         ElementalDefinitionContainer_EM.run();
         DebugElementalInstanceContainer_EM.run();
