@@ -48,7 +48,11 @@ public abstract class EOH_RenderingUtils {
         // Merges colours of the various layers of the star?
         GL11.glEnable(GL11.GL_BLEND);
         // ???
-        GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+        if (alpha < 1.0f) {
+            GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE);
+        } else {
+            GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+        }
 
         // Bind animation to layer of star.
         FMLClientHandler.instance().getClient().getTextureManager().bindTexture(texture);
