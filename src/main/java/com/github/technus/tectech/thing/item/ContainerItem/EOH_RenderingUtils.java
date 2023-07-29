@@ -5,7 +5,6 @@ import static java.lang.Math.pow;
 
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.util.IIcon;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.IItemRenderer;
@@ -14,9 +13,11 @@ import org.lwjgl.opengl.GL11;
 
 import cpw.mods.fml.client.FMLClientHandler;
 
+import java.awt.*;
+
 public abstract class EOH_RenderingUtils {
 
-    public static void renderStar(IItemRenderer.ItemRenderType type) {
+    public static void renderStar(IItemRenderer.ItemRenderType type, Color color) {
         GL11.glPushMatrix();
 
         if (type == IItemRenderer.ItemRenderType.INVENTORY) GL11.glRotated(180, 0, 1, 0);
@@ -27,14 +28,19 @@ public abstract class EOH_RenderingUtils {
                 }
 
         // Render star stuff.
-        renderStarLayer(0, STAR_LAYER_0, 1.0f);
-        renderStarLayer(1, STAR_LAYER_1, 0.4f);
-        renderStarLayer(2, STAR_LAYER_2, 0.2f);
+        renderStarLayer(0, STAR_LAYER_0, color, 1.0f);
+        renderStarLayer(1, STAR_LAYER_1, color, 0.4f);
+        renderStarLayer(2, STAR_LAYER_2, color, 0.2f);
 
         GL11.glPopMatrix();
     }
 
-    private static void renderStarLayer(int layer, ResourceLocation texture, float alpha) {
+    public static void renderStar(IItemRenderer.ItemRenderType type) {
+        renderStar(type, new Color(1.0f, 0.4f, 0.05f, 1.0f));
+    }
+
+
+    private static void renderStarLayer(int layer, ResourceLocation texture, Color color, float alpha) {
 
         // Begin animation.
         GL11.glPushMatrix();
@@ -54,7 +60,7 @@ public abstract class EOH_RenderingUtils {
             GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
         }
 
-        // Bind animation to layer of star.
+        // Bind image to layer of star.
         FMLClientHandler.instance().getClient().getTextureManager().bindTexture(texture);
 
         // 0.01f magic number to shrink sphere obj down.
@@ -74,7 +80,11 @@ public abstract class EOH_RenderingUtils {
         }
 
         // Set colour and alpha (transparency) of the star layer.
-        GL11.glColor4f(1, 1, 1, alpha);
+        final float red = color.getRed() / 255.0f;
+        final float green = color.getGreen() / 255.0f;
+        final float blue = color.getBlue() / 255.0f;
+
+        GL11.glColor4f(red, green, blue, alpha);
 
         starModel.renderAll();
         GL11.glDisable(GL11.GL_BLEND);

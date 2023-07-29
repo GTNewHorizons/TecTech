@@ -5,6 +5,8 @@ import static com.github.technus.tectech.thing.item.ContainerItem.EOH_RenderingU
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.client.IItemRenderer;
 
+import java.awt.*;
+
 public class RenderEyeOfHarmonyItem implements IItemRenderer {
 
     @Override
