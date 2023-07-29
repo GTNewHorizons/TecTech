@@ -181,8 +181,7 @@ public class GT_MetaTileEntity_Hatch_WirelessMulti extends GT_MetaTileEntity_Hat
 
             strongCheckOrAddUser(owner_uuid, owner_name);
 
-            if (addEUToGlobalEnergyMap(owner_uuid, eu_transferred_per_operation.negate()))
-                setEUVar(eu_transferred_per_operation_long);
+            tryFetchingEnergy();
         }
     }
 
@@ -199,18 +198,17 @@ public class GT_MetaTileEntity_Hatch_WirelessMulti extends GT_MetaTileEntity_Hat
 
             // Every ticks_between_energy_addition add eu_transferred_per_operation to internal EU storage from network.
             if (aTick % ticks_between_energy_addition == 0L) {
-                long total_eu = getBaseMetaTileEntity().getStoredEU();
-
-                // Can the machine store the EU being added?
-                long new_eu_storage = total_eu + eu_transferred_per_operation_long;
-                if (new_eu_storage <= maxEUStore()) {
-
-                    // Attempt to remove energy from the network and add it to the internal buffer of the machine.
-                    if (addEUToGlobalEnergyMap(owner_uuid, eu_transferred_per_operation.negate())) {
-                        setEUVar(new_eu_storage);
-                    }
-                }
+                tryFetchingEnergy();
             }
         }
+    }
+
+    private void tryFetchingEnergy() {
+        long currentEU = getBaseMetaTileEntity().getStoredEU();
+        long maxEU = maxEUStore();
+        BigInteger euToTransfer = BigInteger.valueOf(maxEU - currentEU).min(eu_transferred_per_operation);
+        if (euToTransfer.signum() <= 0) return; // nothing to transfer
+        if (!addEUToGlobalEnergyMap(owner_uuid, euToTransfer.negate())) return;
+        setEUVar(currentEU + euToTransfer.longValue());
     }
 }
