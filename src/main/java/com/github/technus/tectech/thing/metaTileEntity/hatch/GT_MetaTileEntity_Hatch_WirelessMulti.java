@@ -9,6 +9,7 @@ import static com.gtnewhorizon.gtnhlib.util.AnimatedTooltipHandler.BOLD;
 import static com.gtnewhorizon.gtnhlib.util.AnimatedTooltipHandler.GRAY;
 import static gregtech.api.enums.GT_Values.AuthorColen;
 import static gregtech.api.enums.GT_Values.V;
+import static java.lang.Long.min;
 
 import java.math.BigInteger;
 
@@ -206,9 +207,9 @@ public class GT_MetaTileEntity_Hatch_WirelessMulti extends GT_MetaTileEntity_Hat
     private void tryFetchingEnergy() {
         long currentEU = getBaseMetaTileEntity().getStoredEU();
         long maxEU = maxEUStore();
-        BigInteger euToTransfer = BigInteger.valueOf(maxEU - currentEU).min(eu_transferred_per_operation);
-        if (euToTransfer.signum() <= 0) return; // nothing to transfer
-        if (!addEUToGlobalEnergyMap(owner_uuid, euToTransfer.negate())) return;
-        setEUVar(currentEU + euToTransfer.longValue());
+        long euToTransfer = min(maxEU - currentEU, eu_transferred_per_operation_long);
+        if (euToTransfer <= 0) return; // nothing to transfer
+        if (!addEUToGlobalEnergyMap(owner_uuid, -euToTransfer)) return;
+        setEUVar(currentEU + euToTransfer);
     }
 }
