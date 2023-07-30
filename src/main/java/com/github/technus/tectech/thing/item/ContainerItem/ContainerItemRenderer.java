@@ -8,8 +8,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.client.IItemRenderer;
 
-import java.awt.*;
-
 public class ContainerItemRenderer implements IItemRenderer {
 
     @Override
@@ -22,18 +20,31 @@ public class ContainerItemRenderer implements IItemRenderer {
         return true;
     }
 
+    private final String CELESTIAL_BODY_TYPE_NBTTAG = "CELESTIAL_BODY_TYPE_NBTTAG";
+
     @Override
-    public void renderItem(ItemRenderType type, ItemStack itemStack, Object... data) {
+    public void renderItem(ItemRenderType itemRenderType, ItemStack itemStack, Object... data) {
 
-        final NBTTagCompound NBTTag = itemStack.stackTagCompound;
-
-        if (NBTTag.getString("celestialBodyType").equals("STAR")) {
-            renderStar(type);
+        if (itemStack == null) {
+            return;
         }
 
-        if (NBTTag.getString("celestialBodyType").equals("PLANET")) {
-            renderBlockInWorld(Blocks.cobblestone, 0, 5);
+        NBTTagCompound NBTTag = new NBTTagCompound();
+        itemStack.readFromNBT(NBTTag);
+
+        if (NBTTag.hasKey(CELESTIAL_BODY_TYPE_NBTTAG)) {
+
+            String type = NBTTag.getString(CELESTIAL_BODY_TYPE_NBTTAG);
+
+            if (type.equals("STAR")) {
+                renderStar(itemRenderType);
+            }
+
+            if (type.equals("PLANET")) {
+                renderBlockInWorld(Blocks.cobblestone, 0, 5);
+            }
         }
+
     }
 
 }
