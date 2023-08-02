@@ -532,15 +532,23 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
                 }).setSize(40, 15).setBackground(GT_UITextures.BUTTON_STANDARD)
                         .addTooltip(translateToLocal("fog.upgrade.tt.1")).setPos(130, 230)).addChild(
                                 new TextWidget(translateToLocal("fog.upgrade.tt.1")).setTextAlignment(Alignment.Center)
-                                        .setScale(0.57f).setMaxWidth(35).setPos(133, 233)));
-        builder.widget(new MultiChildWidget().addChild(new ButtonWidget().setOnClick((clickData, widget) -> {
+                                        .setScale(0.57f).setMaxWidth(35).setPos(133, 233)))
+        .widget(new MultiChildWidget().addChild(new ButtonWidget().setOnClick((clickData, widget) -> {
             upgradeID = 1;
             if (!widget.isClient()) {
                 widget.getContext().openSyncedWindow(11);
             }
         }).setSize(40, 15).setBackground(GT_UITextures.BUTTON_STANDARD).addTooltip(translateToLocal("fog.upgrade.tt.2")).setPos(130, 70)).addChild(
                 new TextWidget(translateToLocal("fog.upgrade.tt.2")).setTextAlignment(Alignment.Center).setScale(0.57f)
-                        .setMaxWidth(36).setPos(133, 73)));
+                        .setMaxWidth(36).setPos(133, 73)))
+        .widget(new MultiChildWidget().addChild(new ButtonWidget().setOnClick((clickData, widget) -> {
+            upgradeID = 2;
+            if (!widget.isClient()) {
+                widget.getContext().openSyncedWindow(11);
+            }
+        }).setSize(40, 15).setBackground(GT_UITextures.BUTTON_STANDARD).addTooltip(translateToLocal("fog.upgrade.tt.3")).setPos(70, 130)).addChild(
+                new TextWidget(translateToLocal("fog.upgrade.tt.3")).setTextAlignment(Alignment.Center).setScale(0.57f)
+                        .setMaxWidth(36).setPos(73, 133)));
         return builder.build();
     }
 
@@ -548,8 +556,10 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
         UITexture background;
         if (upgradeID == 0) {
             background = TecTechUITextures.BACKGROUND_GLOW_ORANGE;
-        } else {
+        } else if (upgradeID == 1) {
             background = TecTechUITextures.BACKGROUND_GLOW_PURPLE;
+        } else {
+            background = TecTechUITextures.BACKGROUND_GLOW_BLUE;
         }
         ModularWindow.Builder builder = ModularWindow.builder(200, 200).setBackground(background)
                 .widget(ButtonWidget.closeWindowButton(true).setPos(185, 3)).widget(
