@@ -26,7 +26,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
@@ -2038,7 +2037,9 @@ public abstract class GT_MetaTileEntity_MultiblockBase_EM
 
     @Override
     public List<GT_MetaTileEntity_Hatch> getExoticEnergyHatches() {
-        return eEnergyMulti.stream().map(hatch -> (GT_MetaTileEntity_Hatch) hatch).collect(Collectors.toList());
+        List<GT_MetaTileEntity_Hatch> list = new ArrayList<>();
+        list.addAll(eEnergyMulti);
+        return list;
     }
 
     // endregion
