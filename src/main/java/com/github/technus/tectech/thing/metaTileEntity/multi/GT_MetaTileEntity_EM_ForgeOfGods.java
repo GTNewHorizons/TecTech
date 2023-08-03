@@ -38,6 +38,7 @@ import com.gtnewhorizon.structurelib.structure.IItemSource;
 import com.gtnewhorizon.structurelib.structure.IStructureDefinition;
 import com.gtnewhorizons.modularui.api.drawable.IDrawable;
 import com.gtnewhorizons.modularui.api.drawable.UITexture;
+import com.gtnewhorizons.modularui.api.math.Alignment;
 import com.gtnewhorizons.modularui.api.screen.ModularWindow;
 import com.gtnewhorizons.modularui.api.screen.UIBuildContext;
 import com.gtnewhorizons.modularui.api.widget.Widget;
@@ -496,7 +497,8 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
                     new DrawableWidget().setDrawable(TecTechUITextures.PICTURE_HEAT_SINK_SMALL).setPos(173, 185)
                             .setSize(18, 6));
         }
-        buildContext.addSyncedWindow(10, this::createConfigurationWindow);
+        buildContext.addSyncedWindow(10, this::createUpgradeTreeWindow);
+        buildContext.addSyncedWindow(11, this::createIndividualUpgradeWindow);
         builder.widget(
                 new ButtonWidget().setOnClick(
                         (clickData, widget) -> { if (!widget.isClient()) widget.getContext().openSyncedWindow(10); })
@@ -518,10 +520,53 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
                 }));
     }
 
-    protected ModularWindow createConfigurationWindow(final EntityPlayer player) {
-        ModularWindow.Builder builder = ModularWindow.builder(200, 160);
-        builder.setBackground(GT_UITextures.BACKGROUND_SINGLEBLOCK_DEFAULT);
-        builder.setGuiTint(getGUIColorization());
+    private int upgradeID = 0;
+
+    protected ModularWindow createUpgradeTreeWindow(final EntityPlayer player) {
+        ModularWindow.Builder builder = ModularWindow.builder(300, 300);
+        builder.setBackground(TecTechUITextures.BACKGROUND_STAR)
+                .widget(ButtonWidget.closeWindowButton(true).setPos(284, 4))
+                .widget(new MultiChildWidget().addChild(new ButtonWidget().setOnClick((clickData, widget) -> {
+                    upgradeID = 0;
+                    if (!widget.isClient()) widget.getContext().openSyncedWindow(11);
+                }).setSize(40, 15).setBackground(GT_UITextures.BUTTON_STANDARD)
+                        .addTooltip(translateToLocal("fog.upgrade.tt.1")).setPos(130, 230)).addChild(
+                                new TextWidget(translateToLocal("fog.upgrade.tt.1")).setTextAlignment(Alignment.Center)
+                                        .setScale(0.57f).setMaxWidth(35).setPos(133, 233)))
+        .widget(new MultiChildWidget().addChild(new ButtonWidget().setOnClick((clickData, widget) -> {
+            upgradeID = 1;
+            if (!widget.isClient()) {
+                widget.getContext().openSyncedWindow(11);
+            }
+        }).setSize(40, 15).setBackground(GT_UITextures.BUTTON_STANDARD).addTooltip(translateToLocal("fog.upgrade.tt.2")).setPos(130, 70)).addChild(
+                new TextWidget(translateToLocal("fog.upgrade.tt.2")).setTextAlignment(Alignment.Center).setScale(0.57f)
+                        .setMaxWidth(36).setPos(133, 73)))
+        .widget(new MultiChildWidget().addChild(new ButtonWidget().setOnClick((clickData, widget) -> {
+            upgradeID = 2;
+            if (!widget.isClient()) {
+                widget.getContext().openSyncedWindow(11);
+            }
+        }).setSize(40, 15).setBackground(GT_UITextures.BUTTON_STANDARD).addTooltip(translateToLocal("fog.upgrade.tt.3")).setPos(70, 130)).addChild(
+                new TextWidget(translateToLocal("fog.upgrade.tt.3")).setTextAlignment(Alignment.Center).setScale(0.57f)
+                        .setMaxWidth(36).setPos(73, 133)));
+        return builder.build();
+    }
+
+    protected ModularWindow createIndividualUpgradeWindow(final EntityPlayer player) {
+        UITexture background;
+        if (upgradeID == 0) {
+            background = TecTechUITextures.BACKGROUND_GLOW_ORANGE;
+        } else if (upgradeID == 1) {
+            background = TecTechUITextures.BACKGROUND_GLOW_PURPLE;
+        } else {
+            background = TecTechUITextures.BACKGROUND_GLOW_BLUE;
+        }
+        ModularWindow.Builder builder = ModularWindow.builder(200, 200).setBackground(background)
+                .widget(ButtonWidget.closeWindowButton(true).setPos(185, 3)).widget(
+                        new MultiChildWidget().addChild(
+                                new TextWidget(translateToLocal("fog.upgrade.text." + (upgradeID + 1)))
+                                        .setTextAlignment(Alignment.Center).setMaxWidth(185).setDefaultColor(0x9c9c9c)
+                                        .setPos(7, 35)));
         return builder.build();
     }
 

@@ -16,6 +16,10 @@ public class TecTechUITextures {
             .fullImage(MODID, "gui/background/screen_blue_parametrizer_txt");
     public static final UITexture BACKGROUND_SCREEN_BLUE_NO_INVENTORY = UITexture
             .fullImage(MODID, "gui/background/screen_blue_no_inventory");
+    public static final UITexture BACKGROUND_STAR = UITexture.fullImage(MODID, "gui/background/star");
+    public static final UITexture BACKGROUND_GLOW_ORANGE = UITexture.fullImage(MODID, "gui/background/orange_glow");
+    public static final UITexture BACKGROUND_GLOW_PURPLE = UITexture.fullImage(MODID, "gui/background/purple_glow");
+    public static final UITexture BACKGROUND_GLOW_BLUE = UITexture.fullImage(MODID, "gui/background/blue_glow");
 
     public static final UITexture BUTTON_STANDARD_16x16 = UITexture.fullImage(MODID, "gui/button/standard_16x16");
     public static final UITexture BUTTON_STANDARD_LIGHT_16x16 = UITexture
@@ -104,4 +108,10 @@ public class TecTechUITextures {
     public static final UITexture PICTURE_PARAMETER_GRAY = UITexture.fullImage(MODID, "gui/picture/parameter_gray");
     public static final UITexture PICTURE_UNCERTAINTY_MONITOR_MULTIMACHINE = UITexture
             .fullImage(MODID, "gui/picture/uncertainty/monitor_multimachine");
+    public static final UITexture PICTURE_UPGRADE_CONNECTOR_FULL = UITexture
+            .fullImage(MODID, "gui/picture/connector");
+    public static final UITexture PICTURE_UPGRADE_CONNECTOR_EMPTY = UITexture
+            .fullImage(MODID, "gui/picture/connector_empty");
+    public static final UITexture PICTURE_UPGRADE_CONNECTOR_SWITCH = UITexture
+            .fullImage(MODID, "gui/picture/connector_switch");
 }
