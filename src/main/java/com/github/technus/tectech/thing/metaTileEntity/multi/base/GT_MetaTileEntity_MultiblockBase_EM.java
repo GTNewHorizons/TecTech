@@ -511,7 +511,6 @@ public abstract class GT_MetaTileEntity_MultiblockBase_EM
      *
      * @param aBaseMetaTileEntity
      * @param side
-     * @param aFacing
      * @param colorIndex
      * @param aActive
      * @param aRedstone
