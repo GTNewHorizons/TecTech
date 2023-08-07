@@ -8,6 +8,7 @@ import java.lang.reflect.Modifier;
 import java.util.Collection;
 import java.util.Iterator;
 
+import com.github.technus.tectech.thing.metaTileEntity.multi.em_machine.TecTech_Loader_MultiTileEntities;
 import net.minecraftforge.common.MinecraftForge;
 
 import com.github.technus.tectech.loader.MainLoader;
@@ -102,7 +103,7 @@ public class TecTech {
     }
 
     @Mod.EventHandler
-    public void PreLoad(FMLPreInitializationEvent PreEvent) {
+    public void onPreLoad(FMLPreInitializationEvent PreEvent) {
         LOGGER.setDebugOutput(true);
 
         configTecTech = new TecTechConfig(
@@ -133,6 +134,8 @@ public class TecTech {
         MinecraftForge.EVENT_BUS.register(enderWorldSavedData);
 
         MainLoader.preLoad();
+
+        new TecTech_Loader_MultiTileEntities().run();
     }
 
     @Mod.EventHandler
