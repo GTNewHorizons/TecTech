@@ -19,8 +19,8 @@ public class TecTech_Loader_MultiTileEntities implements Runnable {
     }
 
     private static void registerMachines() {
-        // Disable for now.
-        MACHINE_REGISTRY.create(5012, StarConsumer.class)
+
+        MACHINE_REGISTRY.create(4141, StarConsumer.class)
                 .name("Star Consumer")
                 .category("MultiblockController")
                 .setBlock(MACHINE_BLOCK)
@@ -28,6 +28,7 @@ public class TecTech_Loader_MultiTileEntities implements Runnable {
                 .inputInventorySize(1)
                 .outputInventorySize(1)
                 .register();
+
     }
 
 }

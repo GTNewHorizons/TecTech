@@ -47,6 +47,11 @@ public class StarConsumer extends Controller<StarConsumer> implements PollutionL
     }
 
     @Override
+    public String getTileEntityName() {
+        return "gt.multitileenetity.multiblock.starconsumer";
+    }
+
+    @Override
     public void construct(ItemStack trigger, boolean hintsOnly) {
         buildState.startBuilding(getStartingStructureOffset());
         buildPiece(MAIN, trigger, hintsOnly, buildState.stopBuilding());
@@ -155,7 +160,7 @@ public class StarConsumer extends Controller<StarConsumer> implements PollutionL
 
     @Override
     public String getLocalName() {
-        return StatCollector.translateToLocal("gt.multiBlock.controller.cokeOven");
+        return StatCollector.translateToLocal("gt.multiBlock.controller.starConsumer");
     }
 
     @Override
