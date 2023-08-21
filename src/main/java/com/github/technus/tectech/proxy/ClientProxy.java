@@ -18,10 +18,10 @@ import net.minecraftforge.common.util.ForgeDirection;
 
 import com.github.technus.tectech.Reference;
 import com.github.technus.tectech.compatibility.openmodularturrets.TT_turret_loader;
-import com.github.technus.tectech.thing.block.QuantumGlassBlock;
-import com.github.technus.tectech.thing.block.QuantumGlassRender;
-import com.github.technus.tectech.thing.block.RenderEyeOfHarmony;
-import com.github.technus.tectech.thing.block.TileEyeOfHarmony;
+import com.github.technus.tectech.thing.block.QuantumGlassStuff.QuantumGlassBlock;
+import com.github.technus.tectech.thing.block.QuantumGlassStuff.QuantumGlassRender;
+import com.github.technus.tectech.thing.block.EyeOfHarmonyStuff.RenderEyeOfHarmony;
+import com.github.technus.tectech.thing.block.EyeOfHarmonyStuff.TileEyeOfHarmony;
 import com.github.technus.tectech.thing.item.ContainerItem.ContainerItem;
 import com.github.technus.tectech.thing.item.ContainerItem.ContainerItemRenderer;
 import com.github.technus.tectech.thing.item.DebugElementalInstanceContainer_EM;

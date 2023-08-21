@@ -5,6 +5,7 @@ import static net.minecraft.util.StatCollector.translateToLocal;
 
 import java.util.List;
 
+import com.github.technus.tectech.thing.block.QuantumGlassStuff.QuantumGlassItem;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemBlock;
