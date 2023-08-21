@@ -447,7 +447,7 @@ public class RenderPlanckScaleSpacetimeCompressionFabricator extends TileEntityS
         GL11.glTranslated(x + 0.5, y + 0.5, z + 0.5);
         GL11.glScalef(1.0f / 33.0f, 1.0f / 33.0f, 1.0f / 33.0f);
 
-        //rotation();
+        // rotation();
 
         centreModel(testShape);
 
