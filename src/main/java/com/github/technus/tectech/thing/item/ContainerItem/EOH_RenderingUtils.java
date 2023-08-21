@@ -98,13 +98,11 @@ public abstract class EOH_RenderingUtils {
         final Tessellator tes = Tessellator.instance;
 
         GL11.glPushMatrix();
-        GL11.glDisable(GL11.GL_CULL_FACE);
         GL11.glDisable(GL11.GL_ALPHA_TEST);
         GL11.glEnable(GL11.GL_BLEND);
         tes.setColorOpaque_F(1f, 1f, 1f);
 
         GL11.glDisable(GL11.GL_LIGHTING);
-        GL11.glDisable(GL11.GL_CULL_FACE);
         GL11.glDisable(GL11.GL_ALPHA_TEST);
         GL11.glEnable(GL11.GL_BLEND);
         tes.setColorOpaque_F(1f, 1f, 1f);
@@ -120,7 +118,6 @@ public abstract class EOH_RenderingUtils {
         // ----------------------------------------------
         GL11.glDisable(GL11.GL_BLEND);
         GL11.glEnable(GL11.GL_ALPHA_TEST);
-        GL11.glEnable(GL11.GL_CULL_FACE);
         GL11.glPopMatrix();
     }
 
