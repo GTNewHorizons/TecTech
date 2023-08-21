@@ -445,7 +445,7 @@ public class RenderPlanckScaleSpacetimeCompressionFabricator extends TileEntityS
         int zI = 0;
 
         GL11.glTranslated(x + 0.5, y + 0.5, z + 0.5);
-        GL11.glScalef(1.0f / 33.0f, 1.0f / 33.0f, 1.0f / 33.0f);
+        //GL11.glScalef(1.0f / 33.0f, 1.0f / 33.0f, 1.0f / 33.0f);
 
         GL11.glRotatef(180, 0.0f, 0.0f, 1.0f);
         // rotation();
