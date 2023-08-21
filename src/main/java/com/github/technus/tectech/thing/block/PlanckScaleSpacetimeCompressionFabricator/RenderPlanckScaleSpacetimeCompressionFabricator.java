@@ -1,6 +1,8 @@
 package com.github.technus.tectech.thing.block.PlanckScaleSpacetimeCompressionFabricator;
 
-import static com.github.technus.tectech.thing.item.ContainerItem.EOH_RenderingUtils.renderBlockInWorld;
+import static com.github.technus.tectech.thing.item.ContainerItem.EOH_RenderingUtils.addRenderedBlockInWorld;
+import static com.github.technus.tectech.thing.item.ContainerItem.EOH_RenderingUtils.beginRenderingBlocksInWorld;
+import static com.github.technus.tectech.thing.item.ContainerItem.EOH_RenderingUtils.endRenderingBlocksInWorld;
 
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
@@ -449,6 +451,8 @@ public class RenderPlanckScaleSpacetimeCompressionFabricator extends TileEntityS
 
         centreModel(testShape);
 
+        beginRenderingBlocksInWorld(scale);
+
         for (String[] layer : testShape) {
             for (String line : layer) {
                 yI++;
@@ -457,23 +461,17 @@ public class RenderPlanckScaleSpacetimeCompressionFabricator extends TileEntityS
 
                     if (block == ' ') continue;
 
-                    GL11.glPushMatrix();
-
-                    // Move block into place.
-                    GL11.glTranslated(xI, yI, zI);
-
                     // Build it.
                     if (block == 'C') {
-                        renderBlockInWorld(ItemList.Casing_Coil_Eternal.getBlock(), 13, scale);
+                        addRenderedBlockInWorld(ItemList.Casing_Coil_Eternal.getBlock(), 13, xI, yI, zI);
                     } else if (block == 'N') {
-                        renderBlockInWorld(GregTech_API.sBlockCasings1, 12, scale);
+                        addRenderedBlockInWorld(GregTech_API.sBlockCasings1, 12, xI, yI, zI);
                     } else if (block == 'b') {
-                        renderBlockInWorld(GregTech_API.sBlockCasings1, 13, scale);
+                        addRenderedBlockInWorld(GregTech_API.sBlockCasings1, 13, xI, yI, zI);
                     } else {
-                        renderBlockInWorld(GregTech_API.sBlockCasings1, 14, scale);
+                        addRenderedBlockInWorld(GregTech_API.sBlockCasings1, 14, xI, yI, zI);
                     }
 
-                    GL11.glPopMatrix();
                 }
                 zI = 0;
             }
@@ -481,6 +479,7 @@ public class RenderPlanckScaleSpacetimeCompressionFabricator extends TileEntityS
             yI = 0;
         }
 
+        endRenderingBlocksInWorld();
         GL11.glPopMatrix();
     }
 
