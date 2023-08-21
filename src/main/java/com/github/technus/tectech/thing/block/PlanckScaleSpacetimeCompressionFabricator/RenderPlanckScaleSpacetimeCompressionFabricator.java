@@ -430,7 +430,7 @@ public class RenderPlanckScaleSpacetimeCompressionFabricator extends TileEntityS
         GL11.glRotatef((System.currentTimeMillis() / 16) % 360, 0.3f, 1, 0.5f);
     }
 
-    private static final float scale = 0.999f;
+    private static final float scale = 0.9999f;
 
     @Override
     public void renderTileEntityAt(TileEntity tile, double x, double y, double z, float timeSinceLastTick) {
@@ -445,10 +445,10 @@ public class RenderPlanckScaleSpacetimeCompressionFabricator extends TileEntityS
         int zI = 0;
 
         GL11.glTranslated(x + 0.5, y + 0.5, z + 0.5);
-        //GL11.glScalef(1.0f / 33.0f, 1.0f / 33.0f, 1.0f / 33.0f);
+        GL11.glScalef(1.0f / 33.0f, 1.0f / 33.0f, 1.0f / 33.0f);
 
         GL11.glRotatef(180, 0.0f, 0.0f, 1.0f);
-        // rotation();
+        //rotation();
 
         centreModel(testShape);
 
