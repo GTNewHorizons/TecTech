@@ -1,9 +1,13 @@
 package com.github.technus.tectech.thing.block.PlanckScaleSpacetimeCompressionFabricator;
 
+import net.minecraft.block.Block;
+import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.init.Blocks;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.IIcon;
+import net.minecraft.world.IBlockAccess;
 import org.lwjgl.opengl.GL11;
 
 import static com.github.technus.tectech.thing.item.ContainerItem.EOH_RenderingUtils.renderBlockInWorld;
@@ -35,6 +39,29 @@ public class RenderPlanckScaleSpacetimeCompressionFabricator extends TileEntityS
 
     private static final float scale = 0.999f;
 
+
+/*
+    @Override
+    public void renderTileEntityAt(TileEntity tile, double x, double y, double z, float timeSinceLastTick) {
+        if(tile.getWorldObj() == null) {
+            return; // Always good to check if the world object is available.
+        }
+
+        RenderBlocks renderer = new RenderBlocks(tile.getWorldObj());
+
+        GL11.glPushMatrix();
+        GL11.glTranslated(x, y, z);
+
+        Block blockToRender = Blocks.diamond_block; // Assuming you want to render the block that this TileEntity represents.
+        int metadata = 0;
+
+        this.bindTexture(TextureMap.locationBlocksTexture);
+
+        renderer.renderStandardBlock(Blocks.diamond_block, 0, 10, 0);
+        GL11.glPopMatrix();
+    }
+*/
+
     @Override
     public void renderTileEntityAt(TileEntity tile, double x, double y, double z, float timeSinceLastTick) {
         if (!(tile instanceof TilePlanckScaleSpacetimeCompressionFabricator PSSCFRenderTile)) return;
@@ -53,7 +80,6 @@ public class RenderPlanckScaleSpacetimeCompressionFabricator extends TileEntityS
         rotation();
 
         centreModel(testShape);
-
 
         for (String line : testShape) {
             for (char block : line.toCharArray()) {
