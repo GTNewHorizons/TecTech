@@ -38,8 +38,8 @@ public class StarConsumer extends Controller<StarConsumer> implements PollutionL
     private static IStructureDefinition<StarConsumer> STRUCTURE_DEFINITION = null;
     private static final Vec3Impl OFFSET = new Vec3Impl(1, 1, 0);
     private static final String MAIN = "Main";
-    private static final PollutionLogic POLLUTION_LOGIC = new PollutionLogic().setPollutionAmount(10);
-    private final ProcessingLogic PROCESSING_LOGIC = new CokeOvenProcessingLogic();
+    private static final PollutionLogic POLLUTION_LOGIC = new PollutionLogic();
+    private final ProcessingLogic PROCESSING_LOGIC = new StarConsumerProcessingLogic();
 
     public StarConsumer() {
         super();
@@ -87,7 +87,7 @@ public class StarConsumer extends Controller<StarConsumer> implements PollutionL
                 .beginStructureBlock(3, 3, 3, true)
                 .addCasingInfoExactly("Coke Oven Bricks", 25, false)
                 .addPollutionAmount(POLLUTION_LOGIC.getPollutionAmount())
-                .toolTipFinisher(GT_Values.AuthorBlueWeabo);
+                .toolTipFinisher(GT_Values.AuthorColen);
         return tt;
     }
 
@@ -120,7 +120,7 @@ public class StarConsumer extends Controller<StarConsumer> implements PollutionL
                 new SlotWidget(inputInventory, 0).setPos(18, 18)
                         .setSize(18, 18));
         builder.widget(
-                new SlotWidget(outputInventory, 0).setPos(36, 36)
+                new SlotWidget(outputInventory, 0).setPos(18, 36)
                         .setSize(18, 18));
         builder.widget(createButtons(builder));
     }

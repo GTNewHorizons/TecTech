@@ -26,7 +26,7 @@ public class TecTech_Loader_MultiTileEntities implements Runnable {
                 .setBlock(MACHINE_BLOCK)
                 .textureFolder("starConsumer")
                 .inputInventorySize(1)
-                .outputInventorySize(1)
+                .outputInventorySize(32)
                 .register();
 
     }
