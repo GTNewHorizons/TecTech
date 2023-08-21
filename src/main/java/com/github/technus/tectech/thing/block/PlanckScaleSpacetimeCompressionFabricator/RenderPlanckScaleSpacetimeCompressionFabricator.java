@@ -1,13 +1,11 @@
 package com.github.technus.tectech.thing.block.PlanckScaleSpacetimeCompressionFabricator;
 
-import net.minecraft.block.Block;
-import net.minecraft.client.renderer.RenderBlocks;
+import gregtech.api.GregTech_API;
+import gregtech.api.enums.ItemList;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.init.Blocks;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.IIcon;
-import net.minecraft.world.IBlockAccess;
 import org.lwjgl.opengl.GL11;
 
 import static com.github.technus.tectech.thing.item.ContainerItem.EOH_RenderingUtils.renderBlockInWorld;
@@ -417,10 +415,10 @@ public class RenderPlanckScaleSpacetimeCompressionFabricator extends TileEntityS
     private static void centreModel(String[][] testShape) {
 
         int x = testShape.length / 2;
-        int y = testShape[0][0].length() / 2;
-        int z = testShape[0].length / 2;
+        int z = testShape[0][0].length() / 2;
+        int y = testShape[0].length / 2;
 
-        GL11.glTranslated(-x, -1-y, -z);
+        GL11.glTranslated(-x, -1-y, -1-z);
 
     }
 
@@ -429,7 +427,7 @@ public class RenderPlanckScaleSpacetimeCompressionFabricator extends TileEntityS
 
         float angle = (currentTimeInMs / 10.0f) % 360;
 
-        GL11.glRotatef((System.currentTimeMillis() / 16) % 360, 0.3f, 1, 0.5f);
+        GL11.glRotatef((System.currentTimeMillis() / 16) % 360, 0.0f, 1, 0.0f);
     }
 
     private static final float scale = 0.999f;
@@ -469,7 +467,6 @@ public class RenderPlanckScaleSpacetimeCompressionFabricator extends TileEntityS
         int yI = 0;
         int zI = 0;
 
-        //centreModel(testShape);
         GL11.glTranslated(x + 0.5, y + 0.5, z + 0.5);
         GL11.glScalef(0.05f, 0.05f, 0.05f);
 
@@ -492,9 +489,13 @@ public class RenderPlanckScaleSpacetimeCompressionFabricator extends TileEntityS
 
                     // Build it.
                     if (block == 'C') {
-                        renderBlockInWorld(Blocks.redstone_block, 0, scale);
+                        renderBlockInWorld(ItemList.Casing_Coil_Eternal.getBlock(), 13, scale);
+                    } else if (block == 'N') {
+                        renderBlockInWorld(GregTech_API.sBlockCasings1, 12, scale);
+                    } else if (block == 'b') {
+                        renderBlockInWorld(GregTech_API.sBlockCasings1, 13, scale);
                     } else {
-                        renderBlockInWorld(Blocks.quartz_block, 0, scale);
+                        renderBlockInWorld(GregTech_API.sBlockCasings1, 14, scale);
                     }
 
                     GL11.glPopMatrix();
