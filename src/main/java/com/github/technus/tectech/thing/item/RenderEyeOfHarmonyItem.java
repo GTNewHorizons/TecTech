@@ -2,10 +2,10 @@ package com.github.technus.tectech.thing.item;
 
 import static com.github.technus.tectech.thing.item.ContainerItem.EOH_RenderingUtils.renderStar;
 
+import java.awt.*;
+
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.client.IItemRenderer;
-
-import java.awt.*;
 
 public class RenderEyeOfHarmonyItem implements IItemRenderer {
 

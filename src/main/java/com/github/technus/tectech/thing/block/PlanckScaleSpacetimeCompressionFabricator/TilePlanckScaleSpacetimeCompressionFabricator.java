@@ -1,16 +1,13 @@
 package com.github.technus.tectech.thing.block.PlanckScaleSpacetimeCompressionFabricator;
 
-import net.minecraft.block.Block;
+import java.util.*;
+
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
-import pers.gwyog.gtneioreplugin.plugin.block.ModBlocks;
-
-import java.util.*;
-import java.util.stream.IntStream;
 
 public class TilePlanckScaleSpacetimeCompressionFabricator extends TileEntity {
 

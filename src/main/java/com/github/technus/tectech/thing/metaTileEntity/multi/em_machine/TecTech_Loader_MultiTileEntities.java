@@ -1,10 +1,10 @@
 package com.github.technus.tectech.thing.metaTileEntity.multi.em_machine;
 
-import gregtech.api.enums.Mods;
-
 import static gregtech.GT_Mod.GT_FML_LOGGER;
 import static gregtech.loaders.preload.GT_Loader_MultiTileEntities.MACHINE_BLOCK;
 import static gregtech.loaders.preload.GT_Loader_MultiTileEntities.MACHINE_REGISTRY;
+
+import gregtech.api.enums.Mods;
 
 public class TecTech_Loader_MultiTileEntities implements Runnable {
 
@@ -20,13 +20,8 @@ public class TecTech_Loader_MultiTileEntities implements Runnable {
 
     private static void registerMachines() {
 
-        MACHINE_REGISTRY.create(4141, StarConsumer.class)
-                .name("Star Consumer")
-                .category("MultiblockController")
-                .setBlock(MACHINE_BLOCK)
-                .textureFolder("starConsumer")
-                .inputInventorySize(1)
-                .outputInventorySize(32)
+        MACHINE_REGISTRY.create(4141, StarConsumer.class).name("Star Consumer").category("MultiblockController")
+                .setBlock(MACHINE_BLOCK).textureFolder("starConsumer").inputInventorySize(1).outputInventorySize(32)
                 .register();
 
     }

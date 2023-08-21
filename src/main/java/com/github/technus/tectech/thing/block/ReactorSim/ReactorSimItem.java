@@ -5,12 +5,13 @@ import static net.minecraft.util.StatCollector.translateToLocal;
 
 import java.util.List;
 
-import com.github.technus.tectech.thing.block.QuantumGlassStuff.QuantumGlassItem;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumChatFormatting;
+
+import com.github.technus.tectech.thing.block.QuantumGlassStuff.QuantumGlassItem;
 
 /**
  * Created by danie_000 on 30.09.2017.

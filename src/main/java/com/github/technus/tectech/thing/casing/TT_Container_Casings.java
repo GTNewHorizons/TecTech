@@ -1,9 +1,9 @@
 package com.github.technus.tectech.thing.casing;
 
-import com.github.technus.tectech.thing.block.PlanckScaleSpacetimeCompressionFabricator.PlanckScaleSpacetimeCompressionFabricatorBlock;
 import net.minecraft.block.Block;
 
 import com.github.technus.tectech.thing.block.EyeOfHarmonyStuff.EyeOfHarmonyBlock;
+import com.github.technus.tectech.thing.block.PlanckScaleSpacetimeCompressionFabricator.PlanckScaleSpacetimeCompressionFabricatorBlock;
 
 /**
  * Created by danie_000 on 03.10.2016.

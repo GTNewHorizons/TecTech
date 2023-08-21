@@ -1,9 +1,9 @@
 package com.github.technus.tectech.thing.item;
 
+import static com.github.technus.tectech.thing.item.ContainerItem.EOH_RenderingUtils.renderStar;
+
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.client.IItemRenderer;
-
-import static com.github.technus.tectech.thing.item.ContainerItem.EOH_RenderingUtils.renderStar;
 
 public class RenderPlanckScaleSpacetimeCompressionFabricatorItem implements IItemRenderer {
 

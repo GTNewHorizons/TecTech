@@ -8,7 +8,6 @@ import java.lang.reflect.Modifier;
 import java.util.Collection;
 import java.util.Iterator;
 
-import com.github.technus.tectech.thing.metaTileEntity.multi.em_machine.TecTech_Loader_MultiTileEntities;
 import net.minecraftforge.common.MinecraftForge;
 
 import com.github.technus.tectech.loader.MainLoader;
@@ -31,6 +30,7 @@ import com.github.technus.tectech.mechanics.enderStorage.EnderWorldSavedData;
 import com.github.technus.tectech.nei.IMCForNEI;
 import com.github.technus.tectech.proxy.CommonProxy;
 import com.github.technus.tectech.recipe.EyeOfHarmonyRecipeStorage;
+import com.github.technus.tectech.thing.metaTileEntity.multi.em_machine.TecTech_Loader_MultiTileEntities;
 import com.github.technus.tectech.util.XSTR;
 
 import cpw.mods.fml.common.FMLCommonHandler;

@@ -31,7 +31,6 @@ import gregtech.api.logic.interfaces.ProcessingLogicHost;
 import gregtech.api.multitileentity.enums.GT_MultiTileCasing;
 import gregtech.api.multitileentity.multiblock.base.Controller;
 import gregtech.api.util.GT_Multiblock_Tooltip_Builder;
-import gregtech.common.tileentities.machines.multiblock.logic.CokeOvenProcessingLogic;
 
 public class StarConsumer extends Controller<StarConsumer> implements PollutionLogicHost, ProcessingLogicHost {
 
@@ -82,12 +81,9 @@ public class StarConsumer extends Controller<StarConsumer> implements PollutionL
     @Override
     protected GT_Multiblock_Tooltip_Builder createTooltip() {
         final GT_Multiblock_Tooltip_Builder tt = new GT_Multiblock_Tooltip_Builder();
-        tt.addMachineType("Coke Oven")
-                .addInfo("Used for charcoal")
-                .beginStructureBlock(3, 3, 3, true)
+        tt.addMachineType("Coke Oven").addInfo("Used for charcoal").beginStructureBlock(3, 3, 3, true)
                 .addCasingInfoExactly("Coke Oven Bricks", 25, false)
-                .addPollutionAmount(POLLUTION_LOGIC.getPollutionAmount())
-                .toolTipFinisher(GT_Values.AuthorColen);
+                .addPollutionAmount(POLLUTION_LOGIC.getPollutionAmount()).toolTipFinisher(GT_Values.AuthorColen);
         return tt;
     }
 
@@ -99,11 +95,12 @@ public class StarConsumer extends Controller<StarConsumer> implements PollutionL
     @Override
     public IStructureDefinition<StarConsumer> getStructureDefinition() {
         if (STRUCTURE_DEFINITION == null) {
-            STRUCTURE_DEFINITION = StructureDefinition.<StarConsumer>builder()
-                    .addShape(
-                            MAIN,
-                            new String[][] { { "AAA", "A~A", "AAA" }, { "AAA", "A-A", "AAA" }, { "AAA", "AAA", "AAA" } })
-                    .addElement('A', addMultiTileCasing("gt.multitileentity.casings", getCasingMeta(), ITEM_IN | ITEM_OUT))
+            STRUCTURE_DEFINITION = StructureDefinition.<StarConsumer>builder().addShape(
+                    MAIN,
+                    new String[][] { { "AAA", "A~A", "AAA" }, { "AAA", "A-A", "AAA" }, { "AAA", "AAA", "AAA" } })
+                    .addElement(
+                            'A',
+                            addMultiTileCasing("gt.multitileentity.casings", getCasingMeta(), ITEM_IN | ITEM_OUT))
                     .build();
         }
         return STRUCTURE_DEFINITION;
@@ -116,12 +113,8 @@ public class StarConsumer extends Controller<StarConsumer> implements PollutionL
 
     @Override
     public void addUIWidgets(ModularWindow.Builder builder, UIBuildContext buildContext) {
-        builder.widget(
-                new SlotWidget(inputInventory, 0).setPos(18, 18)
-                        .setSize(18, 18));
-        builder.widget(
-                new SlotWidget(outputInventory, 0).setPos(18, 36)
-                        .setSize(18, 18));
+        builder.widget(new SlotWidget(inputInventory, 0).setPos(18, 18).setSize(18, 18));
+        builder.widget(new SlotWidget(outputInventory, 0).setPos(18, 36).setSize(18, 18));
         builder.widget(createButtons(builder));
     }
 
@@ -141,21 +134,17 @@ public class StarConsumer extends Controller<StarConsumer> implements PollutionL
 
         final DrawableWidget tab = new DrawableWidget();
         final TextWidget text = new TextWidget(title).setDefaultColor(getTitleColor())
-                .setTextAlignment(Alignment.CenterLeft)
-                .setMaxWidth(titleWidth);
+                .setTextAlignment(Alignment.CenterLeft).setMaxWidth(titleWidth);
         if (GT_Mod.gregtechproxy.mTitleTabStyle == 1) {
-            tab.setDrawable(getGUITextureSet().getTitleTabAngular())
-                    .setPos(0, -(titleHeight + TAB_PADDING) + 1)
+            tab.setDrawable(getGUITextureSet().getTitleTabAngular()).setPos(0, -(titleHeight + TAB_PADDING) + 1)
                     .setSize(getGUIWidth(), titleHeight + TAB_PADDING * 2);
             text.setPos(TAB_PADDING + TITLE_PADDING, -titleHeight + TAB_PADDING);
         } else {
-            tab.setDrawable(getGUITextureSet().getTitleTabDark())
-                    .setPos(0, -(titleHeight + TAB_PADDING * 2) + 1)
+            tab.setDrawable(getGUITextureSet().getTitleTabDark()).setPos(0, -(titleHeight + TAB_PADDING * 2) + 1)
                     .setSize(titleWidth + (TAB_PADDING + TITLE_PADDING) * 2, titleHeight + TAB_PADDING * 2 - 1);
             text.setPos(TAB_PADDING + TITLE_PADDING, -titleHeight);
         }
-        builder.widget(tab)
-                .widget(text);
+        builder.widget(tab).widget(text);
     }
 
     @Override

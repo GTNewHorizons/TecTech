@@ -3,6 +3,8 @@ package com.github.technus.tectech.thing.item.ContainerItem;
 import static com.github.technus.tectech.thing.block.EyeOfHarmonyStuff.RenderEyeOfHarmony.*;
 import static java.lang.Math.pow;
 
+import java.awt.*;
+
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.util.IIcon;
@@ -12,8 +14,6 @@ import net.minecraftforge.client.IItemRenderer;
 import org.lwjgl.opengl.GL11;
 
 import cpw.mods.fml.client.FMLClientHandler;
-
-import java.awt.*;
 
 public abstract class EOH_RenderingUtils {
 
@@ -38,7 +38,6 @@ public abstract class EOH_RenderingUtils {
     public static void renderStar(IItemRenderer.ItemRenderType type) {
         renderStar(type, new Color(1.0f, 0.4f, 0.05f, 1.0f));
     }
-
 
     private static void renderStarLayer(int layer, ResourceLocation texture, Color color, float alpha) {
 
@@ -94,6 +93,7 @@ public abstract class EOH_RenderingUtils {
         // Finish animation.
         GL11.glPopMatrix();
     }
+
     // this.bindTexture(TextureMap.locationBlocksTexture);
     public static void renderBlockInWorld(final Block block, final int meta, final float blockSize) {
         Tessellator tes = Tessellator.instance;

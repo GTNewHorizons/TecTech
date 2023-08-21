@@ -1,16 +1,15 @@
 package com.github.technus.tectech.thing.metaTileEntity.multi.em_machine;
 
+import javax.annotation.Nonnull;
+
+import net.minecraft.item.ItemStack;
+
 import gregtech.api.enums.Materials;
 import gregtech.api.enums.OrePrefixes;
 import gregtech.api.logic.ProcessingLogic;
 import gregtech.api.recipe.check.CheckRecipeResult;
 import gregtech.api.recipe.check.CheckRecipeResultRegistry;
 import gregtech.api.util.GT_OreDictUnificator;
-import net.minecraft.item.ItemStack;
-
-import javax.annotation.Nonnull;
-import java.util.ArrayList;
-import java.util.List;
 
 public final class StarConsumerProcessingLogic extends ProcessingLogic {
 
@@ -20,17 +19,18 @@ public final class StarConsumerProcessingLogic extends ProcessingLogic {
             return CheckRecipeResultRegistry.NO_RECIPE;
         }
 
-
         ItemStack celestialBody = inputItems[0];
 
-//        List<ItemStack> output = new ArrayList<ItemStack>();
-//        output.add(GT_OreDictUnificator.get(OrePrefixes.plateDense, Materials.Europium, 2));
-//        output.add(GT_OreDictUnificator.get(OrePrefixes.plate, Materials.Europium, 2));
+        // List<ItemStack> output = new ArrayList<ItemStack>();
+        // output.add(GT_OreDictUnificator.get(OrePrefixes.plateDense, Materials.Europium, 2));
+        // output.add(GT_OreDictUnificator.get(OrePrefixes.plate, Materials.Europium, 2));
 
         celestialBody.stackSize -= 1;
         setDuration(1);
 
-        setOutputItems(GT_OreDictUnificator.get(OrePrefixes.plateDense, Materials.Europium, 2), GT_OreDictUnificator.get(OrePrefixes.plate, Materials.Europium, 2));
+        setOutputItems(
+                GT_OreDictUnificator.get(OrePrefixes.plateDense, Materials.Europium, 2),
+                GT_OreDictUnificator.get(OrePrefixes.plate, Materials.Europium, 2));
 
         return CheckRecipeResultRegistry.SUCCESSFUL;
     }
