@@ -1,9 +1,13 @@
 package com.github.technus.tectech.proxy;
 
 import static com.github.technus.tectech.TecTech.RANDOM;
+import static com.github.technus.tectech.thing.casing.TT_Container_Casings.PlanckScaleSpacetimeCompressionFabricatorRenderBlock;
 import static com.github.technus.tectech.thing.casing.TT_Container_Casings.eyeOfHarmonyRenderBlock;
 import static gregtech.api.enums.Mods.OpenModularTurrets;
 
+import com.github.technus.tectech.thing.block.PlanckScaleSpacetimeCompressionFabricator.RenderPlanckScaleSpacetimeCompressionFabricator;
+import com.github.technus.tectech.thing.block.PlanckScaleSpacetimeCompressionFabricator.TilePlanckScaleSpacetimeCompressionFabricator;
+import com.github.technus.tectech.thing.item.RenderPlanckScaleSpacetimeCompressionFabricatorItem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityClientPlayerMP;
 import net.minecraft.client.gui.GuiNewChat;
@@ -18,10 +22,10 @@ import net.minecraftforge.common.util.ForgeDirection;
 
 import com.github.technus.tectech.Reference;
 import com.github.technus.tectech.compatibility.openmodularturrets.TT_turret_loader;
-import com.github.technus.tectech.thing.block.QuantumGlassBlock;
-import com.github.technus.tectech.thing.block.QuantumGlassRender;
-import com.github.technus.tectech.thing.block.RenderEyeOfHarmony;
-import com.github.technus.tectech.thing.block.TileEyeOfHarmony;
+import com.github.technus.tectech.thing.block.QuantumGlassStuff.QuantumGlassBlock;
+import com.github.technus.tectech.thing.block.QuantumGlassStuff.QuantumGlassRender;
+import com.github.technus.tectech.thing.block.EyeOfHarmonyStuff.RenderEyeOfHarmony;
+import com.github.technus.tectech.thing.block.EyeOfHarmonyStuff.TileEyeOfHarmony;
 import com.github.technus.tectech.thing.item.ContainerItem.ContainerItem;
 import com.github.technus.tectech.thing.item.ContainerItem.ContainerItemRenderer;
 import com.github.technus.tectech.thing.item.DebugElementalInstanceContainer_EM;
@@ -47,8 +51,14 @@ public class ClientProxy extends CommonProxy {
                 .registerItemRenderer(ElementalDefinitionContainer_EM.INSTANCE, RenderElementalName.INSTANCE);
         MinecraftForgeClient
                 .registerItemRenderer(DebugElementalInstanceContainer_EM.INSTANCE, RenderElementalName.INSTANCE);
+
+        // EOH
         MinecraftForgeClient
                 .registerItemRenderer(Item.getItemFromBlock(eyeOfHarmonyRenderBlock), new RenderEyeOfHarmonyItem());
+
+        // PSSCF
+        MinecraftForgeClient
+                .registerItemRenderer(Item.getItemFromBlock(PlanckScaleSpacetimeCompressionFabricatorRenderBlock), new RenderPlanckScaleSpacetimeCompressionFabricatorItem());
 
         MinecraftForgeClient.registerItemRenderer(ContainerItem.item, new ContainerItemRenderer());
 
@@ -57,6 +67,7 @@ public class ClientProxy extends CommonProxy {
         }
 
         ClientRegistry.bindTileEntitySpecialRenderer(TileEyeOfHarmony.class, new RenderEyeOfHarmony());
+        ClientRegistry.bindTileEntitySpecialRenderer(TilePlanckScaleSpacetimeCompressionFabricator.class, new RenderPlanckScaleSpacetimeCompressionFabricator());
     }
 
     @Override

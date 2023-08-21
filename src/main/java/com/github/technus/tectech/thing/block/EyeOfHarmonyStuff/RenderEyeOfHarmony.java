@@ -1,4 +1,4 @@
-package com.github.technus.tectech.thing.block;
+package com.github.technus.tectech.thing.block.EyeOfHarmonyStuff;
 
 import cpw.mods.fml.client.FMLClientHandler;
 import net.minecraft.client.renderer.texture.TextureMap;
@@ -9,8 +9,6 @@ import net.minecraftforge.client.IItemRenderer;
 import net.minecraftforge.client.model.AdvancedModelLoader;
 import net.minecraftforge.client.model.IModelCustom;
 import org.lwjgl.opengl.GL11;
-
-import java.awt.*;
 
 import static com.github.technus.tectech.Reference.MODID;
 import static com.github.technus.tectech.thing.item.ContainerItem.EOH_RenderingUtils.renderBlockInWorld;

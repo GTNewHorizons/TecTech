@@ -1,4 +1,4 @@
-package com.github.technus.tectech.thing.block;
+package com.github.technus.tectech.thing.block.QuantumGlassStuff;
 
 import static com.github.technus.tectech.Reference.MODID;
 import static com.github.technus.tectech.TecTech.creativeTabTecTech;

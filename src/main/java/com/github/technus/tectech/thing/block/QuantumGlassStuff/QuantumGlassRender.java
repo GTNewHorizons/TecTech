@@ -1,4 +1,4 @@
-package com.github.technus.tectech.thing.block;
+package com.github.technus.tectech.thing.block.QuantumGlassStuff;
 
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.RenderBlocks;

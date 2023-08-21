@@ -1,6 +1,6 @@
 package com.github.technus.tectech.thing.item.ContainerItem;
 
-import static com.github.technus.tectech.thing.block.RenderEyeOfHarmony.*;
+import static com.github.technus.tectech.thing.block.EyeOfHarmonyStuff.RenderEyeOfHarmony.*;
 import static java.lang.Math.pow;
 
 import net.minecraft.block.Block;

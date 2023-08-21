@@ -12,7 +12,7 @@ import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 
 import com.github.technus.tectech.thing.CustomItemList;
-import com.github.technus.tectech.thing.block.QuantumGlassBlock;
+import com.github.technus.tectech.thing.block.QuantumGlassStuff.QuantumGlassBlock;
 import com.gtnewhorizon.structurelib.StructureLibAPI;
 
 import gregtech.api.enums.*;

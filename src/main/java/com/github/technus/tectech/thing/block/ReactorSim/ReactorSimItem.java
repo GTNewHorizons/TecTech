@@ -1,10 +1,11 @@
-package com.github.technus.tectech.thing.block;
+package com.github.technus.tectech.thing.block.ReactorSim;
 
 import static com.github.technus.tectech.util.CommonValues.TEC_MARK_GENERAL;
 import static net.minecraft.util.StatCollector.translateToLocal;
 
 import java.util.List;
 
+import com.github.technus.tectech.thing.block.QuantumGlassStuff.QuantumGlassItem;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemBlock;

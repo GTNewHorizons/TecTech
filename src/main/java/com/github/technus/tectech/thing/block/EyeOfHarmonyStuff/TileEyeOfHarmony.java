@@ -1,4 +1,4 @@
-package com.github.technus.tectech.thing.block;
+package com.github.technus.tectech.thing.block.EyeOfHarmonyStuff;
 
 import java.util.ArrayList;
 import java.util.Arrays;

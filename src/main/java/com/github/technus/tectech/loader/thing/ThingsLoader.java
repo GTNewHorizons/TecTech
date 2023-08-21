@@ -7,9 +7,10 @@ import static gregtech.api.enums.Mods.OpenModularTurrets;
 import com.github.technus.tectech.TecTech;
 import com.github.technus.tectech.compatibility.openmodularturrets.blocks.turretbases.TurretBaseEM;
 import com.github.technus.tectech.compatibility.openmodularturrets.blocks.turretheads.TurretHeadEM;
-import com.github.technus.tectech.thing.block.QuantumGlassBlock;
-import com.github.technus.tectech.thing.block.ReactorSimBlock;
-import com.github.technus.tectech.thing.block.TileEyeOfHarmony;
+import com.github.technus.tectech.thing.block.PlanckScaleSpacetimeCompressionFabricator.TilePlanckScaleSpacetimeCompressionFabricator;
+import com.github.technus.tectech.thing.block.QuantumGlassStuff.QuantumGlassBlock;
+import com.github.technus.tectech.thing.block.ReactorSim.ReactorSimBlock;
+import com.github.technus.tectech.thing.block.EyeOfHarmonyStuff.TileEyeOfHarmony;
 import com.github.technus.tectech.thing.casing.GT_Block_CasingsBA0;
 import com.github.technus.tectech.thing.casing.GT_Block_CasingsTT;
 import com.github.technus.tectech.thing.casing.SpacetimeCompressionFieldCasing;
@@ -32,6 +33,7 @@ public class ThingsLoader implements Runnable {
     public void run() {
 
         GameRegistry.registerTileEntity(TileEyeOfHarmony.class, MODID + ":EyeOfHarmonyRenderBlock");
+        GameRegistry.registerTileEntity(TilePlanckScaleSpacetimeCompressionFabricator.class, MODID + ":TilePlanckScaleSpacetimeCompressionFabricatorRenderBlock");
 
         if (Textures.BlockIcons.casingTexturePages[tectechTexturePage1] == null) {
             Textures.BlockIcons.casingTexturePages[tectechTexturePage1] = new ITexture[128];
