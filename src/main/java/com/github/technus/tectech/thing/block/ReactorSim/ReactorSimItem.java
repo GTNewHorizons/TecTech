@@ -1,4 +1,4 @@
-package com.github.technus.tectech.thing.block;
+package com.github.technus.tectech.thing.block.ReactorSim;
 
 import static com.github.technus.tectech.util.CommonValues.TEC_MARK_GENERAL;
 import static net.minecraft.util.StatCollector.translateToLocal;

@@ -9,7 +9,7 @@ import com.github.technus.tectech.compatibility.openmodularturrets.blocks.turret
 import com.github.technus.tectech.compatibility.openmodularturrets.blocks.turretheads.TurretHeadEM;
 import com.github.technus.tectech.thing.block.PlanckScaleSpacetimeCompressionFabricator.TilePlanckScaleSpacetimeCompressionFabricator;
 import com.github.technus.tectech.thing.block.QuantumGlassStuff.QuantumGlassBlock;
-import com.github.technus.tectech.thing.block.ReactorSimBlock;
+import com.github.technus.tectech.thing.block.ReactorSim.ReactorSimBlock;
 import com.github.technus.tectech.thing.block.EyeOfHarmonyStuff.TileEyeOfHarmony;
 import com.github.technus.tectech.thing.casing.GT_Block_CasingsBA0;
 import com.github.technus.tectech.thing.casing.GT_Block_CasingsTT;
