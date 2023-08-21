@@ -23,7 +23,6 @@ public class PlanckScaleSpacetimeCompressionFabricatorBlock extends Block {
         this.setHardness(-1.0f);
         this.setCreativeTab(TecTech.creativeTabEM);
         this.setBlockName("Planck Scale Spacetime Compression Fabricator Renderer");
-        this.setLightLevel(100.0f);
         registerOther(this);
     }
 
