@@ -2,7 +2,6 @@ package com.github.technus.tectech.thing.block.PlanckScaleSpacetimeCompressionFa
 
 import gregtech.api.GregTech_API;
 import gregtech.api.enums.ItemList;
-import net.minecraft.init.Blocks;
 
 public class PSSCF_DTPF extends BasePSSCFStructure {
 
@@ -14,7 +13,7 @@ public class PSSCF_DTPF extends BasePSSCFStructure {
     }
 
     @Override
-    public String[][] getStructure() {
+    public String[][] getStructureString() {
         return structure;
     }
 

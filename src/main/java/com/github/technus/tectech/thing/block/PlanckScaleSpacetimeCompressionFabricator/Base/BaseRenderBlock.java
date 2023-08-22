@@ -1,6 +1,7 @@
-package com.github.technus.tectech.thing.block.PlanckScaleSpacetimeCompressionFabricator;
+package com.github.technus.tectech.thing.block.PlanckScaleSpacetimeCompressionFabricator.Base;
 
 import com.github.technus.tectech.TecTech;
+import com.github.technus.tectech.thing.block.PlanckScaleSpacetimeCompressionFabricator.TilePlanckScaleSpacetimeCompressionFabricator;
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -13,14 +14,13 @@ import net.minecraft.world.World;
 
 import java.util.ArrayList;
 
-public class PlanckScaleSpacetimeCompressionFabricatorBlock extends Block {
+public class BaseRenderBlock extends Block {
 
-    public PlanckScaleSpacetimeCompressionFabricatorBlock() {
+    public BaseRenderBlock(String name) {
         super(Material.iron);
         this.setResistance(20f);
-        this.setHardness(-1.0f);
         this.setCreativeTab(TecTech.creativeTabEM);
-        this.setBlockName("Planck Scale Spacetime Compression Fabricator Renderer");
+        this.setBlockName(name);
         registerOther(this);
     }
 
@@ -52,7 +52,7 @@ public class PlanckScaleSpacetimeCompressionFabricatorBlock extends Block {
 
     @Override
     public TileEntity createTileEntity(World world, int metadata) {
-        return new TilePlanckScaleSpacetimeCompressionFabricator();
+        return new BaseRenderTileEntity();
     }
 
     public static void registerOther(Block block) {

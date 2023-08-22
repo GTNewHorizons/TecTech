@@ -1,20 +1,15 @@
 package com.github.technus.tectech.thing.block.PlanckScaleSpacetimeCompressionFabricator;
 
 import com.github.technus.tectech.thing.block.PlanckScaleSpacetimeCompressionFabricator.Structures.BasePSSCFStructure;
-import com.github.technus.tectech.thing.block.PlanckScaleSpacetimeCompressionFabricator.Structures.PSSCF_DTPF;
-import com.github.technus.tectech.thing.block.PlanckScaleSpacetimeCompressionFabricator.Structures.PSSCF_NanoForge;
-import net.minecraft.client.renderer.texture.TextureMap;
-import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
-import net.minecraft.tileentity.TileEntity;
 import org.lwjgl.opengl.GL11;
 
 import static com.github.technus.tectech.thing.item.ContainerItem.EOH_RenderingUtils.*;
 
-public class RenderPlanckScaleSpacetimeCompressionFabricator extends TileEntitySpecialRenderer {
+public class RenderHelper {
 
     private static void centreModel(BasePSSCFStructure model) {
 
-        String[][] testShape = model.getStructure();
+        String[][] testShape = model.getStructureString();
 
         int x = testShape.length / 2;
         int z = testShape[0][0].length() / 2;
@@ -28,13 +23,13 @@ public class RenderPlanckScaleSpacetimeCompressionFabricator extends TileEntityS
     }
 
     private static void buildModel(BasePSSCFStructure model) {
-        beginRenderingBlocksInWorld(scale);
+        beginRenderingBlocksInWorld(1.0f);
 
         int xI = 0;
         int yI = 0;
         int zI = 0;
 
-        for (String[] layer : model.getStructure()) {
+        for (String[] layer : model.getStructureString()) {
             for (String line : layer) {
                 yI++;
                 for (char blockChar : line.toCharArray()) {
@@ -55,34 +50,24 @@ public class RenderPlanckScaleSpacetimeCompressionFabricator extends TileEntityS
         endRenderingBlocksInWorld();
     }
 
-    private void scaleModel(final BasePSSCFStructure model) {
-        final float maxScale = 5.0f / model.maxAxisSize();
+    private static void scaleModel(final BasePSSCFStructure model) {
+        final float maxScale = 1.0f / model.maxAxisSize();
         GL11.glScalef(maxScale, maxScale, maxScale);
     }
 
-    private static final float scale = 0.9999f;
-
-    BasePSSCFStructure DTPF = new PSSCF_NanoForge();
-
-    @Override
-    public void renderTileEntityAt(TileEntity tile, double x, double y, double z, float timeSinceLastTick) {
-        if (!(tile instanceof TilePlanckScaleSpacetimeCompressionFabricator)) return;
+    public static void renderModel(double x, double y, double z, final BasePSSCFStructure model) {
 
         GL11.glPushMatrix();
 
-        this.bindTexture(TextureMap.locationBlocksTexture);
-
         GL11.glTranslated(x + 0.5, y + 0.5, z + 0.5);
-        scaleModel(DTPF);
+        scaleModel(model);
 
-        //GL11.glRotatef(180, 0.0f, 0.0f, 1.0f);
         //rotation();
 
-        centreModel(DTPF);
+        centreModel(model);
 
-        buildModel(DTPF);
+        buildModel(model);
 
         GL11.glPopMatrix();
     }
-
 }

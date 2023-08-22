@@ -1,20 +1,35 @@
 package com.github.technus.tectech.thing.block.PlanckScaleSpacetimeCompressionFabricator.Structures;
 
 import gregtech.api.GregTech_API;
-import gregtech.api.enums.ItemList;
-import net.minecraft.init.Blocks;
 
 public class PSSCF_NanoForge extends BasePSSCFStructure {
 
     public PSSCF_NanoForge() {
         map.put('B', new BlockInfo(GregTech_API.sBlockCasings8, 10));
-        map.put('C', new BlockInfo(Blocks.iron_block, 0));
+        map.put('C', new BlockInfo(GregTech_API.sBlockMachines, 4139));
         map.put('A', new BlockInfo(GregTech_API.sBlockCasings2, 5));
+        reverseInnerArrays(structure);
     }
 
     @Override
-    public String[][] getStructure() {
+    public String[][] getStructureString() {
         return structure;
+    }
+
+    public static void reverseInnerArrays(String[][] array) {
+        for (String[] innerArray : array) {
+            int start = 0;
+            int end = innerArray.length - 1;
+
+            while (start < end) {
+                String temp = innerArray[start];
+                innerArray[start] = innerArray[end];
+                innerArray[end] = temp;
+
+                start++;
+                end--;
+            }
+        }
     }
 
     @SuppressWarnings("SpellCheckingInspection")

@@ -8,6 +8,7 @@ import com.github.technus.tectech.TecTech;
 import com.github.technus.tectech.compatibility.openmodularturrets.blocks.turretbases.TurretBaseEM;
 import com.github.technus.tectech.compatibility.openmodularturrets.blocks.turretheads.TurretHeadEM;
 import com.github.technus.tectech.thing.block.EyeOfHarmonyStuff.TileEyeOfHarmony;
+import com.github.technus.tectech.thing.block.PlanckScaleSpacetimeCompressionFabricator.Base.BaseRenderTileEntity;
 import com.github.technus.tectech.thing.block.PlanckScaleSpacetimeCompressionFabricator.TilePlanckScaleSpacetimeCompressionFabricator;
 import com.github.technus.tectech.thing.block.QuantumGlassStuff.QuantumGlassBlock;
 import com.github.technus.tectech.thing.block.ReactorSim.ReactorSimBlock;
@@ -33,8 +34,9 @@ public class ThingsLoader implements Runnable {
     public void run() {
 
         GameRegistry.registerTileEntity(TileEyeOfHarmony.class, MODID + ":EyeOfHarmonyRenderBlock");
+
         GameRegistry.registerTileEntity(
-                TilePlanckScaleSpacetimeCompressionFabricator.class,
+                BaseRenderTileEntity.class,
                 MODID + ":TilePlanckScaleSpacetimeCompressionFabricatorRenderBlock");
 
         if (Textures.BlockIcons.casingTexturePages[tectechTexturePage1] == null) {
