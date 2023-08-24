@@ -5,6 +5,7 @@ import static com.github.technus.tectech.thing.item.ContainerItem.EOH_RenderingU
 import java.util.HashMap;
 import java.util.Set;
 
+import net.minecraft.client.renderer.RenderBlocks;
 import org.lwjgl.opengl.GL11;
 
 import com.github.technus.tectech.thing.block.PlanckScaleSpacetimeCompressionFabricator.Structures.*;
@@ -42,6 +43,7 @@ public class RenderHelper {
                     if (blockChar == ' ') continue;
 
                     BasePSSCFStructure.BlockInfo blockInfo = model.getAssociatedBlockInfo(blockChar);
+
                     addRenderedBlockInWorld(blockInfo.block, blockInfo.metadata, xI, yI, zI);
 
                 }

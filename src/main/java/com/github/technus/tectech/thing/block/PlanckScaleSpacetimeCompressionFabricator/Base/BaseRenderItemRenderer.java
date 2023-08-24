@@ -31,9 +31,14 @@ public class BaseRenderItemRenderer implements IItemRenderer {
 
         if (item.hasTagCompound() && item.getTagCompound().hasKey(MODEL_NAME_NBT_TAG)) {
             BasePSSCFStructure modelToRender = getModel(item.getTagCompound().getString(MODEL_NAME_NBT_TAG));
-            RenderHelper.renderModel(0, 0, 0, modelToRender);
-            return;
+
+            if (type.equals(ItemRenderType.INVENTORY)) {
+                RenderHelper.renderModel(0, -0.1, 0, modelToRender);
+            } else if (type.equals(ItemRenderType.ENTITY)){
+                RenderHelper.renderModel(-0.5, 0, -0.5, modelToRender);
+            }
+
+
         }
-        RenderHelper.renderModel(0, 0, 0, new PSSCF_Default());
     }
 }
