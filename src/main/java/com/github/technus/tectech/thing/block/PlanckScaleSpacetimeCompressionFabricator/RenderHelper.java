@@ -4,6 +4,7 @@ import com.github.technus.tectech.thing.block.PlanckScaleSpacetimeCompressionFab
 import org.lwjgl.opengl.GL11;
 
 import java.util.HashMap;
+import java.util.Set;
 
 import static com.github.technus.tectech.thing.item.ContainerItem.EOH_RenderingUtils.*;
 
@@ -64,10 +65,14 @@ public class RenderHelper {
         modelMap.put(label, model);
     }
 
+    public static Set<String> getModelList() {
+        return modelMap.keySet();
+    }
+
     public static BasePSSCFStructure getModel(String label) {
         BasePSSCFStructure model = modelMap.getOrDefault(label, null);
 
-        if (model == null) return modelMap.get("default");
+        if (model == null) return modelMap.get("Default");
 
         return model;
     }
@@ -89,7 +94,7 @@ public class RenderHelper {
     }
 
     public static void registerAll() {
-        RenderHelper.registerModel("default", new PSSCF_Default());
+        RenderHelper.registerModel("Default", new PSSCF_Default());
         RenderHelper.registerModel("DTPF", new PSSCF_DTPF());
         RenderHelper.registerModel("NanoForge", new PSSCF_NanoForge());
         RenderHelper.registerModel("ReinforcedBlock", new PSSCF_ReinforcedBlock());

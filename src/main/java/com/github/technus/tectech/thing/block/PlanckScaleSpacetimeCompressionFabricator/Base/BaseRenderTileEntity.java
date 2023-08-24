@@ -30,7 +30,7 @@ public class BaseRenderTileEntity extends TileEntity {
         readFromNBT(tag);
     }
 
-    public String modelName = "default";
+    public String modelName = "Default";
 
     @Override
     public void readFromNBT(NBTTagCompound compound) {

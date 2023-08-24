@@ -9,6 +9,7 @@ import java.util.Collection;
 import java.util.Iterator;
 
 import com.github.technus.tectech.thing.block.PlanckScaleSpacetimeCompressionFabricator.Base.BaseRenderBlock;
+import com.github.technus.tectech.thing.block.PlanckScaleSpacetimeCompressionFabricator.Base.BaseRenderItemBlock;
 import com.github.technus.tectech.thing.block.PlanckScaleSpacetimeCompressionFabricator.Trophies.Trophies;
 import cpw.mods.fml.common.registry.GameRegistry;
 import net.minecraft.block.Block;
@@ -140,7 +141,7 @@ public class TecTech {
         MainLoader.preLoad();
 
         Block trophy = new BaseRenderBlock("% Trophy");
-        GameRegistry.registerBlock(trophy, "% Trophy");
+        GameRegistry.registerBlock(trophy, BaseRenderItemBlock.class, "% Trophy");
         Trophies.TrophyBlock = trophy;
 
         new TecTech_Loader_MultiTileEntities().run();

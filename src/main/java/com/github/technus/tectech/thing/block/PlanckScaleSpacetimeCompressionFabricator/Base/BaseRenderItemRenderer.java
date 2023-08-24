@@ -3,6 +3,7 @@ package com.github.technus.tectech.thing.block.PlanckScaleSpacetimeCompressionFa
 import com.github.technus.tectech.thing.block.PlanckScaleSpacetimeCompressionFabricator.RenderHelper;
 import com.github.technus.tectech.thing.block.PlanckScaleSpacetimeCompressionFabricator.Structures.BasePSSCFStructure;
 import com.github.technus.tectech.thing.block.PlanckScaleSpacetimeCompressionFabricator.Structures.PSSCF_DTPF;
+import com.github.technus.tectech.thing.block.PlanckScaleSpacetimeCompressionFabricator.Structures.PSSCF_Default;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.item.ItemStack;
@@ -34,6 +35,6 @@ public class BaseRenderItemRenderer implements IItemRenderer {
             RenderHelper.renderModel(0, 0, 0, modelToRender);
             return;
         }
-        RenderHelper.renderModel(0, 0, 0, new PSSCF_DTPF());
+        RenderHelper.renderModel(0, 0, 0, new PSSCF_Default());
     }
 }
