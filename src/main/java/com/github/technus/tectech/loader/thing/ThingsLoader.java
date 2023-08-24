@@ -9,7 +9,6 @@ import com.github.technus.tectech.compatibility.openmodularturrets.blocks.turret
 import com.github.technus.tectech.compatibility.openmodularturrets.blocks.turretheads.TurretHeadEM;
 import com.github.technus.tectech.thing.block.EyeOfHarmonyStuff.TileEyeOfHarmony;
 import com.github.technus.tectech.thing.block.PlanckScaleSpacetimeCompressionFabricator.Base.BaseRenderTileEntity;
-import com.github.technus.tectech.thing.block.PlanckScaleSpacetimeCompressionFabricator.TilePlanckScaleSpacetimeCompressionFabricator;
 import com.github.technus.tectech.thing.block.QuantumGlassStuff.QuantumGlassBlock;
 import com.github.technus.tectech.thing.block.ReactorSim.ReactorSimBlock;
 import com.github.technus.tectech.thing.casing.GT_Block_CasingsBA0;
@@ -19,7 +18,6 @@ import com.github.technus.tectech.thing.casing.StabilisationFieldCasing;
 import com.github.technus.tectech.thing.casing.TT_Container_Casings;
 import com.github.technus.tectech.thing.casing.TimeAccelerationFieldCasing;
 import com.github.technus.tectech.thing.item.*;
-import com.github.technus.tectech.thing.item.ContainerItem.ContainerItem;
 
 import cpw.mods.fml.common.registry.GameRegistry;
 import gregtech.api.enums.Textures;
@@ -87,8 +85,6 @@ public class ThingsLoader implements Runnable {
 
         TeslaCoilComponent.run();
         TecTech.LOGGER.info("Crafting Components registered");
-
-        ContainerItem.run();
 
         ElementalDefinitionContainer_EM.run();
         DebugElementalInstanceContainer_EM.run();

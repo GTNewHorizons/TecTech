@@ -10,6 +10,7 @@ public class PSSCF_DTPF extends BasePSSCFStructure {
         map.put('N', new BlockInfo(GregTech_API.sBlockCasings1, 12));
         map.put('b', new BlockInfo(GregTech_API.sBlockCasings1, 13));
         map.put('s', new BlockInfo(GregTech_API.sBlockCasings1, 14));
+        reverseInnerArrays(structure);
     }
 
     @Override
@@ -18,7 +19,7 @@ public class PSSCF_DTPF extends BasePSSCFStructure {
     }
 
     @SuppressWarnings("SpellCheckingInspection")
-    private String[][] structure = { { "                                 ",
+    private final String[][] structure = { { "                                 ",
             "         N   N     N   N         ", "         N   N     N   N         ", "         N   N     N   N         ",
             "                                 ", "                                 ", "                                 ",
             "         N   N     N   N         ", "         N   N     N   N         ", " NNN   NNN   N     N   NNN   NNN ",

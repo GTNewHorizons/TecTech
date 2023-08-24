@@ -38,4 +38,20 @@ public abstract class BasePSSCFStructure {
             this.metadata = metadata;
         }
     }
+
+    protected static void reverseInnerArrays(String[][] array) {
+        for (String[] innerArray : array) {
+            int start = 0;
+            int end = innerArray.length - 1;
+
+            while (start < end) {
+                String temp = innerArray[start];
+                innerArray[start] = innerArray[end];
+                innerArray[end] = temp;
+
+                start++;
+                end--;
+            }
+        }
+    }
 }

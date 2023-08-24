@@ -4,5 +4,6 @@ import com.github.technus.tectech.thing.block.PlanckScaleSpacetimeCompressionFab
 import net.minecraft.block.Block;
 
 public abstract class Trophies {
-    public static Block DTPF_Trophy = new BaseRenderBlock("DTPF");
+    public static Block TrophyBlock = new BaseRenderBlock("% Trophy");
+
 }

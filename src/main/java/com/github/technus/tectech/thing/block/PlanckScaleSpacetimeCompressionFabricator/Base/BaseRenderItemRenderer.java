@@ -1,10 +1,4 @@
-package com.github.technus.tectech.thing.item;
-
-import static com.github.technus.tectech.thing.block.PlanckScaleSpacetimeCompressionFabricator.Base.BaseRenderTESR.MODEL_NAME_NBT_TAG;
-import static com.github.technus.tectech.thing.block.PlanckScaleSpacetimeCompressionFabricator.RenderHelper.getModel;
-import static com.github.technus.tectech.thing.item.ContainerItem.EOH_RenderingUtils.renderStar;
-
-import java.awt.*;
+package com.github.technus.tectech.thing.block.PlanckScaleSpacetimeCompressionFabricator.Base;
 
 import com.github.technus.tectech.thing.block.PlanckScaleSpacetimeCompressionFabricator.RenderHelper;
 import com.github.technus.tectech.thing.block.PlanckScaleSpacetimeCompressionFabricator.Structures.BasePSSCFStructure;
@@ -15,7 +9,10 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.client.IItemRenderer;
 
-public class RenderEyeOfHarmonyItem implements IItemRenderer {
+import static com.github.technus.tectech.thing.block.PlanckScaleSpacetimeCompressionFabricator.Base.BaseRenderTESR.MODEL_NAME_NBT_TAG;
+import static com.github.technus.tectech.thing.block.PlanckScaleSpacetimeCompressionFabricator.RenderHelper.getModel;
+
+public class BaseRenderItemRenderer implements IItemRenderer {
 
     @Override
     public boolean handleRenderType(ItemStack item, ItemRenderType type) {
@@ -29,7 +26,14 @@ public class RenderEyeOfHarmonyItem implements IItemRenderer {
 
     @Override
     public void renderItem(ItemRenderType type, ItemStack item, Object... data) {
-        renderStar(type);
-    }
 
+        Minecraft.getMinecraft().getTextureManager().bindTexture(TextureMap.locationBlocksTexture);
+
+        if (item.hasTagCompound() && item.getTagCompound().hasKey(MODEL_NAME_NBT_TAG)) {
+            BasePSSCFStructure modelToRender = getModel(item.getTagCompound().getString(MODEL_NAME_NBT_TAG));
+            RenderHelper.renderModel(0, 0, 0, modelToRender);
+            return;
+        }
+        RenderHelper.renderModel(0, 0, 0, new PSSCF_DTPF());
+    }
 }

@@ -16,24 +16,8 @@ public class PSSCF_NanoForge extends BasePSSCFStructure {
         return structure;
     }
 
-    public static void reverseInnerArrays(String[][] array) {
-        for (String[] innerArray : array) {
-            int start = 0;
-            int end = innerArray.length - 1;
-
-            while (start < end) {
-                String temp = innerArray[start];
-                innerArray[start] = innerArray[end];
-                innerArray[end] = temp;
-
-                start++;
-                end--;
-            }
-        }
-    }
-
     @SuppressWarnings("SpellCheckingInspection")
-    private String[][] structure = new String[][]{{
+    private final String[][] structure = new String[][]{{
             "                             ",
             "                             ",
             "                             ",

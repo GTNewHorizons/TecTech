@@ -1,18 +1,20 @@
 package com.github.technus.tectech.thing.block.PlanckScaleSpacetimeCompressionFabricator.Base;
 
 import com.github.technus.tectech.TecTech;
-import com.github.technus.tectech.thing.block.PlanckScaleSpacetimeCompressionFabricator.TilePlanckScaleSpacetimeCompressionFabricator;
-import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 
 import java.util.ArrayList;
+
+import static com.github.technus.tectech.thing.block.PlanckScaleSpacetimeCompressionFabricator.Base.BaseRenderTESR.MODEL_NAME_NBT_TAG;
 
 public class BaseRenderBlock extends Block {
 
@@ -21,7 +23,6 @@ public class BaseRenderBlock extends Block {
         this.setResistance(20f);
         this.setCreativeTab(TecTech.creativeTabEM);
         this.setBlockName(name);
-        registerOther(this);
     }
 
     @Override
@@ -55,10 +56,21 @@ public class BaseRenderBlock extends Block {
         return new BaseRenderTileEntity();
     }
 
-    public static void registerOther(Block block) {
-        String name = block.getUnlocalizedName().substring(block.getUnlocalizedName().indexOf(".") + 1);
-        GameRegistry.registerBlock(block, name.substring(name.indexOf(":") + 1));
+    @Override
+    public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase placer, ItemStack stack) {
+        if (stack.hasTagCompound()) {
+            // Get the NBT data from the ItemStack
+            NBTTagCompound nbt = stack.getTagCompound();
+
+            // Transfer the NBT data to the TileEntity of the placed block
+            TileEntity tileEntity = world.getTileEntity(x, y, z);
+            if (tileEntity instanceof BaseRenderTileEntity trophyTileEntity) {
+                trophyTileEntity.modelName = nbt.getString(MODEL_NAME_NBT_TAG);
+                trophyTileEntity.markDirty(); // Marks the TileEntity as needing to be saved
+            }
+        }
     }
+
 
     @Override
     public ArrayList<ItemStack> getDrops(World world, int x, int y, int z, int meta, int fortune) {
