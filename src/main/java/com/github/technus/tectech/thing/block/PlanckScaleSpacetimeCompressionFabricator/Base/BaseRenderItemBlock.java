@@ -1,6 +1,6 @@
 package com.github.technus.tectech.thing.block.PlanckScaleSpacetimeCompressionFabricator.Base;
 
-import static com.github.technus.tectech.thing.block.PlanckScaleSpacetimeCompressionFabricator.Base.BaseRenderTESR.MODEL_NAME_NBT_TAG;
+import static com.github.technus.tectech.thing.block.PlanckScaleSpacetimeCompressionFabricator.Base.BaseRenderBlockRendererTESR.MODEL_NAME_NBT_TAG;
 
 import java.util.List;
 
@@ -20,7 +20,7 @@ public class BaseRenderItemBlock extends ItemBlock {
     }
 
     @Override
-    public String getUnlocalizedName(ItemStack itemStack) {
+    public String getItemStackDisplayName(ItemStack itemStack) {
 
         if (itemStack.hasTagCompound() && itemStack.getTagCompound().hasKey(MODEL_NAME_NBT_TAG)) {
             NBTTagCompound tag = itemStack.getTagCompound();
