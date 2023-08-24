@@ -94,7 +94,7 @@ public abstract class EOH_RenderingUtils {
         GL11.glPopMatrix();
     }
 
-        public static void beginRenderingBlocksInWorld(final float blockSize) {
+    public static void beginRenderingBlocksInWorld(final float blockSize) {
         final Tessellator tes = Tessellator.instance;
 
         GL11.glPushMatrix();

@@ -1,8 +1,8 @@
 package com.github.technus.tectech.thing.block.PlanckScaleSpacetimeCompressionFabricator.Structures;
 
-import net.minecraft.block.Block;
-
 import java.util.HashMap;
+
+import net.minecraft.block.Block;
 
 public abstract class BasePSSCFStructure {
 
@@ -13,9 +13,11 @@ public abstract class BasePSSCFStructure {
     public final int getXLength() {
         return getStructureString().length;
     }
+
     public final int getYLength() {
         return getStructureString()[0][0].length();
     }
+
     public final int getZLength() {
         return getStructureString()[0].length;
     }
@@ -31,8 +33,10 @@ public abstract class BasePSSCFStructure {
     protected HashMap<Character, BlockInfo> map = new HashMap<>();
 
     public static class BlockInfo {
+
         public final int metadata;
         public final Block block;
+
         BlockInfo(Block block, int metadata) {
             this.block = block;
             this.metadata = metadata;

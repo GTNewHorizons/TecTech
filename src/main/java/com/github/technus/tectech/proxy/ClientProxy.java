@@ -4,10 +4,6 @@ import static com.github.technus.tectech.TecTech.RANDOM;
 import static com.github.technus.tectech.thing.casing.TT_Container_Casings.eyeOfHarmonyRenderBlock;
 import static gregtech.api.enums.Mods.OpenModularTurrets;
 
-import com.github.technus.tectech.thing.block.PlanckScaleSpacetimeCompressionFabricator.Base.BaseRenderTESR;
-import com.github.technus.tectech.thing.block.PlanckScaleSpacetimeCompressionFabricator.Base.BaseRenderTileEntity;
-import com.github.technus.tectech.thing.block.PlanckScaleSpacetimeCompressionFabricator.RenderHelper;
-import com.github.technus.tectech.thing.block.PlanckScaleSpacetimeCompressionFabricator.Trophies.Trophies;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityClientPlayerMP;
 import net.minecraft.client.gui.GuiNewChat;
@@ -24,13 +20,16 @@ import com.github.technus.tectech.Reference;
 import com.github.technus.tectech.compatibility.openmodularturrets.TT_turret_loader;
 import com.github.technus.tectech.thing.block.EyeOfHarmonyStuff.RenderEyeOfHarmony;
 import com.github.technus.tectech.thing.block.EyeOfHarmonyStuff.TileEyeOfHarmony;
+import com.github.technus.tectech.thing.block.PlanckScaleSpacetimeCompressionFabricator.Base.BaseRenderItemRenderer;
+import com.github.technus.tectech.thing.block.PlanckScaleSpacetimeCompressionFabricator.Base.BaseRenderTESR;
+import com.github.technus.tectech.thing.block.PlanckScaleSpacetimeCompressionFabricator.Base.BaseRenderTileEntity;
+import com.github.technus.tectech.thing.block.PlanckScaleSpacetimeCompressionFabricator.RenderHelper;
+import com.github.technus.tectech.thing.block.PlanckScaleSpacetimeCompressionFabricator.Trophies.Trophies;
 import com.github.technus.tectech.thing.block.QuantumGlassStuff.QuantumGlassBlock;
 import com.github.technus.tectech.thing.block.QuantumGlassStuff.QuantumGlassRender;
-import com.github.technus.tectech.thing.item.ContainerItem.ContainerItemRenderer;
 import com.github.technus.tectech.thing.item.DebugElementalInstanceContainer_EM;
 import com.github.technus.tectech.thing.item.ElementalDefinitionContainer_EM;
 import com.github.technus.tectech.thing.item.RenderEyeOfHarmonyItem;
-import com.github.technus.tectech.thing.block.PlanckScaleSpacetimeCompressionFabricator.Base.BaseRenderItemRenderer;
 import com.github.technus.tectech.thing.item.renderElemental.RenderElementalName;
 import com.gtnewhorizon.structurelib.entity.fx.WeightlessParticleFX;
 
@@ -62,17 +61,12 @@ public class ClientProxy extends CommonProxy {
 
         ClientRegistry.bindTileEntitySpecialRenderer(TileEyeOfHarmony.class, new RenderEyeOfHarmony());
 
-
         Item item = Item.getItemFromBlock(Trophies.TrophyBlock);
 
         // Trophy
-        MinecraftForgeClient.registerItemRenderer(
-                item,
-                new BaseRenderItemRenderer());
+        MinecraftForgeClient.registerItemRenderer(item, new BaseRenderItemRenderer());
 
-        ClientRegistry.bindTileEntitySpecialRenderer(
-                BaseRenderTileEntity.class,
-                new BaseRenderTESR());
+        ClientRegistry.bindTileEntitySpecialRenderer(BaseRenderTileEntity.class, new BaseRenderTESR());
 
         RenderHelper.registerAll();
 

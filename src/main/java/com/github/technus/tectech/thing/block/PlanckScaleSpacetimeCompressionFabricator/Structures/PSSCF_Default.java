@@ -15,6 +15,6 @@ public class PSSCF_Default extends BasePSSCFStructure {
     }
 
     @SuppressWarnings("SpellCheckingInspection")
-    private final String[][] structure = new String[][]{{"x"}};
+    private final String[][] structure = new String[][] { { "x" } };
 
 }

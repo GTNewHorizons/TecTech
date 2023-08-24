@@ -1,12 +1,13 @@
 package com.github.technus.tectech.thing.block.PlanckScaleSpacetimeCompressionFabricator;
 
-import com.github.technus.tectech.thing.block.PlanckScaleSpacetimeCompressionFabricator.Structures.*;
-import org.lwjgl.opengl.GL11;
+import static com.github.technus.tectech.thing.item.ContainerItem.EOH_RenderingUtils.*;
 
 import java.util.HashMap;
 import java.util.Set;
 
-import static com.github.technus.tectech.thing.item.ContainerItem.EOH_RenderingUtils.*;
+import org.lwjgl.opengl.GL11;
+
+import com.github.technus.tectech.thing.block.PlanckScaleSpacetimeCompressionFabricator.Structures.*;
 
 public class RenderHelper {
 
@@ -18,7 +19,7 @@ public class RenderHelper {
         int z = testShape[0][0].length() / 2;
         int y = testShape[0].length / 2;
 
-        GL11.glTranslated(-x,  -1 - y, -1 - z);
+        GL11.glTranslated(-x, -1 - y, -1 - z);
     }
 
     private static void rotation() {
@@ -58,7 +59,6 @@ public class RenderHelper {
         GL11.glScalef(maxScale, maxScale, maxScale);
     }
 
-
     private static final HashMap<String, BasePSSCFStructure> modelMap = new HashMap<>();
 
     public static void registerModel(String label, BasePSSCFStructure model) {
@@ -84,7 +84,7 @@ public class RenderHelper {
         GL11.glTranslated(x + 0.5, y + 0.5, z + 0.5);
         scaleModel(model);
 
-        //rotation();
+        // rotation();
 
         centreModel(model);
 
