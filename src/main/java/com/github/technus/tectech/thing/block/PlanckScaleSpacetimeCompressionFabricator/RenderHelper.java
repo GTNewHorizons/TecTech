@@ -1,11 +1,18 @@
 package com.github.technus.tectech.thing.block.PlanckScaleSpacetimeCompressionFabricator;
 
+import static com.github.technus.tectech.thing.block.PlanckScaleSpacetimeCompressionFabricator.Base.BaseRenderTESR.renderBlock;
 import static com.github.technus.tectech.thing.item.ContainerItem.EOH_RenderingUtils.*;
 
 import java.util.HashMap;
 import java.util.Set;
 
+import net.minecraft.block.Block;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.RenderBlocks;
+import net.minecraft.client.renderer.texture.TextureMap;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.IIcon;
+import net.minecraft.world.World;
 import org.lwjgl.opengl.GL11;
 
 import com.github.technus.tectech.thing.block.PlanckScaleSpacetimeCompressionFabricator.Structures.*;
@@ -27,12 +34,15 @@ public class RenderHelper {
         GL11.glRotatef((System.currentTimeMillis() / 16) % 360, 0.3f, 1, 0.5f);
     }
 
-    private static void buildModel(BasePSSCFStructure model) {
-        beginRenderingBlocksInWorld(1.0f);
+    private static void buildModel(World world, BasePSSCFStructure model) {
+        //beginRenderingBlocksInWorld(1.0f);
 
         int xI = 0;
         int yI = 0;
         int zI = 0;
+        Minecraft.getMinecraft().getTextureManager().bindTexture(TextureMap.locationBlocksTexture);
+
+        RenderBlocks renderBlocks = new TTRenderBlocks(world);
 
         for (String[] layer : model.getStructureString()) {
             for (String line : layer) {
@@ -44,7 +54,7 @@ public class RenderHelper {
 
                     BasePSSCFStructure.BlockInfo blockInfo = model.getAssociatedBlockInfo(blockChar);
 
-                    addRenderedBlockInWorld(blockInfo.block, blockInfo.metadata, xI, yI, zI);
+                    renderBlock(blockInfo.block, blockInfo.metadata, renderBlocks, xI, yI, zI);
 
                 }
                 zI = 0;
@@ -53,7 +63,19 @@ public class RenderHelper {
             yI = 0;
         }
 
-        endRenderingBlocksInWorld();
+        //endRenderingBlocksInWorld();
+    }
+
+    public static class TTRenderBlocks extends RenderBlocks {
+
+        public TTRenderBlocks(World worldObj) {
+            super(worldObj);
+        }
+
+        @Override
+        public void renderFaceYPos(Block p_147806_1_, double p_147806_2_, double p_147806_4_, double p_147806_6_, IIcon p_147806_8_) {
+
+        }
     }
 
     private static void scaleModel(final BasePSSCFStructure model) {
@@ -79,7 +101,7 @@ public class RenderHelper {
         return model;
     }
 
-    public static void renderModel(double x, double y, double z, final BasePSSCFStructure model) {
+    public static void renderModel(World world, double x, double y, double z, final BasePSSCFStructure model) {
 
         GL11.glPushMatrix();
 
@@ -90,7 +112,7 @@ public class RenderHelper {
 
         centreModel(model);
 
-        buildModel(model);
+        buildModel(world, model);
 
         GL11.glPopMatrix();
     }

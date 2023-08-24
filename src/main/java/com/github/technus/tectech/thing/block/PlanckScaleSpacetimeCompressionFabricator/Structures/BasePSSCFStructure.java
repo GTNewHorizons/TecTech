@@ -23,7 +23,7 @@ public abstract class BasePSSCFStructure {
     }
 
     public final float maxAxisSize() {
-        return Math.max(getXLength(), Math.max(getYLength(), getZLength()));
+        return 1; // Math.max(getXLength(), Math.max(getYLength(), getZLength()));
     }
 
     public final BlockInfo getAssociatedBlockInfo(final char letter) {

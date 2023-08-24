@@ -2,12 +2,20 @@ package com.github.technus.tectech.thing.block.PlanckScaleSpacetimeCompressionFa
 
 import static com.github.technus.tectech.thing.block.PlanckScaleSpacetimeCompressionFabricator.RenderHelper.getModel;
 
+import com.github.technus.tectech.thing.CustomItemList;
+import net.minecraft.block.Block;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.RenderBlocks;
+import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
+import net.minecraft.init.Blocks;
 import net.minecraft.tileentity.TileEntity;
 
 import com.github.technus.tectech.thing.block.PlanckScaleSpacetimeCompressionFabricator.RenderHelper;
+import net.minecraft.world.IBlockAccess;
+import net.minecraft.world.World;
+import org.lwjgl.opengl.GL11;
 
 public class BaseRenderTESR extends TileEntitySpecialRenderer {
 
@@ -15,17 +23,25 @@ public class BaseRenderTESR extends TileEntitySpecialRenderer {
 
     @Override
     public void renderTileEntityAt(TileEntity tile, double x, double y, double z, float timeSinceLastTick) {
-
         if (!(tile instanceof BaseRenderTileEntity trophyTileEntity)) return;
 
         this.bindTexture(TextureMap.locationBlocksTexture);
 
-        RenderBlocks rb = new RenderBlocks(tile.getWorldObj());
-
-        //    public boolean renderStandardBlockWithAmbientOcclusion(IBlockAccess aWorld, RenderBlocks aRenderer,
-        //            ITexture[][] aTextures, Block block, int xPos, int yPos, int zPos, float R, float G, float B) {
-
-        RenderHelper.renderModel(x, y, z, getModel(trophyTileEntity.modelName));
+        RenderHelper.renderModel(tile.getWorldObj(), x, y, z, getModel(trophyTileEntity.modelName));
     }
+
+    public static void renderBlock(Block block, int metadata, RenderBlocks renderBlocks, int x, int y, int z) {
+
+        GL11.glPushMatrix();
+
+        GL11.glTranslated(x, y, z);
+        GL11.glRotated(-90, 0.0, 1.0, 0.0);
+        renderBlocks.renderBlockAsItem(block, metadata, 1.0f);
+
+        GL11.glPopMatrix();
+    }
+
+
+
 
 }
