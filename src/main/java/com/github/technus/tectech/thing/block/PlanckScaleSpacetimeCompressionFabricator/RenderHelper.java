@@ -1,7 +1,6 @@
 package com.github.technus.tectech.thing.block.PlanckScaleSpacetimeCompressionFabricator;
 
 import static com.github.technus.tectech.thing.block.PlanckScaleSpacetimeCompressionFabricator.Base.BaseRenderTESR.renderBlock;
-import static com.github.technus.tectech.thing.item.ContainerItem.EOH_RenderingUtils.*;
 
 import java.util.HashMap;
 import java.util.Set;
@@ -10,7 +9,6 @@ import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.client.renderer.texture.TextureMap;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
 import org.lwjgl.opengl.GL11;
@@ -35,7 +33,6 @@ public class RenderHelper {
     }
 
     private static void buildModel(World world, BasePSSCFStructure model) {
-        //beginRenderingBlocksInWorld(1.0f);
 
         int xI = 0;
         int yI = 0;
@@ -62,20 +59,20 @@ public class RenderHelper {
             xI++;
             yI = 0;
         }
-
-        //endRenderingBlocksInWorld();
     }
 
     public static class TTRenderBlocks extends RenderBlocks {
+
+        public RenderFacesInfo renderFaces;
 
         public TTRenderBlocks(World worldObj) {
             super(worldObj);
         }
 
-        @Override
-        public void renderFaceYPos(Block p_147806_1_, double p_147806_2_, double p_147806_4_, double p_147806_6_, IIcon p_147806_8_) {
-
-        }
+//        @Override
+//        public void renderFaceYPos(Block p_147806_1_, double p_147806_2_, double p_147806_4_, double p_147806_6_, IIcon p_147806_8_) {
+//
+//        }
     }
 
     private static void scaleModel(final BasePSSCFStructure model) {

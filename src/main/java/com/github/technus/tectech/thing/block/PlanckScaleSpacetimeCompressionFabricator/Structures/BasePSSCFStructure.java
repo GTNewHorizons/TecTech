@@ -1,6 +1,6 @@
 package com.github.technus.tectech.thing.block.PlanckScaleSpacetimeCompressionFabricator.Structures;
 
-import java.util.HashMap;
+import java.util.*;
 
 import net.minecraft.block.Block;
 
@@ -23,7 +23,7 @@ public abstract class BasePSSCFStructure {
     }
 
     public final float maxAxisSize() {
-        return 1; // Math.max(getXLength(), Math.max(getYLength(), getZLength()));
+        return Math.max(getXLength(), Math.max(getYLength(), getZLength()));
     }
 
     public final BlockInfo getAssociatedBlockInfo(final char letter) {
@@ -57,5 +57,90 @@ public abstract class BasePSSCFStructure {
                 end--;
             }
         }
+    }
+
+    private static String[][] deepCopy(String[][] original) {
+        if (original == null) {
+            return null;
+        }
+
+        final String[][] result = new String[original.length][];
+        for (int i = 0; i < original.length; i++) {
+            result[i] = Arrays.copyOf(original[i], original[i].length);
+        }
+        return result;
+    }
+
+    protected void processStructureMap() {
+
+        String[][] structureCopy = deepCopy(getStructureString());
+        HashSet<Character> transparentBlocks = getTransparentBlocks();
+
+        // These will be replaced with air, so that blocks behind
+        // them are rendered as normal.
+        removeTransparentBlocks(structureCopy, transparentBlocks);
+
+        generateRenderFacesInfo(structureCopy);
+    }
+
+    private void generateRenderFacesInfo(String[][] structure) {
+
+        for (int x = 0; x < getXLength(); x++) {
+            for (int y = 0; y < getYLength(); y++) {
+                for (int z = 0; z < getZLength(); z++) {
+
+                    Character c = structure[x][z].charAt(y);
+
+
+
+
+
+                }
+            }
+        }
+
+    }
+
+    private void removeTransparentBlocks(String[][] structure, HashSet<Character> transparentBlocks) {
+        if (structure == null || transparentBlocks == null) {
+            return;  // Nothing to do if either of them is null
+        }
+
+        for (int i = 0; i < structure.length; i++) {
+            for (int j = 0; j < structure[i].length; j++) {
+                StringBuilder newStr = new StringBuilder();
+
+                // Check each character in the string
+                for (char c : structure[i][j].toCharArray()) {
+                    if (!transparentBlocks.contains(c)) {
+                        // If the character is not in the transparentBlocks, append it to the new string.
+                        newStr.append(c);
+                    } else {
+                        // Otherwise air block.
+                        newStr.append(' ');
+                    }
+                }
+
+                // Update the string in the structure.
+                structure[i][j] = newStr.toString();
+            }
+        }
+    }
+
+    private HashSet<Character> getTransparentBlocks() {
+        HashSet<Character> transparentBlocks = new HashSet<>();
+
+        // Iterate over all blocks to find transparent ones.
+        for (Map.Entry<Character, BlockInfo> entry : map.entrySet()) {
+
+            Block block = entry.getValue().block;
+
+            // Block cannot be seen through.
+            if (!block.isOpaqueCube()) {
+                transparentBlocks.add(entry.getKey());
+            }
+        }
+
+        return transparentBlocks;
     }
 }

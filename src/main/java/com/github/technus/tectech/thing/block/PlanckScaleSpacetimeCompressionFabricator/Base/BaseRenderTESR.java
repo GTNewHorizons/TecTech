@@ -25,13 +25,10 @@ public class BaseRenderTESR extends TileEntitySpecialRenderer {
     public void renderTileEntityAt(TileEntity tile, double x, double y, double z, float timeSinceLastTick) {
         if (!(tile instanceof BaseRenderTileEntity trophyTileEntity)) return;
 
-        this.bindTexture(TextureMap.locationBlocksTexture);
-
         RenderHelper.renderModel(tile.getWorldObj(), x, y, z, getModel(trophyTileEntity.modelName));
     }
 
     public static void renderBlock(Block block, int metadata, RenderBlocks renderBlocks, int x, int y, int z) {
-
         GL11.glPushMatrix();
 
         GL11.glTranslated(x, y, z);
@@ -40,8 +37,5 @@ public class BaseRenderTESR extends TileEntitySpecialRenderer {
 
         GL11.glPopMatrix();
     }
-
-
-
 
 }

@@ -6,7 +6,8 @@ public class PSSCF_Default extends BasePSSCFStructure {
 
     public PSSCF_Default() {
         map.put('x', new BlockInfo(Blocks.stone, 0));
-
+        map.put('z', new BlockInfo(Blocks.glass, 0));
+        processStructureMap();
     }
 
     @Override
@@ -15,6 +16,8 @@ public class PSSCF_Default extends BasePSSCFStructure {
     }
 
     @SuppressWarnings("SpellCheckingInspection")
-    private final String[][] structure = new String[][] { { "x" } };
+    private final String[][] structure = new String[][] {
+            { "x z", "xxx"}
+    };
 
 }
