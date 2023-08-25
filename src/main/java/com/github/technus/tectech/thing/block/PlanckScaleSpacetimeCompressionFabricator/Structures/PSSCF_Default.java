@@ -7,6 +7,9 @@ public class PSSCF_Default extends BasePSSCFStructure {
     public PSSCF_Default() {
         charToBlock.put('x', new BlockInfo(Blocks.stone, 0));
         charToBlock.put('z', new BlockInfo(Blocks.glass, 0));
+        charToBlock.put('a', new BlockInfo(Blocks.redstone_block, 0));
+        charToBlock.put('b', new BlockInfo(Blocks.wool, 0));
+        charToBlock.put('c', new BlockInfo(Blocks.coal_block, 0));
         processStructureMap();
     }
 
@@ -17,7 +20,7 @@ public class PSSCF_Default extends BasePSSCFStructure {
 
     @SuppressWarnings("SpellCheckingInspection")
     private final String[][] structure = new String[][] {
-            { "x z", "xxx"}
+            { "x z", "abc"}
     };
 
 }
