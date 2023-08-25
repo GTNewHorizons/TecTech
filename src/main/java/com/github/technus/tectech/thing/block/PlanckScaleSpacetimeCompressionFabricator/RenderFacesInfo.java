@@ -1,12 +1,6 @@
 package com.github.technus.tectech.thing.block.PlanckScaleSpacetimeCompressionFabricator;
 
-import net.minecraftforge.common.util.ForgeDirection;
-
-import java.util.ArrayList;
-
 public class RenderFacesInfo {
-
-    public RenderFacesInfo() { }
 
     public RenderFacesInfo(boolean state) {
         this.yPos = state;
@@ -20,4 +14,8 @@ public class RenderFacesInfo {
     public boolean yPos, yNeg;
     public boolean xPos, xNeg;
     public boolean zPos, zNeg;
+
+    public boolean allHidden() {
+        return (!yPos) && (!yNeg) && (!xPos) && (!xNeg) && (!zPos) && (!zNeg);
+    }
 }

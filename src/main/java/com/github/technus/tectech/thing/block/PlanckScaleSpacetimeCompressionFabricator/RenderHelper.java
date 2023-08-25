@@ -57,44 +57,15 @@ public class RenderHelper {
                     Character blockChar = model.getStructureString()[x][z].charAt(y);
 
                     if (blockChar.equals(' ')) continue;
+                    if (model.renderFacesArray[x][z][y].allHidden()) continue;
 
                     BasePSSCFStructure.BlockInfo blockInfo = model.getAssociatedBlockInfo(blockChar);
+
                     renderBlocks.renderFacesInfo = model.renderFacesArray[x][z][y];
                     renderBlock(blockInfo.block, blockInfo.metadata, renderBlocks, x, z+1, y+1);
                 }
             }
         }
-
-/*        for (String[] layer : model.getStructureString()) {
-            for (String line : layer) {
-                yI++;
-                for (char blockChar : line.toCharArray()) {
-                    zI++;
-
-                    if (blockChar == ' ') continue;
-
-                    try {
-                        String[][] s = model.getStructureString();
-                        String[] a = s[yI- 1];
-                        String b = a[xI];
-                        Character c = b.charAt(zI - 1);
-                        if (blockChar != c) {
-                            System.out.println("t");
-                        }
-                    } catch (Exception e) {
-                        System.out.println(xI + " " + yI + " " + zI);
-                    }
-
-                    BasePSSCFStructure.BlockInfo blockInfo = model.getAssociatedBlockInfo(blockChar);
-                    renderBlocks.renderFacesInfo = model.renderFacesArray[xI][zI][yI];
-                    renderBlock(blockInfo.block, blockInfo.metadata, renderBlocks, xI, yI, zI);
-
-                }
-                zI = 0;
-            }
-            xI++;
-            yI = 0;
-        }*/
     }
 
     public static class TTRenderBlocks extends RenderBlocks {
@@ -104,6 +75,7 @@ public class RenderHelper {
         public TTRenderBlocks(World world) {
             super(world);
         }
+
 
 
         @Override
@@ -179,7 +151,7 @@ public class RenderHelper {
         GL11.glTranslated(x + 0.5, y + 0.5, z + 0.5);
         scaleModel(model);
 
-        // rotation();
+        //rotation();
 
         centreModel(model);
 
