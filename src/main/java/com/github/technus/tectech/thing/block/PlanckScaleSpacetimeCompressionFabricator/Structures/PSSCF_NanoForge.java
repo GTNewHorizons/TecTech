@@ -7,7 +7,7 @@ public class PSSCF_NanoForge extends BasePSSCFStructure {
 
     public PSSCF_NanoForge() {
         charToBlock.put('B', new BlockInfo(GregTech_API.sBlockCasings8, 10));
-        charToBlock.put('C', new BlockInfo(GregTech_API.sBlockMachines, 4139));
+        charToBlock.put('C', new BlockInfo(GregTech_API.sBlockMachines, 4501));
         charToBlock.put('A', new BlockInfo(GregTech_API.sBlockCasings2, 5));
         reverseInnerArrays(structure);
         processStructureMap();
