@@ -34,9 +34,6 @@ public class BaseRenderTESR extends TileEntitySpecialRenderer {
 
         GL11.glTranslated(x, y, z);
         GL11.glRotated(-90, 0.0, 1.0, 0.0);
-        renderBlocks.x = x;
-        renderBlocks.y = y;
-        renderBlocks.z = z;
         renderBlocks.renderBlockAsItem(block, metadata, 1.0f);
 
         GL11.glPopMatrix();

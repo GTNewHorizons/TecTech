@@ -20,7 +20,7 @@ public class PSSCF_Default extends BasePSSCFStructure {
 
     @SuppressWarnings("SpellCheckingInspection")
     private final String[][] structure = new String[][] {
-            { "x z", "abc"}
+            { "xzx", "abc"}
     };
 
 }

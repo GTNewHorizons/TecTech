@@ -17,10 +17,7 @@ public class RenderFacesInfo {
         this.zNeg = state;
     }
 
-    public boolean yPos;
-    public boolean yNeg;
-    public boolean xPos;
-    public boolean xNeg;
-    public boolean zPos;
-    public boolean zNeg;
+    public boolean yPos, yNeg;
+    public boolean xPos, xNeg;
+    public boolean zPos, zNeg;
 }

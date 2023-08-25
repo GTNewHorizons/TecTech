@@ -4,6 +4,7 @@ import java.util.*;
 
 import com.github.technus.tectech.thing.block.PlanckScaleSpacetimeCompressionFabricator.RenderFacesInfo;
 import net.minecraft.block.Block;
+import scala.Char;
 
 public abstract class BasePSSCFStructure {
 
@@ -91,12 +92,50 @@ public abstract class BasePSSCFStructure {
 
         transparentStructure = structureCopy;
 
-        //generateRenderFacesInfo(structureCopy);
+        generateRenderFacesInfo(structureCopy);
+    }
+
+    public RenderFacesInfo[][][] renderFacesArray;
+
+    private void generateRenderFacesInfo(String[][] structureCopy) {
+
+        renderFacesArray = new RenderFacesInfo[getXLength()][getZLength()][getYLength()];
+
+        for (int x = 0; x < getXLength(); x++) {
+            for (int y = 0; y < getYLength(); y++) {
+                for (int z = 0; z < getZLength(); z++) {
+
+                    RenderFacesInfo renderFacesInfo = new RenderFacesInfo(true);
+
+                    // yNeg Face
+                    char yNegBlock = ' ';
+                    if ((z != 0)) {
+                        yNegBlock = structureCopy[x][z-1].charAt(y);
+                    }
+
+                    if (yNegBlock != ' ') renderFacesInfo.yNeg = false;
+
+
+                    // yPos Face
+                    char yPosBlock = ' ';
+                    if ((z != getZLength() - 1)) {
+                        yPosBlock = structureCopy[x][z+1].charAt(y);
+                    }
+
+                    if (yPosBlock != ' ') renderFacesInfo.yPos = false;
+
+
+                    renderFacesArray[x][z][y] = renderFacesInfo;
+
+                }
+            }
+        }
+
+
     }
 
     String[][] transparentStructure;
 
-    private RenderFacesInfo[][][] renderFacesArray;
 
     private void removeTransparentBlocks(String[][] structure, HashSet<Character> transparentBlocks) {
         if (structure == null || transparentBlocks == null) {

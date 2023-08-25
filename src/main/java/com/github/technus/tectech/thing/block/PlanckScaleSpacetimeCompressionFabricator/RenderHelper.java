@@ -26,6 +26,7 @@ import org.lwjgl.opengl.GL11;
 
 import com.github.technus.tectech.thing.block.PlanckScaleSpacetimeCompressionFabricator.Structures.*;
 import org.lwjgl.opengl.GL12;
+import scala.Char;
 
 public class RenderHelper {
 
@@ -46,14 +47,25 @@ public class RenderHelper {
 
     private static void buildModel(World world, BasePSSCFStructure model) {
 
-        int xI = 0;
-        int yI = 0;
-        int zI = 0;
         Minecraft.getMinecraft().getTextureManager().bindTexture(TextureMap.locationBlocksTexture);
 
         TTRenderBlocks renderBlocks = new TTRenderBlocks(world);
 
-        for (String[] layer : model.getStructureString()) {
+        for (int x = 0; x < model.getXLength(); x++) {
+            for (int y = 0; y < model.getYLength(); y++) {
+                for (int z = 0; z < model.getZLength(); z++) {
+                    Character blockChar = model.getStructureString()[x][z].charAt(y);
+
+                    if (blockChar.equals(' ')) continue;
+
+                    BasePSSCFStructure.BlockInfo blockInfo = model.getAssociatedBlockInfo(blockChar);
+                    renderBlocks.renderFacesInfo = model.renderFacesArray[x][z][y];
+                    renderBlock(blockInfo.block, blockInfo.metadata, renderBlocks, x, z+1, y+1);
+                }
+            }
+        }
+
+/*        for (String[] layer : model.getStructureString()) {
             for (String line : layer) {
                 yI++;
                 for (char blockChar : line.toCharArray()) {
@@ -74,6 +86,7 @@ public class RenderHelper {
                     }
 
                     BasePSSCFStructure.BlockInfo blockInfo = model.getAssociatedBlockInfo(blockChar);
+                    renderBlocks.renderFacesInfo = model.renderFacesArray[xI][zI][yI];
                     renderBlock(blockInfo.block, blockInfo.metadata, renderBlocks, xI, yI, zI);
 
                 }
@@ -81,14 +94,12 @@ public class RenderHelper {
             }
             xI++;
             yI = 0;
-        }
+        }*/
     }
 
     public static class TTRenderBlocks extends RenderBlocks {
 
-        public int x;
-        public int y;
-        public int z;
+        RenderFacesInfo renderFacesInfo;
 
         public TTRenderBlocks(World world) {
             super(world);
@@ -97,42 +108,44 @@ public class RenderHelper {
 
         @Override
         public void renderFaceYNeg(Block p_147768_1_, double p_147768_2_, double p_147768_4_, double p_147768_6_, IIcon p_147768_8_) {
-            super.renderFaceYNeg(p_147768_1_, 0, 0, 0, p_147768_8_);
+            if (this.renderFacesInfo.yNeg) {
+                super.renderFaceYNeg(p_147768_1_, 0, 0, 0, p_147768_8_);
+            }
         }
 
         @Override
         public void renderFaceYPos(Block p_147806_1_, double p_147806_2_, double p_147806_4_, double p_147806_6_, IIcon p_147806_8_) {
-            super.renderFaceYPos(p_147806_1_, 0, 0, 0, p_147806_8_);
+            if (this.renderFacesInfo.yPos) {
+                super.renderFaceYPos(p_147806_1_, 0, 0, 0, p_147806_8_);
+            }
         }
 
         @Override
         public void renderFaceZNeg(Block block, double x, double y, double z, IIcon p_147761_8_) {
-
-            BasePSSCFStructure model = getModel("Default");
-
-            if (this.z == 0) {
+            if (this.renderFacesInfo.zNeg) {
                 super.renderFaceZNeg(block, 0, 0, 0, p_147761_8_);
-                return;
             }
-
-            if (model.doesBlockExist(this.x, this.y, this.z - 1)) return;
-
-            super.renderFaceZNeg(block, 0, 0, 0, p_147761_8_);
         }
 
         @Override
         public void renderFaceZPos(Block p_147734_1_, double p_147734_2_, double p_147734_4_, double p_147734_6_, IIcon p_147734_8_) {
-            super.renderFaceZPos(p_147734_1_, 0, 0, 0, p_147734_8_);
+            if (this.renderFacesInfo.zPos) {
+                super.renderFaceZPos(p_147734_1_, 0, 0, 0, p_147734_8_);
+            }
         }
 
         @Override
         public void renderFaceXNeg(Block p_147798_1_, double p_147798_2_, double p_147798_4_, double p_147798_6_, IIcon p_147798_8_) {
-            super.renderFaceXNeg(p_147798_1_, 0, 0, 0, p_147798_8_);
+            if (this.renderFacesInfo.xNeg) {
+                super.renderFaceXNeg(p_147798_1_, 0, 0, 0, p_147798_8_);
+            }
         }
 
         @Override
         public void renderFaceXPos(Block p_147764_1_, double p_147764_2_, double p_147764_4_, double p_147764_6_, IIcon p_147764_8_) {
-            super.renderFaceXPos(p_147764_1_, 0, 0, 0, p_147764_8_);
+            if (this.renderFacesInfo.xPos) {
+                super.renderFaceXPos(p_147764_1_, 0, 0, 0, p_147764_8_);
+            }
         }
     }
 
