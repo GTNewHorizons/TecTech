@@ -109,7 +109,7 @@ public abstract class BasePSSCFStructure {
 
                     // yNeg Face
                     char yNegBlock = ' ';
-                    if ((z != 0)) {
+                    if (z != 0) {
                         yNegBlock = structureCopy[x][z-1].charAt(y);
                     }
 
@@ -118,11 +118,53 @@ public abstract class BasePSSCFStructure {
 
                     // yPos Face
                     char yPosBlock = ' ';
-                    if ((z != getZLength() - 1)) {
+                    if (z != getZLength() - 1) {
                         yPosBlock = structureCopy[x][z+1].charAt(y);
                     }
 
                     if (yPosBlock != ' ') renderFacesInfo.yPos = false;
+
+
+
+
+
+                    // xNeg Face
+                    char xNegBlock = ' ';
+                    if (y != 0) {
+                        xNegBlock = structureCopy[x][z].charAt(y-1);
+                    }
+
+                    if (xNegBlock != ' ') renderFacesInfo.zNeg = false;
+
+
+                    // xPos Face
+                    char xPosBlock = ' ';
+                    if (y != getYLength() - 1) {
+                        xPosBlock = structureCopy[x][z].charAt(y+1);
+                    }
+
+                    if (xPosBlock != ' ') renderFacesInfo.zPos = false;
+
+
+
+
+                    // zNeg Face
+                    char zNegBlock = ' ';
+                    if (x != 0) {
+                        zNegBlock = structureCopy[x-1][z].charAt(y);
+                    }
+
+                    if (zNegBlock != ' ') renderFacesInfo.xNeg = false;
+
+
+                    // zPos Face
+                    char zPosBlock = ' ';
+                    if (x != getXLength() - 1) {
+                        zPosBlock = structureCopy[x+1][z].charAt(y);
+                    }
+
+                    if (zPosBlock != ' ') renderFacesInfo.xPos = false;
+
 
 
                     renderFacesArray[x][z][y] = renderFacesInfo;
