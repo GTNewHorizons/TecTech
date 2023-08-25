@@ -5,12 +5,13 @@ import gregtech.api.GregTech_API;
 public class PSSCF_ReinforcedBlock extends BasePSSCFStructure {
 
     public PSSCF_ReinforcedBlock() {
-        map.put('A', new BlockInfo(GregTech_API.sBlockCasings1, 12));
-        map.put('B', new BlockInfo(GregTech_API.sBlockCasings1, 14));
-        map.put('C', new BlockInfo(GregTech_API.sBlockCasings5, 11));
-        map.put('D', new BlockInfo(GregTech_API.sBlockCasings5, 12));
-        map.put('E', new BlockInfo(GregTech_API.sBlockCasings8, 10));
-        map.put('F', new BlockInfo(GregTech_API.sBlockCasings8, 14));
+        charToBlock.put('A', new BlockInfo(GregTech_API.sBlockCasings1, 12));
+        charToBlock.put('B', new BlockInfo(GregTech_API.sBlockCasings1, 14));
+        charToBlock.put('C', new BlockInfo(GregTech_API.sBlockCasings5, 11));
+        charToBlock.put('D', new BlockInfo(GregTech_API.sBlockCasings5, 12));
+        charToBlock.put('E', new BlockInfo(GregTech_API.sBlockCasings8, 10));
+        charToBlock.put('F', new BlockInfo(GregTech_API.sBlockCasings8, 14));
+        processStructureMap();
     }
 
     @Override

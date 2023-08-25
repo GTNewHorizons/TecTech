@@ -3,6 +3,7 @@ package com.github.technus.tectech.thing.block.PlanckScaleSpacetimeCompressionFa
 import static com.github.technus.tectech.thing.block.PlanckScaleSpacetimeCompressionFabricator.RenderHelper.getModel;
 
 import com.github.technus.tectech.thing.CustomItemList;
+import com.github.technus.tectech.thing.block.PlanckScaleSpacetimeCompressionFabricator.RenderFacesInfo;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.RenderBlocks;
@@ -28,11 +29,14 @@ public class BaseRenderTESR extends TileEntitySpecialRenderer {
         RenderHelper.renderModel(tile.getWorldObj(), x, y, z, getModel(trophyTileEntity.modelName));
     }
 
-    public static void renderBlock(Block block, int metadata, RenderBlocks renderBlocks, int x, int y, int z) {
+    public static void renderBlock(Block block, int metadata, RenderHelper.TTRenderBlocks renderBlocks, int x, int y, int z) {
         GL11.glPushMatrix();
 
         GL11.glTranslated(x, y, z);
         GL11.glRotated(-90, 0.0, 1.0, 0.0);
+        renderBlocks.x = x;
+        renderBlocks.y = y;
+        renderBlocks.z = z;
         renderBlocks.renderBlockAsItem(block, metadata, 1.0f);
 
         GL11.glPopMatrix();

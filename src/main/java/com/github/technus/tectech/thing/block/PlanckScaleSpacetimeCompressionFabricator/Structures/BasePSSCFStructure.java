@@ -2,13 +2,10 @@ package com.github.technus.tectech.thing.block.PlanckScaleSpacetimeCompressionFa
 
 import java.util.*;
 
+import com.github.technus.tectech.thing.block.PlanckScaleSpacetimeCompressionFabricator.RenderFacesInfo;
 import net.minecraft.block.Block;
 
 public abstract class BasePSSCFStructure {
-
-    public String[][] getStructureString() {
-        return null;
-    }
 
     public final int getXLength() {
         return getStructureString().length;
@@ -22,15 +19,27 @@ public abstract class BasePSSCFStructure {
         return getStructureString()[0].length;
     }
 
+    public boolean doesBlockExist(int x, int y, int z) {
+        try {
+            return transparentStructure[x][y].charAt(z) != ' ';
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    public String[][] getStructureString() {
+        return null;
+    }
+
     public final float maxAxisSize() {
-        return Math.max(getXLength(), Math.max(getYLength(), getZLength()));
+        return 1; // Math.max(getXLength(), Math.max(getYLength(), getZLength()));
     }
 
     public final BlockInfo getAssociatedBlockInfo(final char letter) {
-        return map.get(letter);
+        return charToBlock.get(letter);
     }
 
-    protected HashMap<Character, BlockInfo> map = new HashMap<>();
+    protected HashMap<Character, BlockInfo> charToBlock = new HashMap<>();
 
     public static class BlockInfo {
 
@@ -80,26 +89,14 @@ public abstract class BasePSSCFStructure {
         // them are rendered as normal.
         removeTransparentBlocks(structureCopy, transparentBlocks);
 
-        generateRenderFacesInfo(structureCopy);
+        transparentStructure = structureCopy;
+
+        //generateRenderFacesInfo(structureCopy);
     }
 
-    private void generateRenderFacesInfo(String[][] structure) {
+    String[][] transparentStructure;
 
-        for (int x = 0; x < getXLength(); x++) {
-            for (int y = 0; y < getYLength(); y++) {
-                for (int z = 0; z < getZLength(); z++) {
-
-                    Character c = structure[x][z].charAt(y);
-
-
-
-
-
-                }
-            }
-        }
-
-    }
+    private RenderFacesInfo[][][] renderFacesArray;
 
     private void removeTransparentBlocks(String[][] structure, HashSet<Character> transparentBlocks) {
         if (structure == null || transparentBlocks == null) {
@@ -131,7 +128,7 @@ public abstract class BasePSSCFStructure {
         HashSet<Character> transparentBlocks = new HashSet<>();
 
         // Iterate over all blocks to find transparent ones.
-        for (Map.Entry<Character, BlockInfo> entry : map.entrySet()) {
+        for (Map.Entry<Character, BlockInfo> entry : charToBlock.entrySet()) {
 
             Block block = entry.getValue().block;
 
