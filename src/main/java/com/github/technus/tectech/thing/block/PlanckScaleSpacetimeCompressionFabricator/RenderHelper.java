@@ -49,6 +49,9 @@ public class RenderHelper {
 
         Minecraft.getMinecraft().getTextureManager().bindTexture(TextureMap.locationBlocksTexture);
 
+/*        GL11.glEnable(GL11.GL_CULL_FACE);
+        GL11.glCullFace(GL11.GL_BACK);*/
+
         TTRenderBlocks renderBlocks = new TTRenderBlocks(world);
 
         for (int x = 0; x < model.getXLength(); x++) {
@@ -151,7 +154,7 @@ public class RenderHelper {
         GL11.glTranslated(x + 0.5, y + 0.5, z + 0.5);
         scaleModel(model);
 
-        //rotation();
+        rotation();
 
         centreModel(model);
 
