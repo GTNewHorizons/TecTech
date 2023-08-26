@@ -1,4 +1,4 @@
-package com.github.technus.tectech.thing.block.PlanckScaleSpacetimeCompressionFabricator.Structures;
+package com.github.technus.tectech.thing.block.CustomStructureRendering.Structures;
 
 import net.minecraft.init.Blocks;
 

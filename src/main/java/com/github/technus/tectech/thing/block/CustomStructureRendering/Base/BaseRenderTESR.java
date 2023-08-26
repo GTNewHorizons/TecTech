@@ -1,21 +1,12 @@
-package com.github.technus.tectech.thing.block.PlanckScaleSpacetimeCompressionFabricator.Base;
+package com.github.technus.tectech.thing.block.CustomStructureRendering.Base;
 
-import static com.github.technus.tectech.thing.block.PlanckScaleSpacetimeCompressionFabricator.RenderHelper.getModel;
+import static com.github.technus.tectech.thing.block.CustomStructureRendering.RenderHelper.getModel;
 
-import com.github.technus.tectech.thing.CustomItemList;
-import com.github.technus.tectech.thing.block.PlanckScaleSpacetimeCompressionFabricator.RenderFacesInfo;
 import net.minecraft.block.Block;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.RenderBlocks;
-import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
-import net.minecraft.init.Blocks;
 import net.minecraft.tileentity.TileEntity;
 
-import com.github.technus.tectech.thing.block.PlanckScaleSpacetimeCompressionFabricator.RenderHelper;
-import net.minecraft.world.IBlockAccess;
-import net.minecraft.world.World;
+import com.github.technus.tectech.thing.block.CustomStructureRendering.RenderHelper;
 import org.lwjgl.opengl.GL11;
 
 public class BaseRenderTESR extends TileEntitySpecialRenderer {

@@ -1,4 +1,4 @@
-package com.github.technus.tectech.thing.block.PlanckScaleSpacetimeCompressionFabricator;
+package com.github.technus.tectech.thing.block.CustomStructureRendering;
 
 public class RenderFacesInfo {
 

@@ -1,6 +1,6 @@
-package com.github.technus.tectech.thing.block.PlanckScaleSpacetimeCompressionFabricator.Structures;
+package com.github.technus.tectech.thing.block.CustomStructureRendering.Structures;
 
-import com.github.technus.tectech.thing.block.PlanckScaleSpacetimeCompressionFabricator.RenderFacesInfo;
+import com.github.technus.tectech.thing.block.CustomStructureRendering.RenderFacesInfo;
 import net.minecraft.block.Block;
 
 import java.util.Arrays;
@@ -22,20 +22,12 @@ public abstract class BasePSSCFStructure {
         return getStructureString()[0].length;
     }
 
-    public boolean doesBlockExist(int x, int y, int z) {
-        try {
-            return transparentStructure[x][y].charAt(z) != ' ';
-        } catch (Exception e) {
-            return false;
-        }
-    }
-
     public String[][] getStructureString() {
         return null;
     }
 
     public final float maxAxisSize() {
-        return 5.0f; // Math.max(getXLength(), Math.max(getYLength(), getZLength()));
+        return Math.max(getXLength(), Math.max(getYLength(), getZLength()));
     }
 
     public final BlockInfo getAssociatedBlockInfo(final char letter) {

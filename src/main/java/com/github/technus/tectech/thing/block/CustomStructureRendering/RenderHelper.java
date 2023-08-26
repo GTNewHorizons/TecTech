@@ -1,32 +1,19 @@
-package com.github.technus.tectech.thing.block.PlanckScaleSpacetimeCompressionFabricator;
+package com.github.technus.tectech.thing.block.CustomStructureRendering;
 
-import static com.github.technus.tectech.thing.block.PlanckScaleSpacetimeCompressionFabricator.Base.BaseRenderTESR.renderBlock;
+import static com.github.technus.tectech.thing.block.CustomStructureRendering.Base.BaseRenderTESR.renderBlock;
 
 import java.util.HashMap;
 import java.util.Set;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
-import net.minecraft.block.BlockAnvil;
-import net.minecraft.block.BlockGrass;
-import net.minecraft.block.BlockHopper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.RenderBlocks;
-import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.texture.TextureMap;
-import net.minecraft.client.renderer.tileentity.TileEntityRendererChestHelper;
-import net.minecraft.init.Blocks;
-import net.minecraft.src.FMLRenderAccessLibrary;
 import net.minecraft.util.IIcon;
-import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import org.lwjgl.Sys;
 import org.lwjgl.opengl.GL11;
 
-import com.github.technus.tectech.thing.block.PlanckScaleSpacetimeCompressionFabricator.Structures.*;
-import org.lwjgl.opengl.GL12;
-import scala.Char;
+import com.github.technus.tectech.thing.block.CustomStructureRendering.Structures.*;
 
 public class RenderHelper {
 
@@ -154,7 +141,7 @@ public class RenderHelper {
         GL11.glTranslated(x + 0.5, y + 0.5, z + 0.5);
         scaleModel(model);
 
-        rotation();
+        //rotation();
 
         centreModel(model);
 
@@ -166,7 +153,8 @@ public class RenderHelper {
     public static void registerAll() {
         RenderHelper.registerModel("Default", new PSSCF_Default());
         RenderHelper.registerModel("DTPF", new PSSCF_DTPF());
-        RenderHelper.registerModel("NanoForge", new PSSCF_NanoForge());
-        RenderHelper.registerModel("ReinforcedBlock", new PSSCF_ReinforcedBlock());
+        RenderHelper.registerModel("Nano Forge", new PSSCF_NanoForge());
+        RenderHelper.registerModel("Reinforced Block", new PSSCF_ReinforcedBlock());
+        RenderHelper.registerModel("Big Ring", new PSSCF_Big_Ring());
     }
 }

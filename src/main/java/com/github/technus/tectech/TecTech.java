@@ -31,9 +31,9 @@ import com.github.technus.tectech.mechanics.enderStorage.EnderWorldSavedData;
 import com.github.technus.tectech.nei.IMCForNEI;
 import com.github.technus.tectech.proxy.CommonProxy;
 import com.github.technus.tectech.recipe.EyeOfHarmonyRecipeStorage;
-import com.github.technus.tectech.thing.block.PlanckScaleSpacetimeCompressionFabricator.Base.BaseRenderBlock;
-import com.github.technus.tectech.thing.block.PlanckScaleSpacetimeCompressionFabricator.Base.BaseRenderItemBlock;
-import com.github.technus.tectech.thing.block.PlanckScaleSpacetimeCompressionFabricator.Trophies.Trophies;
+import com.github.technus.tectech.thing.block.CustomStructureRendering.Base.BaseRenderBlock;
+import com.github.technus.tectech.thing.block.CustomStructureRendering.Base.BaseRenderItemBlock;
+import com.github.technus.tectech.thing.block.CustomStructureRendering.Trophies.Trophies;
 import com.github.technus.tectech.thing.metaTileEntity.multi.em_machine.TecTech_Loader_MultiTileEntities;
 import com.github.technus.tectech.util.XSTR;
 

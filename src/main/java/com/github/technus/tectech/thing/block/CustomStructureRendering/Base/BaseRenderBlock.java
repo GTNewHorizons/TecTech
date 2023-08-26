@@ -1,6 +1,6 @@
-package com.github.technus.tectech.thing.block.PlanckScaleSpacetimeCompressionFabricator.Base;
+package com.github.technus.tectech.thing.block.CustomStructureRendering.Base;
 
-import static com.github.technus.tectech.thing.block.PlanckScaleSpacetimeCompressionFabricator.Base.BaseRenderTESR.MODEL_NAME_NBT_TAG;
+import static com.github.technus.tectech.thing.block.CustomStructureRendering.Base.BaseRenderTESR.MODEL_NAME_NBT_TAG;
 
 import java.util.ArrayList;
 
