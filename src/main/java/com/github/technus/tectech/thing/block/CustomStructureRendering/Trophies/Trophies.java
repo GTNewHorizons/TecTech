@@ -8,4 +8,6 @@ public abstract class Trophies {
 
     public static Block TrophyBlock = new BaseRenderBlock("% Trophy");
 
+
+
 }
