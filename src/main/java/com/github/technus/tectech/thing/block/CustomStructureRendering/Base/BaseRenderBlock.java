@@ -55,7 +55,7 @@ public class BaseRenderBlock extends Block {
 
     @Override
     public TileEntity createTileEntity(World world, int metadata) {
-        return new BaseRenderTileEntity();
+        return null;
     }
 
     @Override

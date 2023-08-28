@@ -1,12 +1,13 @@
 package com.github.technus.tectech.thing.block.CustomStructureRendering.Base;
 
-import static com.github.technus.tectech.thing.block.CustomStructureRendering.RenderHelper.getModel;
+import static com.github.technus.tectech.thing.block.CustomStructureRendering.Base.Util.RenderHelper.getModel;
 
+import com.github.technus.tectech.thing.block.CustomStructureRendering.Base.Util.CustomRenderBlocks;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.tileentity.TileEntity;
 
-import com.github.technus.tectech.thing.block.CustomStructureRendering.RenderHelper;
+import com.github.technus.tectech.thing.block.CustomStructureRendering.Base.Util.RenderHelper;
 import org.lwjgl.opengl.GL11;
 
 public class BaseRenderTESR extends TileEntitySpecialRenderer {
@@ -18,16 +19,6 @@ public class BaseRenderTESR extends TileEntitySpecialRenderer {
         if (!(tile instanceof BaseRenderTileEntity trophyTileEntity)) return;
 
         RenderHelper.renderModel(tile.getWorldObj(), x, y, z, getModel(trophyTileEntity.modelName));
-    }
-
-    public static void renderBlock(Block block, int metadata, RenderHelper.TTRenderBlocks renderBlocks, int x, int y, int z) {
-        GL11.glPushMatrix();
-
-        GL11.glTranslated(x, y, z);
-        GL11.glRotated(-90, 0.0, 1.0, 0.0);
-        renderBlocks.renderBlockAsItem(block, metadata, 1.0f);
-
-        GL11.glPopMatrix();
     }
 
 }

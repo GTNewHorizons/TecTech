@@ -1,19 +1,14 @@
-package com.github.technus.tectech.thing.block.CustomStructureRendering;
+package com.github.technus.tectech.thing.block.CustomStructureRendering.Base.Util;
 
-import static com.github.technus.tectech.thing.block.CustomStructureRendering.Base.BaseRenderTESR.renderBlock;
-
-import java.util.HashMap;
-import java.util.Set;
-
+import com.github.technus.tectech.thing.block.CustomStructureRendering.Structures.*;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.client.renderer.texture.TextureMap;
-import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
 import org.lwjgl.opengl.GL11;
 
-import com.github.technus.tectech.thing.block.CustomStructureRendering.Structures.*;
+import java.util.HashMap;
+import java.util.Set;
 
 public class RenderHelper {
 
@@ -36,10 +31,7 @@ public class RenderHelper {
 
         Minecraft.getMinecraft().getTextureManager().bindTexture(TextureMap.locationBlocksTexture);
 
-/*        GL11.glEnable(GL11.GL_CULL_FACE);
-        GL11.glCullFace(GL11.GL_BACK);*/
-
-        TTRenderBlocks renderBlocks = new TTRenderBlocks(world);
+        CustomRenderBlocks renderBlocks = new CustomRenderBlocks(world);
 
         for (int x = 0; x < model.getXLength(); x++) {
             for (int y = 0; y < model.getYLength(); y++) {
@@ -58,59 +50,6 @@ public class RenderHelper {
         }
     }
 
-    public static class TTRenderBlocks extends RenderBlocks {
-
-        RenderFacesInfo renderFacesInfo;
-
-        public TTRenderBlocks(World world) {
-            super(world);
-        }
-
-
-
-        @Override
-        public void renderFaceYNeg(Block p_147768_1_, double p_147768_2_, double p_147768_4_, double p_147768_6_, IIcon p_147768_8_) {
-            if (this.renderFacesInfo.yNeg) {
-                super.renderFaceYNeg(p_147768_1_, 0, 0, 0, p_147768_8_);
-            }
-        }
-
-        @Override
-        public void renderFaceYPos(Block p_147806_1_, double p_147806_2_, double p_147806_4_, double p_147806_6_, IIcon p_147806_8_) {
-            if (this.renderFacesInfo.yPos) {
-                super.renderFaceYPos(p_147806_1_, 0, 0, 0, p_147806_8_);
-            }
-        }
-
-        @Override
-        public void renderFaceZNeg(Block block, double x, double y, double z, IIcon p_147761_8_) {
-            if (this.renderFacesInfo.zNeg) {
-                super.renderFaceZNeg(block, 0, 0, 0, p_147761_8_);
-            }
-        }
-
-        @Override
-        public void renderFaceZPos(Block p_147734_1_, double p_147734_2_, double p_147734_4_, double p_147734_6_, IIcon p_147734_8_) {
-            if (this.renderFacesInfo.zPos) {
-                super.renderFaceZPos(p_147734_1_, 0, 0, 0, p_147734_8_);
-            }
-        }
-
-        @Override
-        public void renderFaceXNeg(Block p_147798_1_, double p_147798_2_, double p_147798_4_, double p_147798_6_, IIcon p_147798_8_) {
-            if (this.renderFacesInfo.xNeg) {
-                super.renderFaceXNeg(p_147798_1_, 0, 0, 0, p_147798_8_);
-            }
-        }
-
-        @Override
-        public void renderFaceXPos(Block p_147764_1_, double p_147764_2_, double p_147764_4_, double p_147764_6_, IIcon p_147764_8_) {
-            if (this.renderFacesInfo.xPos) {
-                super.renderFaceXPos(p_147764_1_, 0, 0, 0, p_147764_8_);
-            }
-        }
-    }
-
     private static void scaleModel(final BasePSSCFStructure model) {
         final float maxScale = 1.0f / model.maxAxisSize();
         GL11.glScalef(maxScale, maxScale, maxScale);
@@ -118,7 +57,7 @@ public class RenderHelper {
 
     private static final HashMap<String, BasePSSCFStructure> modelMap = new HashMap<>();
 
-    public static void registerModel(String label, BasePSSCFStructure model) {
+    public static void registerModel(final String label, final BasePSSCFStructure model) {
         modelMap.put(label, model);
     }
 
@@ -126,7 +65,7 @@ public class RenderHelper {
         return modelMap.keySet();
     }
 
-    public static BasePSSCFStructure getModel(String label) {
+    public static BasePSSCFStructure getModel(final String label) {
         BasePSSCFStructure model = modelMap.getOrDefault(label, null);
 
         if (model == null) return modelMap.get("Default");
@@ -146,6 +85,16 @@ public class RenderHelper {
         centreModel(model);
 
         buildModel(world, model);
+
+        GL11.glPopMatrix();
+    }
+
+    public static void renderBlock(Block block, int metadata, CustomRenderBlocks renderBlocks, int x, int y, int z) {
+        GL11.glPushMatrix();
+
+        GL11.glTranslated(x, y, z);
+        GL11.glRotated(-90, 0.0, 1.0, 0.0);
+        renderBlocks.renderBlockAsItem(block, metadata, 1.0f);
 
         GL11.glPopMatrix();
     }

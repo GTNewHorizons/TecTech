@@ -1,6 +1,6 @@
 package com.github.technus.tectech.thing.block.CustomStructureRendering.Structures;
 
-import com.github.technus.tectech.thing.block.CustomStructureRendering.RenderFacesInfo;
+import com.github.technus.tectech.thing.block.CustomStructureRendering.Base.Util.RenderFacesInfo;
 import net.minecraft.block.Block;
 
 import java.util.Arrays;

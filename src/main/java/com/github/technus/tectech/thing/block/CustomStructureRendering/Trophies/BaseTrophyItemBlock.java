@@ -1,7 +1,7 @@
 package com.github.technus.tectech.thing.block.CustomStructureRendering.Trophies;
 
 import com.github.technus.tectech.thing.block.CustomStructureRendering.Base.BaseRenderItemBlock;
-import com.github.technus.tectech.thing.block.CustomStructureRendering.RenderHelper;
+import com.github.technus.tectech.thing.block.CustomStructureRendering.Base.Util.RenderHelper;
 import net.minecraft.block.Block;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;

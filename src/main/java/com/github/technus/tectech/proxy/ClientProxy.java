@@ -23,7 +23,7 @@ import com.github.technus.tectech.thing.block.EyeOfHarmonyStuff.TileEyeOfHarmony
 import com.github.technus.tectech.thing.block.CustomStructureRendering.Base.BaseRenderItemRenderer;
 import com.github.technus.tectech.thing.block.CustomStructureRendering.Base.BaseRenderTESR;
 import com.github.technus.tectech.thing.block.CustomStructureRendering.Base.BaseRenderTileEntity;
-import com.github.technus.tectech.thing.block.CustomStructureRendering.RenderHelper;
+import com.github.technus.tectech.thing.block.CustomStructureRendering.Base.Util.RenderHelper;
 import com.github.technus.tectech.thing.block.CustomStructureRendering.Trophies.Trophies;
 import com.github.technus.tectech.thing.block.QuantumGlassStuff.QuantumGlassBlock;
 import com.github.technus.tectech.thing.block.QuantumGlassStuff.QuantumGlassRender;
@@ -61,14 +61,7 @@ public class ClientProxy extends CommonProxy {
 
         ClientRegistry.bindTileEntitySpecialRenderer(TileEyeOfHarmony.class, new RenderEyeOfHarmony());
 
-        Item item = Item.getItemFromBlock(Trophies.TrophyBlock);
-
-        // Trophy
-        MinecraftForgeClient.registerItemRenderer(item, new BaseRenderItemRenderer());
-
-        ClientRegistry.bindTileEntitySpecialRenderer(BaseRenderTileEntity.class, new BaseRenderTESR());
-
-        RenderHelper.registerAll();
+        Trophies.registerRenderer();
 
     }
 

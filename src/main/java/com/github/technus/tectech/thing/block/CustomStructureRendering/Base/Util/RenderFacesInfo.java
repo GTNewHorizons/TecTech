@@ -1,8 +1,8 @@
-package com.github.technus.tectech.thing.block.CustomStructureRendering;
+package com.github.technus.tectech.thing.block.CustomStructureRendering.Base.Util;
 
 public class RenderFacesInfo {
 
-    public RenderFacesInfo(boolean state) {
+    public RenderFacesInfo(final boolean state) {
         this.yPos = state;
         this.yNeg = state;
         this.xPos = state;
