@@ -48,6 +48,7 @@ public abstract class BaseModelStructure {
     }
 
     protected static void reverseInnerArrays(String[][] array) {
+
         for (String[] innerArray : array) {
             int start = 0;
             int end = innerArray.length - 1;

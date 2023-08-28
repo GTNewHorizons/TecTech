@@ -1,14 +1,11 @@
 package com.github.technus.tectech.thing.block.CustomStructureRendering.Base.Util;
 
-import com.github.technus.tectech.thing.block.CustomStructureRendering.Structures.*;
+import com.github.technus.tectech.thing.block.CustomStructureRendering.Structures.BaseModelStructure;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.world.World;
 import org.lwjgl.opengl.GL11;
-
-import java.util.HashMap;
-import java.util.Set;
 
 public class RenderHelper {
 

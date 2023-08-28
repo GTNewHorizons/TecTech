@@ -4,13 +4,17 @@ import static com.github.technus.tectech.thing.block.CustomStructureRendering.Ba
 
 import java.util.ArrayList;
 
+import com.github.technus.tectech.thing.block.CustomStructureRendering.Trophies.BaseTrophyTileEntity;
+import com.github.technus.tectech.thing.block.CustomStructureRendering.Trophies.Trophies;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
 
 import com.github.technus.tectech.TecTech;
@@ -73,5 +77,27 @@ public class BaseRenderBlock extends Block {
     public ArrayList<ItemStack> getDrops(World world, int x, int y, int z, int meta, int fortune) {
         return new ArrayList<>();
     }
+
+    @Override
+    public ItemStack getPickBlock(MovingObjectPosition target, World world, int x, int y, int z, EntityPlayer player)
+    {
+        final BaseTrophyTileEntity tileEntity = (BaseTrophyTileEntity) world.getTileEntity(x, y, z);
+        final ItemStack itemToDrop = new ItemStack(Trophies.TrophyItem, 1, 0);
+
+        final NBTTagCompound tag = new NBTTagCompound();
+        tag.setString(MODEL_NAME_NBT_TAG, tileEntity.modelName);
+
+        itemToDrop.stackTagCompound = tag;
+
+        return itemToDrop;
+    }
+
+    @Deprecated
+    public ItemStack getPickBlock(MovingObjectPosition target, World world, int x, int y, int z)
+    {
+        // Although this is deprecated, waila depends on it to generate the ItemStack for its visualisation annoyingly.
+        return getPickBlock(null, world, x, y, z, null);
+    }
+
 
 }
