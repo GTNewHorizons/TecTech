@@ -1,9 +1,7 @@
 package com.github.technus.tectech.thing.block.CustomStructureRendering.Trophies;
 
 import com.github.technus.tectech.thing.block.CustomStructureRendering.Base.BaseRenderBlock;
-import com.glodblock.github.util.BlockPos;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -38,6 +36,13 @@ public class BaseTrophyBlock extends BaseRenderBlock {
         itemToDrop.stackTagCompound = tag;
 
         return itemToDrop;
+    }
+
+    @Deprecated
+    public ItemStack getPickBlock(MovingObjectPosition target, World world, int x, int y, int z)
+    {
+        // Although this is deprecated, waila depends on it to generate the ItemStack for its visualisation annoyingly.
+        return getPickBlock(null, world, x, y, z, null);
     }
 
 
