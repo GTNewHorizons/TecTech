@@ -22,7 +22,8 @@ public class BaseRenderBlock extends Block {
 
     public BaseRenderBlock(String name) {
         super(Material.iron);
-        this.setResistance(20f);
+        this.setResistance(-1);
+        this.setHardness(-1);
         this.setCreativeTab(TecTech.creativeTabEM);
         this.setBlockName(name);
     }
@@ -56,10 +57,10 @@ public class BaseRenderBlock extends Block {
     @Override
     public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase placer, ItemStack stack) {
         if (stack.hasTagCompound()) {
-            // Get the NBT data from the ItemStack
+            // Get the NBT data from the ItemStack.
             NBTTagCompound nbt = stack.getTagCompound();
 
-            // Transfer the NBT data to the TileEntity of the placed block
+            // Transfer the NBT data to the TileEntity of the placed block.
             TileEntity tileEntity = world.getTileEntity(x, y, z);
             if (tileEntity instanceof BaseRenderTileEntity trophyTileEntity) {
                 trophyTileEntity.modelName = nbt.getString(MODEL_NAME_NBT_TAG);
