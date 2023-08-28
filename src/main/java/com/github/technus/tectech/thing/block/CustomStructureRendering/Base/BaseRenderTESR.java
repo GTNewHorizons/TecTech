@@ -1,14 +1,9 @@
 package com.github.technus.tectech.thing.block.CustomStructureRendering.Base;
 
-import static com.github.technus.tectech.thing.block.CustomStructureRendering.Base.Util.RenderHelper.getModel;
-
-import com.github.technus.tectech.thing.block.CustomStructureRendering.Base.Util.CustomRenderBlocks;
-import net.minecraft.block.Block;
+import com.github.technus.tectech.thing.block.CustomStructureRendering.Base.Util.RenderHelper;
+import com.github.technus.tectech.thing.block.CustomStructureRendering.Structures.BaseModelStructure;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.tileentity.TileEntity;
-
-import com.github.technus.tectech.thing.block.CustomStructureRendering.Base.Util.RenderHelper;
-import org.lwjgl.opengl.GL11;
 
 public class BaseRenderTESR extends TileEntitySpecialRenderer {
 
@@ -19,6 +14,10 @@ public class BaseRenderTESR extends TileEntitySpecialRenderer {
         if (!(tile instanceof BaseRenderTileEntity trophyTileEntity)) return;
 
         RenderHelper.renderModel(tile.getWorldObj(), x, y, z, getModel(trophyTileEntity.modelName));
+    }
+
+    protected BaseModelStructure getModel(String modelName) {
+        return null;
     }
 
 }

@@ -55,24 +55,6 @@ public class RenderHelper {
         GL11.glScalef(maxScale, maxScale, maxScale);
     }
 
-    private static final HashMap<String, BaseModelStructure> modelMap = new HashMap<>();
-
-    public static void registerModel(final String label, final BaseModelStructure model) {
-        modelMap.put(label, model);
-    }
-
-    public static Set<String> getModelList() {
-        return modelMap.keySet();
-    }
-
-    public static BaseModelStructure getModel(final String label) {
-        BaseModelStructure model = modelMap.getOrDefault(label, null);
-
-        if (model == null) return modelMap.get("Default");
-
-        return model;
-    }
-
     public static void renderModel(World world, double x, double y, double z, final BaseModelStructure model) {
 
         GL11.glPushMatrix();
@@ -99,11 +81,5 @@ public class RenderHelper {
         GL11.glPopMatrix();
     }
 
-    public static void registerAll() {
-        RenderHelper.registerModel("Default", new Model_Default());
-        RenderHelper.registerModel("DTPF", new Model_DTPF());
-        RenderHelper.registerModel("Nano Forge", new Model_NanoForge());
-        RenderHelper.registerModel("Reinforced Block", new Model_ReinforcedBlock());
-        RenderHelper.registerModel("Big Ring", new Model_Big_Ring());
-    }
+
 }

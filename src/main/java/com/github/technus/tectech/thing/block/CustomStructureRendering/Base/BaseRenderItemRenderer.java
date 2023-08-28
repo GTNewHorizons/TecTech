@@ -1,9 +1,8 @@
 package com.github.technus.tectech.thing.block.CustomStructureRendering.Base;
 
-import static com.github.technus.tectech.thing.block.CustomStructureRendering.Base.BaseRenderTESR.MODEL_NAME_NBT_TAG;
-import static com.github.technus.tectech.thing.block.CustomStructureRendering.Base.Util.RenderHelper.getModel;
-
+import com.github.technus.tectech.thing.block.CustomStructureRendering.Base.Util.RenderHelper;
 import com.github.technus.tectech.thing.block.CustomStructureRendering.Structures.BaseModelStructure;
+import com.github.technus.tectech.thing.block.CustomStructureRendering.Trophies.Trophies;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.client.renderer.texture.TextureMap;
@@ -11,7 +10,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 import net.minecraftforge.client.IItemRenderer;
 
-import com.github.technus.tectech.thing.block.CustomStructureRendering.Base.Util.RenderHelper;
+import static com.github.technus.tectech.thing.block.CustomStructureRendering.Base.BaseRenderTESR.MODEL_NAME_NBT_TAG;
 
 public class BaseRenderItemRenderer implements IItemRenderer {
 
@@ -23,6 +22,10 @@ public class BaseRenderItemRenderer implements IItemRenderer {
     @Override
     public boolean shouldUseRenderHelper(ItemRenderType type, ItemStack item, ItemRendererHelper helper) {
         return true;
+    }
+
+    protected BaseModelStructure getModel(String modelName) {
+        return Trophies.getModel(modelName);
     }
 
     @Override
