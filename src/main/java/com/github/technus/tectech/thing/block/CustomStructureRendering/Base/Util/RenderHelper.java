@@ -12,7 +12,7 @@ import java.util.Set;
 
 public class RenderHelper {
 
-    private static void centreModel(BasePSSCFStructure model) {
+    private static void centreModel(BaseModelStructure model) {
 
         String[][] testShape = model.getStructureString();
 
@@ -27,7 +27,7 @@ public class RenderHelper {
         GL11.glRotatef((System.currentTimeMillis() / 16) % 360, 0.3f, 1, 0.5f);
     }
 
-    private static void buildModel(World world, BasePSSCFStructure model) {
+    private static void buildModel(World world, BaseModelStructure model) {
 
         Minecraft.getMinecraft().getTextureManager().bindTexture(TextureMap.locationBlocksTexture);
 
@@ -41,7 +41,7 @@ public class RenderHelper {
                     if (blockChar.equals(' ')) continue;
                     if (model.renderFacesArray[x][z][y].allHidden()) continue;
 
-                    BasePSSCFStructure.BlockInfo blockInfo = model.getAssociatedBlockInfo(blockChar);
+                    BaseModelStructure.BlockInfo blockInfo = model.getAssociatedBlockInfo(blockChar);
 
                     renderBlocks.renderFacesInfo = model.renderFacesArray[x][z][y];
                     renderBlock(blockInfo.block, blockInfo.metadata, renderBlocks, x, z+1, y+1);
@@ -50,14 +50,14 @@ public class RenderHelper {
         }
     }
 
-    private static void scaleModel(final BasePSSCFStructure model) {
+    private static void scaleModel(final BaseModelStructure model) {
         final float maxScale = 1.0f / model.maxAxisSize();
         GL11.glScalef(maxScale, maxScale, maxScale);
     }
 
-    private static final HashMap<String, BasePSSCFStructure> modelMap = new HashMap<>();
+    private static final HashMap<String, BaseModelStructure> modelMap = new HashMap<>();
 
-    public static void registerModel(final String label, final BasePSSCFStructure model) {
+    public static void registerModel(final String label, final BaseModelStructure model) {
         modelMap.put(label, model);
     }
 
@@ -65,15 +65,15 @@ public class RenderHelper {
         return modelMap.keySet();
     }
 
-    public static BasePSSCFStructure getModel(final String label) {
-        BasePSSCFStructure model = modelMap.getOrDefault(label, null);
+    public static BaseModelStructure getModel(final String label) {
+        BaseModelStructure model = modelMap.getOrDefault(label, null);
 
         if (model == null) return modelMap.get("Default");
 
         return model;
     }
 
-    public static void renderModel(World world, double x, double y, double z, final BasePSSCFStructure model) {
+    public static void renderModel(World world, double x, double y, double z, final BaseModelStructure model) {
 
         GL11.glPushMatrix();
 
@@ -100,10 +100,10 @@ public class RenderHelper {
     }
 
     public static void registerAll() {
-        RenderHelper.registerModel("Default", new PSSCF_Default());
-        RenderHelper.registerModel("DTPF", new PSSCF_DTPF());
-        RenderHelper.registerModel("Nano Forge", new PSSCF_NanoForge());
-        RenderHelper.registerModel("Reinforced Block", new PSSCF_ReinforcedBlock());
-        RenderHelper.registerModel("Big Ring", new PSSCF_Big_Ring());
+        RenderHelper.registerModel("Default", new Model_Default());
+        RenderHelper.registerModel("DTPF", new Model_DTPF());
+        RenderHelper.registerModel("Nano Forge", new Model_NanoForge());
+        RenderHelper.registerModel("Reinforced Block", new Model_ReinforcedBlock());
+        RenderHelper.registerModel("Big Ring", new Model_Big_Ring());
     }
 }

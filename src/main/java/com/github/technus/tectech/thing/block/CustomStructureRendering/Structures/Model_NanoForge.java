@@ -2,10 +2,10 @@ package com.github.technus.tectech.thing.block.CustomStructureRendering.Structur
 
 import gregtech.api.GregTech_API;
 
-public class PSSCF_NanoForge extends BasePSSCFStructure {
+public class Model_NanoForge extends BaseModelStructure {
 
 
-    public PSSCF_NanoForge() {
+    public Model_NanoForge() {
         charToBlock.put('B', new BlockInfo(GregTech_API.sBlockCasings8, 10));
         charToBlock.put('C', new BlockInfo(GregTech_API.sBlockMachines, 4501));
         charToBlock.put('A', new BlockInfo(GregTech_API.sBlockCasings2, 5));

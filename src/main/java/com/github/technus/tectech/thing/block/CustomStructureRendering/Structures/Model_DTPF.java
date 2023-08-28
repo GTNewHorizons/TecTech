@@ -3,9 +3,9 @@ package com.github.technus.tectech.thing.block.CustomStructureRendering.Structur
 import gregtech.api.GregTech_API;
 import gregtech.api.enums.ItemList;
 
-public class PSSCF_DTPF extends BasePSSCFStructure {
+public class Model_DTPF extends BaseModelStructure {
 
-    public PSSCF_DTPF() {
+    public Model_DTPF() {
         charToBlock.put('C', new BlockInfo(ItemList.Casing_Coil_Eternal.getBlock(), 13));
         charToBlock.put('N', new BlockInfo(GregTech_API.sBlockCasings1, 12));
         charToBlock.put('b', new BlockInfo(GregTech_API.sBlockCasings1, 13));

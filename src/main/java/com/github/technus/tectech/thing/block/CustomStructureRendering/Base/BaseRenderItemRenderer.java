@@ -3,6 +3,7 @@ package com.github.technus.tectech.thing.block.CustomStructureRendering.Base;
 import static com.github.technus.tectech.thing.block.CustomStructureRendering.Base.BaseRenderTESR.MODEL_NAME_NBT_TAG;
 import static com.github.technus.tectech.thing.block.CustomStructureRendering.Base.Util.RenderHelper.getModel;
 
+import com.github.technus.tectech.thing.block.CustomStructureRendering.Structures.BaseModelStructure;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.client.renderer.texture.TextureMap;
@@ -11,7 +12,6 @@ import net.minecraft.world.World;
 import net.minecraftforge.client.IItemRenderer;
 
 import com.github.technus.tectech.thing.block.CustomStructureRendering.Base.Util.RenderHelper;
-import com.github.technus.tectech.thing.block.CustomStructureRendering.Structures.BasePSSCFStructure;
 
 public class BaseRenderItemRenderer implements IItemRenderer {
 
@@ -34,7 +34,7 @@ public class BaseRenderItemRenderer implements IItemRenderer {
         Minecraft.getMinecraft().getTextureManager().bindTexture(TextureMap.locationBlocksTexture);
 
         if (item.hasTagCompound() && item.getTagCompound().hasKey(MODEL_NAME_NBT_TAG)) {
-            BasePSSCFStructure modelToRender = getModel(item.getTagCompound().getString(MODEL_NAME_NBT_TAG));
+            BaseModelStructure modelToRender = getModel(item.getTagCompound().getString(MODEL_NAME_NBT_TAG));
 
             if (type.equals(ItemRenderType.INVENTORY)) {
                 RenderHelper.renderModel(world, 0, -0.1, 0, modelToRender);

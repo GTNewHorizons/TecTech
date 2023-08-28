@@ -5,9 +5,9 @@ import net.minecraft.init.Blocks;
 import static com.gtnewhorizon.structurelib.structure.StructureUtility.transpose;
 
 @SuppressWarnings("SpellCheckingInspection")
-public class PSSCF_Big_Ring extends BasePSSCFStructure {
+public class Model_Big_Ring extends BaseModelStructure {
 
-    public PSSCF_Big_Ring() {
+    public Model_Big_Ring() {
         charToBlock.put('-', new BlockInfo(Blocks.iron_block, 0));
         charToBlock.put('W', new BlockInfo(Blocks.iron_block, 0));
         charToBlock.put('B', new BlockInfo(Blocks.iron_block, 0));

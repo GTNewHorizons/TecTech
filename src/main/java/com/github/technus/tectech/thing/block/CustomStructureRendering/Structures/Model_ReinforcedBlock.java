@@ -2,9 +2,9 @@ package com.github.technus.tectech.thing.block.CustomStructureRendering.Structur
 
 import gregtech.api.GregTech_API;
 
-public class PSSCF_ReinforcedBlock extends BasePSSCFStructure {
+public class Model_ReinforcedBlock extends BaseModelStructure {
 
-    public PSSCF_ReinforcedBlock() {
+    public Model_ReinforcedBlock() {
         charToBlock.put('A', new BlockInfo(GregTech_API.sBlockCasings1, 12));
         charToBlock.put('B', new BlockInfo(GregTech_API.sBlockCasings1, 14));
         charToBlock.put('C', new BlockInfo(GregTech_API.sBlockCasings5, 11));

@@ -2,9 +2,9 @@ package com.github.technus.tectech.thing.block.CustomStructureRendering.Structur
 
 import net.minecraft.init.Blocks;
 
-public class PSSCF_Default extends BasePSSCFStructure {
+public class Model_Default extends BaseModelStructure {
 
-    public PSSCF_Default() {
+    public Model_Default() {
         charToBlock.put('x', new BlockInfo(Blocks.stone, 0));
         charToBlock.put('z', new BlockInfo(Blocks.glass, 0));
         charToBlock.put('a', new BlockInfo(Blocks.redstone_block, 0));

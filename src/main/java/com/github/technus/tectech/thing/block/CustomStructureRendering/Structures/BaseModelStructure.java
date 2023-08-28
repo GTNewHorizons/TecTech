@@ -8,7 +8,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 
-public abstract class BasePSSCFStructure {
+public abstract class BaseModelStructure {
 
     public final int getXLength() {
         return getStructureString().length;
