@@ -12,16 +12,28 @@ import com.github.technus.tectech.thing.block.CustomStructureRendering.Base.Base
 import net.minecraft.item.Item;
 import net.minecraftforge.client.MinecraftForgeClient;
 
+import static com.github.technus.tectech.Reference.MODID;
+
 public abstract class Trophies {
 
     public static final Block TrophyBlock = new BaseTrophyBlock("% Trophy");
+    public static Item TrophyItem;
 
+
+    // These two registrations happen at different stages of the minecraft loading process,
+    // hence why we have different methods for them.
     public static void registerBlock() {
         GameRegistry.registerBlock(TrophyBlock, BaseTrophyItemBlock.class, "% Trophy");
     }
 
     public static void registerRenderer() {
-        MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(TrophyBlock), new BaseTrophyItemRenderer());
+        GameRegistry.registerTileEntity(
+                BaseTrophyTileEntity.class,
+                MODID + ":BaseGregTechTrophy");
+
+        TrophyItem = Item.getItemFromBlock(TrophyBlock);
+
+        MinecraftForgeClient.registerItemRenderer(TrophyItem, new BaseTrophyItemRenderer());
         ClientRegistry.bindTileEntitySpecialRenderer(BaseTrophyTileEntity.class, new BaseTrophyTESR());
 
         RenderHelper.registerAll();

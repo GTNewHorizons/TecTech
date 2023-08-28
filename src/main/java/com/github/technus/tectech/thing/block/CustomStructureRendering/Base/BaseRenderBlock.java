@@ -54,11 +54,6 @@ public class BaseRenderBlock extends Block {
     }
 
     @Override
-    public TileEntity createTileEntity(World world, int metadata) {
-        return null;
-    }
-
-    @Override
     public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase placer, ItemStack stack) {
         if (stack.hasTagCompound()) {
             // Get the NBT data from the ItemStack

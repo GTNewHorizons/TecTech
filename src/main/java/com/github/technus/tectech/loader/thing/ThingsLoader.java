@@ -33,9 +33,6 @@ public class ThingsLoader implements Runnable {
 
         GameRegistry.registerTileEntity(TileEyeOfHarmony.class, MODID + ":EyeOfHarmonyRenderBlock");
 
-        GameRegistry.registerTileEntity(
-                BaseRenderTileEntity.class,
-                MODID + ":TilePlanckScaleSpacetimeCompressionFabricatorRenderBlock");
 
         if (Textures.BlockIcons.casingTexturePages[tectechTexturePage1] == null) {
             Textures.BlockIcons.casingTexturePages[tectechTexturePage1] = new ITexture[128];
