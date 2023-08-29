@@ -42,6 +42,7 @@ public abstract class EOH_RenderingUtils {
 
     private static void renderStarLayer(int layer, ResourceLocation texture, Color color, float alpha) {
 
+
         // Begin animation.
         GL11.glPushMatrix();
 
@@ -99,15 +100,11 @@ public abstract class EOH_RenderingUtils {
         final Tessellator tes = Tessellator.instance;
 
         GL11.glPushMatrix();
-        GL11.glDisable(GL11.GL_ALPHA_TEST);
-        GL11.glEnable(GL11.GL_BLEND);
-        tes.setColorOpaque_F(1f, 1f, 1f);
+        GL11.glPushAttrib(GL11.GL_ALL_ATTRIB_BITS);
 
         GL11.glDisable(GL11.GL_LIGHTING);
-        GL11.glDisable(GL11.GL_ALPHA_TEST);
-        GL11.glEnable(GL11.GL_BLEND);
-        tes.setColorOpaque_F(1f, 1f, 1f);
 
+        tes.setColorOpaque_F(1f, 1f, 1f);
         tes.startDrawingQuads();
 
         GL11.glScalef(blockSize, blockSize, blockSize);
@@ -116,9 +113,7 @@ public abstract class EOH_RenderingUtils {
     public static void endRenderingBlocksInWorld() {
         Tessellator.instance.draw();
 
-        GL11.glEnable(GL11.GL_LIGHTING);
-        GL11.glDisable(GL11.GL_BLEND);
-        GL11.glEnable(GL11.GL_ALPHA_TEST);
+        GL11.glPopAttrib();
         GL11.glPopMatrix();
     }
 
@@ -226,7 +221,9 @@ public abstract class EOH_RenderingUtils {
     // this.bindTexture(TextureMap.locationBlocksTexture);
     public static void renderBlockInWorld(final Block block, final int meta, final float blockSize) {
         beginRenderingBlocksInWorld(blockSize);
+
         addRenderedBlockInWorld(block, meta, 0, 0, 0);
+
         endRenderingBlocksInWorld();
     }
 }

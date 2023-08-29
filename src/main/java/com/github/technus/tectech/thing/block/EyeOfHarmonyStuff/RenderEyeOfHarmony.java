@@ -37,6 +37,10 @@ public class RenderEyeOfHarmony extends TileEntitySpecialRenderer {
         // Required to centre the render to the middle of the block.
         GL11.glTranslated(x + 0.5, y + 0.5, z + 0.5);
 
+        GL11.glPushAttrib(GL11.GL_ALL_ATTRIB_BITS);
+        GL11.glDisable(GL11.GL_LIGHTING);
+        GL11.glDisable(GL11.GL_BLEND);
+
         // Star shell.
         renderOuterSpaceShell();
 
@@ -45,6 +49,7 @@ public class RenderEyeOfHarmony extends TileEntitySpecialRenderer {
 
         // Render the star itself.
         renderStar(IItemRenderer.ItemRenderType.INVENTORY);
+        GL11.glPopAttrib();
 
         GL11.glPopMatrix();
     }
@@ -66,6 +71,7 @@ public class RenderEyeOfHarmony extends TileEntitySpecialRenderer {
     void renderOrbit(final TileEyeOfHarmony EOHRenderTile, final TileEyeOfHarmony.OrbitingObject orbitingObject) {
         // Render orbiting body.
         GL11.glPushMatrix();
+
         GL11.glRotatef(orbitingObject.zAngle, 0, 0, 1);
         GL11.glRotatef(orbitingObject.xAngle, 1, 0, 0);
         GL11.glRotatef((orbitingObject.rotationSpeed * 0.1f * EOHRenderTile.angle) % 360.0f, 0F, 1F, 0F);
@@ -80,15 +86,16 @@ public class RenderEyeOfHarmony extends TileEntitySpecialRenderer {
 
     public static void renderOuterSpaceShell() {
 
+        // Save current OpenGL state.
+        GL11.glPushAttrib(GL11.GL_ALL_ATTRIB_BITS);
+
         // Begin animation.
         GL11.glPushMatrix();
 
-        // OpenGL's settings, not sure exactly what these do.
-
-        // Disables lighting, so star is always lit (I think).
+        // Disables lighting, so star is always lit.
         GL11.glDisable(GL11.GL_LIGHTING);
-        // Merges colours of the various layers of the star?
-        GL11.glEnable(GL11.GL_BLEND);
+        // Merges colors of the various layers of the star.
+        //GL11.glEnable(GL11.GL_BLEND);
 
         // Bind animation to layer of star.
         FMLClientHandler.instance().getClient().getTextureManager()
@@ -101,13 +108,14 @@ public class RenderEyeOfHarmony extends TileEntitySpecialRenderer {
         GL11.glColor4f(1, 1, 1, 1);
 
         spaceModel.renderAll();
-        GL11.glDisable(GL11.GL_BLEND);
-        GL11.glDepthMask(true);
-        GL11.glEnable(GL11.GL_LIGHTING);
 
         // Finish animation.
         GL11.glPopMatrix();
+
+        // Restore previous OpenGL state.
+        GL11.glPopAttrib();
     }
+
 
     private static final float STAR_RESCALE = 0.2f;
 
