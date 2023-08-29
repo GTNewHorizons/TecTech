@@ -3,7 +3,10 @@ package com.github.technus.tectech.thing.block.CustomStructureRendering.Trophies
 import com.github.technus.tectech.thing.block.CustomStructureRendering.Base.BaseRenderTileEntity;
 import com.gtnewhorizons.modularui.ModularUI;
 import com.gtnewhorizons.modularui.api.ModularUITextures;
-import com.gtnewhorizons.modularui.api.drawable.*;
+import com.gtnewhorizons.modularui.api.drawable.AdaptableUITexture;
+import com.gtnewhorizons.modularui.api.drawable.ItemDrawable;
+import com.gtnewhorizons.modularui.api.drawable.Text;
+import com.gtnewhorizons.modularui.api.drawable.UITexture;
 import com.gtnewhorizons.modularui.api.math.*;
 import com.gtnewhorizons.modularui.api.screen.ITileWithModularUI;
 import com.gtnewhorizons.modularui.api.screen.ModularWindow;
@@ -18,7 +21,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.StatCollector;
-import net.minecraftforge.fluids.FluidRegistry;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -29,8 +31,6 @@ public class BaseTrophyTileEntity extends BaseRenderTileEntity implements ITileW
 
     private int serverValue = 0;
     private String textFieldValue = "";
-    private final int duration = 60;
-    private int progress = 0;
     private int ticks = 0;
     private float sliderValue = 0;
     private int serverCounter = 0;
@@ -38,10 +38,6 @@ public class BaseTrophyTileEntity extends BaseRenderTileEntity implements ITileW
             .of("modularui:gui/background/display", 143, 75, 2);
     private static final AdaptableUITexture BACKGROUND = AdaptableUITexture
             .of("modularui:gui/background/background", 176, 166, 3);
-    @SuppressWarnings("unused")
-    private static final UITexture PROGRESS_BAR = UITexture.fullImage("modularui", "gui/widgets/progress_bar_arrow");
-    private static final UITexture PROGRESS_BAR_MIXER = UITexture
-            .fullImage("modularui", "gui/widgets/progress_bar_mixer");
 
     @Override
     public ModularWindow createWindow(UIBuildContext buildContext) {
@@ -196,26 +192,6 @@ public class BaseTrophyTileEntity extends BaseRenderTileEntity implements ITileW
                         new TextFieldWidget().setGetter(() -> textFieldValue).setSetter(val -> textFieldValue = val)
                                 .setTextColor(Color.WHITE.dark(1)).setTextAlignment(Alignment.Center).setScrollBar()
                                 .setBackground(DISPLAY.withOffset(-2, -2, 4, 4)).setSize(92, 20).setPos(20, 25))
-                .addChild(
-                        new ProgressBar().setProgress(() -> progress * 1f / duration)
-                                .setDirection(ProgressBar.Direction.LEFT).setTexture(PROGRESS_BAR_MIXER, 20)
-                                .setSynced(false, false).setPos(7, 85))
-                .addChild(
-                        new ProgressBar().setProgress(() -> progress * 1f / duration)
-                                .setDirection(ProgressBar.Direction.RIGHT).setTexture(PROGRESS_BAR_MIXER, 20)
-                                .setSynced(false, false).setPos(30, 85))
-                .addChild(
-                        new ProgressBar().setProgress(() -> progress * 1f / duration)
-                                .setDirection(ProgressBar.Direction.UP).setTexture(PROGRESS_BAR_MIXER, 20)
-                                .setSynced(false, false).setPos(53, 85))
-                .addChild(
-                        new ProgressBar().setProgress(() -> progress * 1f / duration)
-                                .setDirection(ProgressBar.Direction.DOWN).setTexture(PROGRESS_BAR_MIXER, 20)
-                                .setSynced(false, false).setPos(76, 85))
-                .addChild(
-                        new ProgressBar().setProgress(() -> progress * 1f / duration)
-                                .setDirection(ProgressBar.Direction.CIRCULAR_CW).setTexture(PROGRESS_BAR_MIXER, 20)
-                                .setSynced(false, false).setPos(99, 85))
                 .addChild(new ButtonWidget().setOnClick((clickData, widget) -> {
                             if (++serverValue == 3) {
                                 serverValue = 0;
@@ -305,11 +281,6 @@ public class BaseTrophyTileEntity extends BaseRenderTileEntity implements ITileW
                     serverCounter = 0;
                 }
             }
-        } else {
-            if (++progress == duration) {
-                progress = 0;
-            }
         }
     }
-
 }
