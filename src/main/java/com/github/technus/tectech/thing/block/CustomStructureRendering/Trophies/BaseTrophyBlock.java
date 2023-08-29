@@ -1,9 +1,12 @@
 package com.github.technus.tectech.thing.block.CustomStructureRendering.Trophies;
 
 import com.github.technus.tectech.thing.block.CustomStructureRendering.Base.BaseRenderBlock;
+import com.gtnewhorizons.modularui.api.UIInfos;
+import com.gtnewhorizons.modularui.api.screen.ITileWithModularUI;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 
 import java.util.ArrayList;
@@ -13,6 +16,16 @@ public class BaseTrophyBlock extends BaseRenderBlock {
         super(name);
         this.setResistance(1.0F);
         this.setHardness(1.5F);
+    }
+
+    @Override
+    public boolean onBlockActivated(World world, int x, int y, int z,
+                                    EntityPlayer player, int side, float hitX, float hitY, float hitZ) {
+        if (!world  .isRemote) {
+            UIInfos.TILE_MODULAR_UI
+                    .open(player, world, Vec3.createVectorHelper(x, y, z));
+        }
+        return true;
     }
 
     @Override
