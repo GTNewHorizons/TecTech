@@ -4,7 +4,6 @@ import static com.github.technus.tectech.TecTech.LOGGER;
 import static gregtech.api.enums.Mods.GTPlusPlus;
 import static gregtech.api.enums.Mods.NewHorizonsCoreMod;
 
-import com.github.technus.tectech.compatibility.gtpp.GtppAtomLoader;
 import com.github.technus.tectech.mechanics.elementalMatter.core.transformations.EMTransformationRegistry;
 import com.github.technus.tectech.mechanics.elementalMatter.definitions.complex.EMAtomDefinition;
 import com.github.technus.tectech.mechanics.elementalMatter.definitions.complex.EMHadronDefinition;
@@ -42,9 +41,7 @@ public class BaseRecipeLoader {
     public void run(EMTransformationRegistry transformationInfo) {
         EMAtomDefinition.setTransformations(transformationInfo);
         EMHadronDefinition.setTransformations(transformationInfo);
-        if (GTPlusPlus.isModLoaded()) {
-            new GtppAtomLoader().setTransformations(transformationInfo);
-        }
+
         // todo: Move those recipes in NHCore
         if (NewHorizonsCoreMod.isModLoaded()) {
             new Assembler().run();

@@ -5,8 +5,6 @@ import static com.github.technus.tectech.TecTech.configTecTech;
 import static com.github.technus.tectech.TecTech.creativeTabTecTech;
 import static com.github.technus.tectech.TecTech.instance;
 import static com.github.technus.tectech.TecTech.proxy;
-import static com.github.technus.tectech.compatibility.thaumcraft.elementalMatter.transformations.AspectDefinitionCompat.aspectDefinitionCompat;
-import static com.github.technus.tectech.compatibility.thaumcraft.thing.metaTileEntity.multi.EssentiaCompat.essentiaContainerCompat;
 import static com.github.technus.tectech.loader.TecTechConfig.DEBUG_MODE;
 import static gregtech.api.enums.Mods.NewHorizonsCoreMod;
 import static gregtech.api.enums.Mods.Thaumcraft;
@@ -21,10 +19,6 @@ import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 
 import com.github.technus.tectech.TecTech;
-import com.github.technus.tectech.compatibility.thaumcraft.elementalMatter.transformations.AspectDefinitionCompat;
-import com.github.technus.tectech.compatibility.thaumcraft.elementalMatter.transformations.AspectDefinitionCompatEnabled;
-import com.github.technus.tectech.compatibility.thaumcraft.thing.metaTileEntity.multi.EssentiaCompat;
-import com.github.technus.tectech.compatibility.thaumcraft.thing.metaTileEntity.multi.EssentiaCompatEnabled;
 import com.github.technus.tectech.loader.gui.CreativeTabTecTech;
 import com.github.technus.tectech.loader.gui.ModGuiHandler;
 import com.github.technus.tectech.loader.recipe.BaseRecipeLoader;
@@ -69,19 +63,11 @@ public final class MainLoader {
     }
 
     public static void load(EMDefinitionsRegistry definitionsRegistry) {
-        ProgressManager.ProgressBar progressBarLoad = ProgressManager.push("TecTech Loader", 9);
+        ProgressManager.ProgressBar progressBarLoad = ProgressManager.push("TecTech Loader", 7);
 
         progressBarLoad.step("Elemental Things");
         new ElementalLoader().run(definitionsRegistry);
         LOGGER.info("Elemental Init Done");
-
-        progressBarLoad.step("Thaumcraft Compatibility");
-        if (Thaumcraft.isModLoaded()) {
-            essentiaContainerCompat = new EssentiaCompatEnabled();
-        } else {
-            essentiaContainerCompat = new EssentiaCompat();
-        }
-        LOGGER.info("Thaumcraft Compatibility Done");
 
         progressBarLoad.step("Regular Things");
         new ThingsLoader().run();
@@ -94,9 +80,6 @@ public final class MainLoader {
         progressBarLoad.step("Cover Things");
         new CoverLoader().run();
         LOGGER.info("Cover Init Done");
-
-        progressBarLoad.step("Register entities");
-        LOGGER.info("Entities registered");
 
         progressBarLoad.step("Add damage types");
         microwaving = new DamageSource("microwaving").setDamageBypassesArmor();
@@ -134,14 +117,6 @@ public final class MainLoader {
             }
         }
 
-        progressBarPostLoad.step("Thaumcraft Compatibility");
-        if (Thaumcraft.isModLoaded()) {
-            aspectDefinitionCompat = new AspectDefinitionCompatEnabled();
-            aspectDefinitionCompat.run(definitionsRegistry);
-        } else {
-            aspectDefinitionCompat = new AspectDefinitionCompat();
-        }
-
         progressBarPostLoad.step("Recipes");
         new BaseRecipeLoader().run(transformationInfo);
         TecTech.LOGGER.info("Recipe Init Done");
@@ -155,7 +130,7 @@ public final class MainLoader {
             TecTech.LOGGER.info("Blocks were not nerfed");
         }
 
-        ProgressManager.pop(progressBarPostLoad);
+        //ProgressManager.pop(progressBarPostLoad);
     }
 
     public static void addAfterGregTechPostLoadRunner() {

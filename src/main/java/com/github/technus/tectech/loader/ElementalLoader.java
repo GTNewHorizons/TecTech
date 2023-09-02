@@ -1,7 +1,5 @@
 package com.github.technus.tectech.loader;
 
-import com.github.technus.tectech.compatibility.thaumcraft.elementalMatter.definitions.EMComplexAspectDefinition;
-import com.github.technus.tectech.compatibility.thaumcraft.elementalMatter.definitions.EMPrimalAspectDefinition;
 import com.github.technus.tectech.mechanics.elementalMatter.core.definitions.registry.EMDefinitionsRegistry;
 import com.github.technus.tectech.mechanics.elementalMatter.definitions.complex.EMAtomDefinition;
 import com.github.technus.tectech.mechanics.elementalMatter.definitions.complex.EMHadronDefinition;
@@ -34,7 +32,5 @@ public class ElementalLoader {
 
         EMAtomDefinition.run(registry);
 
-        EMPrimalAspectDefinition.run(registry);
-        EMComplexAspectDefinition.run(registry);
     }
 }

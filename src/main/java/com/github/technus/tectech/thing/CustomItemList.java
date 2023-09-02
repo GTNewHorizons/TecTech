@@ -372,8 +372,6 @@ public enum CustomItemList implements IItemContainer {
     Machine_Multi_EMToMatter,
     Machine_Multi_EMjunction,
     Machine_Multi_Scanner,
-    Machine_Multi_EssentiaToEM,
-    Machine_Multi_EMToEssentia,
     Machine_Multi_Infuser,
     Machine_Multi_Collider,
     Machine_Multi_Decay,

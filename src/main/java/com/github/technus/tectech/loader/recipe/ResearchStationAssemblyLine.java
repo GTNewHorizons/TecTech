@@ -204,40 +204,6 @@ public class ResearchStationAssemblyLine implements Runnable {
                 12000,
                 100000);
 
-        // Essentia Quantizer
-        TT_recipeAdder.addResearchableAssemblylineRecipe(
-                CustomItemList.Machine_Multi_MatterToEM.get(1),
-                15000,
-                32,
-                500000,
-                8,
-                new Object[] { CustomItemList.Machine_Multi_MatterToEM.get(1),
-                        GT_OreDictUnificator.get(OrePrefixes.pipeMedium, Materials.Neutronium, 4),
-                        ItemList.Emitter_UV.get(2), new Object[] { "circuitSuperconductor", 1 },
-                        GT_OreDictUnificator.get(OrePrefixes.cableGt02, Materials.Draconium, 2), },
-                new FluidStack[] { Materials.UUMatter.getFluid(2000), Materials.Void.getMolten(2592),
-                        new FluidStack(FluidRegistry.getFluid("ic2coolant"), 4000), Materials.Osmium.getMolten(1296), },
-                CustomItemList.Machine_Multi_EssentiaToEM.get(1),
-                24000,
-                500000);
-
-        // Essentia DeQuantizer
-        TT_recipeAdder.addResearchableAssemblylineRecipe(
-                CustomItemList.Machine_Multi_EMToMatter.get(1),
-                15000,
-                32,
-                500000,
-                8,
-                new Object[] { CustomItemList.Machine_Multi_EMToMatter.get(1),
-                        GT_OreDictUnificator.get(OrePrefixes.pipeMedium, Materials.Neutronium, 4),
-                        ItemList.Sensor_UV.get(2), new Object[] { "circuitSuperconductor", 1 },
-                        GT_OreDictUnificator.get(OrePrefixes.cableGt02, Materials.Draconium, 2), },
-                new FluidStack[] { Materials.UUMatter.getFluid(2000), Materials.Void.getMolten(2592),
-                        new FluidStack(FluidRegistry.getFluid("ic2coolant"), 4000), Materials.Osmium.getMolten(1296), },
-                CustomItemList.Machine_Multi_EMToEssentia.get(1),
-                24000,
-                500000);
-
         // EM Scanner
         TT_recipeAdder.addResearchableAssemblylineRecipe(
                 CustomItemList.Machine_Multi_Research.get(1),

@@ -26,11 +26,9 @@ import static com.github.technus.tectech.thing.CustomItemList.Machine_Multi_Comp
 import static com.github.technus.tectech.thing.CustomItemList.Machine_Multi_DataBank;
 import static com.github.technus.tectech.thing.CustomItemList.Machine_Multi_Decay;
 import static com.github.technus.tectech.thing.CustomItemList.Machine_Multi_EMCrafter;
-import static com.github.technus.tectech.thing.CustomItemList.Machine_Multi_EMToEssentia;
 import static com.github.technus.tectech.thing.CustomItemList.Machine_Multi_EMToMatter;
 import static com.github.technus.tectech.thing.CustomItemList.Machine_Multi_EMjunction;
 import static com.github.technus.tectech.thing.CustomItemList.Machine_Multi_EMmachine;
-import static com.github.technus.tectech.thing.CustomItemList.Machine_Multi_EssentiaToEM;
 import static com.github.technus.tectech.thing.CustomItemList.Machine_Multi_EyeOfHarmony;
 import static com.github.technus.tectech.thing.CustomItemList.Machine_Multi_Infuser;
 import static com.github.technus.tectech.thing.CustomItemList.Machine_Multi_MatterToEM;
@@ -339,8 +337,6 @@ import static com.github.technus.tectech.util.CommonValues.V;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 
-import com.github.technus.tectech.compatibility.thaumcraft.thing.metaTileEntity.multi.GT_MetaTileEntity_EM_essentiaDequantizer;
-import com.github.technus.tectech.compatibility.thaumcraft.thing.metaTileEntity.multi.GT_MetaTileEntity_EM_essentiaQuantizer;
 import com.github.technus.tectech.thing.metaTileEntity.hatch.GT_MetaTileEntity_Hatch_Capacitor;
 import com.github.technus.tectech.thing.metaTileEntity.hatch.GT_MetaTileEntity_Hatch_CreativeData;
 import com.github.technus.tectech.thing.metaTileEntity.hatch.GT_MetaTileEntity_Hatch_CreativeMaintenance;
@@ -2255,16 +2251,6 @@ public class MachineLoader implements Runnable {
         Machine_Multi_EMToMatter.set(
                 new GT_MetaTileEntity_EM_dequantizer(15322, "multimachine.em.emtomatter", "Matter Dequantizer")
                         .getStackForm(1L));
-
-        // COMPAT
-        Machine_Multi_EssentiaToEM.set(
-                new GT_MetaTileEntity_EM_essentiaQuantizer(15323, "multimachine.em.essentiatoem", "Essentia Quantizer")
-                        .getStackForm(1L));
-        Machine_Multi_EMToEssentia.set(
-                new GT_MetaTileEntity_EM_essentiaDequantizer(
-                        15324,
-                        "multimachine.em.emtoessentia",
-                        "Essentia Dequantizer").getStackForm(1L));
 
         Machine_Multi_Scanner.set(
                 new GT_MetaTileEntity_EM_scanner(15330, "multimachine.em.scanner", "Elemental Scanner")

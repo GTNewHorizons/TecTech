@@ -24,8 +24,6 @@ import net.minecraft.util.EnumChatFormatting;
 import net.minecraftforge.common.util.ForgeDirection;
 
 import com.github.technus.tectech.TecTech;
-import com.github.technus.tectech.compatibility.thaumcraft.elementalMatter.definitions.EMComplexAspectDefinition;
-import com.github.technus.tectech.compatibility.thaumcraft.elementalMatter.definitions.EMPrimalAspectDefinition;
 import com.github.technus.tectech.mechanics.elementalMatter.core.decay.EMDecayResult;
 import com.github.technus.tectech.mechanics.elementalMatter.core.definitions.EMPrimitiveTemplate;
 import com.github.technus.tectech.mechanics.elementalMatter.core.maps.EMDefinitionStackMap;
@@ -111,7 +109,6 @@ public class GT_MetaTileEntity_EM_collider extends GT_MetaTileEntity_MultiblockB
                     }
                 });
         registerSimpleAtomFuse(EMHadronDefinition.getClassTypeStatic());
-        registerSimpleAtomFuse(EMComplexAspectDefinition.getClassTypeStatic());
         registerSimpleAtomFuse(EMPrimitiveTemplate.getClassTypeStatic());
 
         FUSE_HANDLERS.put(
@@ -173,9 +170,6 @@ public class GT_MetaTileEntity_EM_collider extends GT_MetaTileEntity_MultiblockB
                     }
                 });
 
-        registerSimpleAspectFuse(EMComplexAspectDefinition.getClassTypeStatic());
-        registerSimpleAspectFuse(EMPrimitiveTemplate.getClassTypeStatic());
-
         FUSE_HANDLERS.put(
                 ((long) EMPrimitiveTemplate.getClassTypeStatic() << 16) | EMPrimitiveTemplate.getClassTypeStatic(),
                 new IColliderHandler() {
@@ -217,54 +211,9 @@ public class GT_MetaTileEntity_EM_collider extends GT_MetaTileEntity_MultiblockB
                         out.putUnify(new EMInstanceStack(in2.getDefinition(), in2.getAmount() - in1.getAmount()));
                     }
                 });
-        PRIMITIVE_FUSE_HANDLERS.put(
-                EMPrimalAspectDefinition.class.getName() + '\0' + EMPrimalAspectDefinition.class.getName(),
-                (in1, in2, out) -> {
-                    if (fuseAspects(in1, in2, out)) return;
-                    if (in1.getAmount() > in2.getAmount()) {
-                        out.putUnify(new EMInstanceStack(in1.getDefinition(), in1.getAmount() - in2.getAmount()));
-                    } else if (in2.getAmount() > in1.getAmount()) {
-                        out.putUnify(new EMInstanceStack(in2.getDefinition(), in2.getAmount() - in1.getAmount()));
-                    }
-                });
+
     }
 
-    private static boolean fuseAspects(EMInstanceStack in1, EMInstanceStack in2, EMInstanceStackMap out) {
-        try {
-            EMDefinitionStackMap defs = new EMDefinitionStackMap();
-            defs.putUnifyExact(in1.getDefinition().getStackForm(1));
-            defs.putUnifyExact(in2.getDefinition().getStackForm(1));
-            EMComplexAspectDefinition aspect = new EMComplexAspectDefinition(
-                    defs.toImmutable_optimized_unsafe_LeavesExposedElementalTree());
-            out.putUnify(new EMInstanceStack(aspect, Math.min(in1.getAmount(), in2.getAmount())));
-        } catch (Exception e) {
-            out.putUnifyAll(in1, in2);
-            return true;
-        }
-        return false;
-    }
-
-    private static void registerSimpleAspectFuse(int classTypeStatic) {
-        FUSE_HANDLERS.put(
-                ((long) EMComplexAspectDefinition.getClassTypeStatic() << 16) | classTypeStatic,
-                new IColliderHandler() {
-
-                    @Override
-                    public void collide(EMInstanceStack in1, EMInstanceStack in2, EMInstanceStackMap out) {
-                        if (fuseAspects(in1, in2, out)) return;
-                        if (in1.getAmount() > in2.getAmount()) {
-                            out.putUnify(new EMInstanceStack(in1.getDefinition(), in1.getAmount() - in2.getAmount()));
-                        } else if (in2.getAmount() > in1.getAmount()) {
-                            out.putUnify(new EMInstanceStack(in2.getDefinition(), in2.getAmount() - in1.getAmount()));
-                        }
-                    }
-
-                    @Override
-                    public byte getRequiredTier() {
-                        return 1;
-                    }
-                });
-    }
 
     private static void registerSimpleAtomFuse(int classTypeStatic) {
         FUSE_HANDLERS
