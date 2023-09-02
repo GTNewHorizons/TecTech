@@ -23,7 +23,6 @@ import com.github.technus.tectech.thing.block.QuantumGlassRender;
 import com.github.technus.tectech.thing.block.RenderEyeOfHarmony;
 import com.github.technus.tectech.thing.block.TileEyeOfHarmony;
 import com.github.technus.tectech.thing.item.DebugElementalInstanceContainer_EM;
-import com.github.technus.tectech.thing.item.ElementalDefinitionContainer_EM;
 import com.github.technus.tectech.thing.item.RenderEyeOfHarmonyItem;
 import com.github.technus.tectech.thing.item.renderElemental.RenderElementalName;
 import com.gtnewhorizon.structurelib.entity.fx.WeightlessParticleFX;
@@ -40,8 +39,6 @@ public class ClientProxy extends CommonProxy {
         QuantumGlassBlock.renderID = RenderingRegistry.getNextAvailableRenderId();
         RenderingRegistry.registerBlockHandler(QuantumGlassBlock.renderID, new QuantumGlassRender());
 
-        MinecraftForgeClient
-                .registerItemRenderer(ElementalDefinitionContainer_EM.INSTANCE, RenderElementalName.INSTANCE);
         MinecraftForgeClient
                 .registerItemRenderer(DebugElementalInstanceContainer_EM.INSTANCE, RenderElementalName.INSTANCE);
         MinecraftForgeClient

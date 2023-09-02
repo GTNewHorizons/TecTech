@@ -1,17 +1,19 @@
 package com.github.technus.tectech.thing.item;
 
-import static com.github.technus.tectech.Reference.MODID;
-import static com.github.technus.tectech.TecTech.creativeTabEM;
-import static com.github.technus.tectech.loader.TecTechConfig.DEBUG_MODE;
-import static com.github.technus.tectech.mechanics.elementalMatter.core.transformations.EMTransformationRegistry.EM_COUNT_PER_1k;
-import static com.github.technus.tectech.mechanics.elementalMatter.core.transformations.EMTransformationRegistry.EM_COUNT_PER_ITEM;
-import static com.github.technus.tectech.mechanics.elementalMatter.core.transformations.EMTransformationRegistry.EM_COUNT_PER_MATERIAL_AMOUNT;
-import static cpw.mods.fml.relauncher.Side.CLIENT;
-import static net.minecraft.util.StatCollector.translateToLocal;
-
-import java.util.Collections;
-import java.util.List;
-
+import com.github.technus.tectech.TecTech;
+import com.github.technus.tectech.font.TecTechFontRender;
+import com.github.technus.tectech.mechanics.elementalMatter.core.EMException;
+import com.github.technus.tectech.mechanics.elementalMatter.core.IEMContainer;
+import com.github.technus.tectech.mechanics.elementalMatter.core.definitions.IEMDefinition;
+import com.github.technus.tectech.mechanics.elementalMatter.core.maps.EMInstanceStackMap;
+import com.github.technus.tectech.mechanics.elementalMatter.core.stacks.EMInstanceStack;
+import com.github.technus.tectech.thing.item.renderElemental.IElementalItem;
+import com.github.technus.tectech.util.CommonValues;
+import com.github.technus.tectech.util.TT_Utility;
+import cpw.mods.fml.common.registry.GameRegistry;
+import cpw.mods.fml.relauncher.SideOnly;
+import gregtech.api.interfaces.metatileentity.IMetaTileEntity;
+import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
@@ -23,21 +25,14 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.world.World;
 
-import com.github.technus.tectech.TecTech;
-import com.github.technus.tectech.font.TecTechFontRender;
-import com.github.technus.tectech.mechanics.elementalMatter.core.EMException;
-import com.github.technus.tectech.mechanics.elementalMatter.core.IEMContainer;
-import com.github.technus.tectech.mechanics.elementalMatter.core.definitions.IEMDefinition;
-import com.github.technus.tectech.mechanics.elementalMatter.core.maps.EMInstanceStackMap;
-import com.github.technus.tectech.mechanics.elementalMatter.core.stacks.EMInstanceStack;
-import com.github.technus.tectech.thing.item.renderElemental.IElementalItem;
-import com.github.technus.tectech.util.CommonValues;
-import com.github.technus.tectech.util.TT_Utility;
+import java.util.Collections;
+import java.util.List;
 
-import cpw.mods.fml.common.registry.GameRegistry;
-import cpw.mods.fml.relauncher.SideOnly;
-import gregtech.api.interfaces.metatileentity.IMetaTileEntity;
-import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
+import static com.github.technus.tectech.Reference.MODID;
+import static com.github.technus.tectech.loader.TecTechConfig.DEBUG_MODE;
+import static com.github.technus.tectech.mechanics.elementalMatter.core.transformations.EMTransformationRegistry.*;
+import static cpw.mods.fml.relauncher.Side.CLIENT;
+import static net.minecraft.util.StatCollector.translateToLocal;
 
 /**
  * Created by Tec on 15.03.2017.
@@ -50,7 +45,6 @@ public final class DebugElementalInstanceContainer_EM extends Item implements IE
         setMaxStackSize(1);
         setUnlocalizedName("em.debugContainer");
         setTextureName(MODID + ":itemDebugContainer");
-        setCreativeTab(creativeTabEM);
     }
 
     @Override

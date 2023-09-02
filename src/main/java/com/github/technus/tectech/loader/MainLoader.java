@@ -2,7 +2,6 @@ package com.github.technus.tectech.loader;
 
 import static com.github.technus.tectech.TecTech.LOGGER;
 import static com.github.technus.tectech.TecTech.configTecTech;
-import static com.github.technus.tectech.TecTech.creativeTabEM;
 import static com.github.technus.tectech.TecTech.creativeTabTecTech;
 import static com.github.technus.tectech.TecTech.instance;
 import static com.github.technus.tectech.TecTech.proxy;
@@ -26,7 +25,6 @@ import com.github.technus.tectech.compatibility.thaumcraft.elementalMatter.trans
 import com.github.technus.tectech.compatibility.thaumcraft.elementalMatter.transformations.AspectDefinitionCompatEnabled;
 import com.github.technus.tectech.compatibility.thaumcraft.thing.metaTileEntity.multi.EssentiaCompat;
 import com.github.technus.tectech.compatibility.thaumcraft.thing.metaTileEntity.multi.EssentiaCompatEnabled;
-import com.github.technus.tectech.loader.gui.CreativeTabEM;
 import com.github.technus.tectech.loader.gui.CreativeTabTecTech;
 import com.github.technus.tectech.loader.gui.ModGuiHandler;
 import com.github.technus.tectech.loader.recipe.BaseRecipeLoader;
@@ -61,7 +59,6 @@ public final class MainLoader {
 
     public static void preLoad() {
         creativeTabTecTech = new CreativeTabTecTech("TecTech");
-        creativeTabEM = new CreativeTabEM("EM");
 
         // set expanded texture arrays for tiers
         try {

@@ -12,7 +12,6 @@ import net.minecraftforge.common.MinecraftForge;
 
 import com.github.technus.tectech.loader.MainLoader;
 import com.github.technus.tectech.loader.TecTechConfig;
-import com.github.technus.tectech.loader.gui.CreativeTabEM;
 import com.github.technus.tectech.loader.gui.CreativeTabTecTech;
 import com.github.technus.tectech.mechanics.anomaly.AnomalyHandler;
 import com.github.technus.tectech.mechanics.anomaly.CancerCommand;
@@ -71,7 +70,6 @@ public class TecTech {
     public static final XSTR RANDOM = XSTR.XSTR_INSTANCE;
     public static final LogHelper LOGGER = new LogHelper(Reference.MODID);
     public static CreativeTabTecTech creativeTabTecTech;
-    public static CreativeTabEM creativeTabEM;
 
     private static IngameErrorLog moduleAdminErrorLogs;
     public static TecTechConfig configTecTech;

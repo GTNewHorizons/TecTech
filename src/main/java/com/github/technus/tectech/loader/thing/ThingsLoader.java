@@ -17,7 +17,6 @@ import com.github.technus.tectech.thing.casing.StabilisationFieldCasing;
 import com.github.technus.tectech.thing.casing.TT_Container_Casings;
 import com.github.technus.tectech.thing.casing.TimeAccelerationFieldCasing;
 import com.github.technus.tectech.thing.item.DebugElementalInstanceContainer_EM;
-import com.github.technus.tectech.thing.item.ElementalDefinitionContainer_EM;
 import com.github.technus.tectech.thing.item.ElementalDefinitionScanStorage_EM;
 import com.github.technus.tectech.thing.item.EnderFluidLinkCover;
 import com.github.technus.tectech.thing.item.EuMeterGT;
@@ -91,7 +90,6 @@ public class ThingsLoader implements Runnable {
         TeslaCoilComponent.run();
         TecTech.LOGGER.info("Crafting Components registered");
 
-        ElementalDefinitionContainer_EM.run();
         DebugElementalInstanceContainer_EM.run();
         TecTech.LOGGER.info("Debug Items registered");
     }
