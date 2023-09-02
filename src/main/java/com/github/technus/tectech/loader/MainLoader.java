@@ -96,7 +96,6 @@ public final class MainLoader {
         LOGGER.info("Cover Init Done");
 
         progressBarLoad.step("Register entities");
-        new EntityLoader().run();
         LOGGER.info("Entities registered");
 
         progressBarLoad.step("Add damage types");

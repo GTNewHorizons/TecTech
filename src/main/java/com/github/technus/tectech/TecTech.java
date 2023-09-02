@@ -21,7 +21,6 @@ import com.github.technus.tectech.mechanics.commands.ConvertFloat;
 import com.github.technus.tectech.mechanics.commands.ConvertInteger;
 import com.github.technus.tectech.mechanics.data.ChunkDataHandler;
 import com.github.technus.tectech.mechanics.data.PlayerPersistence;
-import com.github.technus.tectech.mechanics.elementalMatter.core.commands.EMGive;
 import com.github.technus.tectech.mechanics.elementalMatter.core.commands.EMList;
 import com.github.technus.tectech.mechanics.elementalMatter.core.definitions.registry.EMDefinitionsRegistry;
 import com.github.technus.tectech.mechanics.elementalMatter.core.transformations.EMTransformationRegistry;
@@ -244,7 +243,6 @@ public class TecTech {
         pEvent.registerServerCommand(new ConvertFloat());
         pEvent.registerServerCommand(new EMList());
         if (DEBUG_MODE) {
-            pEvent.registerServerCommand(new EMGive());
             pEvent.registerServerCommand(new CancerCommand());
             pEvent.registerServerCommand(new ChargeCommand());
             pEvent.registerServerCommand(new MassCommand());

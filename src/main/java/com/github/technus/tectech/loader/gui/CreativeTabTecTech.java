@@ -1,17 +1,17 @@
 package com.github.technus.tectech.loader.gui;
 
-import java.util.List;
-
+import com.github.technus.tectech.thing.CustomItemList;
+import com.github.technus.tectech.thing.block.QuantumGlassBlock;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+import gregtech.api.GregTech_API;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 
-import com.github.technus.tectech.thing.CustomItemList;
-import com.github.technus.tectech.thing.item.DebugElementalInstanceContainer_EM;
+import java.util.List;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
-import gregtech.api.GregTech_API;
+import static com.github.technus.tectech.thing.CustomItemList.Machine_Multi_EyeOfHarmony;
 
 public class CreativeTabTecTech extends CreativeTabs {
 
@@ -22,7 +22,7 @@ public class CreativeTabTecTech extends CreativeTabs {
     @SideOnly(Side.CLIENT)
     @Override
     public Item getTabIconItem() {
-        return DebugElementalInstanceContainer_EM.INSTANCE;
+        return Item.getItemFromBlock(QuantumGlassBlock.INSTANCE);
     }
 
     @Override
