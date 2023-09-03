@@ -1699,9 +1699,6 @@ public class MachineLoader implements Runnable {
         Machine_Multi_Infuser.set(
                 new GT_MetaTileEntity_EM_infuser(15350, "multimachine.em.infuser", "Energy Infuser").getStackForm(1));
 
-        Machine_Multi_Wormhole
-                .set(new GT_MetaTileEntity_EM_wormhole(15390, "multimachine.em.wormhole", "Wormhole").getStackForm(1L));
-
         Machine_Multi_EyeOfHarmony.set(
                 new GT_MetaTileEntity_EM_EyeOfHarmony(15410, "multimachine.em.eye_of_harmony", "Eye of Harmony")
                         .getStackForm(1L));
