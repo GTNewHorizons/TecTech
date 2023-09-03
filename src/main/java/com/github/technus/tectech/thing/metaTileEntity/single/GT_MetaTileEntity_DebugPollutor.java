@@ -1,19 +1,21 @@
 package com.github.technus.tectech.thing.metaTileEntity.single;
 
-import static com.github.technus.tectech.thing.metaTileEntity.Textures.MACHINE_CASINGS_TT;
+import static com.github.technus.tectech.thing.metaTileEntity.Textures.*;
+import static com.github.technus.tectech.thing.metaTileEntity.single.GT_MetaTileEntity_DebugPowerGenerator.GENNY;
 import static net.minecraft.util.StatCollector.translateToLocal;
 
 import java.util.function.Consumer;
 
+import gregtech.api.interfaces.IIconContainer;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraftforge.common.util.ForgeDirection;
 
 import com.github.technus.tectech.TecTech;
-import com.github.technus.tectech.thing.metaTileEntity.hatch.GT_MetaTileEntity_Hatch_OverflowElemental;
 import com.github.technus.tectech.util.CommonValues;
 import com.github.technus.tectech.util.TT_Utility;
 import com.gtnewhorizons.modularui.api.drawable.IDrawable;
@@ -45,7 +47,6 @@ public class GT_MetaTileEntity_DebugPollutor extends GT_MetaTileEntity_TieredMac
 
     private static GT_RenderedTexture POLLUTOR;
     public int pollution = 0;
-    public float anomaly = 0;
 
     public GT_MetaTileEntity_DebugPollutor(int aID, String aName, String aNameRegional, int aTier) {
         super(
@@ -80,12 +81,12 @@ public class GT_MetaTileEntity_DebugPollutor extends GT_MetaTileEntity_TieredMac
 
     @Override
     public ITexture[] getTexture(IGregTechTileEntity aBaseMetaTileEntity, ForgeDirection side, ForgeDirection facing,
-            int colorIndex, boolean aActive, boolean aRedstone) {
+                                 int colorIndex, boolean aActive, boolean aRedstone) {
         return new ITexture[] { MACHINE_CASINGS_TT[mTier][colorIndex + 1],
                 side != facing
-                        ? aActive ? new GT_RenderedTexture(GT_MetaTileEntity_Hatch_OverflowElemental.MufflerEM)
-                                : new GT_RenderedTexture(GT_MetaTileEntity_Hatch_OverflowElemental.MufflerEMidle)
-                        : POLLUTOR };
+                        ? true ? (aActive ? OVERLAYS_ENERGY_OUT_LASER_TT[mTier] : OVERLAYS_ENERGY_IN_LASER_TT[mTier])
+                        : (aActive ? OVERLAYS_ENERGY_OUT_POWER_TT[mTier] : OVERLAYS_ENERGY_IN_POWER_TT[mTier])
+                        : GENNY };
     }
 
     @Override
@@ -108,14 +109,11 @@ public class GT_MetaTileEntity_DebugPollutor extends GT_MetaTileEntity_TieredMac
     @Override
     public void saveNBTData(NBTTagCompound aNBT) {
         aNBT.setInteger("ePollution", pollution);
-        aNBT.setFloat("eAnomaly", anomaly);
     }
 
     @Override
     public void loadNBTData(NBTTagCompound aNBT) {
         pollution = aNBT.getInteger("ePollution");
-        anomaly = aNBT.getFloat("eAnomaly");
-        getBaseMetaTileEntity().setActive(anomaly > 0 || pollution > 0);
     }
 
     @Override
@@ -126,10 +124,6 @@ public class GT_MetaTileEntity_DebugPollutor extends GT_MetaTileEntity_TieredMac
     @Override
     public void onPostTick(IGregTechTileEntity aBaseMetaTileEntity, long aTick) {
         if (aBaseMetaTileEntity.isServerSide()) {
-            aBaseMetaTileEntity.setActive(anomaly > 0 || pollution > 0);
-            if (anomaly > 0) {
-                TecTech.anomalyHandler.addAnomaly(aBaseMetaTileEntity, anomaly);
-            }
             if (pollution > 0) {
                 GT_Pollution.addPollution(aBaseMetaTileEntity, pollution);
             }
@@ -182,10 +176,7 @@ public class GT_MetaTileEntity_DebugPollutor extends GT_MetaTileEntity_TieredMac
                 new DrawableWidget().setDrawable(GT_UITextures.PICTURE_SCREEN_BLACK).setSize(90, 72).setPos(43, 4))
                 .widget(
                         TextWidget.dynamicString(() -> "Pollution: " + pollution)
-                                .setDefaultColor(COLOR_TEXT_WHITE.get()).setPos(46, 8))
-                .widget(
-                        TextWidget.dynamicString(() -> "Anomaly: " + anomaly).setDefaultColor(COLOR_TEXT_WHITE.get())
-                                .setPos(46, 16));
+                                .setDefaultColor(COLOR_TEXT_WHITE.get()).setPos(46, 8));
 
         addChangeNumberButton(
                 builder,
@@ -203,8 +194,6 @@ public class GT_MetaTileEntity_DebugPollutor extends GT_MetaTileEntity_TieredMac
                 64,
                 7,
                 22);
-        addChangeNumberButton(builder, GT_UITextures.OVERLAY_BUTTON_MINUS_LARGE, val -> anomaly -= val, 512, 64, 7, 40);
-        addChangeNumberButton(builder, GT_UITextures.OVERLAY_BUTTON_MINUS_LARGE, val -> anomaly /= val, 512, 64, 7, 58);
 
         addChangeNumberButton(builder, GT_UITextures.OVERLAY_BUTTON_MINUS_SMALL, val -> pollution -= val, 16, 1, 25, 4);
         addChangeNumberButton(
@@ -215,8 +204,6 @@ public class GT_MetaTileEntity_DebugPollutor extends GT_MetaTileEntity_TieredMac
                 2,
                 25,
                 22);
-        addChangeNumberButton(builder, GT_UITextures.OVERLAY_BUTTON_MINUS_SMALL, val -> anomaly -= val, 16, 1, 25, 40);
-        addChangeNumberButton(builder, GT_UITextures.OVERLAY_BUTTON_MINUS_SMALL, val -> anomaly /= val, 16, 2, 25, 58);
 
         addChangeNumberButton(builder, GT_UITextures.OVERLAY_BUTTON_PLUS_SMALL, val -> pollution += val, 16, 1, 133, 4);
         addChangeNumberButton(
@@ -227,8 +214,6 @@ public class GT_MetaTileEntity_DebugPollutor extends GT_MetaTileEntity_TieredMac
                 2,
                 133,
                 22);
-        addChangeNumberButton(builder, GT_UITextures.OVERLAY_BUTTON_PLUS_SMALL, val -> anomaly += val, 16, 1, 133, 40);
-        addChangeNumberButton(builder, GT_UITextures.OVERLAY_BUTTON_PLUS_SMALL, val -> anomaly *= val, 16, 2, 133, 58);
 
         addChangeNumberButton(
                 builder,
@@ -246,33 +231,11 @@ public class GT_MetaTileEntity_DebugPollutor extends GT_MetaTileEntity_TieredMac
                 64,
                 151,
                 22);
-        addChangeNumberButton(
-                builder,
-                GT_UITextures.OVERLAY_BUTTON_PLUS_LARGE,
-                val -> anomaly += val,
-                512,
-                64,
-                151,
-                40);
-        addChangeNumberButton(
-                builder,
-                GT_UITextures.OVERLAY_BUTTON_PLUS_LARGE,
-                val -> anomaly *= val,
-                512,
-                64,
-                151,
-                58);
+
     }
 
     private void addChangeNumberButton(ModularWindow.Builder builder, IDrawable overlay, Consumer<Integer> setter,
             int changeNumberShift, int changeNumber, int xPos, int yPos) {
-        builder.widget(new ButtonWidget().setOnClick((clickData, widget) -> {
-            setter.accept(clickData.shift ? changeNumberShift : changeNumber);
-            if (anomaly == Float.POSITIVE_INFINITY) {
-                anomaly = Float.MAX_VALUE;
-            } else if (anomaly == Float.NEGATIVE_INFINITY) {
-                anomaly = -Float.MAX_VALUE;
-            }
-        }).setBackground(GT_UITextures.BUTTON_STANDARD, overlay).setSize(18, 18).setPos(xPos, yPos));
+        builder.widget(new ButtonWidget().setOnClick((clickData, widget) -> setter.accept(clickData.shift ? changeNumberShift : changeNumber)).setBackground(GT_UITextures.BUTTON_STANDARD, overlay).setSize(18, 18).setPos(xPos, yPos));
     }
 }

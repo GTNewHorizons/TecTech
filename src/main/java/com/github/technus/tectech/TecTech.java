@@ -1,48 +1,34 @@
 package com.github.technus.tectech;
 
-import static com.github.technus.tectech.loader.TecTechConfig.DEBUG_MODE;
-import static gregtech.api.enums.Mods.COFHCore;
+import com.github.technus.tectech.loader.MainLoader;
+import com.github.technus.tectech.loader.TecTechConfig;
+import com.github.technus.tectech.loader.gui.CreativeTabTecTech;
+import com.github.technus.tectech.mechanics.commands.ConvertFloat;
+import com.github.technus.tectech.mechanics.commands.ConvertInteger;
+import com.github.technus.tectech.mechanics.data.ChunkDataHandler;
+import com.github.technus.tectech.mechanics.data.PlayerPersistence;
+import com.github.technus.tectech.mechanics.enderStorage.EnderWorldSavedData;
+import com.github.technus.tectech.nei.IMCForNEI;
+import com.github.technus.tectech.proxy.CommonProxy;
+import com.github.technus.tectech.recipe.EyeOfHarmonyRecipeStorage;
+import com.github.technus.tectech.util.XSTR;
+import cpw.mods.fml.common.FMLCommonHandler;
+import cpw.mods.fml.common.Mod;
+import cpw.mods.fml.common.SidedProxy;
+import cpw.mods.fml.common.event.*;
+import eu.usrv.yamcore.auxiliary.IngameErrorLog;
+import eu.usrv.yamcore.auxiliary.LogHelper;
+import gregtech.GT_Mod;
+import gregtech.common.GT_Proxy;
+import net.minecraftforge.common.MinecraftForge;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.Collection;
 import java.util.Iterator;
 
-import net.minecraftforge.common.MinecraftForge;
-
-import com.github.technus.tectech.loader.MainLoader;
-import com.github.technus.tectech.loader.TecTechConfig;
-import com.github.technus.tectech.loader.gui.CreativeTabTecTech;
-import com.github.technus.tectech.mechanics.anomaly.AnomalyHandler;
-import com.github.technus.tectech.mechanics.anomaly.CancerCommand;
-import com.github.technus.tectech.mechanics.anomaly.ChargeCommand;
-import com.github.technus.tectech.mechanics.anomaly.MassCommand;
-import com.github.technus.tectech.mechanics.commands.ConvertFloat;
-import com.github.technus.tectech.mechanics.commands.ConvertInteger;
-import com.github.technus.tectech.mechanics.data.ChunkDataHandler;
-import com.github.technus.tectech.mechanics.data.PlayerPersistence;
-import com.github.technus.tectech.mechanics.elementalMatter.core.commands.EMList;
-import com.github.technus.tectech.mechanics.elementalMatter.core.definitions.registry.EMDefinitionsRegistry;
-import com.github.technus.tectech.mechanics.elementalMatter.core.transformations.EMTransformationRegistry;
-import com.github.technus.tectech.mechanics.enderStorage.EnderWorldSavedData;
-import com.github.technus.tectech.nei.IMCForNEI;
-import com.github.technus.tectech.proxy.CommonProxy;
-import com.github.technus.tectech.recipe.EyeOfHarmonyRecipeStorage;
-import com.github.technus.tectech.util.XSTR;
-
-import cpw.mods.fml.common.FMLCommonHandler;
-import cpw.mods.fml.common.Mod;
-import cpw.mods.fml.common.SidedProxy;
-import cpw.mods.fml.common.event.FMLInitializationEvent;
-import cpw.mods.fml.common.event.FMLLoadCompleteEvent;
-import cpw.mods.fml.common.event.FMLPostInitializationEvent;
-import cpw.mods.fml.common.event.FMLPreInitializationEvent;
-import cpw.mods.fml.common.event.FMLServerAboutToStartEvent;
-import cpw.mods.fml.common.event.FMLServerStartingEvent;
-import eu.usrv.yamcore.auxiliary.IngameErrorLog;
-import eu.usrv.yamcore.auxiliary.LogHelper;
-import gregtech.GT_Mod;
-import gregtech.common.GT_Proxy;
+import static com.github.technus.tectech.loader.TecTechConfig.DEBUG_MODE;
+import static gregtech.api.enums.Mods.COFHCore;
 
 @Mod(
         modid = Reference.MODID,
@@ -75,11 +61,7 @@ public class TecTech {
 
     public static EnderWorldSavedData enderWorldSavedData;
     public static ChunkDataHandler chunkDataHandler;
-    public static AnomalyHandler anomalyHandler;
     public static PlayerPersistence playerPersistence;
-
-    public static final EMDefinitionsRegistry definitionsRegistry = new EMDefinitionsRegistry();
-    public static final EMTransformationRegistry transformationInfo = new EMTransformationRegistry();
 
     /**
      * For Loader.isModLoaded checks during the runtime
@@ -225,28 +207,20 @@ public class TecTech {
             }
         }
 
-        MainLoader.load(definitionsRegistry);
+        MainLoader.load();
         MainLoader.addAfterGregTechPostLoadRunner();
         IMCForNEI.IMCSender();
     }
 
     @Mod.EventHandler
     public void PostLoad(FMLPostInitializationEvent PostEvent) {
-        MainLoader.postLoad(definitionsRegistry, transformationInfo);
-
-        chunkDataHandler.registerChunkMetaDataHandler(anomalyHandler = new AnomalyHandler());
+        MainLoader.postLoad();
     }
 
     @Mod.EventHandler
     public void serverLoad(FMLServerStartingEvent pEvent) {
         pEvent.registerServerCommand(new ConvertInteger());
         pEvent.registerServerCommand(new ConvertFloat());
-        pEvent.registerServerCommand(new EMList());
-        if (DEBUG_MODE) {
-            pEvent.registerServerCommand(new CancerCommand());
-            pEvent.registerServerCommand(new ChargeCommand());
-            pEvent.registerServerCommand(new MassCommand());
-        }
     }
 
     @Mod.EventHandler

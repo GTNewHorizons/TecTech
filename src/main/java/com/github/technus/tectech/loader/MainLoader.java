@@ -7,7 +7,6 @@ import static com.github.technus.tectech.TecTech.instance;
 import static com.github.technus.tectech.TecTech.proxy;
 import static com.github.technus.tectech.loader.TecTechConfig.DEBUG_MODE;
 import static gregtech.api.enums.Mods.NewHorizonsCoreMod;
-import static gregtech.api.enums.Mods.Thaumcraft;
 import static gregtech.api.enums.Mods.TwilightForest;
 
 import java.util.Collection;
@@ -26,11 +25,8 @@ import com.github.technus.tectech.loader.thing.ComponentLoader;
 import com.github.technus.tectech.loader.thing.CoverLoader;
 import com.github.technus.tectech.loader.thing.MachineLoader;
 import com.github.technus.tectech.loader.thing.ThingsLoader;
-import com.github.technus.tectech.mechanics.elementalMatter.core.definitions.registry.EMDefinitionsRegistry;
-import com.github.technus.tectech.mechanics.elementalMatter.core.transformations.EMTransformationRegistry;
 import com.github.technus.tectech.thing.casing.TT_Container_Casings;
 import com.github.technus.tectech.thing.metaTileEntity.Textures;
-import com.github.technus.tectech.thing.metaTileEntity.multi.em_collider.GT_MetaTileEntity_EM_collider;
 
 import cpw.mods.fml.common.ProgressManager;
 import cpw.mods.fml.common.network.NetworkRegistry;
@@ -62,12 +58,8 @@ public final class MainLoader {
         }
     }
 
-    public static void load(EMDefinitionsRegistry definitionsRegistry) {
-        ProgressManager.ProgressBar progressBarLoad = ProgressManager.push("TecTech Loader", 7);
-
-        progressBarLoad.step("Elemental Things");
-        new ElementalLoader().run(definitionsRegistry);
-        LOGGER.info("Elemental Init Done");
+    public static void load() {
+        ProgressManager.ProgressBar progressBarLoad = ProgressManager.push("TecTech Loader", 6);
 
         progressBarLoad.step("Regular Things");
         new ThingsLoader().run();
@@ -99,8 +91,7 @@ public final class MainLoader {
         ProgressManager.pop(progressBarLoad);
     }
 
-    public static void postLoad(EMDefinitionsRegistry definitionsRegistry,
-            EMTransformationRegistry transformationInfo) {
+    public static void postLoad() {
         ProgressManager.ProgressBar progressBarPostLoad = ProgressManager.push("TecTech Post Loader", 4);
 
         progressBarPostLoad.step("Dreamcraft Compatibility");
@@ -118,7 +109,7 @@ public final class MainLoader {
         }
 
         progressBarPostLoad.step("Recipes");
-        new BaseRecipeLoader().run(transformationInfo);
+        new BaseRecipeLoader().run();
         TecTech.LOGGER.info("Recipe Init Done");
 
         if (!configTecTech.DISABLE_BLOCK_HARDNESS_NERF) {
@@ -138,7 +129,6 @@ public final class MainLoader {
             if (TecTech.configTecTech.NERF_FUSION) {
                 FixBrokenFusionRecipes();
             }
-            GT_MetaTileEntity_EM_collider.setValues(getFuelValue(Materials.Helium.getPlasma(125)));
         });
     }
 

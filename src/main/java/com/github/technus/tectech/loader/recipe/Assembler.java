@@ -3164,36 +3164,6 @@ public class Assembler implements Runnable {
                 1200,
                 122880);
 
-        // Elemental Input
-        addAssemblerRecipeWithCleanroom(
-                new ItemStack[] { CustomItemList.eM_Containment.get(1), ItemList.Hatch_Input_UV.get(1),
-                        GT_OreDictUnificator.get(OrePrefixes.pipeMedium, Materials.Naquadah, 2),
-                        ItemList.Sensor_UV.get(1) },
-                Materials.Osmiridium.getMolten(1296),
-                CustomItemList.eM_in_UV.get(1),
-                800,
-                500000);
-
-        // Elemental Output
-        addAssemblerRecipeWithCleanroom(
-                new ItemStack[] { CustomItemList.eM_Containment.get(1), ItemList.Hatch_Output_UV.get(1),
-                        GT_OreDictUnificator.get(OrePrefixes.pipeMedium, Materials.Naquadah, 2),
-                        ItemList.Emitter_UV.get(1) },
-                Materials.Osmiridium.getMolten(1296),
-                CustomItemList.eM_out_UV.get(1),
-                800,
-                500000);
-
-        // Overflow
-        addAssemblerRecipeWithCleanroom(
-                new ItemStack[] { CustomItemList.eM_Containment.get(1), ItemList.Hatch_Muffler_UV.get(1),
-                        GT_OreDictUnificator.get(OrePrefixes.pipeLarge, Materials.Naquadah, 1),
-                        ItemList.Field_Generator_UV.get(1) },
-                Materials.Osmiridium.getMolten(1296),
-                CustomItemList.eM_muffler_UV.get(1),
-                800,
-                500000);
-
         // Capacitor Hatch
         GT_Values.RA.addAssemblerRecipe(
                 new ItemStack[] { ItemList.Hatch_Input_Bus_HV.get(1),

@@ -1,12 +1,7 @@
 package com.github.technus.tectech.loader.recipe;
 
 import static com.github.technus.tectech.TecTech.LOGGER;
-import static gregtech.api.enums.Mods.GTPlusPlus;
 import static gregtech.api.enums.Mods.NewHorizonsCoreMod;
-
-import com.github.technus.tectech.mechanics.elementalMatter.core.transformations.EMTransformationRegistry;
-import com.github.technus.tectech.mechanics.elementalMatter.definitions.complex.EMAtomDefinition;
-import com.github.technus.tectech.mechanics.elementalMatter.definitions.complex.EMHadronDefinition;
 
 import gregtech.api.enums.Materials;
 import gregtech.api.interfaces.IItemContainer;
@@ -38,9 +33,7 @@ public class BaseRecipeLoader {
         return mat == Materials._NULL || mat == null ? def : mat;
     }
 
-    public void run(EMTransformationRegistry transformationInfo) {
-        EMAtomDefinition.setTransformations(transformationInfo);
-        EMHadronDefinition.setTransformations(transformationInfo);
+    public void run() {
 
         // todo: Move those recipes in NHCore
         if (NewHorizonsCoreMod.isModLoaded()) {
@@ -52,6 +45,5 @@ public class BaseRecipeLoader {
             new ResearchStationAssemblyLine().run();
         }
 
-        new MachineEMBehaviours();
     }
 }

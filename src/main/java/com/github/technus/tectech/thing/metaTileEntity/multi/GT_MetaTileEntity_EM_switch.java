@@ -95,7 +95,6 @@ public class GT_MetaTileEntity_EM_switch extends GT_MetaTileEntity_MultiblockBas
             if (Double.isNaN(v)) return STATUS_WRONG;
             v = (int) v;
             if (v <= 0) return STATUS_TOO_LOW;
-            if (v >= base.eOutputHatches.size()) return STATUS_TOO_HIGH;
             return STATUS_OK;
         }
         return STATUS_NEUTRAL;
