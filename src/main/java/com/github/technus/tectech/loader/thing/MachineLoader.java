@@ -1,14 +1,15 @@
 package com.github.technus.tectech.loader.thing;
 
+import static com.github.technus.tectech.thing.CustomItemList.*;
+import static com.github.technus.tectech.util.CommonValues.V;
+
+import net.minecraft.init.Blocks;
+import net.minecraft.item.ItemStack;
+
 import com.github.technus.tectech.thing.metaTileEntity.hatch.*;
 import com.github.technus.tectech.thing.metaTileEntity.multi.*;
 import com.github.technus.tectech.thing.metaTileEntity.pipe.*;
 import com.github.technus.tectech.thing.metaTileEntity.single.*;
-import net.minecraft.init.Blocks;
-import net.minecraft.item.ItemStack;
-
-import static com.github.technus.tectech.thing.CustomItemList.*;
-import static com.github.technus.tectech.util.CommonValues.V;
 
 /**
  * Created by danie_000 on 16.11.2016.
@@ -1768,7 +1769,7 @@ public class MachineLoader implements Runnable {
         // Pipes
         // ===================================================================================================
 
-       LASERpipe.set(
+        LASERpipe.set(
                 new GT_MetaTileEntity_Pipe_Energy(15465, "pipe.energystream", "Laser Vacuum Pipe").getStackForm(1L));
         DATApipe.set(new GT_MetaTileEntity_Pipe_Data(15470, "pipe.datastream", "Optical Fiber Cable").getStackForm(1L));
 

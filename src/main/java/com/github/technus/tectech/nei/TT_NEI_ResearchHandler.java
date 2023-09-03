@@ -9,7 +9,6 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
-import com.github.technus.tectech.recipe.TT_recipe;
 import net.minecraft.client.Minecraft;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
@@ -20,6 +19,7 @@ import org.lwjgl.opengl.GL11;
 
 import com.github.technus.tectech.Reference;
 import com.github.technus.tectech.TecTech;
+import com.github.technus.tectech.recipe.TT_recipe;
 
 import codechicken.lib.gui.GuiDraw;
 import codechicken.nei.ItemList;

@@ -36,6 +36,7 @@ import gregtech.api.objects.GT_RenderedTexture;
 import gregtech.common.GT_Client;
 
 public class GT_MetaTileEntity_Pipe_Energy extends MetaPipeEntity implements IConnectsToEnergyTunnel, IActivePipe {
+
     static Textures.BlockIcons.CustomIcon EMcandy, EMCandyActive;
     private static Textures.BlockIcons.CustomIcon EMpipe;
     public byte connectionCount = 0;

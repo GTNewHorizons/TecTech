@@ -121,7 +121,7 @@ public final class MainLoader {
             TecTech.LOGGER.info("Blocks were not nerfed");
         }
 
-        //ProgressManager.pop(progressBarPostLoad);
+        // ProgressManager.pop(progressBarPostLoad);
     }
 
     public static void addAfterGregTechPostLoadRunner() {

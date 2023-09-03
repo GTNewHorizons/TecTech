@@ -1,26 +1,5 @@
 package com.github.technus.tectech.recipe;
 
-import appeng.util.ReadableNumberConverter;
-import codechicken.nei.PositionedStack;
-import com.gtnewhorizons.modularui.api.forge.IItemHandlerModifiable;
-import com.gtnewhorizons.modularui.api.math.Alignment;
-import com.gtnewhorizons.modularui.api.math.Pos2d;
-import com.gtnewhorizons.modularui.api.screen.ModularWindow;
-import com.gtnewhorizons.modularui.common.widget.ProgressBar;
-import cpw.mods.fml.common.registry.GameRegistry;
-import gregtech.api.gui.modularui.GT_UITextures;
-import gregtech.api.util.GT_LanguageManager;
-import gregtech.api.util.GT_Recipe;
-import gregtech.common.gui.modularui.UIHelper;
-import gregtech.nei.GT_NEI_DefaultHandler;
-import gregtech.nei.NEIRecipeInfo;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.EnumChatFormatting;
-import net.minecraftforge.fluids.FluidStack;
-
-import java.util.*;
-import java.util.function.Supplier;
-
 import static com.github.technus.tectech.util.CommonValues.EOH_TIER_FANCY_NAMES;
 import static com.google.common.math.LongMath.pow;
 import static gregtech.api.util.GT_Utility.formatNumbers;
@@ -28,13 +7,47 @@ import static java.lang.Math.min;
 import static net.minecraft.util.EnumChatFormatting.*;
 import static net.minecraft.util.StatCollector.translateToLocal;
 
+import java.util.*;
+import java.util.function.Supplier;
+
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.EnumChatFormatting;
+import net.minecraftforge.fluids.FluidStack;
+
+import com.gtnewhorizons.modularui.api.forge.IItemHandlerModifiable;
+import com.gtnewhorizons.modularui.api.math.Alignment;
+import com.gtnewhorizons.modularui.api.math.Pos2d;
+import com.gtnewhorizons.modularui.api.screen.ModularWindow;
+import com.gtnewhorizons.modularui.common.widget.ProgressBar;
+
+import appeng.util.ReadableNumberConverter;
+import codechicken.nei.PositionedStack;
+import cpw.mods.fml.common.registry.GameRegistry;
+import gregtech.api.gui.modularui.GT_UITextures;
+import gregtech.api.util.GT_LanguageManager;
+import gregtech.api.util.GT_Recipe;
+import gregtech.common.gui.modularui.UIHelper;
+import gregtech.nei.GT_NEI_DefaultHandler;
+import gregtech.nei.NEIRecipeInfo;
+
 @SuppressWarnings("SpellCheckingInspection")
 public class TT_recipe extends GT_Recipe {
 
     public static final String E_RECIPE_ID = "eRecipeID";
 
-    public TT_recipe(boolean aOptimize, ItemStack[] aInputs, ItemStack[] aOutputs, Object aSpecialItems, int[] aChances, FluidStack[] aFluidInputs, FluidStack[] aFluidOutputs, int aDuration, int aEUt, int aSpecialValue) {
-        super(aOptimize, aInputs, aOutputs, aSpecialItems, aChances, aFluidInputs, aFluidOutputs, aDuration, aEUt, aSpecialValue);
+    public TT_recipe(boolean aOptimize, ItemStack[] aInputs, ItemStack[] aOutputs, Object aSpecialItems, int[] aChances,
+            FluidStack[] aFluidInputs, FluidStack[] aFluidOutputs, int aDuration, int aEUt, int aSpecialValue) {
+        super(
+                aOptimize,
+                aInputs,
+                aOutputs,
+                aSpecialItems,
+                aChances,
+                aFluidInputs,
+                aFluidOutputs,
+                aDuration,
+                aEUt,
+                aSpecialValue);
     }
 
     public static class TT_Recipe_Map<T extends GT_Recipe> {
@@ -154,7 +167,17 @@ public class TT_recipe extends GT_Recipe {
 
         public TT_assLineRecipe(boolean aOptimize, ItemStack researchItem, ItemStack[] aInputs, ItemStack[] aOutputs,
                 Object aSpecialItems, FluidStack[] aFluidInputs, int aDuration, int aEUt, int aSpecialValue) {
-            super(aOptimize, aInputs, aOutputs, aSpecialItems, null, aFluidInputs, null, aDuration, aEUt, aSpecialValue);
+            super(
+                    aOptimize,
+                    aInputs,
+                    aOutputs,
+                    aSpecialItems,
+                    null,
+                    aFluidInputs,
+                    null,
+                    aDuration,
+                    aEUt,
+                    aSpecialValue);
             mResearchItem = researchItem;
         }
 

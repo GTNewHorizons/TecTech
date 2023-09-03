@@ -3059,7 +3059,6 @@ public class Assembler implements Runnable {
                 20,
                 30720);
 
-
         // Laser
         addAssemblerRecipeWithCleanroom(
                 new ItemStack[] { CustomItemList.DATApipe.get(1), GT_ModHandler.getIC2Item("reinforcedGlass", 1L),

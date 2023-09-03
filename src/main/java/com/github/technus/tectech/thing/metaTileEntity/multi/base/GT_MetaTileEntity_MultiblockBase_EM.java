@@ -3,15 +3,11 @@ package com.github.technus.tectech.thing.metaTileEntity.multi.base;
 import static com.github.technus.tectech.loader.TecTechConfig.DEBUG_MODE;
 import static com.github.technus.tectech.loader.TecTechConfig.POWERLESS_MODE;
 import static com.github.technus.tectech.thing.casing.GT_Block_CasingsTT.texturePage;
-import static com.github.technus.tectech.util.CommonValues.MOVE_AT;
 import static com.github.technus.tectech.util.CommonValues.MULTI_CHECK_AT;
-import static com.github.technus.tectech.util.CommonValues.MULTI_PURGE_1_AT;
-import static com.github.technus.tectech.util.CommonValues.MULTI_PURGE_2_AT;
 import static com.github.technus.tectech.util.CommonValues.RECIPE_AT;
 import static com.github.technus.tectech.util.CommonValues.TEC_MARK_GENERAL;
 import static com.github.technus.tectech.util.CommonValues.V;
 import static com.github.technus.tectech.util.CommonValues.VN;
-import static com.github.technus.tectech.util.DoubleCount.div;
 import static com.github.technus.tectech.util.TT_Utility.getTier;
 import static gregtech.api.enums.GT_HatchElement.InputBus;
 import static gregtech.api.enums.GT_HatchElement.InputHatch;
@@ -2358,8 +2354,7 @@ public abstract class GT_MetaTileEntity_MultiblockBase_EM
                         HatchElement.DynamoMulti,
                         HatchElement.InputData,
                         HatchElement.OutputData,
-                        HatchElement.Uncertainty
-                )
+                        HatchElement.Uncertainty)
                 .casingIndex(casingIndex).dot(dot).buildAndChain(casingBlock, casingMeta);
     }
 

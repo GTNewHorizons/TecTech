@@ -1,15 +1,12 @@
 package com.github.technus.tectech.thing.metaTileEntity.single;
 
 import static com.github.technus.tectech.thing.metaTileEntity.Textures.*;
-import static com.github.technus.tectech.thing.metaTileEntity.single.GT_MetaTileEntity_DebugPowerGenerator.GENNY;
 import static net.minecraft.util.StatCollector.translateToLocal;
 
 import java.util.function.Consumer;
 
-import gregtech.api.interfaces.IIconContainer;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumChatFormatting;
@@ -81,7 +78,7 @@ public class GT_MetaTileEntity_DebugPollutor extends GT_MetaTileEntity_TieredMac
 
     @Override
     public ITexture[] getTexture(IGregTechTileEntity aBaseMetaTileEntity, ForgeDirection side, ForgeDirection facing,
-                                 int colorIndex, boolean aActive, boolean aRedstone) {
+            int colorIndex, boolean aActive, boolean aRedstone) {
         return new ITexture[] { MACHINE_CASINGS_TT[mTier][colorIndex + 1],
                 (side == facing) ? POLLUTOR : OVERLAYS_ENERGY_OUT_LASER_TT[mTier] };
     }
@@ -233,6 +230,9 @@ public class GT_MetaTileEntity_DebugPollutor extends GT_MetaTileEntity_TieredMac
 
     private void addChangeNumberButton(ModularWindow.Builder builder, IDrawable overlay, Consumer<Integer> setter,
             int changeNumberShift, int changeNumber, int xPos, int yPos) {
-        builder.widget(new ButtonWidget().setOnClick((clickData, widget) -> setter.accept(clickData.shift ? changeNumberShift : changeNumber)).setBackground(GT_UITextures.BUTTON_STANDARD, overlay).setSize(18, 18).setPos(xPos, yPos));
+        builder.widget(
+                new ButtonWidget().setOnClick(
+                        (clickData, widget) -> setter.accept(clickData.shift ? changeNumberShift : changeNumber))
+                        .setBackground(GT_UITextures.BUTTON_STANDARD, overlay).setSize(18, 18).setPos(xPos, yPos));
     }
 }
