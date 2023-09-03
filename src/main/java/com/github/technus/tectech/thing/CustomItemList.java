@@ -66,7 +66,6 @@ public enum CustomItemList implements IItemContainer {
     Machine_DebugGenny,
     UnusedStuff,
     Machine_DebugPollutor,
-    EMpipe,
     DATApipe,
     LASERpipe,
     rack_Hatch,
@@ -402,7 +401,6 @@ public enum CustomItemList implements IItemContainer {
     Machine_TeslaCoil_4by4_EV,
     Machine_TeslaCoil_4by4_IV,
     DATApipeBlock,
-    EMpipeBlock,
     LASERpipeBlock,
 
     SpacetimeCompressionFieldGeneratorTier0,

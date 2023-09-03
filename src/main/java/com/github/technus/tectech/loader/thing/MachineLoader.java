@@ -1768,13 +1768,10 @@ public class MachineLoader implements Runnable {
         // Pipes
         // ===================================================================================================
 
-        EMpipe.set(new GT_MetaTileEntity_Pipe_EM(15460, "pipe.elementalmatter", "Quantum \"Tunnel\"").getStackForm(1L));
-        LASERpipe.set(
+       LASERpipe.set(
                 new GT_MetaTileEntity_Pipe_Energy(15465, "pipe.energystream", "Laser Vacuum Pipe").getStackForm(1L));
         DATApipe.set(new GT_MetaTileEntity_Pipe_Data(15470, "pipe.datastream", "Optical Fiber Cable").getStackForm(1L));
-        EMpipeBlock.set(
-                new GT_MetaTileEntity_PipeBlock_EM(15471, "pipe.elementalmatter.block", "Quantum \"Tunnel\" Casing")
-                        .getStackForm(1L));
+
         LASERpipeBlock.set(
                 new GT_MetaTileEntity_PipeBlock_Energy(15472, "pipe.energystream.block", "Laser Vacuum Pipe Casing")
                         .getStackForm(1L));

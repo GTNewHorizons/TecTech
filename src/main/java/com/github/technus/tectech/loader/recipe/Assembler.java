@@ -3059,26 +3059,6 @@ public class Assembler implements Runnable {
                 20,
                 30720);
 
-        // Tunnel
-        addAssemblerRecipeWithCleanroom(
-                new ItemStack[] { CustomItemList.DATApipe.get(1),
-                        GT_OreDictUnificator.get(OrePrefixes.plateDouble, Materials.Osmiridium, 4),
-                        GT_OreDictUnificator.get(OrePrefixes.foil, Materials.Osmium, 4),
-                        GT_OreDictUnificator.get(OrePrefixes.wireGt02, Materials.SuperconductorUHV, 2),
-                        ItemList.Field_Generator_MV.get(1),
-                        GT_OreDictUnificator.get(OrePrefixes.circuit, Materials.Ultimate, 1) },
-                Materials.Osmium.getMolten(288),
-                CustomItemList.EMpipe.get(1),
-                400,
-                500000);
-
-        // Tunnel Casing
-        addAssemblerRecipeWithCleanroom(
-                new ItemStack[] { CustomItemList.EMpipe.get(1), ItemList.Casing_LuV.get(1) },
-                null,
-                CustomItemList.EMpipeBlock.get(1),
-                20,
-                30720);
 
         // Laser
         addAssemblerRecipeWithCleanroom(
