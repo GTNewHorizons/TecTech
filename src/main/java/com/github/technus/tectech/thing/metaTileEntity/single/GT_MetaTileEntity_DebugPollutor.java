@@ -83,10 +83,7 @@ public class GT_MetaTileEntity_DebugPollutor extends GT_MetaTileEntity_TieredMac
     public ITexture[] getTexture(IGregTechTileEntity aBaseMetaTileEntity, ForgeDirection side, ForgeDirection facing,
                                  int colorIndex, boolean aActive, boolean aRedstone) {
         return new ITexture[] { MACHINE_CASINGS_TT[mTier][colorIndex + 1],
-                side != facing
-                        ? true ? (aActive ? OVERLAYS_ENERGY_OUT_LASER_TT[mTier] : OVERLAYS_ENERGY_IN_LASER_TT[mTier])
-                        : (aActive ? OVERLAYS_ENERGY_OUT_POWER_TT[mTier] : OVERLAYS_ENERGY_IN_POWER_TT[mTier])
-                        : GENNY };
+                (side == facing) ? POLLUTOR : OVERLAYS_ENERGY_OUT_LASER_TT[mTier] };
     }
 
     @Override
