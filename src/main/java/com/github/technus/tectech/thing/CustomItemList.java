@@ -52,7 +52,6 @@ public enum CustomItemList implements IItemContainer {
     hatch_CreativeMaintenance,
     hatch_CreativeData,
     Machine_OwnerDetector,
-    Machine_DataReader,
     Machine_BuckConverter_IV,
     Machine_BuckConverter_LuV,
     Machine_BuckConverter_ZPM,
