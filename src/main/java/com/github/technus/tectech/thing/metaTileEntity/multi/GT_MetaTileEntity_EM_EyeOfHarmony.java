@@ -1164,6 +1164,7 @@ public class GT_MetaTileEntity_EM_EyeOfHarmony extends GT_MetaTileEntity_Multibl
         }
 
         successChance = recipeChanceCalculator();
+        currentRecipeRocketTier = currentRecipe.getRocketTier();
 
         // Determine EU recipe output.
         euOutput = (long) (recipeObject.getEUOutput() * pow(0.77, currentCircuitMultiplier));
@@ -1235,12 +1236,13 @@ public class GT_MetaTileEntity_EM_EyeOfHarmony extends GT_MetaTileEntity_Multibl
     }
 
     private double successChance;
+    private long currentRecipeRocketTier;
 
     private void outputFailedChance() {
         // 2^Tier spacetime released upon recipe failure.
         mOutputFluids = new FluidStack[] { MaterialsUEVplus.SpaceTime.getMolten(
                 (long) (successChance * MOLTEN_SPACETIME_PER_FAILURE_TIER
-                        * pow(SPACETIME_FAILURE_BASE, currentRecipe.getRocketTier() + 1))) };
+                        * pow(SPACETIME_FAILURE_BASE, currentRecipeRocketTier + 1))) };
         super.outputAfterRecipe_EM();
     }
 
@@ -1401,6 +1403,7 @@ public class GT_MetaTileEntity_EM_EyeOfHarmony extends GT_MetaTileEntity_Multibl
     private static final String RECIPE_RUNNING_NBT_TAG = EYE_OF_HARMONY + "recipeRunning";
     private static final String RECIPE_EU_OUTPUT_NBT_TAG = EYE_OF_HARMONY + "euOutput";
     private static final String RECIPE_SUCCESS_CHANCE_NBT_TAG = EYE_OF_HARMONY + "recipeSuccessChance";
+    private static final String ROCKET_TIER_NBT_TAG = EYE_OF_HARMONY + "rocketTier";
     private static final String CURRENT_CIRCUIT_MULTIPLIER_TAG = EYE_OF_HARMONY + "currentCircuitMultiplier";
     private static final String ANIMATIONS_ENABLED = EYE_OF_HARMONY + "animationsEnabled";
 
@@ -1416,6 +1419,7 @@ public class GT_MetaTileEntity_EM_EyeOfHarmony extends GT_MetaTileEntity_Multibl
         aNBT.setBoolean(RECIPE_RUNNING_NBT_TAG, recipeRunning);
         aNBT.setLong(RECIPE_EU_OUTPUT_NBT_TAG, euOutput);
         aNBT.setDouble(RECIPE_SUCCESS_CHANCE_NBT_TAG, successChance);
+        aNBT.setLong(ROCKET_TIER_NBT_TAG, currentRecipeRocketTier);
         aNBT.setLong(CURRENT_CIRCUIT_MULTIPLIER_TAG, currentCircuitMultiplier);
         aNBT.setBoolean(ANIMATIONS_ENABLED, animationsEnabled);
 
@@ -1450,6 +1454,7 @@ public class GT_MetaTileEntity_EM_EyeOfHarmony extends GT_MetaTileEntity_Multibl
         recipeRunning = aNBT.getBoolean(RECIPE_RUNNING_NBT_TAG);
         euOutput = aNBT.getLong(RECIPE_EU_OUTPUT_NBT_TAG);
         successChance = aNBT.getDouble(RECIPE_SUCCESS_CHANCE_NBT_TAG);
+        currentRecipeRocketTier = aNBT.getLong(ROCKET_TIER_NBT_TAG);
         currentCircuitMultiplier = aNBT.getLong(CURRENT_CIRCUIT_MULTIPLIER_TAG);
         animationsEnabled = aNBT.getBoolean(ANIMATIONS_ENABLED);
 
