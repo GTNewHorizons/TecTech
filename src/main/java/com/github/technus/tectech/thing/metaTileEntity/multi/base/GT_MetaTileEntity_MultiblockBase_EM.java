@@ -316,11 +316,6 @@ public abstract class GT_MetaTileEntity_MultiblockBase_EM
 
     // region tooltip and scanner result
 
-    /**
-     * @param hatchNo
-     * @param paramID
-     * @return
-     */
     public ArrayList<String> getFullLedDescriptionIn(int hatchNo, int paramID) {
         ArrayList<String> list = new ArrayList<>();
         list.add(
@@ -348,11 +343,6 @@ public abstract class GT_MetaTileEntity_MultiblockBase_EM
         return list;
     }
 
-    /**
-     * @param hatchNo
-     * @param paramID
-     * @return
-     */
     public ArrayList<String> getFullLedDescriptionOut(int hatchNo, int paramID) {
         ArrayList<String> list = new ArrayList<>();
         list.add(
@@ -389,8 +379,6 @@ public abstract class GT_MetaTileEntity_MultiblockBase_EM
 
     /**
      * scanner gives it
-     *
-     * @return
      */
     @Override
     public String[] getInfoData() { // TODO Do it
@@ -466,8 +454,6 @@ public abstract class GT_MetaTileEntity_MultiblockBase_EM
 
     /**
      * should it work with scanner? HELL YES
-     *
-     * @return
      */
     @Override
     public boolean isGivingInformation() {
@@ -480,8 +466,6 @@ public abstract class GT_MetaTileEntity_MultiblockBase_EM
 
     /**
      * add more textures
-     *
-     * @param aBlockIconRegister
      */
     @Override
     @SideOnly(Side.CLIENT)
@@ -493,14 +477,6 @@ public abstract class GT_MetaTileEntity_MultiblockBase_EM
 
     /**
      * actually use textures
-     *
-     * @param aBaseMetaTileEntity
-     * @param side
-     * @param facing
-     * @param colorIndex
-     * @param aActive
-     * @param aRedstone
-     * @return
      */
     @Override
     public ITexture[] getTexture(IGregTechTileEntity aBaseMetaTileEntity, ForgeDirection side, ForgeDirection facing,
@@ -514,8 +490,6 @@ public abstract class GT_MetaTileEntity_MultiblockBase_EM
 
     /**
      * should return your activity sound
-     *
-     * @return
      */
     @SideOnly(Side.CLIENT)
     protected ResourceLocation getActivitySound() {
@@ -524,8 +498,6 @@ public abstract class GT_MetaTileEntity_MultiblockBase_EM
 
     /**
      * plays the sounds auto magically
-     *
-     * @param activitySound
      */
     @SideOnly(Side.CLIENT)
     protected void soundMagic(ResourceLocation activitySound) {
@@ -547,9 +519,6 @@ public abstract class GT_MetaTileEntity_MultiblockBase_EM
 
     /**
      * is the thing inside controller a valid item to make the machine work
-     *
-     * @param itemStack
-     * @return
      */
     @Override
     public boolean isCorrectMachinePart(ItemStack itemStack) {
@@ -558,9 +527,6 @@ public abstract class GT_MetaTileEntity_MultiblockBase_EM
 
     /**
      * how much damage to apply to thing in controller - not sure how it does it
-     *
-     * @param itemStack
-     * @return
      */
     @Override
     public int getDamageToComponent(ItemStack itemStack) {
@@ -586,8 +552,6 @@ public abstract class GT_MetaTileEntity_MultiblockBase_EM
 
     /**
      * prevents spontaneous explosions when the chunks unloading would cause them should cover 3 chunks radius
-     *
-     * @return
      */
     protected boolean areChunksAroundLoaded_EM() {
         if (this.isValid() && getBaseMetaTileEntity().isServerSide()) {
@@ -733,8 +697,6 @@ public abstract class GT_MetaTileEntity_MultiblockBase_EM
 
     /**
      * store data
-     *
-     * @param aNBT
      */
     @Override
     public void saveNBTData(NBTTagCompound aNBT) {
@@ -811,8 +773,6 @@ public abstract class GT_MetaTileEntity_MultiblockBase_EM
 
     /**
      * load data
-     *
-     * @param aNBT
      */
     @Override
     public void loadNBTData(NBTTagCompound aNBT) {
@@ -939,8 +899,6 @@ public abstract class GT_MetaTileEntity_MultiblockBase_EM
 
     /**
      * cyclic check even when not working, called LESS frequently
-     *
-     * @return
      */
     private boolean cyclicUpdate() {
         if (cyclicUpdate_EM()) {
@@ -952,8 +910,6 @@ public abstract class GT_MetaTileEntity_MultiblockBase_EM
 
     /**
      * mining level...
-     *
-     * @return
      */
     @Override
     public byte getTileEntityBaseType() {
@@ -966,10 +922,6 @@ public abstract class GT_MetaTileEntity_MultiblockBase_EM
 
     /**
      * internal check machine
-     *
-     * @param iGregTechTileEntity
-     * @param itemStack
-     * @return
      */
     @Override
     public final boolean checkMachine(IGregTechTileEntity iGregTechTileEntity, ItemStack itemStack) {
@@ -978,9 +930,6 @@ public abstract class GT_MetaTileEntity_MultiblockBase_EM
 
     /**
      * internal check recipe
-     *
-     * @param itemStack
-     * @return
      */
     @Override
     public final boolean checkRecipe(ItemStack itemStack) { // do recipe checks, based on "machine content and state"
@@ -1062,9 +1011,6 @@ public abstract class GT_MetaTileEntity_MultiblockBase_EM
 
     /**
      * called every tick the machines is active
-     *
-     * @param aStack
-     * @return
      */
     @Override
     public boolean onRunningTick(ItemStack aStack) {
