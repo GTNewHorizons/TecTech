@@ -1,20 +1,13 @@
 package com.github.technus.tectech;
 
-import static com.github.technus.tectech.loader.TecTechConfig.DEBUG_MODE;
-import static gregtech.api.enums.Mods.COFHCore;
-
-import net.minecraftforge.common.MinecraftForge;
-
 import com.github.technus.tectech.loader.MainLoader;
 import com.github.technus.tectech.loader.TecTechConfig;
 import com.github.technus.tectech.loader.gui.CreativeTabTecTech;
-import com.github.technus.tectech.mechanics.data.PlayerPersistence;
 import com.github.technus.tectech.mechanics.enderStorage.EnderWorldSavedData;
 import com.github.technus.tectech.nei.IMCForNEI;
 import com.github.technus.tectech.proxy.CommonProxy;
 import com.github.technus.tectech.recipe.EyeOfHarmonyRecipeStorage;
 import com.github.technus.tectech.util.XSTR;
-
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.SidedProxy;
@@ -22,9 +15,12 @@ import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLLoadCompleteEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
-import cpw.mods.fml.common.event.FMLServerAboutToStartEvent;
 import eu.usrv.yamcore.auxiliary.IngameErrorLog;
 import eu.usrv.yamcore.auxiliary.LogHelper;
+import net.minecraftforge.common.MinecraftForge;
+
+import static com.github.technus.tectech.loader.TecTechConfig.DEBUG_MODE;
+import static gregtech.api.enums.Mods.COFHCore;
 
 @Mod(
         modid = Reference.MODID,
@@ -56,7 +52,6 @@ public class TecTech {
     public static TecTechConfig configTecTech;
 
     public static EnderWorldSavedData enderWorldSavedData;
-    public static PlayerPersistence playerPersistence;
 
     /**
      * For Loader.isModLoaded checks during the runtime
@@ -64,12 +59,6 @@ public class TecTech {
     public static boolean hasCOFH = false;
 
     public static final byte tectechTexturePage1 = 8;
-
-    public static void AddLoginError(String pMessage) {
-        if (moduleAdminErrorLogs != null) {
-            moduleAdminErrorLogs.AddErrorLogOnAdminJoin(pMessage);
-        }
-    }
 
     @Mod.EventHandler
     public void PreLoad(FMLPreInitializationEvent PreEvent) {
@@ -89,10 +78,6 @@ public class TecTech {
             LOGGER.debug("moduleAdminErrorLogs is enabled");
             moduleAdminErrorLogs = new IngameErrorLog();
         }
-
-        playerPersistence = new PlayerPersistence("tec");
-        FMLCommonHandler.instance().bus().register(playerPersistence);
-        MinecraftForge.EVENT_BUS.register(playerPersistence);
 
         enderWorldSavedData = new EnderWorldSavedData();
         FMLCommonHandler.instance().bus().register(enderWorldSavedData);
@@ -122,8 +107,4 @@ public class TecTech {
 
     public static EyeOfHarmonyRecipeStorage eyeOfHarmonyRecipeStorage = null;
 
-    @Mod.EventHandler
-    public void onServerAboutToStart(FMLServerAboutToStartEvent aEvent) {
-        playerPersistence.clearData();
-    }
 }

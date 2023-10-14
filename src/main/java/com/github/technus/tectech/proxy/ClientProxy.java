@@ -170,12 +170,4 @@ public class ClientProxy extends CommonProxy {
         em_particle(w, box.maxX, box.minY, box.minZ);
     }
 
-    @Override
-    public EntityClientPlayerMP getPlayer() {
-        return Minecraft.getMinecraft().thePlayer;
-    }
-
-    public boolean isThePlayer(EntityPlayer player) {
-        return getPlayer() == player;
-    }
 }
