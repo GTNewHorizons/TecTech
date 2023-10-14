@@ -58,17 +58,6 @@ public class PlayerPersistence {
         map.put(uuid2, tagCompound);
     }
 
-    public void putDataOrSetToNewTag(EntityPlayer player, NBTTagCompound tagCompound) {
-        putDataOrSetToNewTag(
-                player.getUniqueID(),
-                UUID.nameUUIDFromBytes(player.getCommandSenderName().getBytes(forName("UTF-8"))),
-                tagCompound);
-    }
-
-    public void saveData(EntityPlayer player) {
-        TT_Utility.savePlayerFile(player, extension, getDataOrSetToNewTag(player));
-    }
-
     @SubscribeEvent
     public void onLogin(PlayerEvent.PlayerLoggedInEvent event) {
         if (!event.player.worldObj.isRemote) {
