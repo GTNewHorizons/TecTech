@@ -15,7 +15,6 @@ import net.minecraftforge.fluids.FluidStack;
 
 import com.github.technus.tectech.TecTech;
 import com.github.technus.tectech.loader.gui.CreativeTabTecTech;
-import com.github.technus.tectech.loader.gui.ModGuiHandler;
 import com.github.technus.tectech.loader.recipe.BaseRecipeLoader;
 import com.github.technus.tectech.loader.thing.ComponentLoader;
 import com.github.technus.tectech.loader.thing.CoverLoader;
@@ -80,7 +79,6 @@ public final class MainLoader {
         LOGGER.info("Packet Dispatcher registered");
 
         progressBarLoad.step("Register GUI Handler");
-        NetworkRegistry.INSTANCE.registerGuiHandler(instance, new ModGuiHandler());
         proxy.registerRenderInfo();
         LOGGER.info("GUI Handler registered");
 
