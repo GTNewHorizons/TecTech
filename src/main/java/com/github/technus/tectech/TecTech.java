@@ -3,17 +3,11 @@ package com.github.technus.tectech;
 import static com.github.technus.tectech.loader.TecTechConfig.DEBUG_MODE;
 import static gregtech.api.enums.Mods.COFHCore;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.Modifier;
-import java.util.Collection;
-import java.util.Iterator;
-
 import net.minecraftforge.common.MinecraftForge;
 
 import com.github.technus.tectech.loader.MainLoader;
 import com.github.technus.tectech.loader.TecTechConfig;
 import com.github.technus.tectech.loader.gui.CreativeTabTecTech;
-import com.github.technus.tectech.mechanics.data.ChunkDataHandler;
 import com.github.technus.tectech.mechanics.data.PlayerPersistence;
 import com.github.technus.tectech.mechanics.enderStorage.EnderWorldSavedData;
 import com.github.technus.tectech.nei.IMCForNEI;
@@ -29,11 +23,8 @@ import cpw.mods.fml.common.event.FMLLoadCompleteEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.event.FMLServerAboutToStartEvent;
-import cpw.mods.fml.common.event.FMLServerStartingEvent;
 import eu.usrv.yamcore.auxiliary.IngameErrorLog;
 import eu.usrv.yamcore.auxiliary.LogHelper;
-import gregtech.GT_Mod;
-import gregtech.common.GT_Proxy;
 
 @Mod(
         modid = Reference.MODID,
@@ -65,7 +56,6 @@ public class TecTech {
     public static TecTechConfig configTecTech;
 
     public static EnderWorldSavedData enderWorldSavedData;
-    public static ChunkDataHandler chunkDataHandler;
     public static PlayerPersistence playerPersistence;
 
     /**
@@ -104,10 +94,6 @@ public class TecTech {
         FMLCommonHandler.instance().bus().register(playerPersistence);
         MinecraftForge.EVENT_BUS.register(playerPersistence);
 
-        chunkDataHandler = new ChunkDataHandler();
-        FMLCommonHandler.instance().bus().register(chunkDataHandler);
-        MinecraftForge.EVENT_BUS.register(chunkDataHandler);
-
         enderWorldSavedData = new EnderWorldSavedData();
         FMLCommonHandler.instance().bus().register(enderWorldSavedData);
         MinecraftForge.EVENT_BUS.register(enderWorldSavedData);
@@ -138,7 +124,6 @@ public class TecTech {
 
     @Mod.EventHandler
     public void onServerAboutToStart(FMLServerAboutToStartEvent aEvent) {
-        chunkDataHandler.clearData();
         playerPersistence.clearData();
     }
 }
