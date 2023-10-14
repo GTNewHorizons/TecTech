@@ -2,6 +2,8 @@ package com.github.technus.tectech.loader.gui;
 
 import java.util.List;
 
+import com.github.technus.tectech.thing.casing.GT_Block_CasingsBA0;
+import com.github.technus.tectech.thing.casing.GT_Block_CasingsTT;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -22,7 +24,7 @@ public class CreativeTabTecTech extends CreativeTabs {
     @SideOnly(Side.CLIENT)
     @Override
     public Item getTabIconItem() {
-        return Item.getItemFromBlock(QuantumGlassBlock.INSTANCE);
+        return Item.getItemFromBlock(GT_Block_CasingsTT.getBlockById(0)); // High power casing
     }
 
     @Override

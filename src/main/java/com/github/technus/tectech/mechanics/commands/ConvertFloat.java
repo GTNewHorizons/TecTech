@@ -18,7 +18,6 @@ public class ConvertFloat implements ICommand {
         aliases.add("convert_float");
         aliases.add("c_f");
     }
-
     @Override
     public void processCommand(ICommandSender sender, String[] args) {
         if (!sender.getEntityWorld().isRemote) {

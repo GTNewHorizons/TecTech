@@ -16,7 +16,6 @@ import net.minecraftforge.fluids.FluidStack;
 import com.github.technus.tectech.TecTech;
 import com.github.technus.tectech.loader.gui.CreativeTabTecTech;
 import com.github.technus.tectech.loader.recipe.BaseRecipeLoader;
-import com.github.technus.tectech.loader.thing.ComponentLoader;
 import com.github.technus.tectech.loader.thing.CoverLoader;
 import com.github.technus.tectech.loader.thing.MachineLoader;
 import com.github.technus.tectech.loader.thing.ThingsLoader;
@@ -24,7 +23,6 @@ import com.github.technus.tectech.thing.casing.TT_Container_Casings;
 import com.github.technus.tectech.thing.metaTileEntity.Textures;
 
 import cpw.mods.fml.common.ProgressManager;
-import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
 import gregtech.api.GregTech_API;
 import gregtech.api.enums.Materials;
@@ -37,10 +35,6 @@ public final class MainLoader {
     public static DamageSource microwaving, elementalPollution, subspace;
 
     private MainLoader() {}
-
-    public static void staticLoad() {
-        new ComponentLoader();
-    }
 
     public static void preLoad() {
         creativeTabTecTech = new CreativeTabTecTech("TecTech");
