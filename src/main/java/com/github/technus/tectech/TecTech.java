@@ -13,8 +13,6 @@ import net.minecraftforge.common.MinecraftForge;
 import com.github.technus.tectech.loader.MainLoader;
 import com.github.technus.tectech.loader.TecTechConfig;
 import com.github.technus.tectech.loader.gui.CreativeTabTecTech;
-import com.github.technus.tectech.mechanics.commands.ConvertFloat;
-import com.github.technus.tectech.mechanics.commands.ConvertInteger;
 import com.github.technus.tectech.mechanics.data.ChunkDataHandler;
 import com.github.technus.tectech.mechanics.data.PlayerPersistence;
 import com.github.technus.tectech.mechanics.enderStorage.EnderWorldSavedData;
@@ -83,10 +81,6 @@ public class TecTech {
         }
     }
 
-    static {
-        MainLoader.staticLoad();
-    }
-
     @Mod.EventHandler
     public void PreLoad(FMLPreInitializationEvent PreEvent) {
         LOGGER.setDebugOutput(true);
@@ -125,95 +119,6 @@ public class TecTech {
     public void Load(FMLInitializationEvent event) {
         hasCOFH = COFHCore.isModLoaded();
 
-        if (configTecTech.DISABLE_MATERIAL_LOADING_FFS) {
-            try {
-                Field modifiersField = Field.class.getDeclaredField("modifiers");
-                modifiersField.setAccessible(true);
-                Field field = GT_Proxy.class.getDeclaredField("mEvents");
-                field.setAccessible(true);
-                modifiersField.setInt(field, field.getModifiers() & ~Modifier.FINAL);
-                field.set(GT_Mod.gregtechproxy, new Collection<Object>() {
-
-                    @Override
-                    public int size() {
-                        return 0;
-                    }
-
-                    @Override
-                    public boolean isEmpty() {
-                        return true;
-                    }
-
-                    @Override
-                    public boolean contains(Object o) {
-                        return false;
-                    }
-
-                    @Override
-                    public Iterator<Object> iterator() {
-                        return new Iterator<Object>() {
-
-                            @Override
-                            public boolean hasNext() {
-                                return false;
-                            }
-
-                            @Override
-                            public Object next() {
-                                return null;
-                            }
-                        };
-                    }
-
-                    @Override
-                    public Object[] toArray() {
-                        return new Object[0];
-                    }
-
-                    @Override
-                    public boolean add(Object o) {
-                        return false;
-                    }
-
-                    @Override
-                    public boolean remove(Object o) {
-                        return false;
-                    }
-
-                    @Override
-                    public boolean addAll(Collection<?> c) {
-                        return false;
-                    }
-
-                    @Override
-                    public void clear() {}
-
-                    @Override
-                    public boolean retainAll(Collection<?> c) {
-                        return false;
-                    }
-
-                    @Override
-                    public boolean removeAll(Collection<?> c) {
-                        return false;
-                    }
-
-                    @Override
-                    public boolean containsAll(Collection<?> c) {
-                        return false;
-                    }
-
-                    @SuppressWarnings("unchecked")
-                    @Override
-                    public Object[] toArray(Object[] a) {
-                        return new Object[0];
-                    }
-                });
-            } catch (NoSuchFieldException | IllegalAccessException e) {
-                LOGGER.error(Reference.MODID + " could not disable material loading!");
-            }
-        }
-
         MainLoader.load();
         MainLoader.addAfterGregTechPostLoadRunner();
         IMCForNEI.IMCSender();
@@ -222,12 +127,6 @@ public class TecTech {
     @Mod.EventHandler
     public void PostLoad(FMLPostInitializationEvent PostEvent) {
         MainLoader.postLoad();
-    }
-
-    @Mod.EventHandler
-    public void serverLoad(FMLServerStartingEvent pEvent) {
-        pEvent.registerServerCommand(new ConvertInteger());
-        pEvent.registerServerCommand(new ConvertFloat());
     }
 
     @Mod.EventHandler
