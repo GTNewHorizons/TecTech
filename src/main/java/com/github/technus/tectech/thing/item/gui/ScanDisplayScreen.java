@@ -11,7 +11,6 @@ import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.util.ResourceLocation;
 
 import com.github.technus.tectech.TecTech;
-import com.github.technus.tectech.font.TecTechFontRender;
 
 /**
  * Created by danie_000 on 17.12.2017.
@@ -57,39 +56,39 @@ public class ScanDisplayScreen extends GuiScreen {
         for (int i = firstLine - 1, j = 8; i >= 0 && j != 0; i--, j /= 2) {
             int equalPos = lines[i].indexOf('=');
             if (equalPos >= 0) {
-                TecTechFontRender.INSTANCE
+                Minecraft.getMinecraft().fontRenderer
                         .drawSplitString(lines[i].substring(0, equalPos), textBaseX, textBaseY - 8 + j, 200, itick);
-                TecTechFontRender.INSTANCE
+                Minecraft.getMinecraft().fontRenderer
                         .drawSplitString(lines[i].substring(equalPos), textBaseXX, textBaseY - 8 + j, 200, itick);
             } else {
-                TecTechFontRender.INSTANCE.drawSplitString(lines[i], textBaseX, textBaseY - 8 + j, 200, itick);
+                Minecraft.getMinecraft().fontRenderer.drawSplitString(lines[i], textBaseX, textBaseY - 8 + j, 200, itick);
             }
         }
         for (int i = firstLine, j = 0; i < lines.length && j < renderedLines; i++, j++) {
             textBaseY += 9;
             int equalPos = lines[i].indexOf('=');
             if (equalPos >= 0) {
-                TecTechFontRender.INSTANCE
+                Minecraft.getMinecraft().fontRenderer
                         .drawSplitString(lines[i].substring(0, equalPos), textBaseX, textBaseY, 200, itick);
-                TecTechFontRender.INSTANCE
+                Minecraft.getMinecraft().fontRenderer
                         .drawSplitString(lines[i].substring(equalPos), textBaseXX, textBaseY, 200, itick);
             } else {
-                TecTechFontRender.INSTANCE.drawSplitString(lines[i], textBaseX, textBaseY, 200, itick);
+                Minecraft.getMinecraft().fontRenderer.drawSplitString(lines[i], textBaseX, textBaseY, 200, itick);
             }
         }
         for (int i = firstLine + renderedLines, j = 8; i < lines.length && j != 0; i++, j /= 2) {
             int equalPos = lines[i].indexOf('=');
             if (equalPos >= 0) {
-                TecTechFontRender.INSTANCE
+                Minecraft.getMinecraft().fontRenderer
                         .drawSplitString(lines[i].substring(0, equalPos), textBaseX, textBaseY + 17 - j, 200, itick);
-                TecTechFontRender.INSTANCE
+                Minecraft.getMinecraft().fontRenderer
                         .drawSplitString(lines[i].substring(equalPos), textBaseXX, textBaseY + 17 - j, 200, itick);
             } else {
-                TecTechFontRender.INSTANCE.drawSplitString(lines[i], textBaseX, textBaseY + 17 - j, 200, itick);
+                Minecraft.getMinecraft().fontRenderer.drawSplitString(lines[i], textBaseX, textBaseY + 17 - j, 200, itick);
             }
         }
-        TecTechFontRender.INSTANCE.drawSplitString(Integer.toString(firstLine), textBaseX, baseY + 146, 200, itick);
-        TecTechFontRender.INSTANCE.drawSplitString(Integer.toString(lines.length), textBaseX, baseY + 157, 200, itick);
+        Minecraft.getMinecraft().fontRenderer.drawSplitString(Integer.toString(firstLine), textBaseX, baseY + 146, 200, itick);
+        Minecraft.getMinecraft().fontRenderer.drawSplitString(Integer.toString(lines.length), textBaseX, baseY + 157, 200, itick);
     }
 
     @Override
