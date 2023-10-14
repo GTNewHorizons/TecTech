@@ -61,7 +61,8 @@ public class ScanDisplayScreen extends GuiScreen {
                 Minecraft.getMinecraft().fontRenderer
                         .drawSplitString(lines[i].substring(equalPos), textBaseXX, textBaseY - 8 + j, 200, itick);
             } else {
-                Minecraft.getMinecraft().fontRenderer.drawSplitString(lines[i], textBaseX, textBaseY - 8 + j, 200, itick);
+                Minecraft.getMinecraft().fontRenderer
+                        .drawSplitString(lines[i], textBaseX, textBaseY - 8 + j, 200, itick);
             }
         }
         for (int i = firstLine, j = 0; i < lines.length && j < renderedLines; i++, j++) {
@@ -84,11 +85,14 @@ public class ScanDisplayScreen extends GuiScreen {
                 Minecraft.getMinecraft().fontRenderer
                         .drawSplitString(lines[i].substring(equalPos), textBaseXX, textBaseY + 17 - j, 200, itick);
             } else {
-                Minecraft.getMinecraft().fontRenderer.drawSplitString(lines[i], textBaseX, textBaseY + 17 - j, 200, itick);
+                Minecraft.getMinecraft().fontRenderer
+                        .drawSplitString(lines[i], textBaseX, textBaseY + 17 - j, 200, itick);
             }
         }
-        Minecraft.getMinecraft().fontRenderer.drawSplitString(Integer.toString(firstLine), textBaseX, baseY + 146, 200, itick);
-        Minecraft.getMinecraft().fontRenderer.drawSplitString(Integer.toString(lines.length), textBaseX, baseY + 157, 200, itick);
+        Minecraft.getMinecraft().fontRenderer
+                .drawSplitString(Integer.toString(firstLine), textBaseX, baseY + 146, 200, itick);
+        Minecraft.getMinecraft().fontRenderer
+                .drawSplitString(Integer.toString(lines.length), textBaseX, baseY + 157, 200, itick);
     }
 
     @Override

@@ -1,5 +1,10 @@
 package com.github.technus.tectech;
 
+import static com.github.technus.tectech.loader.TecTechConfig.DEBUG_MODE;
+import static gregtech.api.enums.Mods.COFHCore;
+
+import net.minecraftforge.common.MinecraftForge;
+
 import com.github.technus.tectech.loader.MainLoader;
 import com.github.technus.tectech.loader.TecTechConfig;
 import com.github.technus.tectech.loader.gui.CreativeTabTecTech;
@@ -8,6 +13,7 @@ import com.github.technus.tectech.nei.IMCForNEI;
 import com.github.technus.tectech.proxy.CommonProxy;
 import com.github.technus.tectech.recipe.EyeOfHarmonyRecipeStorage;
 import com.github.technus.tectech.util.XSTR;
+
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.SidedProxy;
@@ -17,10 +23,6 @@ import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import eu.usrv.yamcore.auxiliary.IngameErrorLog;
 import eu.usrv.yamcore.auxiliary.LogHelper;
-import net.minecraftforge.common.MinecraftForge;
-
-import static com.github.technus.tectech.loader.TecTechConfig.DEBUG_MODE;
-import static gregtech.api.enums.Mods.COFHCore;
 
 @Mod(
         modid = Reference.MODID,

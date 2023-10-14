@@ -1,17 +1,5 @@
 package com.github.technus.tectech.util;
 
-import com.github.technus.tectech.TecTech;
-import cpw.mods.fml.common.FMLCommonHandler;
-import cpw.mods.fml.common.ObfuscationReflectionHelper;
-import cpw.mods.fml.common.registry.GameRegistry;
-import gregtech.api.metatileentity.implementations.GT_MetaTileEntity_TieredMachineBlock;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompressedStreamTools;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.server.MinecraftServer;
-import net.minecraft.world.storage.IPlayerFileData;
-import net.minecraft.world.storage.SaveHandler;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.lang.reflect.Field;
@@ -20,6 +8,20 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 import java.util.UUID;
+
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.CompressedStreamTools;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.world.storage.IPlayerFileData;
+import net.minecraft.world.storage.SaveHandler;
+
+import com.github.technus.tectech.TecTech;
+
+import cpw.mods.fml.common.FMLCommonHandler;
+import cpw.mods.fml.common.ObfuscationReflectionHelper;
+import cpw.mods.fml.common.registry.GameRegistry;
+import gregtech.api.metatileentity.implementations.GT_MetaTileEntity_TieredMachineBlock;
 
 /**
  * Created by Tec on 21.03.2017.

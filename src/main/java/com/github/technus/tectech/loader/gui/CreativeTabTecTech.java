@@ -2,14 +2,12 @@ package com.github.technus.tectech.loader.gui;
 
 import java.util.List;
 
-import com.github.technus.tectech.thing.casing.GT_Block_CasingsBA0;
-import com.github.technus.tectech.thing.casing.GT_Block_CasingsTT;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 
 import com.github.technus.tectech.thing.CustomItemList;
-import com.github.technus.tectech.thing.block.QuantumGlassBlock;
+import com.github.technus.tectech.thing.casing.GT_Block_CasingsTT;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
