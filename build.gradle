@@ -854,17 +854,17 @@ ext.setupHotswapAgentTask = tasks.register("setupHotswapAgent") {
     }
 }
 
-public abstract class RunHotswappableMinecraftTask extends RunMinecraftTask {
+abstract class RunHotswappableMinecraftTask extends RunMinecraftTask {
     // IntelliJ doesn't seem to allow commandline arguments so we also support an env variable
-    private boolean enableHotswap = Boolean.valueOf(System.getenv("HOTSWAP"));
+    private boolean enableHotswap = Boolean.valueOf(System.getenv("HOTSWAP"))
 
     @Input
-    public boolean getEnableHotswap() { return enableHotswap }
+    boolean getEnableHotswap() { return enableHotswap }
     @Option(option = "hotswap", description = "Enables HotSwapAgent for enhanced class reloading under a debugger")
-    public boolean setEnableHotswap(boolean enable) { enableHotswap = enable }
+    boolean setEnableHotswap(boolean enable) { enableHotswap = enable }
 
     @Inject
-    public RunHotswappableMinecraftTask(Distribution side, String superTask, org.gradle.api.invocation.Gradle gradle) {
+    RunHotswappableMinecraftTask(Distribution side, String superTask, org.gradle.api.invocation.Gradle gradle) {
         super(side, gradle)
 
         this.lwjglVersion = 3
@@ -884,7 +884,7 @@ public abstract class RunHotswappableMinecraftTask extends RunMinecraftTask {
         this.classpath(project.java17DependenciesCfg)
     }
 
-    public void setup(Project project) {
+    void setup(Project project) {
         super.setup(project)
         if (project.usesMixins.toBoolean()) {
             this.extraJvmArgs.addAll(project.provider(() -> {
@@ -1283,7 +1283,7 @@ if (curseForgeProjectId.size() != 0 && System.getenv("CURSEFORGE_TOKEN") != null
 }
 
 def addModrinthDep(String scope, String type, String name) {
-    com.modrinth.minotaur.dependencies.Dependency dep;
+    com.modrinth.minotaur.dependencies.Dependency dep
     if (!(scope in ["required", "optional", "incompatible", "embedded"])) {
         throw new Exception("Invalid modrinth dependency scope: " + scope)
     }

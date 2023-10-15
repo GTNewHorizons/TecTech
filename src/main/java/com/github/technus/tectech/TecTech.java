@@ -50,7 +50,6 @@ public class TecTech {
     public static final LogHelper LOGGER = new LogHelper(Reference.MODID);
     public static CreativeTabTecTech creativeTabTecTech;
 
-    private static IngameErrorLog moduleAdminErrorLogs;
     public static TecTechConfig configTecTech;
 
     public static EnderWorldSavedData enderWorldSavedData;
@@ -63,6 +62,7 @@ public class TecTech {
     public static final byte tectechTexturePage1 = 8;
 
     @Mod.EventHandler
+    @SuppressWarnings("unused")
     public void PreLoad(FMLPreInitializationEvent PreEvent) {
         LOGGER.setDebugOutput(true);
 
@@ -78,7 +78,7 @@ public class TecTech {
         if (configTecTech.MOD_ADMIN_ERROR_LOGS) {
             LOGGER.setDebugOutput(DEBUG_MODE);
             LOGGER.debug("moduleAdminErrorLogs is enabled");
-            moduleAdminErrorLogs = new IngameErrorLog();
+            IngameErrorLog moduleAdminErrorLogs = new IngameErrorLog();
         }
 
         enderWorldSavedData = new EnderWorldSavedData();
@@ -89,6 +89,7 @@ public class TecTech {
     }
 
     @Mod.EventHandler
+    @SuppressWarnings("unused")
     public void Load(FMLInitializationEvent event) {
         hasCOFH = COFHCore.isModLoaded();
 
@@ -98,11 +99,13 @@ public class TecTech {
     }
 
     @Mod.EventHandler
+    @SuppressWarnings("unused")
     public void PostLoad(FMLPostInitializationEvent PostEvent) {
         MainLoader.postLoad();
     }
 
     @Mod.EventHandler
+    @SuppressWarnings("unused")
     public void onLoadCompleted(FMLLoadCompleteEvent event) {
         eyeOfHarmonyRecipeStorage = new EyeOfHarmonyRecipeStorage();
     }

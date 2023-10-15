@@ -1,25 +1,13 @@
 package com.github.technus.tectech.util;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.lang.reflect.Field;
 import java.util.Formatter;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
-import java.util.UUID;
 
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompressedStreamTools;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.server.MinecraftServer;
-import net.minecraft.world.storage.IPlayerFileData;
-import net.minecraft.world.storage.SaveHandler;
 
-import com.github.technus.tectech.TecTech;
-
-import cpw.mods.fml.common.FMLCommonHandler;
-import cpw.mods.fml.common.ObfuscationReflectionHelper;
 import cpw.mods.fml.common.registry.GameRegistry;
 import gregtech.api.metatileentity.implementations.GT_MetaTileEntity_TieredMachineBlock;
 
@@ -171,64 +159,6 @@ public final class TT_Utility {
             return Long.toString((long) value);
         }
         return Double.toString(value);
-    }
-
-    public static NBTTagCompound getPlayerData(UUID uuid1, UUID uuid2, String extension) {
-        try {
-            if (FMLCommonHandler.instance().getEffectiveSide().isServer()) {
-                if (uuid1 != null && uuid2 != null) {
-                    IPlayerFileData playerNBTManagerObj = MinecraftServer.getServer().worldServerForDimension(0)
-                            .getSaveHandler().getSaveHandler();
-                    SaveHandler sh = (SaveHandler) playerNBTManagerObj;
-                    File dir = ObfuscationReflectionHelper.getPrivateValue(
-                            SaveHandler.class,
-                            sh,
-                            new String[] { "playersDirectory", "field_75771_c" });
-                    String id1 = uuid1.toString();
-                    NBTTagCompound tagCompound = read(new File(dir, id1 + "." + extension));
-                    if (tagCompound != null) {
-                        return tagCompound;
-                    }
-                    tagCompound = readBackup(new File(dir, id1 + "." + extension + "_bak"));
-                    if (tagCompound != null) {
-                        return tagCompound;
-                    }
-                    String id2 = uuid2.toString();
-                    tagCompound = read(new File(dir, id2 + "." + extension));
-                    if (tagCompound != null) {
-                        return tagCompound;
-                    }
-                    tagCompound = readBackup(new File(dir, id2 + "." + extension + "_bak"));
-                    if (tagCompound != null) {
-                        return tagCompound;
-                    }
-                }
-            }
-        } catch (Exception ignored) {}
-        return new NBTTagCompound();
-    }
-
-    private static NBTTagCompound read(File file) {
-        if (file != null && file.exists()) {
-            try (FileInputStream fileInputStream = new FileInputStream(file)) {
-                return CompressedStreamTools.readCompressed(fileInputStream);
-            } catch (Exception var9) {
-                TecTech.LOGGER.error("Cannot read NBT File: " + file.getAbsolutePath());
-            }
-        }
-        return null;
-    }
-
-    private static NBTTagCompound readBackup(File file) {
-        if (file != null && file.exists()) {
-            try (FileInputStream fileInputStream = new FileInputStream(file)) {
-                return CompressedStreamTools.readCompressed(fileInputStream);
-            } catch (Exception var9) {
-                TecTech.LOGGER.error("Cannot read NBT File: " + file.getAbsolutePath());
-                return new NBTTagCompound();
-            }
-        }
-        return null;
     }
 
 }
