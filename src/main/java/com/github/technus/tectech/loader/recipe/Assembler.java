@@ -51,7 +51,7 @@ public class Assembler implements Runnable {
                 200,
                 500000);
 
-        // recipe for ass line data hatches
+        // recipe for assline data hatches
         RA.addAssemblerRecipe(
                 ItemList.Hatch_DataAccess_EV.get(1),
                 CustomItemList.dataIn_Hatch.get(1),
