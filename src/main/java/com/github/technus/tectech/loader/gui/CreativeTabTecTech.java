@@ -7,7 +7,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 
 import com.github.technus.tectech.thing.CustomItemList;
-import com.github.technus.tectech.thing.block.QuantumGlassBlock;
+import com.github.technus.tectech.thing.casing.TT_Container_Casings;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -22,7 +22,7 @@ public class CreativeTabTecTech extends CreativeTabs {
     @SideOnly(Side.CLIENT)
     @Override
     public Item getTabIconItem() {
-        return Item.getItemFromBlock(QuantumGlassBlock.INSTANCE);
+        return Item.getItemFromBlock(TT_Container_Casings.sBlockCasingsTT); // High power casing
     }
 
     @Override

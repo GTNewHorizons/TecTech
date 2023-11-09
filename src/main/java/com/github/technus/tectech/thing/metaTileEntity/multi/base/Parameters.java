@@ -53,6 +53,7 @@ public class Parameters {
         return false;
     }
 
+    @SuppressWarnings("unused") // Used in GTNH-Intergalactic, do not delete.
     public boolean trySetParameters(int hatchNo, int parameterId, double parameter) {
         Group p = groups[hatchNo];
         if (parent.mMaxProgresstime <= 0 || (p != null && p.updateWhileRunning)) {
@@ -81,35 +82,6 @@ public class Parameters {
     public void setToDefaults(boolean defaultIn, boolean defaultOut) {
         for (int hatch = 0; hatch < 10; hatch++) {
             setToDefaults(hatch, defaultIn, defaultOut);
-        }
-    }
-
-    public void ClearDefinitions() {
-        parameterInArrayList.clear();
-        parameterOutArrayList.clear();
-        for (int i = 0; i < groups.length; i++) {
-            groups[i] = null;
-        }
-    }
-
-    public void removeGroup(Group group) {
-        if (group == groups[group.hatchNo]) {
-            removeGroup(group.hatchNo);
-        } else {
-            throw new IllegalArgumentException("Group does not exists in this parametrization!");
-        }
-    }
-
-    public void removeGroup(int hatchNo) {
-        Group hatch = groups[hatchNo];
-        if (hatch != null) {
-            for (Group.ParameterOut p : hatch.parameterOut) {
-                parameterOutArrayList.remove(p);
-            }
-            for (Group.ParameterIn p : hatch.parameterIn) {
-                parameterInArrayList.remove(p);
-            }
-            groups[hatchNo] = null;
         }
     }
 
