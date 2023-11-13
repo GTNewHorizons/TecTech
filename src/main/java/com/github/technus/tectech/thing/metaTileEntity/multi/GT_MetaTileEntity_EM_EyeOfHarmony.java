@@ -1079,7 +1079,7 @@ public class GT_MetaTileEntity_EM_EyeOfHarmony extends GT_MetaTileEntity_Multibl
         }
     }
 
-    private EyeOfHarmonyRecipe currentRecipe;
+    private static EyeOfHarmonyRecipe currentRecipe;
 
     // Counter for lag prevention.
     private long lagPreventer = 0;
@@ -1088,7 +1088,7 @@ public class GT_MetaTileEntity_EM_EyeOfHarmony extends GT_MetaTileEntity_Multibl
     private static final long RECIPE_CHECK_INTERVAL = 3 * 20;
     private long currentCircuitMultiplier = 0;
     private long astralArrayAmount = 0;
-    private long parallelAmount = 1;
+    private static long parallelAmount = 1;
     private long parallelExponent = 1;
     private BigInteger usedEU = BigInteger.ZERO;
 
@@ -1347,7 +1347,7 @@ public class GT_MetaTileEntity_EM_EyeOfHarmony extends GT_MetaTileEntity_Multibl
 
         destroyRenderBlock();
 
-        // Output RU
+        // Output EU
         addEUToGlobalEnergyMap(userUUID, outputEU_BigInt);
 
         startEU = 0;
@@ -1369,6 +1369,8 @@ public class GT_MetaTileEntity_EM_EyeOfHarmony extends GT_MetaTileEntity_Multibl
 
         // Do other stuff from TT superclasses. E.g. outputting fluids.
         super.outputAfterRecipe_EM();
+
+        currentRecipe = null;
     }
 
     @Override
