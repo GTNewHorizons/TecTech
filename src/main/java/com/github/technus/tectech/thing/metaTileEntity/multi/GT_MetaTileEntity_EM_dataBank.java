@@ -26,8 +26,10 @@ import org.jetbrains.annotations.NotNull;
 
 import com.github.technus.tectech.Reference;
 import com.github.technus.tectech.mechanics.dataTransport.InventoryDataPacket;
+import com.github.technus.tectech.mechanics.dataTransport.WirelessInventoryDataPacket;
 import com.github.technus.tectech.thing.metaTileEntity.hatch.GT_MetaTileEntity_Hatch_InputDataItems;
 import com.github.technus.tectech.thing.metaTileEntity.hatch.GT_MetaTileEntity_Hatch_OutputDataItems;
+import com.github.technus.tectech.thing.metaTileEntity.hatch.GT_MetaTileEntity_Hatch_OutputData_Wireless;
 import com.github.technus.tectech.thing.metaTileEntity.multi.base.GT_MetaTileEntity_MultiblockBase_EM;
 import com.github.technus.tectech.thing.metaTileEntity.multi.base.render.TT_RenderedExtendedFacingTexture;
 import com.github.technus.tectech.util.CommonValues;
@@ -54,6 +56,8 @@ public class GT_MetaTileEntity_EM_dataBank extends GT_MetaTileEntity_MultiblockB
 
     // region variables
     private final ArrayList<GT_MetaTileEntity_Hatch_OutputDataItems> eStacksDataOutputs = new ArrayList<>();
+    private final List<GT_MetaTileEntity_Hatch_OutputData_Wireless> eWirelessDataOutputs = new ArrayList<>();
+
     private final ArrayList<IInventory> eDataAccessHatches = new ArrayList<>();
     private boolean slave = false;
     // endregion
@@ -149,6 +153,12 @@ public class GT_MetaTileEntity_EM_dataBank extends GT_MetaTileEntity_MultiblockB
             mMaxProgresstime = 20;
             mEfficiencyIncrease = 10000;
             return SimpleCheckRecipeResult.ofSuccess("providing_data");
+        } else if (eDataAccessHatches.size() > 0 && eWirelessDataOutputs.size() > 0) {
+            mEUt = -(int) V[slave ? 6 : 4];
+            eAmpereFlow = 1 + (long) eWirelessDataOutputs.size() * eDataAccessHatches.size();
+            mMaxProgresstime = 20;
+            mEfficiencyIncrease = 10000;
+            return SimpleCheckRecipeResult.ofSuccess("providing_data");
         }
         return SimpleCheckRecipeResult.ofFailure("no_data");
     }
@@ -156,6 +166,8 @@ public class GT_MetaTileEntity_EM_dataBank extends GT_MetaTileEntity_MultiblockB
     @Override
     public void outputAfterRecipe_EM() {
         ArrayList<ItemStack> stacks = new ArrayList<>();
+
+        // Iterate through all data access hatches and collect items
         for (IInventory dataAccess : eDataAccessHatches) {
             int count = dataAccess.getSizeInventory();
             for (int i = 0; i < count; i++) {
@@ -165,14 +177,29 @@ public class GT_MetaTileEntity_EM_dataBank extends GT_MetaTileEntity_MultiblockB
                 }
             }
         }
+
+        // If there are items, create an InventoryDataPacket
         if (stacks.size() > 0) {
             ItemStack[] arr = stacks.toArray(nullItem);
+
+            // Iterate through all output hatches and set the InventoryDataPacket
             for (GT_MetaTileEntity_Hatch_OutputDataItems hatch : eStacksDataOutputs) {
                 hatch.q = new InventoryDataPacket(arr);
             }
+
+            // Check for wireless output hatches and set the InventoryDataPacket
+            for (GT_MetaTileEntity_Hatch_OutputData_Wireless wirelessHatch : eWirelessDataOutputs) {
+                wirelessHatch.q = new WirelessInventoryDataPacket(arr);
+            }
         } else {
+            // If no items, set q to null for all output hatches
             for (GT_MetaTileEntity_Hatch_OutputDataItems hatch : eStacksDataOutputs) {
                 hatch.q = null;
+            }
+
+            // Set q to null for all wireless output hatches
+            for (GT_MetaTileEntity_Hatch_OutputData_Wireless wirelessHatch : eWirelessDataOutputs) {
+                wirelessHatch.q = null;
             }
         }
     }
@@ -205,9 +232,14 @@ public class GT_MetaTileEntity_EM_dataBank extends GT_MetaTileEntity_MultiblockB
         if (aMetaTileEntity == null) {
             return false;
         }
+
         if (aMetaTileEntity instanceof GT_MetaTileEntity_Hatch_OutputDataItems) {
             ((GT_MetaTileEntity_Hatch) aMetaTileEntity).updateTexture(aBaseCasingIndex);
             return eStacksDataOutputs.add((GT_MetaTileEntity_Hatch_OutputDataItems) aMetaTileEntity);
+        } else if (aMetaTileEntity instanceof GT_MetaTileEntity_Hatch_OutputData_Wireless) {
+            // Handle GT_MetaTileEntity_Hatch_OutputData_Wireless separately
+            ((GT_MetaTileEntity_Hatch) aMetaTileEntity).updateTexture(aBaseCasingIndex);
+            return eWirelessDataOutputs.add((GT_MetaTileEntity_Hatch_OutputData_Wireless) aMetaTileEntity);
         } else if (aMetaTileEntity instanceof GT_MetaTileEntity_Hatch_DataAccess
                 && !(aMetaTileEntity instanceof GT_MetaTileEntity_Hatch_InputDataItems)) {
                     ((GT_MetaTileEntity_Hatch) aMetaTileEntity).updateTexture(aBaseCasingIndex);
@@ -218,6 +250,7 @@ public class GT_MetaTileEntity_EM_dataBank extends GT_MetaTileEntity_MultiblockB
                 slave = true;
                 return eDataAccessHatches.add(aMetaTileEntity);
             }
+
         return false;
     }
 
@@ -251,7 +284,8 @@ public class GT_MetaTileEntity_EM_dataBank extends GT_MetaTileEntity_MultiblockB
                 return t.eDataAccessHatches.size();
             }
         },
-        OutboundConnector(GT_MetaTileEntity_Hatch_OutputDataItems.class) {
+        OutboundConnector(GT_MetaTileEntity_Hatch_OutputDataItems.class,
+                GT_MetaTileEntity_Hatch_OutputData_Wireless.class) {
 
             @Override
             public long count(GT_MetaTileEntity_EM_dataBank t) {

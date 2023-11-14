@@ -301,6 +301,8 @@ public enum CustomItemList implements IItemContainer {
     eM_energyWirelessTunnel6_UXV,
     eM_energyWirelessTunnel7_UXV,
 
+    dataInAss_Wireless_Hatch,
+    dataOutBank_Wireless_Hatch,
     Parametrizer_Hatch,
     ParametrizerX_Hatch,
     ParametrizerTXT_Hatch,

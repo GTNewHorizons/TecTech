@@ -6,23 +6,7 @@ import static com.github.technus.tectech.util.CommonValues.V;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 
-import com.github.technus.tectech.thing.metaTileEntity.hatch.GT_MetaTileEntity_Hatch_Capacitor;
-import com.github.technus.tectech.thing.metaTileEntity.hatch.GT_MetaTileEntity_Hatch_CreativeData;
-import com.github.technus.tectech.thing.metaTileEntity.hatch.GT_MetaTileEntity_Hatch_CreativeMaintenance;
-import com.github.technus.tectech.thing.metaTileEntity.hatch.GT_MetaTileEntity_Hatch_DynamoMulti;
-import com.github.technus.tectech.thing.metaTileEntity.hatch.GT_MetaTileEntity_Hatch_DynamoTunnel;
-import com.github.technus.tectech.thing.metaTileEntity.hatch.GT_MetaTileEntity_Hatch_EnergyMulti;
-import com.github.technus.tectech.thing.metaTileEntity.hatch.GT_MetaTileEntity_Hatch_EnergyTunnel;
-import com.github.technus.tectech.thing.metaTileEntity.hatch.GT_MetaTileEntity_Hatch_Holder;
-import com.github.technus.tectech.thing.metaTileEntity.hatch.GT_MetaTileEntity_Hatch_InputData;
-import com.github.technus.tectech.thing.metaTileEntity.hatch.GT_MetaTileEntity_Hatch_InputDataItems;
-import com.github.technus.tectech.thing.metaTileEntity.hatch.GT_MetaTileEntity_Hatch_OutputData;
-import com.github.technus.tectech.thing.metaTileEntity.hatch.GT_MetaTileEntity_Hatch_OutputDataItems;
-import com.github.technus.tectech.thing.metaTileEntity.hatch.GT_MetaTileEntity_Hatch_Param;
-import com.github.technus.tectech.thing.metaTileEntity.hatch.GT_MetaTileEntity_Hatch_ParamText;
-import com.github.technus.tectech.thing.metaTileEntity.hatch.GT_MetaTileEntity_Hatch_Rack;
-import com.github.technus.tectech.thing.metaTileEntity.hatch.GT_MetaTileEntity_Hatch_Uncertainty;
-import com.github.technus.tectech.thing.metaTileEntity.hatch.GT_MetaTileEntity_Hatch_WirelessMulti;
+import com.github.technus.tectech.thing.metaTileEntity.hatch.*;
 import com.github.technus.tectech.thing.metaTileEntity.multi.GT_MetaTileEntity_EM_EyeOfHarmony;
 import com.github.technus.tectech.thing.metaTileEntity.multi.GT_MetaTileEntity_EM_computer;
 import com.github.technus.tectech.thing.metaTileEntity.multi.GT_MetaTileEntity_EM_dataBank;
@@ -1739,6 +1723,18 @@ public class MachineLoader implements Runnable {
         // ===================================================================================================
         // Hatches
         // ===================================================================================================
+        dataInAss_Wireless_Hatch.set(
+                new GT_MetaTileEntity_Hatch_InputData_Wireless(
+                        15269,
+                        "hatch.wireless.datain.tier.07",
+                        "Wireless Data Slave",
+                        7).getStackForm(1L));
+        dataOutBank_Wireless_Hatch.set(
+                new GT_MetaTileEntity_Hatch_OutputData_Wireless(
+                        15301,
+                        "hatch.wireless.dataout.tier.07",
+                        "Wireless Data Bank Master",
+                        7).getStackForm(1L));
 
         Parametrizer_Hatch.set(
                 new GT_MetaTileEntity_Hatch_Param(15420, "hatch.param.tier.05", "Parametrizer", 5).getStackForm(1L)); // TODO
