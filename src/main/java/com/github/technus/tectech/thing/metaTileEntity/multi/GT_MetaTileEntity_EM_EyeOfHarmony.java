@@ -1221,8 +1221,6 @@ public class GT_MetaTileEntity_EM_EyeOfHarmony extends GT_MetaTileEntity_Multibl
                                 .multiply(BigInteger.valueOf((long) (powerMultiplier * precisionMultiplier))))
                 .divide(BigInteger.valueOf(precisionMultiplier));
 
-
-
         // Remove EU from the users network.
         if (!addEUToGlobalEnergyMap(userUUID, usedEU)) {
             return SimpleCheckRecipeResult.ofFailure("insufficient_power_no_val");
