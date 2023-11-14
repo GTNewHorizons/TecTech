@@ -21,7 +21,7 @@ public class WirelessInventoryDataPacket extends DataPacket<ItemStack[]> {
     protected ItemStack[] contentFromNBT(NBTTagCompound nbt) {
         int count = nbt.getInteger("count");
         if (count > 0) {
-            ArrayList<ItemStack> stacks = new ArrayList<>();
+            ArrayList<ItemStack> stacks = new ArrayList<>(count);
             for (int i = 0; i < count; i++) {
                 ItemStack stack = ItemStack.loadItemStackFromNBT(nbt.getCompoundTag(Integer.toString(i)));
                 if (stack != null) {
