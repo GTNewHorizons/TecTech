@@ -12,7 +12,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraftforge.common.util.ForgeDirection;
 
-
 import com.github.technus.tectech.mechanics.dataTransport.WirelessDataNetwork;
 import com.github.technus.tectech.mechanics.dataTransport.WirelessInventoryDataPacket;
 import com.github.technus.tectech.util.CommonValues;
@@ -43,7 +42,6 @@ public class GT_MetaTileEntity_Hatch_InputData_Wireless extends GT_MetaTileEntit
 
     private ItemStack[] stacks;
     private WirelessInventoryDataPacket inventoryDataPacket;
-
 
     public GT_MetaTileEntity_Hatch_InputData_Wireless(int aID, String aName, String aNameRegional, int aTier) {
         super(aID, aName, aNameRegional, aTier);
