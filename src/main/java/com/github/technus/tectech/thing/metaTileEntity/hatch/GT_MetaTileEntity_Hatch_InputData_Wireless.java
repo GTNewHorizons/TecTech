@@ -8,12 +8,10 @@ import static net.minecraft.util.StatCollector.translateToLocalFormatted;
 
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraftforge.common.util.ForgeDirection;
 
-import org.apache.commons.lang3.reflect.FieldUtils;
 
 import com.github.technus.tectech.mechanics.dataTransport.WirelessDataNetwork;
 import com.github.technus.tectech.mechanics.dataTransport.WirelessInventoryDataPacket;
@@ -45,7 +43,7 @@ public class GT_MetaTileEntity_Hatch_InputData_Wireless extends GT_MetaTileEntit
 
     private ItemStack[] stacks;
     private WirelessInventoryDataPacket inventoryDataPacket;
-    private String clientLocale = "en_US";
+
 
     public GT_MetaTileEntity_Hatch_InputData_Wireless(int aID, String aName, String aNameRegional, int aTier) {
         super(aID, aName, aNameRegional, aTier);
@@ -99,12 +97,6 @@ public class GT_MetaTileEntity_Hatch_InputData_Wireless extends GT_MetaTileEntit
         if (aBaseMetaTileEntity.isClientSide()) {
             return true;
         }
-        try {
-            EntityPlayerMP player = (EntityPlayerMP) aPlayer;
-            clientLocale = (String) FieldUtils.readField(player, "translator", true);
-        } catch (Exception e) {
-            clientLocale = "en_US";
-        }
         return true;
     }
 
@@ -147,7 +139,7 @@ public class GT_MetaTileEntity_Hatch_InputData_Wireless extends GT_MetaTileEntit
 
     @Override
     public ItemStack getStackInSlot(int aIndex) {
-        return inventoryDataPacket != null && aIndex < inventoryDataPacket.getContent().length
+        return inventoryDataPacket != null && aIndex >= 0 && aIndex < inventoryDataPacket.getContent().length
                 ? inventoryDataPacket.getContent()[aIndex]
                 : null;
     }
@@ -205,7 +197,7 @@ public class GT_MetaTileEntity_Hatch_InputData_Wireless extends GT_MetaTileEntit
 
     @Override
     public String[] getInfoData() {
-        return new String[] { translateToLocalFormatted("tt.keyphrase.Content_Stack_Count", clientLocale) + ": "
+        return new String[] { translateToLocalFormatted("tt.keyphrase.Content_Stack_Count") + ": "
                 + (stacks == null ? 0 : stacks.length) };
     }
 
