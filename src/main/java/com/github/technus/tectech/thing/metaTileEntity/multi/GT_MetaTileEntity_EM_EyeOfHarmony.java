@@ -90,7 +90,7 @@ public class GT_MetaTileEntity_EM_EyeOfHarmony extends GT_MetaTileEntity_Multibl
     private static final long MOLTEN_SPACETIME_PER_FAILURE_TIER = 14_400L;
     private static final double SPACETIME_FAILURE_BASE = 2;
     private static final String TOOLTIP_BAR = GOLD
-            + "------------------------------------------------------------------------------------";
+            + "---------------------------------------------------------------------------------------";
 
     // Region variables.
     private static Textures.BlockIcons.CustomIcon ScreenOFF;
@@ -972,13 +972,8 @@ public class GT_MetaTileEntity_EM_EyeOfHarmony extends GT_MetaTileEntity_Multibl
                         "is available the items/fluids will be " + UNDERLINE + DARK_RED + "voided" + RESET + GRAY + ".")
                 .addInfo(TOOLTIP_BAR)
                 .addInfo("This multiblock can be overclocked by placing a programmed circuit into the input bus.")
-                .addInfo("Each OC halves recipe time and multiplies startup cost by a factor of:")
-                .addInfo(GREEN + "(log4.4(overclockAmount + 1) + 1) * 0.77^overclockAmount")
                 .addInfo(
-                        "Furthermore, each OC decreases the power output by a factor of " + RED
-                                + "0.77^overclockAmount"
-                                + GRAY
-                                + ".")
+                        "E.g. A circuit of 2 will provide 2 OCs, 16x EU consumed and 0.25x the time. All outputs are equal.")
                 .addInfo("All item and fluid output chances & amounts per recipe are unaffected.").addInfo(TOOLTIP_BAR)
                 .addInfo(
                         "If a recipe fails the EOH will output " + GREEN
@@ -992,6 +987,25 @@ public class GT_MetaTileEntity_EM_EyeOfHarmony extends GT_MetaTileEntity_Multibl
                 .addInfo(
                         MaterialsUEVplus.SpaceTime.getLocalizedNameForItem("%material")
                                 + " instead of fluid/item outputs and output as much EU as a successful recipe.")
+                .addInfo(TOOLTIP_BAR)
+                .addInfo(
+                        "This multiblock can perform parallel processing by placing Astral Array Fabricators into the input bus.")
+                .addInfo("The amount of parallel is calculated via this formula:")
+                .addInfo(GREEN + "parallel = 2^(floor(log(8 * astralArrayAmount) / (-log(2) - log(5) + log(17))))")
+                .addInfo("If the EOH is running parallel recipes, the power calculation changes.")
+                .addInfo("The power needed for parallel processing is calculated as follows:")
+                .addInfo(
+                        GREEN + "total EU = ((powerOutput * 2 - powerInput * (3.2 + 0.019 * 2^(1.5))) / 18) * 2.3^(log2(parallel) - 1)")
+                .addInfo(
+                        "Furthermore, if parallel recipes are run, the recipes consume "
+                                + MaterialsUEVplus.RawStarMatter.getLocalizedNameForItem("%material"))
+                .addInfo("instead of helium and hydrogen. Overflow penalties still apply.")
+                .addInfo(
+                        "The required amount of fluid to start a recipe is " + GREEN
+                                + "9 / 10^6 * heliumAmount * parallel"
+                                + GRAY
+                                + ".")
+                .addInfo("All item & fluid outputs including failure fluid are multiplied by the amount of parallel.")
                 .addInfo(TOOLTIP_BAR).addInfo("Animations can be disabled by using a screwdriver on the multiblock.")
                 .addSeparator().addStructureInfo("Eye of Harmony structure is too complex! See schematic for details.")
                 .addStructureInfo(
