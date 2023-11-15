@@ -2,10 +2,8 @@ package com.github.technus.tectech.proxy;
 
 import static com.github.technus.tectech.TecTech.RANDOM;
 import static com.github.technus.tectech.thing.casing.TT_Container_Casings.eyeOfHarmonyRenderBlock;
-import static gregtech.api.enums.Mods.OpenModularTurrets;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.EntityClientPlayerMP;
 import net.minecraft.client.gui.GuiNewChat;
 import net.minecraft.client.particle.EntityFX;
 import net.minecraft.entity.player.EntityPlayer;
@@ -17,15 +15,11 @@ import net.minecraftforge.client.MinecraftForgeClient;
 import net.minecraftforge.common.util.ForgeDirection;
 
 import com.github.technus.tectech.Reference;
-import com.github.technus.tectech.compatibility.openmodularturrets.TT_turret_loader;
 import com.github.technus.tectech.thing.block.QuantumGlassBlock;
 import com.github.technus.tectech.thing.block.QuantumGlassRender;
 import com.github.technus.tectech.thing.block.RenderEyeOfHarmony;
 import com.github.technus.tectech.thing.block.TileEyeOfHarmony;
-import com.github.technus.tectech.thing.item.DebugElementalInstanceContainer_EM;
-import com.github.technus.tectech.thing.item.ElementalDefinitionContainer_EM;
 import com.github.technus.tectech.thing.item.RenderEyeOfHarmonyItem;
-import com.github.technus.tectech.thing.item.renderElemental.RenderElementalName;
 import com.gtnewhorizon.structurelib.entity.fx.WeightlessParticleFX;
 
 import cpw.mods.fml.client.FMLClientHandler;
@@ -41,15 +35,7 @@ public class ClientProxy extends CommonProxy {
         RenderingRegistry.registerBlockHandler(QuantumGlassBlock.renderID, new QuantumGlassRender());
 
         MinecraftForgeClient
-                .registerItemRenderer(ElementalDefinitionContainer_EM.INSTANCE, RenderElementalName.INSTANCE);
-        MinecraftForgeClient
-                .registerItemRenderer(DebugElementalInstanceContainer_EM.INSTANCE, RenderElementalName.INSTANCE);
-        MinecraftForgeClient
                 .registerItemRenderer(Item.getItemFromBlock(eyeOfHarmonyRenderBlock), new RenderEyeOfHarmonyItem());
-
-        if (OpenModularTurrets.isModLoaded()) {
-            new TT_turret_loader().run();
-        }
 
         ClientRegistry.bindTileEntitySpecialRenderer(TileEyeOfHarmony.class, new RenderEyeOfHarmony());
     }
@@ -183,12 +169,4 @@ public class ClientProxy extends CommonProxy {
         em_particle(w, box.maxX, box.minY, box.minZ);
     }
 
-    @Override
-    public EntityClientPlayerMP getPlayer() {
-        return Minecraft.getMinecraft().thePlayer;
-    }
-
-    public boolean isThePlayer(EntityPlayer player) {
-        return getPlayer() == player;
-    }
 }

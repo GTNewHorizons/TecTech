@@ -1,10 +1,6 @@
 package com.github.technus.tectech.thing.metaTileEntity.single;
 
-import static com.github.technus.tectech.thing.metaTileEntity.Textures.MACHINE_CASINGS_TT;
-import static com.github.technus.tectech.thing.metaTileEntity.Textures.OVERLAYS_ENERGY_IN_LASER_TT;
-import static com.github.technus.tectech.thing.metaTileEntity.Textures.OVERLAYS_ENERGY_IN_POWER_TT;
-import static com.github.technus.tectech.thing.metaTileEntity.Textures.OVERLAYS_ENERGY_OUT_LASER_TT;
-import static com.github.technus.tectech.thing.metaTileEntity.Textures.OVERLAYS_ENERGY_OUT_POWER_TT;
+import static com.github.technus.tectech.thing.metaTileEntity.Textures.*;
 import static com.github.technus.tectech.util.CommonValues.TRANSFER_AT;
 import static com.github.technus.tectech.util.CommonValues.VN;
 import static net.minecraft.util.StatCollector.translateToLocal;
@@ -54,7 +50,7 @@ import gregtech.api.util.GT_Utility;
 public class GT_MetaTileEntity_DebugPowerGenerator extends GT_MetaTileEntity_TieredMachineBlock
         implements IConnectsToEnergyTunnel, IAddUIWidgets, IAddGregtechLogo {
 
-    private static GT_RenderedTexture GENNY;
+    public static GT_RenderedTexture GENNY;
     private boolean LASER = false;
     public int EUT = 0, AMP = 0;
     public boolean producing = true;

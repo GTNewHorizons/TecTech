@@ -3,7 +3,7 @@ package com.github.technus.tectech.nei;
 import static com.github.technus.tectech.recipe.TT_recipeAdder.nullItem;
 import static gregtech.api.enums.ItemList.Display_Fluid;
 
-import java.awt.*;
+import java.awt.Rectangle;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
@@ -186,8 +186,7 @@ public class TT_NEI_ScannerHandler extends TemplateRecipeHandler {
     public List<String> handleItemTooltip(GuiRecipe<?> gui, ItemStack aStack, List<String> currenttip,
             int aRecipeIndex) {
         TemplateRecipeHandler.CachedRecipe tObject = arecipes.get(aRecipeIndex);
-        if (tObject instanceof CachedDefaultRecipe) {
-            CachedDefaultRecipe tRecipe = (CachedDefaultRecipe) tObject;
+        if (tObject instanceof CachedDefaultRecipe tRecipe) {
             for (PositionedStack tStack : tRecipe.mOutputs) {
                 if (aStack == tStack.item) {
                     if (!(tStack instanceof FixedPositionedStack) || ((FixedPositionedStack) tStack).mChance <= 0
