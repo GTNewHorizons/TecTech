@@ -302,6 +302,7 @@ public enum CustomItemList implements IItemContainer {
     eM_energyWirelessTunnel7_UXV,
 
     dataInAss_Wireless_Hatch,
+
     dataOutBank_Wireless_Hatch,
     Parametrizer_Hatch,
     ParametrizerX_Hatch,
@@ -350,6 +351,7 @@ public enum CustomItemList implements IItemContainer {
     Machine_Multi_Switch,
     Machine_Multi_Research,
     Machine_Multi_DataBank,
+    Machine_Multi_QuantumBank,
     Machine_Multi_Infuser,
     Machine_Multi_Decay,
     Machine_Multi_Annihilation,

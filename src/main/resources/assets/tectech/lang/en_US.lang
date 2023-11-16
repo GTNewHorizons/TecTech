@@ -708,6 +708,15 @@ gt.blockmachines.multimachine.em.databank.desc.0=Controller block of the Data Ba
 gt.blockmachines.multimachine.em.databank.desc.1=Used to supply Assembling Lines with more Data Sticks
 gt.blockmachines.multimachine.em.databank.desc.2=and give multiple Assembling Lines access to the same Data Stick
 
+gt.blockmachines.multimachine.em.quantumbank.name=Quantum Data Bank
+gt.blockmachines.multimachine.em.quantumbank.hint.0=Dot 1: 1x Input Hatch, 1x Optical Slave Connector
+gt.blockmachines.multimachine.em.quantumbank.desc.0=Controller block of the Quantum Data Bank
+gt.blockmachines.multimachine.em.quantumbank.desc.1=Quantum Entangle Assembly Line Data! Allows for wireless data stick transmission.
+gt.blockmachines.multimachine.em.quantumbank.desc.2=EU is deducted from wireless EU network only.
+gt.blockmachines.multimachine.em.quantumbank.desc.3=EU/t = NumWirelessSlaves * 5m eu/t
+gt.blockmachines.multimachine.em.quantumbank.desc.4=Author: §dSUMMER
+
+
 gt.blockmachines.multimachine.em.junction.name=Matter Junction
 gt.blockmachines.multimachine.em.junction.hint.0=1 - Classic Hatches or High Power Casing
 gt.blockmachines.multimachine.em.junction.hint.1=2 - Elemental Hatches or Molecular Casing

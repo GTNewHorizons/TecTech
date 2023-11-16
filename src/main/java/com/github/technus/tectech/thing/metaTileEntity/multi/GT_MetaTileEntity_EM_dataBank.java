@@ -124,7 +124,7 @@ public class GT_MetaTileEntity_EM_dataBank extends GT_MetaTileEntity_MultiblockB
                         translateToLocal("tt.keyword.Structure.AnyComputerCasing"),
                         2) // Data Access Hatch: Any Computer Casing
                 .addOtherStructurePart(
-                        translateToLocal("gt.blockmachines.hatch.dataoutass.tier.07.name"),
+                        translateToLocal("gt.blockmachines.hatch.datain.tier.07"),
                         translateToLocal("tt.keyword.Structure.AnyComputerCasing"),
                         2) // Data Bank Master Connector: Any Computer Casing
                 .addEnergyHatch(translateToLocal("tt.keyword.Structure.AnyHighPowerCasing"), 1) // Energy Hatch: Any
@@ -155,7 +155,8 @@ public class GT_MetaTileEntity_EM_dataBank extends GT_MetaTileEntity_MultiblockB
             return SimpleCheckRecipeResult.ofSuccess("providing_data");
         } else if (eDataAccessHatches.size() > 0 && eWirelessDataOutputs.size() > 0) {
             mEUt = -(int) V[slave ? 6 : 4];
-            eAmpereFlow = 1 + (long) eWirelessDataOutputs.size() * eDataAccessHatches.size();
+            eAmpereFlow = 1 + (long) eWirelessDataOutputs.size() * 10 * eDataAccessHatches.size(); // 10x energy cost?
+                                                                                                   // IDK balance shit
             mMaxProgresstime = 20;
             mEfficiencyIncrease = 10000;
             return SimpleCheckRecipeResult.ofSuccess("providing_data");

@@ -33,7 +33,6 @@ public class GT_MetaTileEntity_Hatch_OutputData_Wireless
     }
 
     private String owner_uuid;
-    private String owner_name;
 
     public GT_MetaTileEntity_Hatch_OutputData_Wireless(int aID, String aName, String aNameRegional, int aTier) {
         super(
@@ -143,7 +142,6 @@ public class GT_MetaTileEntity_Hatch_OutputData_Wireless
 
             // UUID and username of the owner.
             owner_uuid = aBaseMetaTileEntity.getOwnerUuid().toString();
-            owner_name = aBaseMetaTileEntity.getOwnerName();
         }
     }
 
@@ -163,6 +161,6 @@ public class GT_MetaTileEntity_Hatch_OutputData_Wireless
     }
 
     private String getNetworkIdFromMetaTileEntity() {
-        return owner_uuid + owner_name; // Placeholder
+        return owner_uuid; // Placeholder
     }
 }

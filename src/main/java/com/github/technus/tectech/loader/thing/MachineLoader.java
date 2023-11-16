@@ -19,7 +19,6 @@ import com.github.technus.tectech.thing.metaTileEntity.hatch.GT_MetaTileEntity_H
 import com.github.technus.tectech.thing.metaTileEntity.hatch.GT_MetaTileEntity_Hatch_InputData_Wireless;
 import com.github.technus.tectech.thing.metaTileEntity.hatch.GT_MetaTileEntity_Hatch_OutputData;
 import com.github.technus.tectech.thing.metaTileEntity.hatch.GT_MetaTileEntity_Hatch_OutputDataItems;
-import com.github.technus.tectech.thing.metaTileEntity.hatch.GT_MetaTileEntity_Hatch_OutputData_Wireless;
 import com.github.technus.tectech.thing.metaTileEntity.hatch.GT_MetaTileEntity_Hatch_Param;
 import com.github.technus.tectech.thing.metaTileEntity.hatch.GT_MetaTileEntity_Hatch_ParamText;
 import com.github.technus.tectech.thing.metaTileEntity.hatch.GT_MetaTileEntity_Hatch_Rack;
@@ -29,6 +28,7 @@ import com.github.technus.tectech.thing.metaTileEntity.multi.GT_MetaTileEntity_E
 import com.github.technus.tectech.thing.metaTileEntity.multi.GT_MetaTileEntity_EM_computer;
 import com.github.technus.tectech.thing.metaTileEntity.multi.GT_MetaTileEntity_EM_dataBank;
 import com.github.technus.tectech.thing.metaTileEntity.multi.GT_MetaTileEntity_EM_infuser;
+import com.github.technus.tectech.thing.metaTileEntity.multi.GT_MetaTileEntity_EM_quantumBank;
 import com.github.technus.tectech.thing.metaTileEntity.multi.GT_MetaTileEntity_EM_research;
 import com.github.technus.tectech.thing.metaTileEntity.multi.GT_MetaTileEntity_EM_switch;
 import com.github.technus.tectech.thing.metaTileEntity.multi.GT_MetaTileEntity_EM_transformer;
@@ -1727,6 +1727,10 @@ public class MachineLoader implements Runnable {
         Machine_Multi_DataBank.set(
                 new GT_MetaTileEntity_EM_dataBank(15313, "multimachine.em.databank", "Data Bank").getStackForm(1L));
 
+        Machine_Multi_QuantumBank.set(
+                new GT_MetaTileEntity_EM_quantumBank(15301, "multimachine.em.quantumbank", "Quantum Bank")
+                        .getStackForm(1L));
+
         Machine_Multi_Research.set(
                 new GT_MetaTileEntity_EM_research(15331, "multimachine.em.research", "Research station")
                         .getStackForm(1L));
@@ -1746,12 +1750,6 @@ public class MachineLoader implements Runnable {
                         15269,
                         "hatch.wireless.datain.tier.07",
                         "Wireless Data Slave",
-                        7).getStackForm(1L));
-        dataOutBank_Wireless_Hatch.set(
-                new GT_MetaTileEntity_Hatch_OutputData_Wireless(
-                        15301,
-                        "hatch.wireless.dataout.tier.07",
-                        "Wireless Data Bank Master",
                         7).getStackForm(1L));
 
         Parametrizer_Hatch.set(

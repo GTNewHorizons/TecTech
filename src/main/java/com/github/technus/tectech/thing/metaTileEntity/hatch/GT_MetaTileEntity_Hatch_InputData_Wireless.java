@@ -172,12 +172,11 @@ public class GT_MetaTileEntity_Hatch_InputData_Wireless extends GT_MetaTileEntit
 
             // UUID and username of the owner.
             owner_uuid = aBaseMetaTileEntity.getOwnerUuid().toString();
-            owner_name = aBaseMetaTileEntity.getOwnerName();
         }
     }
 
     private String getNetworkIdFromMetaTileEntity() {
-        return owner_uuid + owner_name; // Placeholder
+        return owner_uuid; // Placeholder
     }
 
     @Override
