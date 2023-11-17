@@ -101,7 +101,7 @@ public class GT_MetaTileEntity_EM_EyeOfHarmony extends GT_MetaTileEntity_Multibl
 
     private String userUUID = "";
     private long euOutput = 0;
-    private static BigInteger outputEU_BigInt = BigInteger.ZERO;
+    private BigInteger outputEU_BigInt = BigInteger.ZERO;
     private long startEU = 0;
 
     @Override
@@ -773,7 +773,9 @@ public class GT_MetaTileEntity_EM_EyeOfHarmony extends GT_MetaTileEntity_Multibl
 
         if (parallelAmount > 1) {
             chance -= stellarPlasmaOverflowProbabilityAdjustment;
-        } else chance -= (hydrogenOverflowProbabilityAdjustment + heliumOverflowProbabilityAdjustment);
+        } else {
+            chance -= (hydrogenOverflowProbabilityAdjustment + heliumOverflowProbabilityAdjustment);
+        }
 
         return clamp(chance, 0.0, 1.0);
     }
@@ -1083,7 +1085,7 @@ public class GT_MetaTileEntity_EM_EyeOfHarmony extends GT_MetaTileEntity_Multibl
         }
     }
 
-    private static EyeOfHarmonyRecipe currentRecipe;
+    private EyeOfHarmonyRecipe currentRecipe;
 
     // Counter for lag prevention.
     private long lagPreventer = 0;
@@ -1092,7 +1094,7 @@ public class GT_MetaTileEntity_EM_EyeOfHarmony extends GT_MetaTileEntity_Multibl
     private static final long RECIPE_CHECK_INTERVAL = 3 * 20;
     private long currentCircuitMultiplier = 0;
     private long astralArrayAmount = 0;
-    private static long parallelAmount = 1;
+    private long parallelAmount = 1;
     private long parallelExponent = 1;
     private BigInteger usedEU = BigInteger.ZERO;
 
@@ -1164,7 +1166,7 @@ public class GT_MetaTileEntity_EM_EyeOfHarmony extends GT_MetaTileEntity_Multibl
 
         // Debug mode, overwrites the required fluids to initiate the recipe to 100L of each.
         if (parallelAmount > 1) {
-            if ((EOH_DEBUG_MODE && getStellarPlasmaStored() < 100) || (getStellarPlasmaStored()
+            if ((EOH_DEBUG_MODE && getStellarPlasmaStored() < 100) || (!EOH_DEBUG_MODE && getStellarPlasmaStored()
                     < currentRecipe.getHeliumRequirement() * (9 / 1_000_000f) * parallelAmount)) {
                 return SimpleCheckRecipeResult.ofFailure("no_stellarPlasma");
             }
@@ -1172,12 +1174,12 @@ public class GT_MetaTileEntity_EM_EyeOfHarmony extends GT_MetaTileEntity_Multibl
 
         if (parallelAmount == 1) {
             if ((EOH_DEBUG_MODE && getHydrogenStored() < 100)
-                    || (getHydrogenStored() < currentRecipe.getHydrogenRequirement() * parallelAmount)) {
+                    || (!EOH_DEBUG_MODE && getHydrogenStored() < currentRecipe.getHydrogenRequirement() * parallelAmount)) {
                 return SimpleCheckRecipeResult.ofFailure("no_hydrogen");
             }
 
             if ((EOH_DEBUG_MODE && getHeliumStored() < 100)
-                    || (getHeliumStored() < currentRecipe.getHeliumRequirement() * parallelAmount)) {
+                    || (!EOH_DEBUG_MODE && getHeliumStored() < currentRecipe.getHeliumRequirement() * parallelAmount)) {
                 return SimpleCheckRecipeResult.ofFailure("no_helium");
             }
         }
@@ -1259,16 +1261,14 @@ public class GT_MetaTileEntity_EM_EyeOfHarmony extends GT_MetaTileEntity_Multibl
         mOutputFluids = recipeObject.getOutputFluids();
         outputItems = recipeObject.getOutputItems();
 
-        if (yield != 1.0) {
-            // Iterate over item output list and apply yield values.
-            for (ItemStackLong itemStackLong : outputItems) {
-                itemStackLong.stackSize *= yield * parallelAmount;
-            }
+        // Iterate over item output list and apply yield & parallel values.
+        for (ItemStackLong itemStackLong : outputItems) {
+            itemStackLong.stackSize *= yield * parallelAmount;
+        }
 
-            // Iterate over fluid output list and apply yield values.
-            for (FluidStack fluidStack : mOutputFluids) {
-                fluidStack.amount *= yield * parallelAmount;
-            }
+        // Iterate over fluid output list and apply yield & parallel values.
+        for (FluidStack fluidStack : mOutputFluids) {
+            fluidStack.amount *= yield * parallelAmount;
         }
 
         updateSlots();
@@ -1372,8 +1372,6 @@ public class GT_MetaTileEntity_EM_EyeOfHarmony extends GT_MetaTileEntity_Multibl
 
         // Do other stuff from TT superclasses. E.g. outputting fluids.
         super.outputAfterRecipe_EM();
-
-        currentRecipe = null;
     }
 
     @Override
@@ -1476,6 +1474,9 @@ public class GT_MetaTileEntity_EM_EyeOfHarmony extends GT_MetaTileEntity_Multibl
     private static final String ROCKET_TIER_NBT_TAG = EYE_OF_HARMONY + "rocketTier";
     private static final String CURRENT_CIRCUIT_MULTIPLIER_TAG = EYE_OF_HARMONY + "currentCircuitMultiplier";
     private static final String ANIMATIONS_ENABLED = EYE_OF_HARMONY + "animationsEnabled";
+    private static final String CALCULATED_EU_OUTPUT_NBT_TAG = EYE_OF_HARMONY + "animationsEnabled";
+    private static final String PARALLEL_AMOUNT_NBT_TAG = EYE_OF_HARMONY + "parallelAmount";
+    private static final String ASTRAL_ARRAY_AMOUNT_NBT_TAG = EYE_OF_HARMONY + "astralArrayAmount";
 
     // Sub tags, less specific names required.
     private static final String STACK_SIZE = "stackSize";
@@ -1492,6 +1493,9 @@ public class GT_MetaTileEntity_EM_EyeOfHarmony extends GT_MetaTileEntity_Multibl
         aNBT.setLong(ROCKET_TIER_NBT_TAG, currentRecipeRocketTier);
         aNBT.setLong(CURRENT_CIRCUIT_MULTIPLIER_TAG, currentCircuitMultiplier);
         aNBT.setBoolean(ANIMATIONS_ENABLED, animationsEnabled);
+        aNBT.setLong(PARALLEL_AMOUNT_NBT_TAG, parallelAmount);
+        aNBT.setLong(ASTRAL_ARRAY_AMOUNT_NBT_TAG, astralArrayAmount);
+        aNBT.setByteArray(CALCULATED_EU_OUTPUT_NBT_TAG, outputEU_BigInt.toByteArray());
 
         // Store damage values/stack sizes of GT items being outputted.
         NBTTagCompound itemStackListNBTTag = new NBTTagCompound();
@@ -1527,6 +1531,9 @@ public class GT_MetaTileEntity_EM_EyeOfHarmony extends GT_MetaTileEntity_Multibl
         currentRecipeRocketTier = aNBT.getLong(ROCKET_TIER_NBT_TAG);
         currentCircuitMultiplier = aNBT.getLong(CURRENT_CIRCUIT_MULTIPLIER_TAG);
         animationsEnabled = aNBT.getBoolean(ANIMATIONS_ENABLED);
+        parallelAmount = aNBT.getLong(PARALLEL_AMOUNT_NBT_TAG);
+        astralArrayAmount = aNBT.getLong(ASTRAL_ARRAY_AMOUNT_NBT_TAG);
+        outputEU_BigInt = new BigInteger(aNBT.getByteArray(CALCULATED_EU_OUTPUT_NBT_TAG));
 
         // Load damage values/stack sizes of GT items being outputted and convert back to items.
         NBTTagCompound tempItemTag = aNBT.getCompoundTag(ITEM_OUTPUT_NBT_TAG);
