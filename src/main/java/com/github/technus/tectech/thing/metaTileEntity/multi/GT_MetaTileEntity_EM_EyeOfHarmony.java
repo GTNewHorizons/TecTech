@@ -45,6 +45,7 @@ import com.github.technus.tectech.thing.casing.TT_Container_Casings;
 import com.github.technus.tectech.thing.metaTileEntity.multi.base.GT_MetaTileEntity_MultiblockBase_EM;
 import com.github.technus.tectech.thing.metaTileEntity.multi.base.render.TT_RenderedExtendedFacingTexture;
 import com.github.technus.tectech.util.CommonValues;
+import com.github.technus.tectech.util.FluidStackLong;
 import com.github.technus.tectech.util.ItemStackLong;
 import com.google.common.collect.ImmutableList;
 import com.google.common.math.LongMath;
@@ -748,6 +749,7 @@ public class GT_MetaTileEntity_EM_EyeOfHarmony extends GT_MetaTileEntity_Multibl
     private static final long TICKS_BETWEEN_HATCH_DRAIN = EOH_DEBUG_MODE ? 10 : 20;
 
     private List<ItemStackLong> outputItems = new ArrayList<>();
+    private List<FluidStackLong> outputFluids = new ArrayList<>();
 
     private void calculateInputFluidExcessValues(final long hydrogenRecipeRequirement,
             final long heliumRecipeRequirement) {
@@ -1173,8 +1175,8 @@ public class GT_MetaTileEntity_EM_EyeOfHarmony extends GT_MetaTileEntity_Multibl
         }
 
         if (parallelAmount == 1) {
-            if ((EOH_DEBUG_MODE && getHydrogenStored() < 100)
-                    || (!EOH_DEBUG_MODE && getHydrogenStored() < currentRecipe.getHydrogenRequirement() * parallelAmount)) {
+            if ((EOH_DEBUG_MODE && getHydrogenStored() < 100) || (!EOH_DEBUG_MODE
+                    && getHydrogenStored() < currentRecipe.getHydrogenRequirement() * parallelAmount)) {
                 return SimpleCheckRecipeResult.ofFailure("no_hydrogen");
             }
 
@@ -1258,7 +1260,7 @@ public class GT_MetaTileEntity_EM_EyeOfHarmony extends GT_MetaTileEntity_Multibl
         }
 
         // Return copies of the output objects.
-        mOutputFluids = recipeObject.getOutputFluids();
+        outputFluids = recipeObject.getOutputFluids();
         outputItems = recipeObject.getOutputItems();
 
         // Iterate over item output list and apply yield & parallel values.
@@ -1267,8 +1269,8 @@ public class GT_MetaTileEntity_EM_EyeOfHarmony extends GT_MetaTileEntity_Multibl
         }
 
         // Iterate over fluid output list and apply yield & parallel values.
-        for (FluidStack fluidStack : mOutputFluids) {
-            fluidStack.amount *= yield * parallelAmount;
+        for (FluidStackLong fluidStackLong : outputFluids) {
+            fluidStackLong.amount *= yield * parallelAmount;
         }
 
         updateSlots();
@@ -1317,9 +1319,11 @@ public class GT_MetaTileEntity_EM_EyeOfHarmony extends GT_MetaTileEntity_Multibl
 
     private void outputFailedChance() {
         // 2^Tier spacetime released upon recipe failure.
-        mOutputFluids = new FluidStack[] { MaterialsUEVplus.SpaceTime.getMolten(
-                (long) (successChance * MOLTEN_SPACETIME_PER_FAILURE_TIER
-                        * pow(SPACETIME_FAILURE_BASE, currentRecipeRocketTier + 1)) * parallelAmount) };
+        outputFluids.add(
+                new FluidStackLong(
+                        MaterialsUEVplus.SpaceTime.getMolten(1),
+                        (long) (successChance * MOLTEN_SPACETIME_PER_FAILURE_TIER
+                                * pow(SPACETIME_FAILURE_BASE, currentRecipeRocketTier + 1)) * parallelAmount));
         super.outputAfterRecipe_EM();
     }
 
