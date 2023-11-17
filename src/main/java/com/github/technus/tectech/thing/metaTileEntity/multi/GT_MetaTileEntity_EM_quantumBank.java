@@ -63,10 +63,10 @@ import java.util.ArrayList;
 
 public class GT_MetaTileEntity_EM_quantumBank extends GT_MetaTileEntity_MultiblockBase_EM
         implements ISurvivalConstructable {
-
+    private int cappedStorage = 200;
     @Override
     public void onFirstTick_EM(IGregTechTileEntity aBaseMetaTileEntity) {
-        inventoryHandler.setSize(20);
+        inventoryHandler.setSize(250);
         if (!hasMaintenanceChecks) turnOffMaintenance();
         if (!mMachine) {
             aBaseMetaTileEntity.disableWorking();
@@ -142,8 +142,6 @@ public class GT_MetaTileEntity_EM_quantumBank extends GT_MetaTileEntity_Multiblo
         if (!structureCheck_EM("main", 1, 2, 0)){
             return false;
         }
-
-
         return true;
     }
 
@@ -200,10 +198,15 @@ public class GT_MetaTileEntity_EM_quantumBank extends GT_MetaTileEntity_Multiblo
     @Override
     @NotNull
     protected CheckRecipeResult checkProcessing_EM() {
-        System.out.println("Were Alive!!!!");
-        System.out.println(inventoryHandler.getSlots());
         return SimpleCheckRecipeResult.ofFailure("no_data");
     }
+    @Override
+    public void addGregTechLogo(ModularWindow.Builder builder) { //Moving this stupid ass logo in the way
+        builder.widget(
+                new DrawableWidget().setDrawable(TecTechUITextures.PICTURE_TECTECH_LOGO_DARK).setSize(18, 18)
+                        .setPos(173, 168));
+    }
+    /*
     @Override
     public void bindPlayerInventoryUI(ModularWindow.Builder builder, UIBuildContext buildContext) {
         builder.bindPlayerInventory(
@@ -212,10 +215,9 @@ public class GT_MetaTileEntity_EM_quantumBank extends GT_MetaTileEntity_Multiblo
                 this.getGUITextureSet()
                         .getItemSlot());
     }
+     */
     @Override
     public void addUIWidgets(ModularWindow.Builder builder, UIBuildContext buildContext) {
-
-        EntityPlayer player = buildContext.getPlayer();
         builder.widget(
                 new DrawableWidget().setDrawable(TecTechUITextures.BACKGROUND_SCREEN_BLUE).setPos(4, 4)
                         .setSize(190, 91));
@@ -227,15 +229,16 @@ public class GT_MetaTileEntity_EM_quantumBank extends GT_MetaTileEntity_Multiblo
                     else getBaseMetaTileEntity().disableWorking();
                 }));
         final Scrollable scrollable = new Scrollable().setVerticalScroll();
-        for (int row = 0; row * 4 < inventoryHandler.getSlots() - 1; row++) {
-            int columnsToMake = Math.min(inventoryHandler.getSlots() - row * 4, 4);
+        for (int row = 0; row * 10 < cappedStorage - 1; row++) {
+            int columnsToMake = Math.min(cappedStorage - row * 10, 10);
             for (int column = 0; column < columnsToMake; column++) {
                 scrollable.widget(
-                        new SlotWidget(inventoryHandler, row * 4 + column).setPos(column * 18, row * 18)
+                        new SlotWidget(inventoryHandler, row * 10 + column).setPos(column * 18, row * 18)
                                 .setSize(18, 18));
             }
         }
-        builder.widget(scrollable.setSize(18 * 4 + 4, 18 * 4).setPos(25, 7));
+        builder.widget(scrollable.setSize(18 * 10 + 4, 18 * 4).setPos(7, 16));
+
     }
 
 
