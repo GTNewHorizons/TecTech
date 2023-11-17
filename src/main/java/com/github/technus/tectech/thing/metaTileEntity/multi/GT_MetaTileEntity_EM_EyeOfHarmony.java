@@ -1319,11 +1319,10 @@ public class GT_MetaTileEntity_EM_EyeOfHarmony extends GT_MetaTileEntity_Multibl
 
     private void outputFailedChance() {
         // 2^Tier spacetime released upon recipe failure.
-        outputFluids.add(
-                new FluidStackLong(
-                        MaterialsUEVplus.SpaceTime.getMolten(1),
-                        (long) (successChance * MOLTEN_SPACETIME_PER_FAILURE_TIER
-                                * pow(SPACETIME_FAILURE_BASE, currentRecipeRocketTier + 1)) * parallelAmount));
+        outputFluidToAENetwork(
+                MaterialsUEVplus.SpaceTime.getMolten(1),
+                (long) (successChance * MOLTEN_SPACETIME_PER_FAILURE_TIER
+                        * pow(SPACETIME_FAILURE_BASE, currentRecipeRocketTier + 1)) * parallelAmount);
         super.outputAfterRecipe_EM();
     }
 
@@ -1371,8 +1370,13 @@ public class GT_MetaTileEntity_EM_EyeOfHarmony extends GT_MetaTileEntity_Multibl
             outputItemToAENetwork(itemStack.itemStack, itemStack.stackSize);
         }
 
+        for (FluidStackLong fluidStack : outputFluids) {
+            outputFluidToAENetwork(fluidStack.fluidStack, fluidStack.amount);
+        }
+
         // Clear the array list for new recipes.
         outputItems = new ArrayList<>();
+        outputFluids = new ArrayList<>();
 
         // Do other stuff from TT superclasses. E.g. outputting fluids.
         super.outputAfterRecipe_EM();
@@ -1422,6 +1426,30 @@ public class GT_MetaTileEntity_EM_EyeOfHarmony extends GT_MetaTileEntity_Multibl
         }
     }
 
+    private void outputFluidToAENetwork(FluidStack fluid, long amount) {
+
+        if ((fluid == null) || (amount <= 0)) {
+            return;
+        }
+
+        if (amount < Integer.MAX_VALUE) {
+            FluidStack tmpFluid = fluid.copy();
+            tmpFluid.amount = (int) amount;
+            ((GT_MetaTileEntity_Hatch_Output_ME) mOutputHatches.get(0)).tryFillAE(tmpFluid);
+        } else {
+            // For fluidStacks > Int max.
+            while (amount >= Integer.MAX_VALUE) {
+                FluidStack tmpFluid = fluid.copy();
+                tmpFluid.amount = Integer.MAX_VALUE;
+                ((GT_MetaTileEntity_Hatch_Output_ME) mOutputHatches.get(0)).tryFillAE(tmpFluid);
+                amount -= Integer.MAX_VALUE;
+            }
+            FluidStack tmpFluid = fluid.copy();
+            tmpFluid.amount = (int) amount;
+            ((GT_MetaTileEntity_Hatch_Output_ME) mOutputHatches.get(0)).tryFillAE(tmpFluid);
+        }
+    }
+
     @Override
     public String[] getInfoData() {
         ArrayList<String> str = new ArrayList<>(Arrays.asList(super.getInfoData()));
@@ -1439,11 +1467,11 @@ public class GT_MetaTileEntity_EM_EyeOfHarmony extends GT_MetaTileEntity_Multibl
             str.add("Astral Array Fabricators detected: " + RED + formatNumbers(astralArrayAmount));
             str.add("Total Parallel: " + RED + formatNumbers(parallelAmount));
             str.add("EU Output: " + RED + formatNumbers(outputEU_BigInt) + RESET + " EU");
-            if (mOutputFluids.length > 0) {
+            if (outputFluids.size() > 0) {
                 // Star matter is always the last element in the array.
                 str.add(
                         "Estimated Star Matter Output: " + RED
-                                + formatNumbers(mOutputFluids[mOutputFluids.length - 1].amount)
+                                + formatNumbers(outputFluids.get(outputFluids.size() - 1).amount)
                                 + RESET
                                 + " L");
             }
@@ -1471,7 +1499,9 @@ public class GT_MetaTileEntity_EM_EyeOfHarmony extends GT_MetaTileEntity_Multibl
     // NBT save/load strings.
     private static final String EYE_OF_HARMONY = "eyeOfHarmonyOutput";
     private static final String NUMBER_OF_ITEMS_NBT_TAG = EYE_OF_HARMONY + "numberOfItems";
+    private static final String NUMBER_OF_FLUIDS_NBT_TAG = EYE_OF_HARMONY + "numberOfFluids";
     private static final String ITEM_OUTPUT_NBT_TAG = EYE_OF_HARMONY + "itemOutput";
+    private static final String FLUID_OUTPUT_NBT_TAG = EYE_OF_HARMONY + "fluidOutput";
     private static final String RECIPE_RUNNING_NBT_TAG = EYE_OF_HARMONY + "recipeRunning";
     private static final String RECIPE_EU_OUTPUT_NBT_TAG = EYE_OF_HARMONY + "euOutput";
     private static final String RECIPE_SUCCESS_CHANCE_NBT_TAG = EYE_OF_HARMONY + "recipeSuccessChance";
@@ -1485,6 +1515,8 @@ public class GT_MetaTileEntity_EM_EyeOfHarmony extends GT_MetaTileEntity_Multibl
     // Sub tags, less specific names required.
     private static final String STACK_SIZE = "stackSize";
     private static final String ITEM_STACK_NBT_TAG = "itemStack";
+    private static final String FLUID_AMOUNT = "fluidAmount";
+    private static final String FLUID_STACK_NBT_TAG = "fluidStack";
 
     @Override
     public void saveNBTData(NBTTagCompound aNBT) {
@@ -1517,6 +1549,23 @@ public class GT_MetaTileEntity_EM_EyeOfHarmony extends GT_MetaTileEntity_Multibl
         }
 
         aNBT.setTag(ITEM_OUTPUT_NBT_TAG, itemStackListNBTTag);
+
+        // Store damage values/stack sizes of GT fluida being outputted.
+        NBTTagCompound fluidStackListNBTTag = new NBTTagCompound();
+        fluidStackListNBTTag.setLong(NUMBER_OF_FLUIDS_NBT_TAG, outputFluids.size());
+
+        int indexFluids = 0;
+        for (FluidStackLong fluidStackLong : outputFluids) {
+            // Save fluid amount to NBT.
+            fluidStackListNBTTag.setLong(indexFluids + FLUID_AMOUNT, fluidStackLong.amount);
+
+            // Save FluidStack to NBT.
+            aNBT.setTag(indexFluids + FLUID_STACK_NBT_TAG, fluidStackLong.fluidStack.writeToNBT(new NBTTagCompound()));
+
+            indexFluids++;
+        }
+
+        aNBT.setTag(FLUID_OUTPUT_NBT_TAG, fluidStackListNBTTag);
 
         super.saveNBTData(aNBT);
     }
@@ -1552,6 +1601,22 @@ public class GT_MetaTileEntity_EM_EyeOfHarmony extends GT_MetaTileEntity_Multibl
             ItemStack itemStack = ItemStack.loadItemStackFromNBT(aNBT.getCompoundTag(index + ITEM_STACK_NBT_TAG));
 
             outputItems.add(new ItemStackLong(itemStack, stackSize));
+        }
+
+        // Load damage values/fluid amounts of GT fluids being outputted and convert back to fluids.
+        NBTTagCompound tempFluidTag = aNBT.getCompoundTag(FLUID_OUTPUT_NBT_TAG);
+
+        // Iterate over all stored fluids.
+        for (int indexFluids = 0; indexFluids < tempFluidTag.getInteger(NUMBER_OF_FLUIDS_NBT_TAG); indexFluids++) {
+
+            // Load fluid amount from NBT.
+            long fluidAmount = tempFluidTag.getLong(indexFluids + FLUID_AMOUNT);
+
+            // Load FluidStack from NBT.
+            FluidStack fluidStack = FluidStack
+                    .loadFluidStackFromNBT(aNBT.getCompoundTag(indexFluids + FLUID_STACK_NBT_TAG));
+
+            outputFluids.add(new FluidStackLong(fluidStack, fluidAmount));
         }
 
         super.loadNBTData(aNBT);

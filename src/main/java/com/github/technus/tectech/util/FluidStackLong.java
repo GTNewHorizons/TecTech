@@ -26,5 +26,4 @@ public class FluidStackLong {
         return new FluidStack(fluidStackLong.fluidStack, amount);
     }
 
-
 }
