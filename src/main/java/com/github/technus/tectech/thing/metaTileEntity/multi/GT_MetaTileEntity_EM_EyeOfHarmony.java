@@ -791,8 +791,9 @@ public class GT_MetaTileEntity_EM_EyeOfHarmony extends GT_MetaTileEntity_Multibl
 
         if (parallelAmount > 1) {
             yield -= stellarPlasmaOverflowProbabilityAdjustment;
-        } else yield -= (hydrogenOverflowProbabilityAdjustment + heliumOverflowProbabilityAdjustment);
-
+        } else {
+            yield -= (hydrogenOverflowProbabilityAdjustment + heliumOverflowProbabilityAdjustment);
+        }
         return clamp(yield, 0.0, 1.0);
     }
 
