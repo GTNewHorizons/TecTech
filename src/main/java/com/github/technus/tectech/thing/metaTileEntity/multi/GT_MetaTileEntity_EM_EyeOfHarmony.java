@@ -1510,7 +1510,7 @@ public class GT_MetaTileEntity_EM_EyeOfHarmony extends GT_MetaTileEntity_Multibl
     private static final String ROCKET_TIER_NBT_TAG = EYE_OF_HARMONY + "rocketTier";
     private static final String CURRENT_CIRCUIT_MULTIPLIER_TAG = EYE_OF_HARMONY + "currentCircuitMultiplier";
     private static final String ANIMATIONS_ENABLED = EYE_OF_HARMONY + "animationsEnabled";
-    private static final String CALCULATED_EU_OUTPUT_NBT_TAG = EYE_OF_HARMONY + "animationsEnabled";
+    private static final String CALCULATED_EU_OUTPUT_NBT_TAG = EYE_OF_HARMONY + "outputEU_BigInt";
     private static final String PARALLEL_AMOUNT_NBT_TAG = EYE_OF_HARMONY + "parallelAmount";
     private static final String ASTRAL_ARRAY_AMOUNT_NBT_TAG = EYE_OF_HARMONY + "astralArrayAmount";
 
