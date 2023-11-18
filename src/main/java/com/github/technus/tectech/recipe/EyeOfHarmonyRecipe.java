@@ -35,16 +35,16 @@ import pers.gwyog.gtneioreplugin.util.GT5OreSmallHelper;
 public class EyeOfHarmonyRecipe {
 
     static final FluidStackLong[] SPECIAL_FLUIDS = new FluidStackLong[] {
-            new FluidStackLong(MaterialsUEVplus.WhiteDwarfMatter.getMolten(1), 1_152),
-            new FluidStackLong(MaterialsUEVplus.WhiteDwarfMatter.getMolten(1), 1_152),
-            new FluidStackLong(MaterialsUEVplus.WhiteDwarfMatter.getMolten(1), 4_608),
-            new FluidStackLong(MaterialsUEVplus.WhiteDwarfMatter.getMolten(1), 18_432),
-            new FluidStackLong(MaterialsUEVplus.BlackDwarfMatter.getMolten(1), 1_152),
-            new FluidStackLong(MaterialsUEVplus.BlackDwarfMatter.getMolten(1), 4_608),
-            new FluidStackLong(MaterialsUEVplus.BlackDwarfMatter.getMolten(1), 18_432),
-            new FluidStackLong(MaterialsUEVplus.Universium.getMolten(1), 1_152),
-            new FluidStackLong(MaterialsUEVplus.Universium.getMolten(1), 4_608),
-            new FluidStackLong(MaterialsUEVplus.Universium.getMolten(1), 18_432) };
+            new FluidStackLong(MaterialsUEVplus.WhiteDwarfMatter.getMolten(1_152), 1_152),
+            new FluidStackLong(MaterialsUEVplus.WhiteDwarfMatter.getMolten(1_152), 1_152),
+            new FluidStackLong(MaterialsUEVplus.WhiteDwarfMatter.getMolten(4_608), 4_608),
+            new FluidStackLong(MaterialsUEVplus.WhiteDwarfMatter.getMolten(18_432), 18_432),
+            new FluidStackLong(MaterialsUEVplus.BlackDwarfMatter.getMolten(1_152), 1_152),
+            new FluidStackLong(MaterialsUEVplus.BlackDwarfMatter.getMolten(4_608), 4_608),
+            new FluidStackLong(MaterialsUEVplus.BlackDwarfMatter.getMolten(18_432), 18_432),
+            new FluidStackLong(MaterialsUEVplus.Universium.getMolten(1_152), 1_152),
+            new FluidStackLong(MaterialsUEVplus.Universium.getMolten(4_608), 4_608),
+            new FluidStackLong(MaterialsUEVplus.Universium.getMolten(18_432), 18_432) };
 
     HashingStrategy<ItemStack> itemStackHashingStrategy = new HashingStrategy<>() {
 
@@ -139,26 +139,28 @@ public class EyeOfHarmonyRecipe {
         // End item processing.
 
         // --- Fluid handling ---
-        ArrayList<FluidStackLong> fluidStackArrayList = new ArrayList<>();
+        ArrayList<FluidStackLong> fluidStackLongArrayList = new ArrayList<>();
+
+        int plasmaAmount = (int) ((this.spacetimeCasingTierRequired + 1) * 8_000_000L);
 
         // If DeepDark then it should output all plasmas involved in making exotic catalyst.
         if (rocketTier == 9) {
             for (Materials material : VALID_PLASMAS) {
-                fluidStackArrayList.add(new FluidStackLong(material.getPlasma(1), 1));
+                fluidStackLongArrayList.add(new FluidStackLong(material.getPlasma(plasmaAmount), plasmaAmount));
             }
         } else {
             // --- Output and process fluids of the recipe.
-            fluidStackArrayList.addAll(validPlasmaGenerator(materialList));
-        }
-
-        for (FluidStackLong fluidStackLong : fluidStackArrayList) {
-            fluidStackLong.amount = (int) ((this.spacetimeCasingTierRequired + 1) * 8_000_000L);
+            ArrayList<FluidStack> fluidStackArrayList = new ArrayList<>(validPlasmaGenerator(materialList));
+            for (FluidStack fluidStack : fluidStackArrayList) {
+                fluidStack = new FluidStack(fluidStack, plasmaAmount);
+                fluidStackLongArrayList.add(new FluidStackLong(fluidStack, plasmaAmount));
+            }
         }
 
         // Add a bonus fluid of compressed star matter.
-        fluidStackArrayList.add(
+        fluidStackLongArrayList.add(
                 new FluidStackLong(
-                        MaterialsUEVplus.RawStarMatter.getFluid(1),
+                        MaterialsUEVplus.RawStarMatter.getFluid((this.spacetimeCasingTierRequired + 1) * 100_000),
                         (this.spacetimeCasingTierRequired + 1) * 100_000));
 
         // Tier 0 & 1 - 576 White
@@ -176,9 +178,9 @@ public class EyeOfHarmonyRecipe {
         if (spacetimeTier == 0 || spacetimeTier == 9) {
             spacetimeTier -= 1;
         }
-        fluidStackArrayList.add(SPECIAL_FLUIDS[spacetimeTier + 1]);
+        fluidStackLongArrayList.add(SPECIAL_FLUIDS[spacetimeTier + 1]);
 
-        outputFluids = fluidStackArrayList;
+        outputFluids = fluidStackLongArrayList;
         // --- End fluid handling ---.
 
         this.hydrogenRequirement = hydrogenRequirement;
@@ -406,13 +408,13 @@ public class EyeOfHarmonyRecipe {
         return outputList;
     }
 
-    private static ArrayList<FluidStackLong> validPlasmaGenerator(final List<Pair<Materials, Long>> planetList) {
+    private static ArrayList<FluidStack> validPlasmaGenerator(final List<Pair<Materials, Long>> planetList) {
 
-        ArrayList<FluidStackLong> plasmaList = new ArrayList<>();
+        ArrayList<FluidStack> plasmaList = new ArrayList<>();
 
         for (Pair<Materials, Long> pair : planetList) {
             if (VALID_PLASMAS.contains(pair.getLeft())) {
-                plasmaList.add(new FluidStackLong(pair.getLeft().getPlasma(1), 1));
+                plasmaList.add(pair.getLeft().getPlasma(1));
             }
         }
 
