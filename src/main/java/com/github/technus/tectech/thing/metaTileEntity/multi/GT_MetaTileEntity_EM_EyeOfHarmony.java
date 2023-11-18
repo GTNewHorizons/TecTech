@@ -1153,11 +1153,12 @@ public class GT_MetaTileEntity_EM_EyeOfHarmony extends GT_MetaTileEntity_Multibl
 
         astralArrayAmount = 0;
 
-        for (int i = 0; i < mInputBusses.get(0).getSizeInventory(); i++) {
-            if (mInputBusses.get(0).getStackInSlot(i) != null
-                    && mInputBusses.get(0).getStackInSlot(i).isItemEqual(astralArrayFabricator.get(1))) {
-                astralArrayAmount += (long) clamp(mInputBusses.get(0).getStackInSlot(i).stackSize, 0, 64);
+        for (ItemStack itemStack : mInputBusses.get(0).getRealInventory()) {
+            if (itemStack != null && itemStack.isItemEqual(astralArrayFabricator.get(1))) {
+                astralArrayAmount += (long) clamp(itemStack.stackSize, 0, 64);
+                continue;
             }
+            break;
         }
 
         if (astralArrayAmount != 0) {
