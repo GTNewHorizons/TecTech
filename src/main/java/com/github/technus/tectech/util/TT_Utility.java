@@ -10,6 +10,7 @@ import net.minecraft.item.ItemStack;
 
 import cpw.mods.fml.common.registry.GameRegistry;
 import gregtech.api.metatileentity.implementations.GT_MetaTileEntity_TieredMachineBlock;
+import net.minecraft.nbt.NBTTagCompound;
 
 /**
  * Created by Tec on 21.03.2017.
@@ -159,6 +160,26 @@ public final class TT_Utility {
             return Long.toString((long) value);
         }
         return Double.toString(value);
+    }
+
+    //Begin itemStack NBT translations (Taken from KubaTech <3)
+    public static NBTTagCompound writeItemStackToNBT(ItemStack stack) {
+        NBTTagCompound compound = new NBTTagCompound();
+
+        stack.writeToNBT(compound);
+        compound.setInteger("IntCount", stack.stackSize);
+
+        return compound;
+    }
+
+    public static ItemStack readItemStackFromNBT(NBTTagCompound compound) {
+        ItemStack stack = ItemStack.loadItemStackFromNBT(compound);
+
+        if (stack == null) return null;
+
+        if (compound.hasKey("IntCount")) stack.stackSize = compound.getInteger("IntCount");
+
+        return stack;
     }
 
 }

@@ -61,6 +61,9 @@ public class TecTechUITextures {
     public static final UITexture OVERLAY_BUTTON_PARAMETRIZER_IF = UITexture
             .fullImage(MODID, "gui/overlay_button/parametrizer_if");
 
+    public static final UITexture OVERLAY_BUTTON_FRIEND_MENU = UITexture
+            .fullImage(MODID, "gui/overlay_button/friend_menu");
+
     public static final UITexture OVERLAY_SLOT_RACK = UITexture.fullImage(MODID, "gui/overlay_slot/rack");
     public static final UITexture OVERLAY_SLOT_MESH = UITexture.fullImage(MODID, "gui/overlay_slot/mesh");
 
