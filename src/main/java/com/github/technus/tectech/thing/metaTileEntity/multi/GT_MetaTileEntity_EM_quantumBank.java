@@ -1,10 +1,8 @@
 package com.github.technus.tectech.thing.metaTileEntity.multi;
 
-import static com.github.technus.tectech.recipe.TT_recipeAdder.nullItem;
 import static com.github.technus.tectech.thing.casing.GT_Block_CasingsTT.textureOffset;
 import static com.github.technus.tectech.thing.casing.GT_Block_CasingsTT.texturePage;
 import static com.github.technus.tectech.thing.casing.TT_Container_Casings.sBlockCasingsTT;
-import static com.github.technus.tectech.util.CommonValues.V;
 import static com.github.technus.tectech.util.TT_Utility.readItemStackFromNBT;
 import static com.github.technus.tectech.util.TT_Utility.writeItemStackToNBT;
 import static com.gtnewhorizon.structurelib.structure.StructureUtility.ofBlock;
@@ -18,10 +16,15 @@ import static gregtech.api.util.GT_StructureUtility.buildHatchAdder;
 import static gregtech.api.util.GT_StructureUtility.ofFrame;
 
 import com.github.technus.tectech.thing.casing.TT_Container_Casings;
+import com.github.technus.tectech.util.SyncArrayListPacket;
 import com.google.common.collect.ImmutableList;
 import com.gtnewhorizon.structurelib.structure.IItemSource;
+import com.gtnewhorizons.modularui.api.drawable.Text;
 import com.gtnewhorizons.modularui.api.math.Alignment;
-import com.gtnewhorizons.modularui.common.internal.wrapper.BaseSlot;
+import com.gtnewhorizons.modularui.api.math.CrossAxisAlignment;
+import com.gtnewhorizons.modularui.api.math.MainAxisAlignment;
+import com.gtnewhorizons.modularui.common.widget.Row;
+import cpw.mods.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import gregtech.api.util.GT_Utility;
 import static net.minecraft.util.StatCollector.translateToLocal;
 
@@ -46,11 +49,12 @@ import com.gtnewhorizons.modularui.common.widget.SlotWidget;
 import com.gtnewhorizons.modularui.common.widget.TextWidget;
 import gregtech.api.recipe.check.CheckRecipeResult;
 import gregtech.api.recipe.check.SimpleCheckRecipeResult;
-import gregtech.common.gui.modularui.widget.CheckRecipeResultSyncer;
+
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.util.ForgeDirection;
@@ -71,8 +75,7 @@ import gregtech.api.enums.Textures;
 import gregtech.api.interfaces.ITexture;
 import gregtech.api.interfaces.metatileentity.IMetaTileEntity;
 import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
-import gregtech.api.recipe.check.CheckRecipeResult;
-import gregtech.api.recipe.check.SimpleCheckRecipeResult;
+
 
 import gregtech.api.util.GT_Multiblock_Tooltip_Builder;
 import org.apache.commons.lang3.tuple.Pair;
@@ -86,14 +89,16 @@ public class GT_MetaTileEntity_EM_quantumBank extends GT_MetaTileEntity_Multiblo
         implements ISurvivalConstructable {
 
     //Workaround to stupid superclass having 3 slots.
-    ItemStack[] invStorage = new ItemStack[600];
-    ItemStackHandler invHandler = new ItemStackHandler(invStorage);
-    private int unlockedSlots = 144; //Minimum quantity possible
-    private int slotCount = 0; //For GUI to show total used so far
+    ItemStack[] inventoryStorageArray = new ItemStack[600];
+    ItemStackHandler inventoryStorageHandler = new ItemStackHandler(inventoryStorageArray);
+    ItemStackHandler phantomStorageHandler = new ItemStackHandler(600);
+    private int numberOfUnlockedSlots = 144; //Minimum quantity possible
+    private int usedSlotCount = 0; //For GUI to show total used so far
     private int storageTier = -1; //funny metaData
 
     private ArrayList<String> friendsList = new ArrayList();
     protected static int FRIENDSLIST_WINDOW_ID = 592;
+    private String owner_name;
 
 
 
@@ -166,22 +171,35 @@ public class GT_MetaTileEntity_EM_quantumBank extends GT_MetaTileEntity_Multiblo
         if (!structureCheck_EM("main", 1, 2, 0)){
             return false;
         }
-        unlockedSlots = 144 + (storageTier * 54);
+        numberOfUnlockedSlots = 144 + (storageTier * 54);
         return true;
     }
 
     public void saveNBTData(NBTTagCompound aNBT){
         super.saveNBTData(aNBT);
-        for (int i = 0; i < unlockedSlots; i++) {
-            if(invStorage[i] == null) {break;} //stop us from wasting CPU time looping through nothing
-                aNBT.setTag("invHandler."+ i, writeItemStackToNBT(invStorage[i]));
+        aNBT.setInteger("numberOfUnlockedSlots", numberOfUnlockedSlots);
+        aNBT.setInteger("friendsListSize", friendsList.size());
+        for (int i = 0; i < friendsList.size(); i++){
+            if (friendsList.get(i) == null) {break;}
+            aNBT.setString("friendsList."+ i, friendsList.get(i));
         }
+        for (int i = 0; i < numberOfUnlockedSlots; i++) {
+            if(inventoryStorageArray[i] == null) {break;} //stop us from wasting CPU time looping through nothing
+                aNBT.setTag("inventoryStorageHandler."+ i, writeItemStackToNBT(inventoryStorageArray[i]));
+        }
+
     }
     public void loadNBTData(NBTTagCompound aNBT){
         super.loadNBTData(aNBT);
-        for (int i = 0; i < invStorage.length; i++){
-            if (readItemStackFromNBT(aNBT.getCompoundTag("invHandler."+i)) == null) {break;} //stop us from wasting CPU time looping through nothing
-            invStorage[i] = readItemStackFromNBT(aNBT.getCompoundTag("invHandler."+i));
+        numberOfUnlockedSlots = aNBT.getInteger("numberOfUnlockedSlots");
+        for (int i = 0; i < aNBT.getInteger("friendsListSize"); i++){
+            if (!friendsList.contains(aNBT.getString("friendsList."+i))){
+                friendsList.add(i, aNBT.getString("friendsList."+i));
+            }
+        }
+        for (int i = 0; i < inventoryStorageArray.length; i++){
+            if (readItemStackFromNBT(aNBT.getCompoundTag("inventoryStorageHandler."+i)) == null) {break;} //stop us from wasting CPU time looping through nothing
+            inventoryStorageArray[i] = readItemStackFromNBT(aNBT.getCompoundTag("inventoryStorageHandler."+i));
         }
     }
     @Override
@@ -271,6 +289,10 @@ public class GT_MetaTileEntity_EM_quantumBank extends GT_MetaTileEntity_Multiblo
     public void onFirstTick_EM(IGregTechTileEntity aBaseMetaTileEntity) {
         super.onFirstTick_EM(aBaseMetaTileEntity);
         if (aBaseMetaTileEntity.isServerSide()){
+            owner_name = aBaseMetaTileEntity.getOwnerName();
+            if (!friendsList.contains(owner_name)) {
+                friendsList.add(0, owner_name);
+            }
             if (!hasMaintenanceChecks) turnOffMaintenance();
             if (!mMachine) {
                 aBaseMetaTileEntity.disableWorking();
@@ -283,21 +305,21 @@ public class GT_MetaTileEntity_EM_quantumBank extends GT_MetaTileEntity_Multiblo
         super.onPostTick(aBaseMetaTileEntity, aTick);
         if (aBaseMetaTileEntity.isServerSide() && aBaseMetaTileEntity.hasInventoryBeenModified()){
             updateSlots();
-            slotCount = getUsedSlotCount();
+            usedSlotCount = getUsedSlotCount();
         }
     }
     private int getUsedSlotCount(){
         int slotCounter = 0;
-        for (int i = 0; i < unlockedSlots; i++) {
-            if(invStorage[i] == null) {break;} //stop us from wasting CPU time looping through nothing
+        for (int i = 0; i < numberOfUnlockedSlots; i++) {
+            if(inventoryStorageArray[i] == null) {break;} //stop us from wasting CPU time looping through nothing
             slotCounter++;
         }
         return slotCounter;
     }
-
+    @Override
     public void updateSlots() {
-        for (int i = 0; i < unlockedSlots; i++)
-            if (invStorage[i] != null && invStorage[i].stackSize <= 0) invStorage[i] = null;
+        for (int i = 0; i < numberOfUnlockedSlots; i++)
+            if (inventoryStorageArray[i] != null && inventoryStorageArray[i].stackSize <= 0) inventoryStorageArray[i] = null;
         fillStacksIntoFirstSlots();
     }
     /*
@@ -305,20 +327,20 @@ public class GT_MetaTileEntity_EM_quantumBank extends GT_MetaTileEntity_Multiblo
     Might try to find more optimized way later
      */
     protected void fillStacksIntoFirstSlots() {
-        final int L = invStorage.length;
+        final int L = inventoryStorageArray.length;
         HashMap<GT_Utility.ItemId, Integer> slots = new HashMap<>(L);
         HashMap<GT_Utility.ItemId, ItemStack> stacks = new HashMap<>(L);
         List<GT_Utility.ItemId> order = new ArrayList<>(L);
         List<Integer> validSlots = new ArrayList<>(L);
         for (int i = 0; i < L; i++) {
             validSlots.add(i);
-            ItemStack s = invStorage[i];
+            ItemStack s = inventoryStorageArray[i];
             if (s == null) continue;
             GT_Utility.ItemId sID = GT_Utility.ItemId.createNoCopy(s);
             slots.merge(sID, s.stackSize, Integer::sum);
             if (!stacks.containsKey(sID)) stacks.put(sID, s);
             order.add(sID);
-            invStorage[i] = null;
+            inventoryStorageArray[i] = null;
         }
         int slotindex = 0;
         for (GT_Utility.ItemId sID : order) {
@@ -326,10 +348,10 @@ public class GT_MetaTileEntity_EM_quantumBank extends GT_MetaTileEntity_Multiblo
             if (toSet == 0) continue;
             int slot = validSlots.get(slotindex);
             slotindex++;
-            invStorage[slot] = stacks.get(sID)
+            inventoryStorageArray[slot] = stacks.get(sID)
                     .copy();
-            toSet = Math.min(toSet, invStorage[slot].getMaxStackSize());
-            invStorage[slot].stackSize = toSet;
+            toSet = Math.min(toSet, inventoryStorageArray[slot].getMaxStackSize());
+            inventoryStorageArray[slot].stackSize = toSet;
             slots.merge(sID, toSet, (a, b) -> a - b);
         }
     }
@@ -373,17 +395,98 @@ public class GT_MetaTileEntity_EM_quantumBank extends GT_MetaTileEntity_Multiblo
     }
 
     protected ModularWindow createFriendsConfigWindow(final EntityPlayer player){
-        return ModularWindow.builder(158, 180)
-                .setBackground(TecTechUITextures.BACKGROUND_SCREEN_BLUE)
+        ModularWindow.Builder currentWindow = ModularWindow.builder(158, 180);
 
-                .build();
+
+
+        currentWindow.setBackground(TecTechUITextures.BACKGROUND_SCREEN_BLUE);
+        //TO-DO
+        /*
+        -Network friendsList to other players so everyone sees the same thing
+        -Proper spacing without SPACE_BETWEEN /0 bullshit
+        -Only allow owner to add/remove friends
+        -Probably networking friendsList back to server, who knows
+        */
+
+        ArrayList<String> activePlayerList = new ArrayList<>();
+
+        currentWindow.widget(new FakeSyncWidget.StringSyncer(() -> owner_name, val -> owner_name = val));
+        System.out.println("OWNER_NAME:"+owner_name);
+        for (EntityPlayer playerEntity : player.getEntityWorld().playerEntities) {
+            if (playerEntity.getDisplayName().equals(owner_name) && !friendsList.contains(owner_name)){
+                friendsList.add(playerEntity.getDisplayName());
+                System.out.println("Inside activePlayerList check, added owner");
+            } else if (!friendsList.contains(playerEntity.getDisplayName())) {
+                activePlayerList.add(playerEntity.getDisplayName());
+            }
+        }
+        if(getBaseMetaTileEntity().isServerSide()){
+            if (player instanceof EntityPlayerMP) {
+                sendArrayListToClient(friendsList, (EntityPlayerMP) player);
+               // System.out.println("SERVER: sendArrayListToClient-Length: " + friendsList.size());
+            }
+        }
+        DynamicPositionedColumn friendsContainer = new DynamicPositionedColumn();
+
+        friendsContainer.widget(new TextWidget("Friends List").setTextAlignment(Alignment.TopCenter).setDefaultColor(COLOR_TEXT_WHITE.get()));
+
+        for (String friend : friendsList){
+            System.out.println("We are inside window, friend:friendsList");
+            System.out.println(friend + ":" + friendsList.get(0));
+            //Sync our friendsList from client -> Server
+            if (friend == friendsList.get(0)){ //We know owner is always index 0
+                friendsContainer.widget(new Row().setAlignment(MainAxisAlignment.SPACE_BETWEEN, CrossAxisAlignment.CENTER)
+                        .widget(new TextWidget("§9"+friend + " (owner)"))
+                        .widget(new TextWidget(" ")) //Space_Between can div by zero without a spare 2nd element
+                        .setMaxWidth(142));
+            } else  {
+                friendsContainer.widget(new Row().setAlignment(MainAxisAlignment.SPACE_BETWEEN, CrossAxisAlignment.CENTER)
+                        .widget(new TextWidget("§9"+friend))
+                        .widget(new TextWidget(" ")) //Space_Between can div by zero without a spare 2nd element
+                        .widget(new ButtonWidget().setOnClick(((clickData,widget) -> {
+                            friendsList.remove(friend);
+                            sendArrayListToServer(friendsList);
+                        }))
+                                .setBackground(new Text("§c-"))
+                                .setSize(8,8)).setMaxWidth(142));
+            }
+
+        }
+
+        friendsContainer.widget(new TextWidget("Active Players").setTextAlignment(Alignment.TopCenter).setDefaultColor(COLOR_TEXT_WHITE.get()));
+
+        for (String activePlayer : activePlayerList) {
+                if(friendsList.contains(activePlayer)){
+                    activePlayerList.remove(activePlayer);
+                }
+
+
+            friendsContainer.widget(new Row().setAlignment(MainAxisAlignment.SPACE_BETWEEN, CrossAxisAlignment.CENTER)
+                    .widget(new TextWidget(activePlayer))
+                    .widget(new TextWidget(" ")) //Space_Between can div by zero without a spare 2nd element
+                    .widget(new ButtonWidget().setOnClick(((clickData, widget) -> {
+                        if (!friendsList.contains(activePlayer)) {friendsList.add(activePlayer);}
+                        sendArrayListToServer(friendsList);
+                    }))
+                            .setBackground(new Text("§a+"))
+                            .setSize(8, 8)).setMaxWidth(142));
+        }
+
+
+
+        currentWindow.widget(friendsContainer.setPos(7, 8));
+        return currentWindow.build();
     }
 
+
     protected ButtonWidget createFriendsButton() {
+
         Widget button = new ButtonWidget().setOnClick((clickData, widget) -> {
                     TecTech.proxy.playSound(getBaseMetaTileEntity(), "fx_click");
                     if (!widget.isClient()) {
                         widget.getContext().openSyncedWindow(FRIENDSLIST_WINDOW_ID);
+                        sendArrayListToClient(friendsList, (EntityPlayerMP) widget.getContext().getPlayer());
+                        System.out.println("createFriendsButton CALLED -> sendArrayListToClient");
                     }
                 }).setPlayClickSound(false)
                 .setBackground(TecTechUITextures.BUTTON_STANDARD_16x16, TecTechUITextures.OVERLAY_BUTTON_FRIEND_MENU)
@@ -403,9 +506,9 @@ public class GT_MetaTileEntity_EM_quantumBank extends GT_MetaTileEntity_Multiblo
     private DynamicPositionedColumn drawTexts(DynamicPositionedColumn screenElements){
         super.drawTexts(screenElements, null);
         screenElements.setSynced(false);
-        screenElements.widget(new FakeSyncWidget.IntegerSyncer(() -> slotCount, val -> slotCount = val)); // Sync our values
+        screenElements.widget(new FakeSyncWidget.IntegerSyncer(() -> usedSlotCount, val -> usedSlotCount = val)); // Sync our values
         screenElements.widget(
-                TextWidget.dynamicString(() -> ("Current Capacity: " + slotCount + "/" + unlockedSlots))
+                TextWidget.dynamicString(() -> ("Current Capacity: " + usedSlotCount + "/" + numberOfUnlockedSlots))
                         .setSynced(false)
                         .setTextAlignment(Alignment.CenterLeft)
                         .setDefaultColor(COLOR_TEXT_WHITE.get())
@@ -414,9 +517,9 @@ public class GT_MetaTileEntity_EM_quantumBank extends GT_MetaTileEntity_Multiblo
     }
     @Override
     public void addUIWidgets(ModularWindow.Builder builder, UIBuildContext buildContext) {
-        final DynamicPositionedColumn screenElements = new DynamicPositionedColumn();
+        final DynamicPositionedColumn textContainer = new DynamicPositionedColumn();
 
-        builder.widget(new FakeSyncWidget.IntegerSyncer(() -> unlockedSlots, val -> unlockedSlots = val)); // Sync our value
+        builder.widget(new FakeSyncWidget.IntegerSyncer(() -> numberOfUnlockedSlots, val -> numberOfUnlockedSlots = val)); // Sync our value
 
 
         builder.setSize(new Size(200, 265));
@@ -427,8 +530,8 @@ public class GT_MetaTileEntity_EM_quantumBank extends GT_MetaTileEntity_Multiblo
         builder.widget(
                 new DrawableWidget().setDrawable(TecTechUITextures.BACKGROUND_SCREEN_BLUE).setPos(4, 98)
                         .setSize(190, 81));
-        drawTexts(screenElements);
-        builder.widget(screenElements.setPos(7, 8));
+        drawTexts(textContainer);
+        builder.widget(textContainer.setPos(7, 8));
 
         Widget powerSwitchButton = createPowerSwitchButton();
         builder.widget(powerSwitchButton)
@@ -437,22 +540,38 @@ public class GT_MetaTileEntity_EM_quantumBank extends GT_MetaTileEntity_Multiblo
                     else disableWorking();
                 }));
 
-        final Scrollable scrollable = new Scrollable().setVerticalScroll();
-        for (int row = 0; row * 10 < unlockedSlots - 1; row++) {
-            int columnsToMake = Math.min(unlockedSlots - row * 10, 10);
+        final Scrollable inventoryScrollable = new Scrollable().setVerticalScroll();
+        for (int row = 0; row * 10 < numberOfUnlockedSlots - 1; row++) {
+            int columnsToMake = Math.min(numberOfUnlockedSlots - row * 10, 10);
             for (int column = 0; column < columnsToMake; column++) {
-                scrollable.widget(
-                        new SlotWidget(invHandler, row * 10 + column).setPos(column * 18, row * 18)
-                                .setSize(18, 18));
+                inventoryScrollable.widget(
+                        new SlotWidget(inventoryStorageHandler, row * 10 + column).setPos(column * 18, row * 18).setSize(18, 18));
             }
         }
 
-        builder.widget(scrollable.setSize(18 * 10 + 4, 18 * 4).setPos(7, 103));
+        builder.widget(inventoryScrollable.setSize(18 * 10 + 4, 18 * 4).setPos(7, 103));
 
         builder.widget(createFriendsButton());
         buildContext.addSyncedWindow(FRIENDSLIST_WINDOW_ID, this::createFriendsConfigWindow);
+    }
 
+    public ArrayList<String> getFriendsList() {
+        return friendsList;
+    }
+    public void setFriendsList(ArrayList<String> arrayList) {
+        friendsList = arrayList;
+        System.out.println("CLIENT: setFriendsList -> "+ friendsList.get(0));
+    }
+
+    public void sendArrayListToServer(ArrayList<String> arrayList){
+        SimpleNetworkWrapper networkWrapper = TecTech.networkWrapper;
+        SyncArrayListPacket packet = new SyncArrayListPacket(arrayList, this);
+        networkWrapper.sendToServer(packet);
+    }
+
+    public void sendArrayListToClient(ArrayList<String> arrayList, EntityPlayerMP entityPlayerMP){
+        SimpleNetworkWrapper networkWrapper = TecTech.networkWrapper;
+        SyncArrayListPacket packet = new SyncArrayListPacket(arrayList, this);
+        networkWrapper.sendTo(packet, entityPlayerMP);
     }
 }
-
-

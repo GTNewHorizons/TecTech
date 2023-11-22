@@ -1,6 +1,7 @@
 package com.github.technus.tectech.util;
 
 import java.lang.reflect.Field;
+import java.util.ArrayList;
 import java.util.Formatter;
 import java.util.HashMap;
 import java.util.Locale;
@@ -181,5 +182,4 @@ public final class TT_Utility {
 
         return stack;
     }
-
 }

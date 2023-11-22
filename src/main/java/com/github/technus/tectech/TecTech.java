@@ -4,7 +4,6 @@ import static com.github.technus.tectech.loader.TecTechConfig.DEBUG_MODE;
 import static gregtech.api.enums.Mods.COFHCore;
 
 import net.minecraftforge.common.MinecraftForge;
-
 import com.github.technus.tectech.loader.MainLoader;
 import com.github.technus.tectech.loader.TecTechConfig;
 import com.github.technus.tectech.loader.gui.CreativeTabTecTech;
@@ -12,6 +11,7 @@ import com.github.technus.tectech.mechanics.enderStorage.EnderWorldSavedData;
 import com.github.technus.tectech.nei.IMCForNEI;
 import com.github.technus.tectech.proxy.CommonProxy;
 import com.github.technus.tectech.recipe.EyeOfHarmonyRecipeStorage;
+import com.github.technus.tectech.util.SyncArrayListPacket;
 
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.Mod;
@@ -20,6 +20,9 @@ import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLLoadCompleteEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
+import cpw.mods.fml.common.network.NetworkRegistry;
+import cpw.mods.fml.common.network.simpleimpl.SimpleNetworkWrapper;
+import cpw.mods.fml.relauncher.Side;
 import eu.usrv.yamcore.auxiliary.IngameErrorLog;
 import eu.usrv.yamcore.auxiliary.LogHelper;
 import gregtech.api.objects.XSTR;
@@ -39,6 +42,8 @@ import gregtech.api.objects.XSTR;
                 + "after:CoFHCore;"
                 + "after:Thaumcraft;")
 public class TecTech {
+
+    public static SimpleNetworkWrapper networkWrapper;
 
     @SidedProxy(clientSide = Reference.CLIENTSIDE, serverSide = Reference.SERVERSIDE)
     public static CommonProxy proxy;
@@ -80,6 +85,10 @@ public class TecTech {
             LOGGER.debug("moduleAdminErrorLogs is enabled");
             IngameErrorLog moduleAdminErrorLogs = new IngameErrorLog();
         }
+
+        networkWrapper = NetworkRegistry.INSTANCE.newSimpleChannel("tectech_channel");
+        networkWrapper.registerMessage(SyncArrayListPacket.Handler.class, SyncArrayListPacket.class, 0, Side.CLIENT);
+        networkWrapper.registerMessage(SyncArrayListPacket.Handler.class, SyncArrayListPacket.class, 0, Side.SERVER);
 
         enderWorldSavedData = new EnderWorldSavedData();
         FMLCommonHandler.instance().bus().register(enderWorldSavedData);
