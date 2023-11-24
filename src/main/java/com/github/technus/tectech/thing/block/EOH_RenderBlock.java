@@ -68,4 +68,36 @@ public class EOH_RenderBlock extends Block {
         return new ArrayList<>();
     }
 
+    // Logic for changing collision based on gamemode.
+    private boolean isPlayerCreative() {
+        World world = Minecraft.getMinecraft().thePlayer.getEntityWorld();
+
+        if (world.isRemote) {
+            EntityPlayer player = Minecraft.getMinecraft().thePlayer;
+            if (player != null) {
+                return player.capabilities.isCreativeMode;
+            }
+        }
+        return false;
+    }
+
+    @Override
+    public AxisAlignedBB getCollisionBoundingBoxFromPool(World world, int x, int y, int z) {
+        // If the user is in survival the block should be impossible to break/collide with.
+        if (isPlayerCreative()) {
+            return AxisAlignedBB.getBoundingBox(x, y, z, x + 1, y + 1, z + 1);
+        } else {
+            return null;
+        }
+    }
+
+    @Override
+    public void setBlockBoundsBasedOnState(IBlockAccess world, int x, int y, int z) {
+        if (isPlayerCreative()) {
+            this.setBlockBounds(0.0F, 0.0F, 0.0F, 1.0F, 1.0F, 1.0F);
+        } else {
+            this.setBlockBounds(0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F);
+        }
+    }
+
 }
