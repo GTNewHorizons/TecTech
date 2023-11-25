@@ -1,15 +1,5 @@
 package com.github.technus.tectech.rendering.EOH;
 
-import cpw.mods.fml.client.FMLClientHandler;
-import net.minecraft.block.Block;
-import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.util.IIcon;
-import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.client.IItemRenderer;
-import org.lwjgl.opengl.GL11;
-
-import java.awt.*;
-
 import static com.github.technus.tectech.Reference.MODID;
 import static com.github.technus.tectech.rendering.EOH.EOH_TESR.STAR_LAYER_0;
 import static com.github.technus.tectech.rendering.EOH.EOH_TESR.STAR_LAYER_1;
@@ -17,6 +7,18 @@ import static com.github.technus.tectech.rendering.EOH.EOH_TESR.STAR_LAYER_2;
 import static com.github.technus.tectech.rendering.EOH.EOH_TESR.spaceModel;
 import static com.github.technus.tectech.rendering.EOH.EOH_TESR.starModel;
 import static java.lang.Math.pow;
+
+import java.awt.*;
+
+import net.minecraft.block.Block;
+import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.util.IIcon;
+import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.client.IItemRenderer;
+
+import org.lwjgl.opengl.GL11;
+
+import cpw.mods.fml.client.FMLClientHandler;
 
 public abstract class EOH_RenderingUtils {
 
@@ -26,9 +28,9 @@ public abstract class EOH_RenderingUtils {
         if (type == IItemRenderer.ItemRenderType.INVENTORY) GL11.glRotated(180, 0, 1, 0);
         else if (type == IItemRenderer.ItemRenderType.EQUIPPED
                 || type == IItemRenderer.ItemRenderType.EQUIPPED_FIRST_PERSON) {
-            GL11.glTranslated(0.5, 0.5, 0.5);
-            if (type == IItemRenderer.ItemRenderType.EQUIPPED) GL11.glRotated(90, 0, 1, 0);
-        }
+                    GL11.glTranslated(0.5, 0.5, 0.5);
+                    if (type == IItemRenderer.ItemRenderType.EQUIPPED) GL11.glRotated(90, 0, 1, 0);
+                }
 
         // Render star stuff.
         renderStarLayer(0, STAR_LAYER_0, color, 1.0f);
@@ -43,7 +45,6 @@ public abstract class EOH_RenderingUtils {
     }
 
     private static void renderStarLayer(int layer, ResourceLocation texture, Color color, float alpha) {
-
 
         // Begin animation.
         GL11.glPushMatrix();
@@ -124,7 +125,7 @@ public abstract class EOH_RenderingUtils {
     static final double[] BLOCK_Z = { +0.5, +0.5, +0.5, +0.5, -0.5, -0.5, -0.5, -0.5 };
 
     public static void addRenderedBlockInWorld(final Block block, final int meta, final double x, final double y,
-                                               final double z) {
+            final double z) {
         final Tessellator tes = Tessellator.instance;
 
         IIcon texture;
@@ -240,7 +241,7 @@ public abstract class EOH_RenderingUtils {
         // Disables lighting, so star is always lit.
         GL11.glDisable(GL11.GL_LIGHTING);
         // Merges colors of the various layers of the star.
-        //GL11.glEnable(GL11.GL_BLEND);
+        // GL11.glEnable(GL11.GL_BLEND);
 
         // Bind animation to layer of star.
         FMLClientHandler.instance().getClient().getTextureManager()
