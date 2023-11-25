@@ -1,6 +1,10 @@
 package com.github.technus.tectech.rendering.EOH;
 
-import com.github.technus.tectech.thing.block.TileEyeOfHarmony;
+import static com.github.technus.tectech.Reference.MODID;
+import static com.github.technus.tectech.rendering.EOH.EOH_RenderingUtils.renderBlockInWorld;
+import static com.github.technus.tectech.rendering.EOH.EOH_RenderingUtils.renderOuterSpaceShell;
+import static com.github.technus.tectech.rendering.EOH.EOH_RenderingUtils.renderStar;
+
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.tileentity.TileEntity;
@@ -8,12 +12,10 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.IItemRenderer;
 import net.minecraftforge.client.model.AdvancedModelLoader;
 import net.minecraftforge.client.model.IModelCustom;
+
 import org.lwjgl.opengl.GL11;
 
-import static com.github.technus.tectech.Reference.MODID;
-import static com.github.technus.tectech.rendering.EOH.EOH_RenderingUtils.renderBlockInWorld;
-import static com.github.technus.tectech.rendering.EOH.EOH_RenderingUtils.renderOuterSpaceShell;
-import static com.github.technus.tectech.rendering.EOH.EOH_RenderingUtils.renderStar;
+import com.github.technus.tectech.thing.block.TileEyeOfHarmony;
 
 public class EOH_TESR extends TileEntitySpecialRenderer {
 
