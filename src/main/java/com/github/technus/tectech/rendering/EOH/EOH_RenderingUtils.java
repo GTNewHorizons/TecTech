@@ -8,7 +8,7 @@ import static com.github.technus.tectech.rendering.EOH.EOH_TESR.spaceModel;
 import static com.github.technus.tectech.rendering.EOH.EOH_TESR.starModel;
 import static java.lang.Math.pow;
 
-import java.awt.*;
+import java.awt.Color;
 
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.Tessellator;
