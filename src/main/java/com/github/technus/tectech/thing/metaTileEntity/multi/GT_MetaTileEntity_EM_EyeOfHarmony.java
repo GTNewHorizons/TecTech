@@ -863,7 +863,7 @@ public class GT_MetaTileEntity_EM_EyeOfHarmony extends GT_MetaTileEntity_Multibl
             }
         }
 
-        // Check there is 1 input bus.
+        // Check there is 1 input bus, and it is not a stocking input bus.
         {
             if (mInputBusses.size() != 1) {
                 return false;
@@ -873,6 +873,7 @@ public class GT_MetaTileEntity_EM_EyeOfHarmony extends GT_MetaTileEntity_Multibl
                 return false;
             }
         }
+
         // Make sure there are no energy hatches.
         {
             if (mEnergyHatches.size() > 0) {
