@@ -55,7 +55,7 @@ public abstract class EOH_RenderingUtils {
         GL11.glDisable(GL11.GL_LIGHTING);
         // Culls triangles/quads facing away from the camera
         GL11.glEnable(GL11.GL_CULL_FACE);
-        // Merges colours of the various layers of the star?
+        // Allows alpha blending to occur (transparency-based color mixing)
         GL11.glEnable(GL11.GL_BLEND);
         // ???
         if (alpha < 1.0f) {
