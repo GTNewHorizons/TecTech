@@ -95,6 +95,7 @@ public abstract class EOH_RenderingUtils {
         GL11.glDepthMask(true);
         GL11.glEnable(GL11.GL_LIGHTING);
 
+        GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
         // Finish animation.
         GL11.glPopMatrix();
     }

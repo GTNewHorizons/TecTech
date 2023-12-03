@@ -74,15 +74,9 @@ public class EOH_ItemRenderer implements IItemRenderer {
         GL11.glScalef(scale, scale, scale);
 
         switch (layer) {
-            case 0:
-                GL11.glRotatef(130 + (System.currentTimeMillis() / 64) % 360, 0F, 1F, 1F);
-                break;
-            case 1:
-                GL11.glRotatef(-49 + (System.currentTimeMillis() / 64) % 360, 1F, 1F, 0F);
-                break;
-            case 2:
-                GL11.glRotatef(67 + (System.currentTimeMillis() / 64) % 360, 1F, 0F, 1F);
-                break;
+            case 0 -> GL11.glRotatef(130 + (System.currentTimeMillis() / 64) % 360, 0F, 1F, 1F);
+            case 1 -> GL11.glRotatef(-49 + (System.currentTimeMillis() / 64) % 360, 1F, 1F, 0F);
+            case 2 -> GL11.glRotatef(67 + (System.currentTimeMillis() / 64) % 360, 1F, 0F, 1F);
         }
 
         // Set colour and alpha (transparency) of the star layer.
@@ -93,6 +87,7 @@ public class EOH_ItemRenderer implements IItemRenderer {
         GL11.glDepthMask(true);
         GL11.glEnable(GL11.GL_LIGHTING);
 
+        GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
         // Finish animation.
         GL11.glPopMatrix();
     }
