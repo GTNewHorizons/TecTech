@@ -53,7 +53,7 @@ public abstract class EOH_RenderingUtils {
 
         // Disables lighting, so star is always lit (I think).
         GL11.glDisable(GL11.GL_LIGHTING);
-        // Culls things out of line of sight?
+        // Culls triangles/quads facing away from the camera
         GL11.glEnable(GL11.GL_CULL_FACE);
         // Merges colours of the various layers of the star?
         GL11.glEnable(GL11.GL_BLEND);
