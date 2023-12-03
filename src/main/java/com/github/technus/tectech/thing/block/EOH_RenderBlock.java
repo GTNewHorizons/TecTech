@@ -70,8 +70,8 @@ public class EOH_RenderBlock extends Block {
     }
 
     @Override
-    public void setBlockBoundsBasedOnState(IBlockAccess world, int x, int y, int z) {
-        this.setBlockBounds(0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F);
+    public boolean isCollidable() {
+        return false;
     }
 
 }
