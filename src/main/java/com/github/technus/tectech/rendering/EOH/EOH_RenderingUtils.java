@@ -221,7 +221,6 @@ public abstract class EOH_RenderingUtils {
         }
     }
 
-    // this.bindTexture(TextureMap.locationBlocksTexture);
     public static void renderBlockInWorld(final Block block, final int meta, final float blockSize) {
         beginRenderingBlocksInWorld(blockSize);
 
