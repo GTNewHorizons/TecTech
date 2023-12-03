@@ -53,9 +53,9 @@ public abstract class EOH_RenderingUtils {
 
         // Disables lighting, so star is always lit (I think).
         GL11.glDisable(GL11.GL_LIGHTING);
-        // Culls things out of line of sight?
+        // Culls triangles/quads facing away from the camera
         GL11.glEnable(GL11.GL_CULL_FACE);
-        // Merges colours of the various layers of the star?
+        // Allows alpha blending to occur (transparency-based color mixing)
         GL11.glEnable(GL11.GL_BLEND);
         // ???
         if (alpha < 1.0f) {
@@ -222,7 +222,6 @@ public abstract class EOH_RenderingUtils {
         }
     }
 
-    // this.bindTexture(TextureMap.locationBlocksTexture);
     public static void renderBlockInWorld(final Block block, final int meta, final float blockSize) {
         beginRenderingBlocksInWorld(blockSize);
 
