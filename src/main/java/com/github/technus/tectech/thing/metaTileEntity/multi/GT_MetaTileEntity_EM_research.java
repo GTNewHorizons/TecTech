@@ -1,11 +1,8 @@
 package com.github.technus.tectech.thing.metaTileEntity.multi;
 
-import static com.github.technus.tectech.recipe.TT_recipe.E_RECIPE_ID;
 import static com.github.technus.tectech.thing.casing.GT_Block_CasingsTT.textureOffset;
 import static com.github.technus.tectech.thing.casing.GT_Block_CasingsTT.texturePage;
 import static com.github.technus.tectech.thing.casing.TT_Container_Casings.sBlockCasingsTT;
-import static com.github.technus.tectech.thing.metaTileEntity.multi.GT_MetaTileEntity_EM_crafting.crafter;
-import static com.github.technus.tectech.thing.metaTileEntity.multi.em_machine.GT_MetaTileEntity_EM_machine.machine;
 import static com.github.technus.tectech.util.CommonValues.V;
 import static com.github.technus.tectech.util.CommonValues.VN;
 import static com.gtnewhorizon.structurelib.structure.StructureUtility.ofBlock;
@@ -13,6 +10,7 @@ import static com.gtnewhorizon.structurelib.structure.StructureUtility.transpose
 import static gregtech.api.enums.GT_HatchElement.Energy;
 import static gregtech.api.enums.GT_HatchElement.Maintenance;
 import static gregtech.api.util.GT_StructureUtility.buildHatchAdder;
+import static gregtech.api.util.GT_Utility.filterValidMTEs;
 import static mcp.mobius.waila.api.SpecialChars.GREEN;
 import static mcp.mobius.waila.api.SpecialChars.RED;
 import static mcp.mobius.waila.api.SpecialChars.RESET;
@@ -36,8 +34,9 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
 import org.apache.commons.lang3.reflect.FieldUtils;
+import org.jetbrains.annotations.NotNull;
 
-import com.github.technus.tectech.recipe.TT_recipe;
+import com.github.technus.tectech.recipe.TecTechRecipeMaps;
 import com.github.technus.tectech.thing.metaTileEntity.hatch.GT_MetaTileEntity_Hatch_EnergyMulti;
 import com.github.technus.tectech.thing.metaTileEntity.hatch.GT_MetaTileEntity_Hatch_Holder;
 import com.github.technus.tectech.thing.metaTileEntity.multi.base.GT_MetaTileEntity_MultiblockBase_EM;
@@ -47,7 +46,6 @@ import com.gtnewhorizon.structurelib.alignment.constructable.ISurvivalConstructa
 import com.gtnewhorizon.structurelib.structure.IItemSource;
 import com.gtnewhorizon.structurelib.structure.IStructureDefinition;
 
-import cpw.mods.fml.common.registry.GameRegistry;
 import gregtech.api.enums.ItemList;
 import gregtech.api.enums.Textures;
 import gregtech.api.interfaces.IHatchElement;
@@ -57,7 +55,9 @@ import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
 import gregtech.api.metatileentity.MetaTileEntity;
 import gregtech.api.metatileentity.implementations.GT_MetaTileEntity_Hatch;
 import gregtech.api.metatileentity.implementations.GT_MetaTileEntity_Hatch_Energy;
-import gregtech.api.metatileentity.implementations.GT_MetaTileEntity_MultiBlockBase;
+import gregtech.api.recipe.check.CheckRecipeResult;
+import gregtech.api.recipe.check.CheckRecipeResultRegistry;
+import gregtech.api.recipe.check.SimpleCheckRecipeResult;
 import gregtech.api.util.GT_LanguageManager;
 import gregtech.api.util.GT_Multiblock_Tooltip_Builder;
 import gregtech.api.util.GT_Recipe;
@@ -73,10 +73,11 @@ import mcp.mobius.waila.api.IWailaDataAccessor;
 public class GT_MetaTileEntity_EM_research extends GT_MetaTileEntity_MultiblockBase_EM
         implements ISurvivalConstructable {
 
+    public static final String machine = "EM Machinery";
+    public static final String crafter = "EM Crafting";
     // region variables
     private final ArrayList<GT_MetaTileEntity_Hatch_Holder> eHolders = new ArrayList<>();
     private GT_Recipe.GT_Recipe_AssemblyLine tRecipe;
-    private TT_recipe.TT_assLineRecipe aRecipe;
     private String machineType;
     private static final String assembly = "Assembly line";
     private ItemStack holdItem;
@@ -304,7 +305,7 @@ public class GT_MetaTileEntity_EM_research extends GT_MetaTileEntity_MultiblockB
     }
 
     private boolean iterateRecipes() {
-        for (GT_Recipe ttRecipe : TT_recipe.GT_Recipe_MapTT.sResearchableFakeRecipes.mRecipeList) {
+        for (GT_Recipe ttRecipe : TecTechRecipeMaps.researchStationFakeRecipes.getAllRecipes()) {
             if (GT_Utility.areStacksEqual(ttRecipe.mInputs[0], holdItem, true)) {
                 computationRequired = computationRemaining = ttRecipe.mDuration * 20L;
                 mMaxProgresstime = 20;
@@ -326,10 +327,8 @@ public class GT_MetaTileEntity_EM_research extends GT_MetaTileEntity_MultiblockB
 
     @Override
     public boolean checkMachine_EM(IGregTechTileEntity iGregTechTileEntity, ItemStack itemStack) {
-        for (GT_MetaTileEntity_Hatch_Holder rack : eHolders) {
-            if (GT_MetaTileEntity_MultiBlockBase.isValidMetaTileEntity(rack)) {
-                rack.getBaseMetaTileEntity().setActive(false);
-            }
+        for (GT_MetaTileEntity_Hatch_Holder rack : filterValidMTEs(eHolders)) {
+            rack.getBaseMetaTileEntity().setActive(false);
         }
         eHolders.clear();
 
@@ -337,46 +336,30 @@ public class GT_MetaTileEntity_EM_research extends GT_MetaTileEntity_MultiblockB
             return false;
         }
 
-        for (GT_MetaTileEntity_Hatch_Holder rack : eHolders) {
-            if (GT_MetaTileEntity_MultiBlockBase.isValidMetaTileEntity(rack)) {
-                rack.getBaseMetaTileEntity().setActive(iGregTechTileEntity.isActive());
-            }
+        for (GT_MetaTileEntity_Hatch_Holder rack : filterValidMTEs(eHolders)) {
+            rack.getBaseMetaTileEntity().setActive(iGregTechTileEntity.isActive());
         }
         return eHolders.size() == 1;
     }
 
     @Override
-    public boolean checkRecipe_EM(ItemStack itemStack) {
+    @NotNull
+    protected CheckRecipeResult checkProcessing_EM() {
+        ItemStack controllerStack = getControllerSlot();
         tRecipe = null;
-        aRecipe = null;
         if (!eHolders.isEmpty() && eHolders.get(0).mInventory[0] != null) {
             holdItem = eHolders.get(0).mInventory[0].copy();
-            if (ItemList.Tool_DataStick.isStackEqual(itemStack, false, true)) {
-                for (GT_Recipe.GT_Recipe_AssemblyLine assRecipe : TT_recipe.GT_Recipe_MapTT.sAssemblylineRecipes) {
+            if (ItemList.Tool_DataStick.isStackEqual(controllerStack, false, true)) {
+                for (GT_Recipe.GT_Recipe_AssemblyLine assRecipe : TecTechRecipeMaps.researchableALRecipeList) {
                     if (GT_Utility.areStacksEqual(assRecipe.mResearchItem, holdItem, true)) {
                         machineType = assembly;
                         tRecipe = assRecipe;
                         // if found
-                        if (iterateRecipes()) return true;
+                        if (iterateRecipes()) return SimpleCheckRecipeResult.ofSuccess("researching");
                     }
                 }
-            } else if (ItemList.Tool_DataOrb.isStackEqual(itemStack, false, true)) {
-                for (TT_recipe.TT_assLineRecipe assRecipeTT : TT_recipe.TT_Recipe_Map.sMachineRecipes.recipeList()) {
-                    if (GT_Utility.areStacksEqual(assRecipeTT.mResearchItem, holdItem, true)) {
-                        aRecipe = assRecipeTT;
-                        machineType = machine;
-                        // if found
-                        if (iterateRecipes()) return true;
-                    }
-                }
-                for (TT_recipe.TT_assLineRecipe assRecipeTT : TT_recipe.TT_Recipe_Map.sCrafterRecipes.recipeList()) {
-                    if (GT_Utility.areStacksEqual(assRecipeTT.mResearchItem, holdItem, true)) {
-                        aRecipe = assRecipeTT;
-                        machineType = crafter;
-                        // if found
-                        if (iterateRecipes()) return true;
-                    }
-                }
+            } else {
+                return CheckRecipeResultRegistry.NO_DATA_STICKS;
             }
         }
         holdItem = null;
@@ -384,7 +367,7 @@ public class GT_MetaTileEntity_EM_research extends GT_MetaTileEntity_MultiblockB
         for (GT_MetaTileEntity_Hatch_Holder r : eHolders) {
             r.getBaseMetaTileEntity().setActive(false);
         }
-        return false;
+        return SimpleCheckRecipeResult.ofFailure("no_research_item");
     }
 
     @Override
@@ -402,33 +385,10 @@ public class GT_MetaTileEntity_EM_research extends GT_MetaTileEntity_MultiblockB
                         makeStick();
                     }
                 }
-            } else if (aRecipe != null && ItemList.Tool_DataOrb.isStackEqual(mInventory[1], false, true)) {
-                eHolders.get(0).getBaseMetaTileEntity().setActive(false);
-                eHolders.get(0).mInventory[0] = null;
-
-                mInventory[1].setStackDisplayName(
-                        GT_LanguageManager.getTranslation(aRecipe.mOutputs[0].getDisplayName()) + ' '
-                                + machineType
-                                + " Construction Data");
-                NBTTagCompound tNBT = mInventory[1].getTagCompound(); // code above makes it not null
-
-                tNBT.setString("eMachineType", machineType);
-                GameRegistry.UniqueIdentifier uid = GameRegistry.findUniqueIdentifierFor(aRecipe.mOutputs[0].getItem());
-                tNBT.setString(E_RECIPE_ID, uid + ":" + aRecipe.mOutputs[0].getItemDamage());
-                tNBT.setString(
-                        "author",
-                        EnumChatFormatting.BLUE + "Tec"
-                                + EnumChatFormatting.DARK_BLUE
-                                + "Tech"
-                                + EnumChatFormatting.WHITE
-                                + ' '
-                                + machineType
-                                + " Recipe Generator");
             }
         }
         computationRequired = computationRemaining = 0;
         tRecipe = null;
-        aRecipe = null;
         holdItem = null;
     }
 
@@ -479,17 +439,13 @@ public class GT_MetaTileEntity_EM_research extends GT_MetaTileEntity_MultiblockB
     public String[] getInfoData() {
         long storedEnergy = 0;
         long maxEnergy = 0;
-        for (GT_MetaTileEntity_Hatch_Energy tHatch : mEnergyHatches) {
-            if (GT_MetaTileEntity_MultiBlockBase.isValidMetaTileEntity(tHatch)) {
-                storedEnergy += tHatch.getBaseMetaTileEntity().getStoredEU();
-                maxEnergy += tHatch.getBaseMetaTileEntity().getEUCapacity();
-            }
+        for (GT_MetaTileEntity_Hatch_Energy tHatch : filterValidMTEs(mEnergyHatches)) {
+            storedEnergy += tHatch.getBaseMetaTileEntity().getStoredEU();
+            maxEnergy += tHatch.getBaseMetaTileEntity().getEUCapacity();
         }
-        for (GT_MetaTileEntity_Hatch_EnergyMulti tHatch : eEnergyMulti) {
-            if (GT_MetaTileEntity_MultiBlockBase.isValidMetaTileEntity(tHatch)) {
-                storedEnergy += tHatch.getBaseMetaTileEntity().getStoredEU();
-                maxEnergy += tHatch.getBaseMetaTileEntity().getEUCapacity();
-            }
+        for (GT_MetaTileEntity_Hatch_EnergyMulti tHatch : filterValidMTEs(eEnergyMulti)) {
+            storedEnergy += tHatch.getBaseMetaTileEntity().getStoredEU();
+            maxEnergy += tHatch.getBaseMetaTileEntity().getEUCapacity();
         }
 
         return new String[] { translateToLocalFormatted("tt.keyphrase.Energy_Hatches", clientLocale) + ":",
@@ -622,7 +578,6 @@ public class GT_MetaTileEntity_EM_research extends GT_MetaTileEntity_MultiblockB
         }
         computationRequired = computationRemaining = 0;
         tRecipe = null;
-        aRecipe = null;
         holdItem = null;
     }
 
@@ -630,39 +585,19 @@ public class GT_MetaTileEntity_EM_research extends GT_MetaTileEntity_MultiblockB
     public void onFirstTick_EM(IGregTechTileEntity aBaseMetaTileEntity) {
         if (aBaseMetaTileEntity.isServerSide()) {
             if (computationRemaining > 0) {
-                aRecipe = null;
                 tRecipe = null;
                 if (holdItem != null) {
                     if (ItemList.Tool_DataStick.isStackEqual(mInventory[1], false, true)) {
-                        for (GT_Recipe.GT_Recipe_AssemblyLine tRecipe : TT_recipe.GT_Recipe_MapTT.sAssemblylineRecipes) {
+                        for (GT_Recipe.GT_Recipe_AssemblyLine tRecipe : TecTechRecipeMaps.researchableALRecipeList) {
                             if (GT_Utility.areStacksEqual(tRecipe.mResearchItem, holdItem, true)) {
                                 this.tRecipe = tRecipe;
                                 machineType = assembly;
                                 break;
                             }
                         }
-                    } else if (ItemList.Tool_DataOrb.isStackEqual(mInventory[1], false, true)) {
-                        for (TT_recipe.TT_assLineRecipe assRecipeTT : TT_recipe.TT_Recipe_Map.sMachineRecipes
-                                .recipeList()) {
-                            if (GT_Utility.areStacksEqual(assRecipeTT.mResearchItem, holdItem, true)) {
-                                aRecipe = assRecipeTT;
-                                machineType = machine;
-                                break;
-                            }
-                        }
-                        if (aRecipe == null) {
-                            for (TT_recipe.TT_assLineRecipe assRecipeTT : TT_recipe.TT_Recipe_Map.sCrafterRecipes
-                                    .recipeList()) {
-                                if (GT_Utility.areStacksEqual(assRecipeTT.mResearchItem, holdItem, true)) {
-                                    aRecipe = assRecipeTT;
-                                    machineType = crafter;
-                                    break;
-                                }
-                            }
-                        }
                     }
                 }
-                if (tRecipe == null && aRecipe == null) {
+                if (tRecipe == null) {
                     holdItem = null;
                     computationRequired = computationRemaining = 0;
                     mMaxProgresstime = 0;

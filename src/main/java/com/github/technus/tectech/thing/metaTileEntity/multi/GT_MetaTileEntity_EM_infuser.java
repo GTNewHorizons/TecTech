@@ -15,6 +15,8 @@ import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fluids.FluidStack;
 
+import org.jetbrains.annotations.NotNull;
+
 import com.github.technus.tectech.Reference;
 import com.github.technus.tectech.TecTech;
 import com.github.technus.tectech.thing.metaTileEntity.multi.base.GT_MetaTileEntity_MultiblockBase_EM;
@@ -29,7 +31,10 @@ import gregtech.api.enums.Materials;
 import gregtech.api.interfaces.metatileentity.IMetaTileEntity;
 import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
 import gregtech.api.metatileentity.implementations.GT_MetaTileEntity_Hatch_InputBus;
+import gregtech.api.recipe.check.CheckRecipeResult;
+import gregtech.api.recipe.check.SimpleCheckRecipeResult;
 import gregtech.api.util.GT_Multiblock_Tooltip_Builder;
+import gregtech.common.tileentities.machines.GT_MetaTileEntity_Hatch_InputBus_ME;
 import ic2.api.item.ElectricItem;
 import ic2.api.item.IElectricItem;
 
@@ -45,9 +50,8 @@ public class GT_MetaTileEntity_EM_infuser extends GT_MetaTileEntity_MultiblockBa
     // region structure
     private static final String[] description = new String[] {
             EnumChatFormatting.AQUA + translateToLocal("tt.keyphrase.Hint_Details") + ":",
-            translateToLocal("gt.blockmachines.multimachine.em.infuser.hint"), // 1 - Classic Hatches or High Power
-                                                                               // Casing
-    };
+            // 1 - Classic Hatches or High Power Casing
+            translateToLocal("gt.blockmachines.multimachine.em.infuser.hint"), };
 
     private static final IStructureDefinition<GT_MetaTileEntity_EM_infuser> STRUCTURE_DEFINITION = IStructureDefinition
             .<GT_MetaTileEntity_EM_infuser>builder()
@@ -152,28 +156,27 @@ public class GT_MetaTileEntity_EM_infuser extends GT_MetaTileEntity_MultiblockBa
     }
 
     @Override
-    public boolean checkRecipe_EM(ItemStack itemStack) {
+    @NotNull
+    protected CheckRecipeResult checkProcessing_EM() {
         for (GT_MetaTileEntity_Hatch_InputBus inputBus : mInputBusses) {
-            if (inputBus.mInventory != null) {
-                for (ItemStack itemStackInBus : inputBus.mInventory) {
-                    if (itemStackInBus != null) {
-                        Item item = itemStackInBus.getItem();
-                        if (itemStackInBus.stackSize == 1 && item != null) {
-                            if (isItemStackFullyCharged(itemStackInBus) && isItemStackFullyRepaired(itemStackInBus)) {
-                                if (addOutput(itemStackInBus)) {
-                                    this.depleteInput(itemStackInBus);
-                                }
-                            } else {
-                                mEfficiencyIncrease = 10000;
-                                mMaxProgresstime = 20;
-                                return true;
-                            }
-                        }
+            if (inputBus instanceof GT_MetaTileEntity_Hatch_InputBus_ME) continue;
+            for (int i = 0; i < inputBus.getSizeInventory(); i++) {
+                ItemStack itemStackInBus = inputBus.getStackInSlot(i);
+                if (itemStackInBus == null) continue;
+                Item item = itemStackInBus.getItem();
+                if (itemStackInBus.stackSize != 1 || item == null) continue;
+                if (isItemStackFullyCharged(itemStackInBus) && isItemStackFullyRepaired(itemStackInBus)) {
+                    if (addOutput(itemStackInBus)) {
+                        this.depleteInput(itemStackInBus);
                     }
+                } else {
+                    mEfficiencyIncrease = 10000;
+                    mMaxProgresstime = 20;
+                    return SimpleCheckRecipeResult.ofSuccess("charging");
                 }
             }
         }
-        return false;
+        return SimpleCheckRecipeResult.ofFailure("no_chargeable_item");
     }
 
     @Override
@@ -181,45 +184,41 @@ public class GT_MetaTileEntity_EM_infuser extends GT_MetaTileEntity_MultiblockBa
         boolean itemProcessed = false;
         startRecipeProcessing();
         for (GT_MetaTileEntity_Hatch_InputBus inputBus : mInputBusses) {
-            if (inputBus.mInventory != null) {
-                for (ItemStack itemStackInBus : inputBus.mInventory) {
-                    if (itemStackInBus != null) {
-                        Item item = itemStackInBus.getItem();
-                        if (itemStackInBus.stackSize == 1 && item != null) {
-                            if (isItemStackFullyCharged(itemStackInBus) && isItemStackFullyRepaired(itemStackInBus)) {
-                                itemProcessed = true;
-                                if (addOutput(itemStackInBus)) {
-                                    this.depleteInput(itemStackInBus);
-                                }
-                            } else {
-                                if (item.isRepairable()) {
-                                    FluidStack uum = getStoredFluids().stream()
-                                            .filter(fluid -> Materials.UUMatter.getFluid(1).isFluidEqual(fluid))
-                                            .findAny().orElse(null);
-                                    if (uum != null) {
-                                        int repairedDamage = Math
-                                                .min(item.getDamage(itemStackInBus), maxRepairedDamagePerOperation);
-                                        long euCost = repairedDamage * usedEuPerDurability;
-                                        if (getEUVar() >= euCost && depleteInput(
-                                                new FluidStack(
-                                                        Materials.UUMatter.mFluid,
-                                                        repairedDamage * usedUumPerDurability))) {
-                                            item.setDamage(
-                                                    itemStackInBus,
-                                                    Math.max(item.getDamage(itemStackInBus) - repairedDamage, 0));
-                                            setEUVar(Math.min(getEUVar() - euCost, 0));
-                                        }
-                                    }
-                                }
-                                if (item instanceof IElectricItem) {
-                                    doChargeItemStack((IElectricItem) item, itemStackInBus);
-                                    return;
-                                } else if (TecTech.hasCOFH && item instanceof IEnergyContainerItem) {
-                                    doChargeItemStackRF((IEnergyContainerItem) item, itemStackInBus);
-                                    return;
-                                }
+            if (inputBus instanceof GT_MetaTileEntity_Hatch_InputBus_ME) continue;
+            for (int i = 0; i < inputBus.getSizeInventory(); i++) {
+                ItemStack itemStackInBus = inputBus.getStackInSlot(i);
+                if (itemStackInBus == null) continue;
+                Item item = itemStackInBus.getItem();
+                if (itemStackInBus.stackSize != 1 || item == null) continue;
+                if (isItemStackFullyCharged(itemStackInBus) && isItemStackFullyRepaired(itemStackInBus)) {
+                    itemProcessed = true;
+                    if (addOutput(itemStackInBus)) {
+                        this.depleteInput(itemStackInBus);
+                    }
+                } else {
+                    if (item.isRepairable()) {
+                        FluidStack uum = getStoredFluids().stream()
+                                .filter(fluid -> Materials.UUMatter.getFluid(1).isFluidEqual(fluid)).findAny()
+                                .orElse(null);
+                        if (uum != null) {
+                            int repairedDamage = Math
+                                    .min(item.getDamage(itemStackInBus), maxRepairedDamagePerOperation);
+                            long euCost = repairedDamage * usedEuPerDurability;
+                            if (getEUVar() >= euCost && depleteInput(
+                                    new FluidStack(Materials.UUMatter.mFluid, repairedDamage * usedUumPerDurability))) {
+                                item.setDamage(
+                                        itemStackInBus,
+                                        Math.max(item.getDamage(itemStackInBus) - repairedDamage, 0));
+                                setEUVar(Math.min(getEUVar() - euCost, 0));
                             }
                         }
+                    }
+                    if (item instanceof IElectricItem) {
+                        doChargeItemStack((IElectricItem) item, itemStackInBus);
+                        return;
+                    } else if (TecTech.hasCOFH && item instanceof IEnergyContainerItem) {
+                        doChargeItemStackRF((IEnergyContainerItem) item, itemStackInBus);
+                        return;
                     }
                 }
             }
@@ -233,39 +232,39 @@ public class GT_MetaTileEntity_EM_infuser extends GT_MetaTileEntity_MultiblockBa
     @Override
     public GT_Multiblock_Tooltip_Builder createTooltip() {
         final GT_Multiblock_Tooltip_Builder tt = new GT_Multiblock_Tooltip_Builder();
-        tt.addMachineType(translateToLocal("gt.blockmachines.multimachine.em.infuser.name")) // Machine Type: Energy
-                                                                                             // Infuser
-                .addInfo(translateToLocal("gt.blockmachines.multimachine.em.infuser.desc.0")) // Controller block of the
-                                                                                              // Energy Infuser
-                .addInfo(translateToLocal("gt.blockmachines.multimachine.em.infuser.desc.1")) // Can be used to charge
-                                                                                              // items (lossless)
-                .addInfo(translateToLocal("gt.blockmachines.multimachine.em.infuser.desc.2")) // Can be fed with
-                                                                                              // UU-Matter to repair
-                                                                                              // items
-                .addSeparator().beginStructureBlock(3, 5, 3, false)
-                .addController(translateToLocal("tt.keyword.Structure.FrontCenter3rd")) // Controller: Front 3rd layer
-                                                                                        // center
-                .addOtherStructurePart(
+        // Machine Type: Energy Infuser
+        tt.addMachineType(translateToLocal("gt.blockmachines.multimachine.em.infuser.name"))
+                // Controller block of the Energy Infuser
+                .addInfo(translateToLocal("gt.blockmachines.multimachine.em.infuser.desc.0"))
+                // Can be used to charge items (lossless)
+                .addInfo(translateToLocal("gt.blockmachines.multimachine.em.infuser.desc.1"))
+                // Can be fed with UU-Matter to repair items
+                .addInfo(translateToLocal("gt.blockmachines.multimachine.em.infuser.desc.2"))
+                // Stocking Bus is not supported
+                .addInfo(translateToLocal("gt.blockmachines.multimachine.em.infuser.desc.3")).addSeparator()
+                .beginStructureBlock(3, 5, 3, false)
+                // Controller: Front 3rd layer center
+                .addController(translateToLocal("tt.keyword.Structure.FrontCenter3rd")).addOtherStructurePart(
+                        // High Power
                         translateToLocal("gt.blockcasingsTT.0.name"),
-                        translateToLocal("gt.blockmachines.multimachine.em.infuser.Structure.HighPowerCasing")) // High
-                                                                                                                // Power
+                        translateToLocal("gt.blockmachines.multimachine.em.infuser.Structure.HighPowerCasing"))
                 // Casing: Layer
                 // 1 and 5
                 .addOtherStructurePart(
+                        // Molecular Coil
                         translateToLocal("gt.blockcasingsTT.7.name"),
-                        translateToLocal("gt.blockmachines.multimachine.em.infuser.Structure.MolecularCoil")) // Molecular
-                                                                                                              // Coil:
+                        translateToLocal("gt.blockmachines.multimachine.em.infuser.Structure.MolecularCoil"))
                 // Layer 2 and 4
                 .addOtherStructurePart(
+                        // Molecular
                         translateToLocal("gt.blockcasingsTT.4.name"),
-                        translateToLocal("gt.blockmachines.multimachine.em.infuser.Structure.MolecularCasing")) // Molecular
+                        translateToLocal("gt.blockmachines.multimachine.em.infuser.Structure.MolecularCasing"))
                 // Casing: Layer
                 // 3 (hollow)
-                .addEnergyHatch(translateToLocal("tt.keyword.Structure.AnyHighPowerCasing"), 1) // Energy Hatch: Any
-                                                                                                // High Power Casing
-                .addMaintenanceHatch(translateToLocal("tt.keyword.Structure.AnyHighPowerCasing"), 1) // Maintenance
-                                                                                                     // Hatch: Any High
-                                                                                                     // Power Casing
+                // Energy Hatch: Any High Power Casing
+                .addEnergyHatch(translateToLocal("tt.keyword.Structure.AnyHighPowerCasing"), 1)
+                // Maintenance Hatch: Any High Power Casing
+                .addMaintenanceHatch(translateToLocal("tt.keyword.Structure.AnyHighPowerCasing"), 1)
                 .toolTipFinisher(CommonValues.TEC_MARK_GENERAL);
         return tt;
     }

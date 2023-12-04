@@ -15,7 +15,12 @@ import com.github.technus.tectech.thing.CustomItemList;
 import com.github.technus.tectech.thing.block.QuantumGlassBlock;
 import com.gtnewhorizon.structurelib.StructureLibAPI;
 
-import gregtech.api.enums.*;
+import gregtech.api.enums.GT_Values;
+import gregtech.api.enums.ItemList;
+import gregtech.api.enums.Materials;
+import gregtech.api.enums.MaterialsUEVplus;
+import gregtech.api.enums.OrePrefixes;
+import gregtech.api.enums.TierEU;
 import gregtech.api.util.GT_ModHandler;
 import gregtech.api.util.GT_OreDictUnificator;
 import gregtech.api.util.GT_Utility;
@@ -46,7 +51,7 @@ public class Assembler implements Runnable {
                 200,
                 500000);
 
-        // recipe for ass line data hatches
+        // recipe for assline data hatches
         RA.addAssemblerRecipe(
                 ItemList.Hatch_DataAccess_EV.get(1),
                 CustomItemList.dataIn_Hatch.get(1),
@@ -2344,39 +2349,6 @@ public class Assembler implements Runnable {
             }
         }
 
-        // Parameterizer
-        GT_Values.RA.addAssemblerRecipe(
-                new ItemStack[] { CustomItemList.eM_Computer_Casing.get(1),
-                        GT_OreDictUnificator.get(OrePrefixes.circuit, Materials.Master, 1),
-                        CustomItemList.DATApipe.get(4), ItemList.Cover_Screen.get(1),
-                        new ItemStack(Blocks.stone_button, 16), GT_Utility.getIntegratedCircuit(1), },
-                Materials.Iridium.getMolten(2592),
-                CustomItemList.Parametrizer_Hatch.get(1),
-                800,
-                122880);
-
-        // Parametrizer X
-        GT_Values.RA.addAssemblerRecipe(
-                new ItemStack[] { CustomItemList.eM_Computer_Casing.get(1),
-                        GT_OreDictUnificator.get(OrePrefixes.circuit, Materials.Ultimate, 1),
-                        CustomItemList.DATApipe.get(6), ItemList.Cover_Screen.get(1),
-                        new ItemStack(Blocks.stone_button, 32), GT_Utility.getIntegratedCircuit(2), },
-                Materials.Iridium.getMolten(2592),
-                CustomItemList.ParametrizerX_Hatch.get(1),
-                800,
-                122880);
-
-        // Parametrizer tXt
-        GT_Values.RA.addAssemblerRecipe(
-                new ItemStack[] { CustomItemList.eM_Computer_Casing.get(1),
-                        GT_OreDictUnificator.get(OrePrefixes.circuit, Materials.Bio, 1), CustomItemList.DATApipe.get(8),
-                        ItemList.Cover_Screen.get(2), new ItemStack(Blocks.stone_button, 64),
-                        GT_Utility.getIntegratedCircuit(3), },
-                Materials.Iridium.getMolten(2592),
-                CustomItemList.ParametrizerTXT_Hatch.get(1),
-                800,
-                122880);
-
         // Tesla Capacitor
         {
             // LV Tesla Capacitor
@@ -3059,27 +3031,6 @@ public class Assembler implements Runnable {
                 20,
                 30720);
 
-        // Tunnel
-        addAssemblerRecipeWithCleanroom(
-                new ItemStack[] { CustomItemList.DATApipe.get(1),
-                        GT_OreDictUnificator.get(OrePrefixes.plateDouble, Materials.Osmiridium, 4),
-                        GT_OreDictUnificator.get(OrePrefixes.foil, Materials.Osmium, 4),
-                        GT_OreDictUnificator.get(OrePrefixes.wireGt02, Materials.SuperconductorUHV, 2),
-                        ItemList.Field_Generator_MV.get(1),
-                        GT_OreDictUnificator.get(OrePrefixes.circuit, Materials.Ultimate, 1) },
-                Materials.Osmium.getMolten(288),
-                CustomItemList.EMpipe.get(1),
-                400,
-                500000);
-
-        // Tunnel Casing
-        addAssemblerRecipeWithCleanroom(
-                new ItemStack[] { CustomItemList.EMpipe.get(1), ItemList.Casing_LuV.get(1) },
-                null,
-                CustomItemList.EMpipeBlock.get(1),
-                20,
-                30720);
-
         // Laser
         addAssemblerRecipeWithCleanroom(
                 new ItemStack[] { CustomItemList.DATApipe.get(1), GT_ModHandler.getIC2Item("reinforcedGlass", 1L),
@@ -3163,36 +3114,6 @@ public class Assembler implements Runnable {
                 CustomItemList.UncertaintyX_Hatch.get(1),
                 1200,
                 122880);
-
-        // Elemental Input
-        addAssemblerRecipeWithCleanroom(
-                new ItemStack[] { CustomItemList.eM_Containment.get(1), ItemList.Hatch_Input_UV.get(1),
-                        GT_OreDictUnificator.get(OrePrefixes.pipeMedium, Materials.Naquadah, 2),
-                        ItemList.Sensor_UV.get(1) },
-                Materials.Osmiridium.getMolten(1296),
-                CustomItemList.eM_in_UV.get(1),
-                800,
-                500000);
-
-        // Elemental Output
-        addAssemblerRecipeWithCleanroom(
-                new ItemStack[] { CustomItemList.eM_Containment.get(1), ItemList.Hatch_Output_UV.get(1),
-                        GT_OreDictUnificator.get(OrePrefixes.pipeMedium, Materials.Naquadah, 2),
-                        ItemList.Emitter_UV.get(1) },
-                Materials.Osmiridium.getMolten(1296),
-                CustomItemList.eM_out_UV.get(1),
-                800,
-                500000);
-
-        // Overflow
-        addAssemblerRecipeWithCleanroom(
-                new ItemStack[] { CustomItemList.eM_Containment.get(1), ItemList.Hatch_Muffler_UV.get(1),
-                        GT_OreDictUnificator.get(OrePrefixes.pipeLarge, Materials.Naquadah, 1),
-                        ItemList.Field_Generator_UV.get(1) },
-                Materials.Osmiridium.getMolten(1296),
-                CustomItemList.eM_muffler_UV.get(1),
-                800,
-                500000);
 
         // Capacitor Hatch
         GT_Values.RA.addAssemblerRecipe(

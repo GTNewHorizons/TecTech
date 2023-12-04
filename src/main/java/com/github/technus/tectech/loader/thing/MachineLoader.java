@@ -1,10 +1,7 @@
 package com.github.technus.tectech.loader.thing;
 
-import static com.github.technus.tectech.mechanics.elementalMatter.core.transformations.EMTransformationRegistry.EM_COUNT_PER_MATERIAL_AMOUNT;
 import static com.github.technus.tectech.thing.CustomItemList.DATApipe;
 import static com.github.technus.tectech.thing.CustomItemList.DATApipeBlock;
-import static com.github.technus.tectech.thing.CustomItemList.EMpipe;
-import static com.github.technus.tectech.thing.CustomItemList.EMpipeBlock;
 import static com.github.technus.tectech.thing.CustomItemList.LASERpipe;
 import static com.github.technus.tectech.thing.CustomItemList.LASERpipeBlock;
 import static com.github.technus.tectech.thing.CustomItemList.Machine_BuckConverter_IV;
@@ -16,37 +13,23 @@ import static com.github.technus.tectech.thing.CustomItemList.Machine_BuckConver
 import static com.github.technus.tectech.thing.CustomItemList.Machine_BuckConverter_UV;
 import static com.github.technus.tectech.thing.CustomItemList.Machine_BuckConverter_UXV;
 import static com.github.technus.tectech.thing.CustomItemList.Machine_BuckConverter_ZPM;
-import static com.github.technus.tectech.thing.CustomItemList.Machine_DataReader;
 import static com.github.technus.tectech.thing.CustomItemList.Machine_DebugGenny;
 import static com.github.technus.tectech.thing.CustomItemList.Machine_DebugPollutor;
 import static com.github.technus.tectech.thing.CustomItemList.Machine_DebugWriter;
-import static com.github.technus.tectech.thing.CustomItemList.Machine_Multi_Annihilation;
-import static com.github.technus.tectech.thing.CustomItemList.Machine_Multi_Collider;
 import static com.github.technus.tectech.thing.CustomItemList.Machine_Multi_Computer;
 import static com.github.technus.tectech.thing.CustomItemList.Machine_Multi_DataBank;
-import static com.github.technus.tectech.thing.CustomItemList.Machine_Multi_Decay;
-import static com.github.technus.tectech.thing.CustomItemList.Machine_Multi_EMCrafter;
-import static com.github.technus.tectech.thing.CustomItemList.Machine_Multi_EMToEssentia;
-import static com.github.technus.tectech.thing.CustomItemList.Machine_Multi_EMToMatter;
-import static com.github.technus.tectech.thing.CustomItemList.Machine_Multi_EMjunction;
-import static com.github.technus.tectech.thing.CustomItemList.Machine_Multi_EMmachine;
-import static com.github.technus.tectech.thing.CustomItemList.Machine_Multi_EssentiaToEM;
 import static com.github.technus.tectech.thing.CustomItemList.Machine_Multi_EyeOfHarmony;
 import static com.github.technus.tectech.thing.CustomItemList.Machine_Multi_ForgeOfGods;
 import static com.github.technus.tectech.thing.CustomItemList.Machine_Multi_Infuser;
-import static com.github.technus.tectech.thing.CustomItemList.Machine_Multi_MatterToEM;
 import static com.github.technus.tectech.thing.CustomItemList.Machine_Multi_Microwave;
 import static com.github.technus.tectech.thing.CustomItemList.Machine_Multi_MoltenModule;
 import static com.github.technus.tectech.thing.CustomItemList.Machine_Multi_PlasmaModule;
 import static com.github.technus.tectech.thing.CustomItemList.Machine_Multi_QuarkGluonPlasmaModule;
 import static com.github.technus.tectech.thing.CustomItemList.Machine_Multi_Research;
-import static com.github.technus.tectech.thing.CustomItemList.Machine_Multi_Scanner;
 import static com.github.technus.tectech.thing.CustomItemList.Machine_Multi_SmeltingModule;
-import static com.github.technus.tectech.thing.CustomItemList.Machine_Multi_Stabilizer;
 import static com.github.technus.tectech.thing.CustomItemList.Machine_Multi_Switch;
 import static com.github.technus.tectech.thing.CustomItemList.Machine_Multi_TeslaCoil;
 import static com.github.technus.tectech.thing.CustomItemList.Machine_Multi_Transformer;
-import static com.github.technus.tectech.thing.CustomItemList.Machine_Multi_Wormhole;
 import static com.github.technus.tectech.thing.CustomItemList.Machine_OwnerDetector;
 import static com.github.technus.tectech.thing.CustomItemList.Machine_TeslaCoil_1by1_EV;
 import static com.github.technus.tectech.thing.CustomItemList.Machine_TeslaCoil_1by1_HV;
@@ -79,16 +62,6 @@ import static com.github.technus.tectech.thing.CustomItemList.dataInAss_Hatch;
 import static com.github.technus.tectech.thing.CustomItemList.dataIn_Hatch;
 import static com.github.technus.tectech.thing.CustomItemList.dataOutAss_Hatch;
 import static com.github.technus.tectech.thing.CustomItemList.dataOut_Hatch;
-import static com.github.technus.tectech.thing.CustomItemList.eM_avr_EV;
-import static com.github.technus.tectech.thing.CustomItemList.eM_avr_HV;
-import static com.github.technus.tectech.thing.CustomItemList.eM_avr_IV;
-import static com.github.technus.tectech.thing.CustomItemList.eM_avr_LuV;
-import static com.github.technus.tectech.thing.CustomItemList.eM_avr_UEV;
-import static com.github.technus.tectech.thing.CustomItemList.eM_avr_UHV;
-import static com.github.technus.tectech.thing.CustomItemList.eM_avr_UIV;
-import static com.github.technus.tectech.thing.CustomItemList.eM_avr_UMV;
-import static com.github.technus.tectech.thing.CustomItemList.eM_avr_UV;
-import static com.github.technus.tectech.thing.CustomItemList.eM_avr_ZPM;
 import static com.github.technus.tectech.thing.CustomItemList.eM_dynamoMulti16_EV;
 import static com.github.technus.tectech.thing.CustomItemList.eM_dynamoMulti16_IV;
 import static com.github.technus.tectech.thing.CustomItemList.eM_dynamoMulti16_LuV;
@@ -310,24 +283,13 @@ import static com.github.technus.tectech.thing.CustomItemList.eM_energyWirelessM
 import static com.github.technus.tectech.thing.CustomItemList.eM_energyWirelessMulti64_UV;
 import static com.github.technus.tectech.thing.CustomItemList.eM_energyWirelessMulti64_UXV;
 import static com.github.technus.tectech.thing.CustomItemList.eM_energyWirelessMulti64_ZPM;
-import static com.github.technus.tectech.thing.CustomItemList.eM_in_UEV;
-import static com.github.technus.tectech.thing.CustomItemList.eM_in_UHV;
-import static com.github.technus.tectech.thing.CustomItemList.eM_in_UIV;
-import static com.github.technus.tectech.thing.CustomItemList.eM_in_UMV;
-import static com.github.technus.tectech.thing.CustomItemList.eM_in_UV;
-import static com.github.technus.tectech.thing.CustomItemList.eM_in_UXV;
-import static com.github.technus.tectech.thing.CustomItemList.eM_muffler_UEV;
-import static com.github.technus.tectech.thing.CustomItemList.eM_muffler_UHV;
-import static com.github.technus.tectech.thing.CustomItemList.eM_muffler_UIV;
-import static com.github.technus.tectech.thing.CustomItemList.eM_muffler_UMV;
-import static com.github.technus.tectech.thing.CustomItemList.eM_muffler_UV;
-import static com.github.technus.tectech.thing.CustomItemList.eM_muffler_UXV;
-import static com.github.technus.tectech.thing.CustomItemList.eM_out_UEV;
-import static com.github.technus.tectech.thing.CustomItemList.eM_out_UHV;
-import static com.github.technus.tectech.thing.CustomItemList.eM_out_UIV;
-import static com.github.technus.tectech.thing.CustomItemList.eM_out_UMV;
-import static com.github.technus.tectech.thing.CustomItemList.eM_out_UV;
-import static com.github.technus.tectech.thing.CustomItemList.eM_out_UXV;
+import static com.github.technus.tectech.thing.CustomItemList.eM_energyWirelessTunnel1_UXV;
+import static com.github.technus.tectech.thing.CustomItemList.eM_energyWirelessTunnel2_UXV;
+import static com.github.technus.tectech.thing.CustomItemList.eM_energyWirelessTunnel3_UXV;
+import static com.github.technus.tectech.thing.CustomItemList.eM_energyWirelessTunnel4_UXV;
+import static com.github.technus.tectech.thing.CustomItemList.eM_energyWirelessTunnel5_UXV;
+import static com.github.technus.tectech.thing.CustomItemList.eM_energyWirelessTunnel6_UXV;
+import static com.github.technus.tectech.thing.CustomItemList.eM_energyWirelessTunnel7_UXV;
 import static com.github.technus.tectech.thing.CustomItemList.hatch_CreativeData;
 import static com.github.technus.tectech.thing.CustomItemList.hatch_CreativeMaintenance;
 import static com.github.technus.tectech.thing.CustomItemList.holder_Hatch;
@@ -337,8 +299,6 @@ import static com.github.technus.tectech.util.CommonValues.V;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 
-import com.github.technus.tectech.compatibility.thaumcraft.thing.metaTileEntity.multi.GT_MetaTileEntity_EM_essentiaDequantizer;
-import com.github.technus.tectech.compatibility.thaumcraft.thing.metaTileEntity.multi.GT_MetaTileEntity_EM_essentiaQuantizer;
 import com.github.technus.tectech.thing.metaTileEntity.hatch.GT_MetaTileEntity_Hatch_Capacitor;
 import com.github.technus.tectech.thing.metaTileEntity.hatch.GT_MetaTileEntity_Hatch_CreativeData;
 import com.github.technus.tectech.thing.metaTileEntity.hatch.GT_MetaTileEntity_Hatch_CreativeMaintenance;
@@ -349,11 +309,8 @@ import com.github.technus.tectech.thing.metaTileEntity.hatch.GT_MetaTileEntity_H
 import com.github.technus.tectech.thing.metaTileEntity.hatch.GT_MetaTileEntity_Hatch_Holder;
 import com.github.technus.tectech.thing.metaTileEntity.hatch.GT_MetaTileEntity_Hatch_InputData;
 import com.github.technus.tectech.thing.metaTileEntity.hatch.GT_MetaTileEntity_Hatch_InputDataItems;
-import com.github.technus.tectech.thing.metaTileEntity.hatch.GT_MetaTileEntity_Hatch_InputElemental;
 import com.github.technus.tectech.thing.metaTileEntity.hatch.GT_MetaTileEntity_Hatch_OutputData;
 import com.github.technus.tectech.thing.metaTileEntity.hatch.GT_MetaTileEntity_Hatch_OutputDataItems;
-import com.github.technus.tectech.thing.metaTileEntity.hatch.GT_MetaTileEntity_Hatch_OutputElemental;
-import com.github.technus.tectech.thing.metaTileEntity.hatch.GT_MetaTileEntity_Hatch_OverflowElemental;
 import com.github.technus.tectech.thing.metaTileEntity.hatch.GT_MetaTileEntity_Hatch_Param;
 import com.github.technus.tectech.thing.metaTileEntity.hatch.GT_MetaTileEntity_Hatch_ParamText;
 import com.github.technus.tectech.thing.metaTileEntity.hatch.GT_MetaTileEntity_Hatch_Rack;
@@ -361,41 +318,26 @@ import com.github.technus.tectech.thing.metaTileEntity.hatch.GT_MetaTileEntity_H
 import com.github.technus.tectech.thing.metaTileEntity.hatch.GT_MetaTileEntity_Hatch_WirelessMulti;
 import com.github.technus.tectech.thing.metaTileEntity.multi.GT_MetaTileEntity_EM_EyeOfHarmony;
 import com.github.technus.tectech.thing.metaTileEntity.multi.GT_MetaTileEntity_EM_ForgeOfGods;
-import com.github.technus.tectech.thing.metaTileEntity.multi.GT_MetaTileEntity_EM_annihilation;
 import com.github.technus.tectech.thing.metaTileEntity.multi.GT_MetaTileEntity_EM_computer;
-import com.github.technus.tectech.thing.metaTileEntity.multi.GT_MetaTileEntity_EM_crafting;
 import com.github.technus.tectech.thing.metaTileEntity.multi.GT_MetaTileEntity_EM_dataBank;
-import com.github.technus.tectech.thing.metaTileEntity.multi.GT_MetaTileEntity_EM_decay;
-import com.github.technus.tectech.thing.metaTileEntity.multi.GT_MetaTileEntity_EM_dequantizer;
 import com.github.technus.tectech.thing.metaTileEntity.multi.GT_MetaTileEntity_EM_infuser;
-import com.github.technus.tectech.thing.metaTileEntity.multi.GT_MetaTileEntity_EM_junction;
-import com.github.technus.tectech.thing.metaTileEntity.multi.GT_MetaTileEntity_EM_quantizer;
 import com.github.technus.tectech.thing.metaTileEntity.multi.GT_MetaTileEntity_EM_research;
-import com.github.technus.tectech.thing.metaTileEntity.multi.GT_MetaTileEntity_EM_scanner;
-import com.github.technus.tectech.thing.metaTileEntity.multi.GT_MetaTileEntity_EM_stabilizer;
 import com.github.technus.tectech.thing.metaTileEntity.multi.GT_MetaTileEntity_EM_switch;
 import com.github.technus.tectech.thing.metaTileEntity.multi.GT_MetaTileEntity_EM_transformer;
-import com.github.technus.tectech.thing.metaTileEntity.multi.GT_MetaTileEntity_EM_wormhole;
 import com.github.technus.tectech.thing.metaTileEntity.multi.GT_MetaTileEntity_TM_microwave;
 import com.github.technus.tectech.thing.metaTileEntity.multi.GT_MetaTileEntity_TM_teslaCoil;
-import com.github.technus.tectech.thing.metaTileEntity.multi.em_collider.GT_MetaTileEntity_EM_collider;
-import com.github.technus.tectech.thing.metaTileEntity.multi.em_machine.GT_MetaTileEntity_EM_machine;
 import com.github.technus.tectech.thing.metaTileEntity.multi.godforge_modules.GT_MetaTileEntity_EM_MoltenModule;
 import com.github.technus.tectech.thing.metaTileEntity.multi.godforge_modules.GT_MetaTileEntity_EM_PlasmaModule;
 import com.github.technus.tectech.thing.metaTileEntity.multi.godforge_modules.GT_MetaTileEntity_EM_SmeltingModule;
 import com.github.technus.tectech.thing.metaTileEntity.multi.godforge_modules.GT_MetaTileEntity_EM_quark_gluon_plasma;
 import com.github.technus.tectech.thing.metaTileEntity.pipe.GT_MetaTileEntity_PipeBlock_Data;
-import com.github.technus.tectech.thing.metaTileEntity.pipe.GT_MetaTileEntity_PipeBlock_EM;
 import com.github.technus.tectech.thing.metaTileEntity.pipe.GT_MetaTileEntity_PipeBlock_Energy;
 import com.github.technus.tectech.thing.metaTileEntity.pipe.GT_MetaTileEntity_Pipe_Data;
-import com.github.technus.tectech.thing.metaTileEntity.pipe.GT_MetaTileEntity_Pipe_EM;
 import com.github.technus.tectech.thing.metaTileEntity.pipe.GT_MetaTileEntity_Pipe_Energy;
 import com.github.technus.tectech.thing.metaTileEntity.single.GT_MetaTileEntity_BuckConverter;
-import com.github.technus.tectech.thing.metaTileEntity.single.GT_MetaTileEntity_DataReader;
 import com.github.technus.tectech.thing.metaTileEntity.single.GT_MetaTileEntity_DebugPollutor;
 import com.github.technus.tectech.thing.metaTileEntity.single.GT_MetaTileEntity_DebugPowerGenerator;
 import com.github.technus.tectech.thing.metaTileEntity.single.GT_MetaTileEntity_DebugStructureWriter;
-import com.github.technus.tectech.thing.metaTileEntity.single.GT_MetaTileEntity_MicroController;
 import com.github.technus.tectech.thing.metaTileEntity.single.GT_MetaTileEntity_OwnerDetector;
 import com.github.technus.tectech.thing.metaTileEntity.single.GT_MetaTileEntity_TeslaCoil;
 
@@ -406,175 +348,6 @@ public class MachineLoader implements Runnable {
 
     @Override
     public void run() {
-        // ===================================================================================================
-        // eM IN
-        // ===================================================================================================
-
-        eM_in_UV.set(
-                new GT_MetaTileEntity_Hatch_InputElemental(15000, "hatch.emin.tier.08", "UV Elemental Input Hatch", 8)
-                        .getStackForm(1L));
-
-        eM_in_UHV.set(
-                new GT_MetaTileEntity_Hatch_InputElemental(15001, "hatch.emin.tier.09", "UHV Elemental Input Hatch", 9)
-                        .getStackForm(1L));
-
-        eM_in_UEV.set(
-                new GT_MetaTileEntity_Hatch_InputElemental(15002, "hatch.emin.tier.10", "UEV Elemental Input Hatch", 10)
-                        .getStackForm(1L));
-
-        eM_in_UIV.set(
-                new GT_MetaTileEntity_Hatch_InputElemental(15003, "hatch.emin.tier.11", "UIV Elemental Input Hatch", 11)
-                        .getStackForm(1L));
-
-        eM_in_UMV.set(
-                new GT_MetaTileEntity_Hatch_InputElemental(15004, "hatch.emin.tier.12", "UMV Elemental Input Hatch", 12)
-                        .getStackForm(1L));
-
-        eM_in_UXV.set(
-                new GT_MetaTileEntity_Hatch_InputElemental(15005, "hatch.emin.tier.13", "UXV Elemental Input Hatch", 13)
-                        .getStackForm(1L));
-
-        // ===================================================================================================
-        // eM OUT
-        // ===================================================================================================
-
-        eM_out_UV.set(
-                new GT_MetaTileEntity_Hatch_OutputElemental(
-                        15010,
-                        "hatch.emout.tier.08",
-                        "UV Elemental Output Hatch",
-                        8).getStackForm(1L));
-
-        eM_out_UHV.set(
-                new GT_MetaTileEntity_Hatch_OutputElemental(
-                        15011,
-                        "hatch.emout.tier.09",
-                        "UHV Elemental Output Hatch",
-                        9).getStackForm(1L));
-
-        eM_out_UEV.set(
-                new GT_MetaTileEntity_Hatch_OutputElemental(
-                        15012,
-                        "hatch.emout.tier.10",
-                        "UEV Elemental Output Hatch",
-                        10).getStackForm(1L));
-
-        eM_out_UIV.set(
-                new GT_MetaTileEntity_Hatch_OutputElemental(
-                        15013,
-                        "hatch.emout.tier.11",
-                        "UIV Elemental Output Hatch",
-                        11).getStackForm(1L));
-
-        eM_out_UMV.set(
-                new GT_MetaTileEntity_Hatch_OutputElemental(
-                        15014,
-                        "hatch.emout.tier.12",
-                        "UMV Elemental Output Hatch",
-                        12).getStackForm(1L));
-
-        eM_out_UXV.set(
-                new GT_MetaTileEntity_Hatch_OutputElemental(
-                        15015,
-                        "hatch.emout.tier.13",
-                        "UXV Elemental Output Hatch",
-                        13).getStackForm(1L));
-
-        // ===================================================================================================
-        // eM Waste OUT
-        // ===================================================================================================
-
-        eM_muffler_UV.set(
-                new GT_MetaTileEntity_Hatch_OverflowElemental(
-                        15020,
-                        "hatch.emmuffler.tier.08",
-                        "UV Overflow Output Hatch",
-                        8,
-                        1e10f * EM_COUNT_PER_MATERIAL_AMOUNT).getStackForm(1L));
-
-        eM_muffler_UHV.set(
-                new GT_MetaTileEntity_Hatch_OverflowElemental(
-                        15021,
-                        "hatch.emmuffler.tier.09",
-                        "UHV Overflow Output Hatch",
-                        9,
-                        5e10f * EM_COUNT_PER_MATERIAL_AMOUNT).getStackForm(1L));
-
-        eM_muffler_UEV.set(
-                new GT_MetaTileEntity_Hatch_OverflowElemental(
-                        15022,
-                        "hatch.emmuffler.tier.10",
-                        "UEV Overflow Output Hatch",
-                        10,
-                        25e10f * EM_COUNT_PER_MATERIAL_AMOUNT).getStackForm(1L));
-
-        eM_muffler_UIV.set(
-                new GT_MetaTileEntity_Hatch_OverflowElemental(
-                        15023,
-                        "hatch.emmuffler.tier.11",
-                        "UIV Overflow Output Hatch",
-                        11,
-                        125e10f * EM_COUNT_PER_MATERIAL_AMOUNT).getStackForm(1L));
-
-        eM_muffler_UMV.set(
-                new GT_MetaTileEntity_Hatch_OverflowElemental(
-                        15024,
-                        "hatch.emmuffler.tier.12",
-                        "UMV Overflow Output Hatch",
-                        12,
-                        125e11f * EM_COUNT_PER_MATERIAL_AMOUNT).getStackForm(1L));
-
-        eM_muffler_UXV.set(
-                new GT_MetaTileEntity_Hatch_OverflowElemental(
-                        15025,
-                        "hatch.emmuffler.tier.13",
-                        "UXV Overflow Output Hatch",
-                        13,
-                        125e12f * EM_COUNT_PER_MATERIAL_AMOUNT).getStackForm(1L));
-
-        // ===================================================================================================
-        // Microcontrollers
-        // ===================================================================================================
-
-        eM_avr_HV.set(
-                new GT_MetaTileEntity_MicroController(15030, "machine.avr.tier.08", "HV AVR Micro-controller", 3)
-                        .getStackForm(1L));
-
-        eM_avr_EV.set(
-                new GT_MetaTileEntity_MicroController(15031, "machine.avr.tier.08", "EV AVR Micro-controller", 4)
-                        .getStackForm(1L));
-
-        eM_avr_IV.set(
-                new GT_MetaTileEntity_MicroController(15032, "machine.avr.tier.08", "IV AVR Micro-controller", 5)
-                        .getStackForm(1L));
-
-        eM_avr_LuV.set(
-                new GT_MetaTileEntity_MicroController(15033, "machine.avr.tier.08", "LuV AVR Micro-controller", 6)
-                        .getStackForm(1L));
-
-        eM_avr_ZPM.set(
-                new GT_MetaTileEntity_MicroController(15034, "machine.avr.tier.08", "ZPM AVR Micro-controller", 7)
-                        .getStackForm(1L));
-
-        eM_avr_UV.set(
-                new GT_MetaTileEntity_MicroController(15035, "machine.avr.tier.08", "UV AVR Micro-controller", 8)
-                        .getStackForm(1L));
-
-        eM_avr_UHV.set(
-                new GT_MetaTileEntity_MicroController(15036, "machine.avr.tier.09", "UHV AVR Micro-controller", 9)
-                        .getStackForm(1L));
-
-        eM_avr_UEV.set(
-                new GT_MetaTileEntity_MicroController(15037, "machine.avr.tier.10", "UEV AVR Micro-controller", 10)
-                        .getStackForm(1L));
-
-        eM_avr_UIV.set(
-                new GT_MetaTileEntity_MicroController(15038, "machine.avr.tier.11", "UIV AVR Micro-controller", 11)
-                        .getStackForm(1L));
-
-        eM_avr_UMV.set(
-                new GT_MetaTileEntity_MicroController(15039, "machine.avr.tier.12", "UMV AVR Micro-controller", 12)
-                        .getStackForm(1L));
 
         // ===================================================================================================
         // Multi AMP Power INPUTS
@@ -1033,6 +806,55 @@ public class MachineLoader implements Runnable {
                         14,
                         64).getStackForm(1L));
 
+        eM_energyWirelessTunnel1_UXV.set(
+                new GT_MetaTileEntity_Hatch_WirelessMulti(
+                        15500,
+                        "hatch.energywirelesstunnel1.tier.13",
+                        "UXV 256A Wireless Energy Hatch",
+                        13,
+                        256).getStackForm(1L));
+        eM_energyWirelessTunnel2_UXV.set(
+                new GT_MetaTileEntity_Hatch_WirelessMulti(
+                        15501,
+                        "hatch.energywirelesstunnel2.tier.13",
+                        "UXV 1,024A Wireless Energy Hatch",
+                        13,
+                        1024).getStackForm(1L));
+        eM_energyWirelessTunnel3_UXV.set(
+                new GT_MetaTileEntity_Hatch_WirelessMulti(
+                        15502,
+                        "hatch.energywirelesstunnel3.tier.13",
+                        "UXV 4,096A Wireless Energy Hatch",
+                        13,
+                        4096).getStackForm(1L));
+        eM_energyWirelessTunnel4_UXV.set(
+                new GT_MetaTileEntity_Hatch_WirelessMulti(
+                        15503,
+                        "hatch.energywirelesstunnel4.tier.13",
+                        "UXV 16,384A Wireless Energy Hatch",
+                        13,
+                        16384).getStackForm(1L));
+        eM_energyWirelessTunnel5_UXV.set(
+                new GT_MetaTileEntity_Hatch_WirelessMulti(
+                        15504,
+                        "hatch.energywirelesstunnel5.tier.13",
+                        "UXV 65,536A Wireless Energy Hatch",
+                        13,
+                        65536).getStackForm(1L));
+        eM_energyWirelessTunnel6_UXV.set(
+                new GT_MetaTileEntity_Hatch_WirelessMulti(
+                        15505,
+                        "hatch.energywirelesstunnel6.tier.13",
+                        "UXV 262,144A Wireless Energy Hatch",
+                        13,
+                        262144).getStackForm(1L));
+        eM_energyWirelessTunnel7_UXV.set(
+                new GT_MetaTileEntity_Hatch_WirelessMulti(
+                        15506,
+                        "hatch.energywirelesstunnel7.tier.13",
+                        "UXV 1,048,576A Wireless Energy Hatch",
+                        13,
+                        1048576).getStackForm(1L));
         // ===================================================================================================
         // Multi AMP Laser INPUTS
         // ===================================================================================================
@@ -1048,42 +870,42 @@ public class MachineLoader implements Runnable {
                 new GT_MetaTileEntity_Hatch_EnergyTunnel(
                         15140,
                         "hatch.energytunnel2.tier.05",
-                        "IV 1024A/t Laser Target Hatch",
+                        "IV 1,024A/t Laser Target Hatch",
                         5,
                         1024).getStackForm(1L));
         eM_energyTunnel3_IV.set(
                 new GT_MetaTileEntity_Hatch_EnergyTunnel(
                         15150,
                         "hatch.energytunnel3.tier.05",
-                        "IV 4096A/t Laser Target Hatch",
+                        "IV 4,096A/t Laser Target Hatch",
                         5,
                         4096).getStackForm(1L));
         eM_energyTunnel4_IV.set(
                 new GT_MetaTileEntity_Hatch_EnergyTunnel(
                         15160,
                         "hatch.energytunnel4.tier.05",
-                        "IV 16384A/t Laser Target Hatch",
+                        "IV 16,384A/t Laser Target Hatch",
                         5,
                         16384).getStackForm(1L));
         eM_energyTunnel5_IV.set(
                 new GT_MetaTileEntity_Hatch_EnergyTunnel(
                         15170,
                         "hatch.energytunnel5.tier.05",
-                        "IV 65536A/t Laser Target Hatch",
+                        "IV 65,536A/t Laser Target Hatch",
                         5,
                         65536).getStackForm(1L));
         eM_energyTunnel6_IV.set(
                 new GT_MetaTileEntity_Hatch_EnergyTunnel(
                         15180,
                         "hatch.energytunnel6.tier.05",
-                        "IV 262144A/t Laser Target Hatch",
+                        "IV 262,144A/t Laser Target Hatch",
                         5,
                         262144).getStackForm(1L));
         eM_energyTunnel7_IV.set(
                 new GT_MetaTileEntity_Hatch_EnergyTunnel(
                         15190,
                         "hatch.energytunnel7.tier.05",
-                        "IV 1048576A/t Laser Target Hatch",
+                        "IV 1,048,576A/t Laser Target Hatch",
                         5,
                         1048576).getStackForm(1L));
 
@@ -1098,42 +920,42 @@ public class MachineLoader implements Runnable {
                 new GT_MetaTileEntity_Hatch_EnergyTunnel(
                         15141,
                         "hatch.energytunnel2.tier.06",
-                        "LuV 1024A/t Laser Target Hatch",
+                        "LuV 1,024A/t Laser Target Hatch",
                         6,
                         1024).getStackForm(1L));
         eM_energyTunnel3_LuV.set(
                 new GT_MetaTileEntity_Hatch_EnergyTunnel(
                         15151,
                         "hatch.energytunnel3.tier.06",
-                        "LuV 4096A/t Laser Target Hatch",
+                        "LuV 4,096A/t Laser Target Hatch",
                         6,
                         4096).getStackForm(1L));
         eM_energyTunnel4_LuV.set(
                 new GT_MetaTileEntity_Hatch_EnergyTunnel(
                         15161,
                         "hatch.energytunnel4.tier.06",
-                        "LuV 16384A/t Laser Target Hatch",
+                        "LuV 16,384A/t Laser Target Hatch",
                         6,
                         16384).getStackForm(1L));
         eM_energyTunnel5_LuV.set(
                 new GT_MetaTileEntity_Hatch_EnergyTunnel(
                         15171,
                         "hatch.energytunnel5.tier.06",
-                        "LuV 65536A/t Laser Target Hatch",
+                        "LuV 65,536A/t Laser Target Hatch",
                         6,
                         65536).getStackForm(1L));
         eM_energyTunnel6_LuV.set(
                 new GT_MetaTileEntity_Hatch_EnergyTunnel(
                         15181,
                         "hatch.energytunnel6.tier.06",
-                        "LuV 262144A/t Laser Target Hatch",
+                        "LuV 262,144A/t Laser Target Hatch",
                         6,
                         262144).getStackForm(1L));
         eM_energyTunnel7_LuV.set(
                 new GT_MetaTileEntity_Hatch_EnergyTunnel(
                         15191,
                         "hatch.energytunnel7.tier.06",
-                        "LuV 1048576A/t Laser Target Hatch",
+                        "LuV 1,048,576A/t Laser Target Hatch",
                         6,
                         1048576).getStackForm(1L));
 
@@ -1148,42 +970,42 @@ public class MachineLoader implements Runnable {
                 new GT_MetaTileEntity_Hatch_EnergyTunnel(
                         15142,
                         "hatch.energytunnel2.tier.07",
-                        "ZPM 1024A/t Laser Target Hatch",
+                        "ZPM 1,024A/t Laser Target Hatch",
                         7,
                         1024).getStackForm(1L));
         eM_energyTunnel3_ZPM.set(
                 new GT_MetaTileEntity_Hatch_EnergyTunnel(
                         15152,
                         "hatch.energytunnel3.tier.07",
-                        "ZPM 4096A/t Laser Target Hatch",
+                        "ZPM 4,096A/t Laser Target Hatch",
                         7,
                         4096).getStackForm(1L));
         eM_energyTunnel4_ZPM.set(
                 new GT_MetaTileEntity_Hatch_EnergyTunnel(
                         15162,
                         "hatch.energytunnel4.tier.07",
-                        "ZPM 16384A/t Laser Target Hatch",
+                        "ZPM 16,384A/t Laser Target Hatch",
                         7,
                         16384).getStackForm(1L));
         eM_energyTunnel5_ZPM.set(
                 new GT_MetaTileEntity_Hatch_EnergyTunnel(
                         15172,
                         "hatch.energytunnel5.tier.07",
-                        "ZPM 65536A/t Laser Target Hatch",
+                        "ZPM 65,536A/t Laser Target Hatch",
                         7,
                         65536).getStackForm(1L));
         eM_energyTunnel6_ZPM.set(
                 new GT_MetaTileEntity_Hatch_EnergyTunnel(
                         15182,
                         "hatch.energytunnel6.tier.07",
-                        "ZPM 262144A/t Laser Target Hatch",
+                        "ZPM 262,144A/t Laser Target Hatch",
                         7,
                         262144).getStackForm(1L));
         eM_energyTunnel7_ZPM.set(
                 new GT_MetaTileEntity_Hatch_EnergyTunnel(
                         15192,
                         "hatch.energytunnel7.tier.07",
-                        "ZPM 1048576A/t Laser Target Hatch",
+                        "ZPM 1,048,576A/t Laser Target Hatch",
                         7,
                         1048576).getStackForm(1L));
 
@@ -1198,42 +1020,42 @@ public class MachineLoader implements Runnable {
                 new GT_MetaTileEntity_Hatch_EnergyTunnel(
                         15143,
                         "hatch.energytunnel2.tier.08",
-                        "UV 1024A/t Laser Target Hatch",
+                        "UV 1,024A/t Laser Target Hatch",
                         8,
                         1024).getStackForm(1L));
         eM_energyTunnel3_UV.set(
                 new GT_MetaTileEntity_Hatch_EnergyTunnel(
                         15153,
                         "hatch.energytunnel3.tier.08",
-                        "UV 4096A/t Laser Target Hatch",
+                        "UV 4,096A/t Laser Target Hatch",
                         8,
                         4096).getStackForm(1L));
         eM_energyTunnel4_UV.set(
                 new GT_MetaTileEntity_Hatch_EnergyTunnel(
                         15163,
                         "hatch.energytunnel4.tier.08",
-                        "UV 16384A/t Laser Target Hatch",
+                        "UV 16,384A/t Laser Target Hatch",
                         8,
                         16384).getStackForm(1L));
         eM_energyTunnel5_UV.set(
                 new GT_MetaTileEntity_Hatch_EnergyTunnel(
                         15173,
                         "hatch.energytunnel5.tier.08",
-                        "UV 65536A/t Laser Target Hatch",
+                        "UV 65,536A/t Laser Target Hatch",
                         8,
                         65536).getStackForm(1L));
         eM_energyTunnel6_UV.set(
                 new GT_MetaTileEntity_Hatch_EnergyTunnel(
                         15183,
                         "hatch.energytunnel6.tier.08",
-                        "UV 262144A/t Laser Target Hatch",
+                        "UV 262,144A/t Laser Target Hatch",
                         8,
                         262144).getStackForm(1L));
         eM_energyTunnel7_UV.set(
                 new GT_MetaTileEntity_Hatch_EnergyTunnel(
                         15193,
                         "hatch.energytunnel7.tier.08",
-                        "UV 1048576A/t Laser Target Hatch",
+                        "UV 1,048,576A/t Laser Target Hatch",
                         8,
                         1048576).getStackForm(1L));
 
@@ -1248,42 +1070,42 @@ public class MachineLoader implements Runnable {
                 new GT_MetaTileEntity_Hatch_EnergyTunnel(
                         15144,
                         "hatch.energytunnel2.tier.09",
-                        "UHV 1024A/t Laser Target Hatch",
+                        "UHV 1,024A/t Laser Target Hatch",
                         9,
                         1024).getStackForm(1L));
         eM_energyTunnel3_UHV.set(
                 new GT_MetaTileEntity_Hatch_EnergyTunnel(
                         15154,
                         "hatch.energytunnel3.tier.09",
-                        "UHV 4096A/t Laser Target Hatch",
+                        "UHV 4,096A/t Laser Target Hatch",
                         9,
                         4096).getStackForm(1L));
         eM_energyTunnel4_UHV.set(
                 new GT_MetaTileEntity_Hatch_EnergyTunnel(
                         15164,
                         "hatch.energytunnel4.tier.09",
-                        "UHV 16384A/t Laser Target Hatch",
+                        "UHV 16,384A/t Laser Target Hatch",
                         9,
                         16384).getStackForm(1L));
         eM_energyTunnel5_UHV.set(
                 new GT_MetaTileEntity_Hatch_EnergyTunnel(
                         15174,
                         "hatch.energytunnel5.tier.09",
-                        "UHV 65536A/t Laser Target Hatch",
+                        "UHV 65,536A/t Laser Target Hatch",
                         9,
                         65536).getStackForm(1L));
         eM_energyTunnel6_UHV.set(
                 new GT_MetaTileEntity_Hatch_EnergyTunnel(
                         15184,
                         "hatch.energytunnel6.tier.09",
-                        "UHV 262144A/t Laser Target Hatch",
+                        "UHV 262,144A/t Laser Target Hatch",
                         9,
                         262144).getStackForm(1L));
         eM_energyTunnel7_UHV.set(
                 new GT_MetaTileEntity_Hatch_EnergyTunnel(
                         15194,
                         "hatch.energytunnel7.tier.09",
-                        "UHV 1048576A/t Laser Target Hatch",
+                        "UHV 1,048,576A/t Laser Target Hatch",
                         9,
                         1048576).getStackForm(1L));
 
@@ -1298,42 +1120,42 @@ public class MachineLoader implements Runnable {
                 new GT_MetaTileEntity_Hatch_EnergyTunnel(
                         15145,
                         "hatch.energytunnel2.tier.10",
-                        "UEV 1024A/t Laser Target Hatch",
+                        "UEV 1,024A/t Laser Target Hatch",
                         10,
                         1024).getStackForm(1L));
         eM_energyTunnel3_UEV.set(
                 new GT_MetaTileEntity_Hatch_EnergyTunnel(
                         15155,
                         "hatch.energytunnel3.tier.10",
-                        "UEV 4096A/t Laser Target Hatch",
+                        "UEV 4,096A/t Laser Target Hatch",
                         10,
                         4096).getStackForm(1L));
         eM_energyTunnel4_UEV.set(
                 new GT_MetaTileEntity_Hatch_EnergyTunnel(
                         15165,
                         "hatch.energytunnel4.tier.10",
-                        "UEV 16384A/t Laser Target Hatch",
+                        "UEV 16,384A/t Laser Target Hatch",
                         10,
                         16384).getStackForm(1L));
         eM_energyTunnel5_UEV.set(
                 new GT_MetaTileEntity_Hatch_EnergyTunnel(
                         15175,
                         "hatch.energytunnel5.tier.10",
-                        "UEV 65536A/t Laser Target Hatch",
+                        "UEV 65,536A/t Laser Target Hatch",
                         10,
                         65536).getStackForm(1L));
         eM_energyTunnel6_UEV.set(
                 new GT_MetaTileEntity_Hatch_EnergyTunnel(
                         15185,
                         "hatch.energytunnel6.tier.10",
-                        "UEV 262144A/t Laser Target Hatch",
+                        "UEV 262,144A/t Laser Target Hatch",
                         10,
                         262144).getStackForm(1L));
         eM_energyTunnel7_UEV.set(
                 new GT_MetaTileEntity_Hatch_EnergyTunnel(
                         15195,
                         "hatch.energytunnel7.tier.10",
-                        "UEV 1048576A/t Laser Target Hatch",
+                        "UEV 1,048,576A/t Laser Target Hatch",
                         10,
                         1048576).getStackForm(1L));
 
@@ -1348,42 +1170,42 @@ public class MachineLoader implements Runnable {
                 new GT_MetaTileEntity_Hatch_EnergyTunnel(
                         15146,
                         "hatch.energytunnel2.tier.11",
-                        "UIV 1024A/t Laser Target Hatch",
+                        "UIV 1,024A/t Laser Target Hatch",
                         11,
                         1024).getStackForm(1L));
         eM_energyTunnel3_UIV.set(
                 new GT_MetaTileEntity_Hatch_EnergyTunnel(
                         15156,
                         "hatch.energytunnel3.tier.11",
-                        "UIV 4096A/t Laser Target Hatch",
+                        "UIV 4,096A/t Laser Target Hatch",
                         11,
                         4096).getStackForm(1L));
         eM_energyTunnel4_UIV.set(
                 new GT_MetaTileEntity_Hatch_EnergyTunnel(
                         15166,
                         "hatch.energytunnel4.tier.11",
-                        "UIV 16384A/t Laser Target Hatch",
+                        "UIV 16,384A/t Laser Target Hatch",
                         11,
                         16384).getStackForm(1L));
         eM_energyTunnel5_UIV.set(
                 new GT_MetaTileEntity_Hatch_EnergyTunnel(
                         15176,
                         "hatch.energytunnel5.tier.11",
-                        "UIV 65536A/t Laser Target Hatch",
+                        "UIV 65,536A/t Laser Target Hatch",
                         11,
                         65536).getStackForm(1L));
         eM_energyTunnel6_UIV.set(
                 new GT_MetaTileEntity_Hatch_EnergyTunnel(
                         15186,
                         "hatch.energytunnel6.tier.11",
-                        "UIV 262144A/t Laser Target Hatch",
+                        "UIV 262,144A/t Laser Target Hatch",
                         11,
                         262144).getStackForm(1L));
         eM_energyTunnel7_UIV.set(
                 new GT_MetaTileEntity_Hatch_EnergyTunnel(
                         15196,
                         "hatch.energytunnel7.tier.11",
-                        "UIV 1048576A/t Laser Target Hatch",
+                        "UIV 1,048,576A/t Laser Target Hatch",
                         11,
                         1048576).getStackForm(1L));
 
@@ -1398,42 +1220,42 @@ public class MachineLoader implements Runnable {
                 new GT_MetaTileEntity_Hatch_EnergyTunnel(
                         15147,
                         "hatch.energytunnel2.tier.12",
-                        "UMV 1024A/t Laser Target Hatch",
+                        "UMV 1,024A/t Laser Target Hatch",
                         12,
                         1024).getStackForm(1L));
         eM_energyTunnel3_UMV.set(
                 new GT_MetaTileEntity_Hatch_EnergyTunnel(
                         15157,
                         "hatch.energytunnel3.tier.12",
-                        "UMV 4096A/t Laser Target Hatch",
+                        "UMV 4,096A/t Laser Target Hatch",
                         12,
                         4096).getStackForm(1L));
         eM_energyTunnel4_UMV.set(
                 new GT_MetaTileEntity_Hatch_EnergyTunnel(
                         15167,
                         "hatch.energytunnel4.tier.12",
-                        "UMV 16384A/t Laser Target Hatch",
+                        "UMV 16,384A/t Laser Target Hatch",
                         12,
                         16384).getStackForm(1L));
         eM_energyTunnel5_UMV.set(
                 new GT_MetaTileEntity_Hatch_EnergyTunnel(
                         15177,
                         "hatch.energytunnel5.tier.12",
-                        "UMV 65536A/t Laser Target Hatch",
+                        "UMV 65,536A/t Laser Target Hatch",
                         12,
                         65536).getStackForm(1L));
         eM_energyTunnel6_UMV.set(
                 new GT_MetaTileEntity_Hatch_EnergyTunnel(
                         15187,
                         "hatch.energytunnel6.tier.12",
-                        "UMV 262144A/t Laser Target Hatch",
+                        "UMV 262,144A/t Laser Target Hatch",
                         12,
                         262144).getStackForm(1L));
         eM_energyTunnel7_UMV.set(
                 new GT_MetaTileEntity_Hatch_EnergyTunnel(
                         15197,
                         "hatch.energytunnel7.tier.12",
-                        "UMV 1048576A/t Laser Target Hatch",
+                        "UMV 1,048,576A/t Laser Target Hatch",
                         12,
                         1048576).getStackForm(1L));
 
@@ -1448,42 +1270,42 @@ public class MachineLoader implements Runnable {
                 new GT_MetaTileEntity_Hatch_EnergyTunnel(
                         15148,
                         "hatch.energytunnel2.tier.13",
-                        "UXV 1024A/t Laser Target Hatch",
+                        "UXV 1,024A/t Laser Target Hatch",
                         13,
                         1024).getStackForm(1L));
         eM_energyTunnel3_UXV.set(
                 new GT_MetaTileEntity_Hatch_EnergyTunnel(
                         15158,
                         "hatch.energytunnel3.tier.13",
-                        "UXV 4096A/t Laser Target Hatch",
+                        "UXV 4,096A/t Laser Target Hatch",
                         13,
                         4096).getStackForm(1L));
         eM_energyTunnel4_UXV.set(
                 new GT_MetaTileEntity_Hatch_EnergyTunnel(
                         15168,
                         "hatch.energytunnel4.tier.13",
-                        "UXV 16384A/t Laser Target Hatch",
+                        "UXV 16,384A/t Laser Target Hatch",
                         13,
                         16384).getStackForm(1L));
         eM_energyTunnel5_UXV.set(
                 new GT_MetaTileEntity_Hatch_EnergyTunnel(
                         15178,
                         "hatch.energytunnel5.tier.13",
-                        "UXV 65536A/t Laser Target Hatch",
+                        "UXV 65,536A/t Laser Target Hatch",
                         13,
                         65536).getStackForm(1L));
         eM_energyTunnel6_UXV.set(
                 new GT_MetaTileEntity_Hatch_EnergyTunnel(
                         15188,
                         "hatch.energytunnel6.tier.13",
-                        "UXV 262144A/t Laser Target Hatch",
+                        "UXV 262,144A/t Laser Target Hatch",
                         13,
                         262144).getStackForm(1L));
         eM_energyTunnel7_UXV.set(
                 new GT_MetaTileEntity_Hatch_EnergyTunnel(
                         15198,
                         "hatch.energytunnel7.tier.13",
-                        "UXV 1048576A/t Laser Target Hatch",
+                        "UXV 1,048,576A/t Laser Target Hatch",
                         13,
                         1048576).getStackForm(1L));
         eM_energyTunnel9001.set(
@@ -1732,42 +1554,42 @@ public class MachineLoader implements Runnable {
                 new GT_MetaTileEntity_Hatch_DynamoTunnel(
                         15240,
                         "hatch.dynamotunnel2.tier.05",
-                        "IV 1024A/t Laser Source Hatch",
+                        "IV 1,024A/t Laser Source Hatch",
                         5,
                         1024).getStackForm(1L));
         eM_dynamoTunnel3_IV.set(
                 new GT_MetaTileEntity_Hatch_DynamoTunnel(
                         15250,
                         "hatch.dynamotunnel3.tier.05",
-                        "IV 4096A/t Laser Source Hatch",
+                        "IV 4,096A/t Laser Source Hatch",
                         5,
                         4096).getStackForm(1L));
         eM_dynamoTunnel4_IV.set(
                 new GT_MetaTileEntity_Hatch_DynamoTunnel(
                         15260,
                         "hatch.dynamotunnel4.tier.05",
-                        "IV 16384A/t Laser Source Hatch",
+                        "IV 16,384A/t Laser Source Hatch",
                         5,
                         16384).getStackForm(1L));
         eM_dynamoTunnel5_IV.set(
                 new GT_MetaTileEntity_Hatch_DynamoTunnel(
                         15270,
                         "hatch.dynamotunnel5.tier.05",
-                        "IV 65536A/t Laser Source Hatch",
+                        "IV 65,536A/t Laser Source Hatch",
                         5,
                         65536).getStackForm(1L));
         eM_dynamoTunnel6_IV.set(
                 new GT_MetaTileEntity_Hatch_DynamoTunnel(
                         15280,
                         "hatch.dynamotunnel6.tier.05",
-                        "IV 262144A/t Laser Source Hatch",
+                        "IV 262,144A/t Laser Source Hatch",
                         5,
                         262144).getStackForm(1L));
         eM_dynamoTunnel7_IV.set(
                 new GT_MetaTileEntity_Hatch_DynamoTunnel(
                         15290,
                         "hatch.dynamotunnel7.tier.05",
-                        "IV 1048576A/t Laser Source Hatch",
+                        "IV 1,048,576A/t Laser Source Hatch",
                         5,
                         1048576).getStackForm(1L));
 
@@ -1782,42 +1604,42 @@ public class MachineLoader implements Runnable {
                 new GT_MetaTileEntity_Hatch_DynamoTunnel(
                         15241,
                         "hatch.dynamotunnel2.tier.06",
-                        "LuV 1024A/t Laser Source Hatch",
+                        "LuV 1,024A/t Laser Source Hatch",
                         6,
                         1024).getStackForm(1L));
         eM_dynamoTunnel3_LuV.set(
                 new GT_MetaTileEntity_Hatch_DynamoTunnel(
                         15251,
                         "hatch.dynamotunnel3.tier.06",
-                        "LuV 4096A/t Laser Source Hatch",
+                        "LuV 4,096A/t Laser Source Hatch",
                         6,
                         4096).getStackForm(1L));
         eM_dynamoTunnel4_LuV.set(
                 new GT_MetaTileEntity_Hatch_DynamoTunnel(
                         15261,
                         "hatch.dynamotunnel4.tier.06",
-                        "LuV 16384A/t Laser Source Hatch",
+                        "LuV 16,384A/t Laser Source Hatch",
                         6,
                         16384).getStackForm(1L));
         eM_dynamoTunnel5_LuV.set(
                 new GT_MetaTileEntity_Hatch_DynamoTunnel(
                         15271,
                         "hatch.dynamotunnel5.tier.06",
-                        "LuV 65536A/t Laser Source Hatch",
+                        "LuV 65,536A/t Laser Source Hatch",
                         6,
                         65536).getStackForm(1L));
         eM_dynamoTunnel6_LuV.set(
                 new GT_MetaTileEntity_Hatch_DynamoTunnel(
                         15281,
                         "hatch.dynamotunnel6.tier.06",
-                        "LuV 262144A/t Laser Source Hatch",
+                        "LuV 262,144A/t Laser Source Hatch",
                         6,
                         262144).getStackForm(1L));
         eM_dynamoTunnel7_LuV.set(
                 new GT_MetaTileEntity_Hatch_DynamoTunnel(
                         15291,
                         "hatch.dynamotunnel7.tier.06",
-                        "LuV 1048576A/t Laser Source Hatch",
+                        "LuV 1,048,576A/t Laser Source Hatch",
                         6,
                         1048576).getStackForm(1L));
 
@@ -1832,42 +1654,42 @@ public class MachineLoader implements Runnable {
                 new GT_MetaTileEntity_Hatch_DynamoTunnel(
                         15242,
                         "hatch.dynamotunnel2.tier.07",
-                        "ZPM 1024A/t Laser Source Hatch",
+                        "ZPM 1,024A/t Laser Source Hatch",
                         7,
                         1024).getStackForm(1L));
         eM_dynamoTunnel3_ZPM.set(
                 new GT_MetaTileEntity_Hatch_DynamoTunnel(
                         15252,
                         "hatch.dynamotunnel3.tier.07",
-                        "ZPM 4096A/t Laser Source Hatch",
+                        "ZPM 4,096A/t Laser Source Hatch",
                         7,
                         4096).getStackForm(1L));
         eM_dynamoTunnel4_ZPM.set(
                 new GT_MetaTileEntity_Hatch_DynamoTunnel(
                         15262,
                         "hatch.dynamotunnel4.tier.07",
-                        "ZPM 16384A/t Laser Source Hatch",
+                        "ZPM 16,384A/t Laser Source Hatch",
                         7,
                         16384).getStackForm(1L));
         eM_dynamoTunnel5_ZPM.set(
                 new GT_MetaTileEntity_Hatch_DynamoTunnel(
                         15272,
                         "hatch.dynamotunnel5.tier.07",
-                        "ZPM 65536A/t Laser Source Hatch",
+                        "ZPM 65,536A/t Laser Source Hatch",
                         7,
                         65536).getStackForm(1L));
         eM_dynamoTunnel6_ZPM.set(
                 new GT_MetaTileEntity_Hatch_DynamoTunnel(
                         15282,
                         "hatch.dynamotunnel6.tier.07",
-                        "ZPM 262144A/t Laser Source Hatch",
+                        "ZPM 262,144A/t Laser Source Hatch",
                         7,
                         262144).getStackForm(1L));
         eM_dynamoTunnel7_ZPM.set(
                 new GT_MetaTileEntity_Hatch_DynamoTunnel(
                         15292,
                         "hatch.dynamotunnel7.tier.07",
-                        "ZPM 1048576A/t Laser Source Hatch",
+                        "ZPM 1,048,576A/t Laser Source Hatch",
                         7,
                         1048576).getStackForm(1L));
 
@@ -1882,42 +1704,42 @@ public class MachineLoader implements Runnable {
                 new GT_MetaTileEntity_Hatch_DynamoTunnel(
                         15243,
                         "hatch.dynamotunnel2.tier.08",
-                        "UV 1024A/t Laser Source Hatch",
+                        "UV 1,024A/t Laser Source Hatch",
                         8,
                         1024).getStackForm(1L));
         eM_dynamoTunnel3_UV.set(
                 new GT_MetaTileEntity_Hatch_DynamoTunnel(
                         15253,
                         "hatch.dynamotunnel3.tier.08",
-                        "UV 4096A/t Laser Source Hatch",
+                        "UV 4,096A/t Laser Source Hatch",
                         8,
                         4096).getStackForm(1L));
         eM_dynamoTunnel4_UV.set(
                 new GT_MetaTileEntity_Hatch_DynamoTunnel(
                         15263,
                         "hatch.dynamotunnel4.tier.08",
-                        "UV 16384A/t Laser Source Hatch",
+                        "UV 16,384A/t Laser Source Hatch",
                         8,
                         16384).getStackForm(1L));
         eM_dynamoTunnel5_UV.set(
                 new GT_MetaTileEntity_Hatch_DynamoTunnel(
                         15273,
                         "hatch.dynamotunnel5.tier.08",
-                        "UV 65536A/t Laser Source Hatch",
+                        "UV 65,536A/t Laser Source Hatch",
                         8,
                         65536).getStackForm(1L));
         eM_dynamoTunnel6_UV.set(
                 new GT_MetaTileEntity_Hatch_DynamoTunnel(
                         15283,
                         "hatch.dynamotunnel6.tier.08",
-                        "UV 262144A/t Laser Source Hatch",
+                        "UV 262,144A/t Laser Source Hatch",
                         8,
                         262144).getStackForm(1L));
         eM_dynamoTunnel7_UV.set(
                 new GT_MetaTileEntity_Hatch_DynamoTunnel(
                         15293,
                         "hatch.dynamotunnel7.tier.08",
-                        "UV 1048576A/t Laser Source Hatch",
+                        "UV 1,048,576A/t Laser Source Hatch",
                         8,
                         1048576).getStackForm(1L));
 
@@ -1932,42 +1754,42 @@ public class MachineLoader implements Runnable {
                 new GT_MetaTileEntity_Hatch_DynamoTunnel(
                         15244,
                         "hatch.dynamotunnel2.tier.09",
-                        "UHV 1024A/t Laser Source Hatch",
+                        "UHV 1,024A/t Laser Source Hatch",
                         9,
                         1024).getStackForm(1L));
         eM_dynamoTunnel3_UHV.set(
                 new GT_MetaTileEntity_Hatch_DynamoTunnel(
                         15254,
                         "hatch.dynamotunnel3.tier.09",
-                        "UHV 4096A/t Laser Source Hatch",
+                        "UHV 4,096A/t Laser Source Hatch",
                         9,
                         4096).getStackForm(1L));
         eM_dynamoTunnel4_UHV.set(
                 new GT_MetaTileEntity_Hatch_DynamoTunnel(
                         15264,
                         "hatch.dynamotunnel4.tier.09",
-                        "UHV 16384A/t Laser Source Hatch",
+                        "UHV 16,384A/t Laser Source Hatch",
                         9,
                         16384).getStackForm(1L));
         eM_dynamoTunnel5_UHV.set(
                 new GT_MetaTileEntity_Hatch_DynamoTunnel(
                         15274,
                         "hatch.dynamotunnel5.tier.09",
-                        "UHV 65536A/t Laser Source Hatch",
+                        "UHV 65,536A/t Laser Source Hatch",
                         9,
                         65536).getStackForm(1L));
         eM_dynamoTunnel6_UHV.set(
                 new GT_MetaTileEntity_Hatch_DynamoTunnel(
                         15284,
                         "hatch.dynamotunnel6.tier.09",
-                        "UHV 262144A/t Laser Source Hatch",
+                        "UHV 262,144A/t Laser Source Hatch",
                         9,
                         262144).getStackForm(1L));
         eM_dynamoTunnel7_UHV.set(
                 new GT_MetaTileEntity_Hatch_DynamoTunnel(
                         15294,
                         "hatch.dynamotunnel7.tier.09",
-                        "UHV 1048576A/t Laser Source Hatch",
+                        "UHV 1,048,576A/t Laser Source Hatch",
                         9,
                         1048576).getStackForm(1L));
 
@@ -1982,42 +1804,42 @@ public class MachineLoader implements Runnable {
                 new GT_MetaTileEntity_Hatch_DynamoTunnel(
                         15245,
                         "hatch.dynamotunnel2.tier.10",
-                        "UEV 1024A/t Laser Source Hatch",
+                        "UEV 1,024A/t Laser Source Hatch",
                         10,
                         1024).getStackForm(1L));
         eM_dynamoTunnel3_UEV.set(
                 new GT_MetaTileEntity_Hatch_DynamoTunnel(
                         15255,
                         "hatch.dynamotunnel3.tier.10",
-                        "UEV 4096A/t Laser Source Hatch",
+                        "UEV 4,096A/t Laser Source Hatch",
                         10,
                         4096).getStackForm(1L));
         eM_dynamoTunnel4_UEV.set(
                 new GT_MetaTileEntity_Hatch_DynamoTunnel(
                         15265,
                         "hatch.dynamotunnel4.tier.10",
-                        "UEV 16384A/t Laser Source Hatch",
+                        "UEV 16,384A/t Laser Source Hatch",
                         10,
                         16384).getStackForm(1L));
         eM_dynamoTunnel5_UEV.set(
                 new GT_MetaTileEntity_Hatch_DynamoTunnel(
                         15275,
                         "hatch.dynamotunnel5.tier.10",
-                        "UEV 65536A/t Laser Source Hatch",
+                        "UEV 65,536A/t Laser Source Hatch",
                         10,
                         65536).getStackForm(1L));
         eM_dynamoTunnel6_UEV.set(
                 new GT_MetaTileEntity_Hatch_DynamoTunnel(
                         15285,
                         "hatch.dynamotunnel6.tier.10",
-                        "UEV 262144A/t Laser Source Hatch",
+                        "UEV 262,144A/t Laser Source Hatch",
                         10,
                         262144).getStackForm(1L));
         eM_dynamoTunnel7_UEV.set(
                 new GT_MetaTileEntity_Hatch_DynamoTunnel(
                         15295,
                         "hatch.dynamotunnel7.tier.10",
-                        "UEV 1048576A/t Laser Source Hatch",
+                        "UEV 1,048,576A/t Laser Source Hatch",
                         10,
                         1048576).getStackForm(1L));
 
@@ -2032,42 +1854,42 @@ public class MachineLoader implements Runnable {
                 new GT_MetaTileEntity_Hatch_DynamoTunnel(
                         15246,
                         "hatch.dynamotunnel2.tier.11",
-                        "UIV 1024A/t Laser Source Hatch",
+                        "UIV 1,024A/t Laser Source Hatch",
                         11,
                         1024).getStackForm(1L));
         eM_dynamoTunnel3_UIV.set(
                 new GT_MetaTileEntity_Hatch_DynamoTunnel(
                         15256,
                         "hatch.dynamotunnel3.tier.11",
-                        "UIV 4096A/t Laser Source Hatch",
+                        "UIV 4,096A/t Laser Source Hatch",
                         11,
                         4096).getStackForm(1L));
         eM_dynamoTunnel4_UIV.set(
                 new GT_MetaTileEntity_Hatch_DynamoTunnel(
                         15266,
                         "hatch.dynamotunnel4.tier.11",
-                        "UIV 16384A/t Laser Source Hatch",
+                        "UIV 16,384A/t Laser Source Hatch",
                         11,
                         16384).getStackForm(1L));
         eM_dynamoTunnel5_UIV.set(
                 new GT_MetaTileEntity_Hatch_DynamoTunnel(
                         15276,
                         "hatch.dynamotunnel5.tier.11",
-                        "UIV 65536A/t Laser Source Hatch",
+                        "UIV 65,536A/t Laser Source Hatch",
                         11,
                         65536).getStackForm(1L));
         eM_dynamoTunnel6_UIV.set(
                 new GT_MetaTileEntity_Hatch_DynamoTunnel(
                         15286,
                         "hatch.dynamotunnel6.tier.11",
-                        "UIV 262144A/t Laser Source Hatch",
+                        "UIV 262,144A/t Laser Source Hatch",
                         11,
                         262144).getStackForm(1L));
         eM_dynamoTunnel7_UIV.set(
                 new GT_MetaTileEntity_Hatch_DynamoTunnel(
                         15296,
                         "hatch.dynamotunnel7.tier.11",
-                        "UIV 1048576A/t Laser Source Hatch",
+                        "UIV 1,048,576A/t Laser Source Hatch",
                         11,
                         1048576).getStackForm(1L));
 
@@ -2082,42 +1904,42 @@ public class MachineLoader implements Runnable {
                 new GT_MetaTileEntity_Hatch_DynamoTunnel(
                         15247,
                         "hatch.dynamotunnel2.tier.12",
-                        "UMV 1024A/t Laser Source Hatch",
+                        "UMV 1,024A/t Laser Source Hatch",
                         12,
                         1024).getStackForm(1L));
         eM_dynamoTunnel3_UMV.set(
                 new GT_MetaTileEntity_Hatch_DynamoTunnel(
                         15257,
                         "hatch.dynamotunnel3.tier.12",
-                        "UMV 4096A/t Laser Source Hatch",
+                        "UMV 4,096A/t Laser Source Hatch",
                         12,
                         4096).getStackForm(1L));
         eM_dynamoTunnel4_UMV.set(
                 new GT_MetaTileEntity_Hatch_DynamoTunnel(
                         15267,
                         "hatch.dynamotunnel4.tier.12",
-                        "UMV 16384A/t Laser Source Hatch",
+                        "UMV 16,384A/t Laser Source Hatch",
                         12,
                         16384).getStackForm(1L));
         eM_dynamoTunnel5_UMV.set(
                 new GT_MetaTileEntity_Hatch_DynamoTunnel(
                         15277,
                         "hatch.dynamotunnel5.tier.12",
-                        "UMV 65536A/t Laser Source Hatch",
+                        "UMV 65,536A/t Laser Source Hatch",
                         12,
                         65536).getStackForm(1L));
         eM_dynamoTunnel6_UMV.set(
                 new GT_MetaTileEntity_Hatch_DynamoTunnel(
                         15287,
                         "hatch.dynamotunnel6.tier.12",
-                        "UMV 262144A/t Laser Source Hatch",
+                        "UMV 262,144A/t Laser Source Hatch",
                         12,
                         262144).getStackForm(1L));
         eM_dynamoTunnel7_UMV.set(
                 new GT_MetaTileEntity_Hatch_DynamoTunnel(
                         15297,
                         "hatch.dynamotunnel7.tier.12",
-                        "UMV 1048576A/t Laser Source Hatch",
+                        "UMV 1,048,576A/t Laser Source Hatch",
                         12,
                         1048576).getStackForm(1L));
 
@@ -2132,42 +1954,42 @@ public class MachineLoader implements Runnable {
                 new GT_MetaTileEntity_Hatch_DynamoTunnel(
                         15248,
                         "hatch.dynamotunnel2.tier.13",
-                        "UXV 1024A/t Laser Source Hatch",
+                        "UXV 1,024A/t Laser Source Hatch",
                         13,
                         1024).getStackForm(1L));
         eM_dynamoTunnel3_UXV.set(
                 new GT_MetaTileEntity_Hatch_DynamoTunnel(
                         15258,
                         "hatch.dynamotunnel3.tier.13",
-                        "UXV 4096A/t Laser Source Hatch",
+                        "UXV 4,096A/t Laser Source Hatch",
                         13,
                         4096).getStackForm(1L));
         eM_dynamoTunnel4_UXV.set(
                 new GT_MetaTileEntity_Hatch_DynamoTunnel(
                         15268,
                         "hatch.dynamotunnel4.tier.13",
-                        "UXV 16384A/t Laser Source Hatch",
+                        "UXV 16,384A/t Laser Source Hatch",
                         13,
                         16384).getStackForm(1L));
         eM_dynamoTunnel5_UXV.set(
                 new GT_MetaTileEntity_Hatch_DynamoTunnel(
                         15278,
                         "hatch.dynamotunnel5.tier.13",
-                        "UXV 65536A/t Laser Source Hatch",
+                        "UXV 65,536A/t Laser Source Hatch",
                         13,
                         65536).getStackForm(1L));
         eM_dynamoTunnel6_UXV.set(
                 new GT_MetaTileEntity_Hatch_DynamoTunnel(
                         15288,
                         "hatch.dynamotunnel6.tier.13",
-                        "UXV 262144A/t Laser Source Hatch",
+                        "UXV 262,144A/t Laser Source Hatch",
                         13,
                         262144).getStackForm(1L));
         eM_dynamoTunnel7_UXV.set(
                 new GT_MetaTileEntity_Hatch_DynamoTunnel(
                         15298,
                         "hatch.dynamotunnel7.tier.13",
-                        "UXV 1048576A/t Laser Source Hatch",
+                        "UXV 1,048,576A/t Laser Source Hatch",
                         13,
                         1048576).getStackForm(1L));
         eM_dynamoTunnel9001.set(
@@ -2197,63 +2019,17 @@ public class MachineLoader implements Runnable {
         Machine_Multi_Computer.set(
                 new GT_MetaTileEntity_EM_computer(15311, "multimachine.em.computer", "Quantum Computer")
                         .getStackForm(1L));
+
         Machine_Multi_DataBank.set(
                 new GT_MetaTileEntity_EM_dataBank(15313, "multimachine.em.databank", "Data Bank").getStackForm(1L));
 
-        Machine_Multi_EMjunction.set(
-                new GT_MetaTileEntity_EM_junction(15320, "multimachine.em.junction", "Matter Junction")
-                        .getStackForm(1L));
-        Machine_Multi_MatterToEM.set(
-                new GT_MetaTileEntity_EM_quantizer(15321, "multimachine.em.mattertoem", "Matter Quantizer")
-                        .getStackForm(1L));
-        Machine_Multi_EMToMatter.set(
-                new GT_MetaTileEntity_EM_dequantizer(15322, "multimachine.em.emtomatter", "Matter Dequantizer")
-                        .getStackForm(1L));
-
-        // COMPAT
-        Machine_Multi_EssentiaToEM.set(
-                new GT_MetaTileEntity_EM_essentiaQuantizer(15323, "multimachine.em.essentiatoem", "Essentia Quantizer")
-                        .getStackForm(1L));
-        Machine_Multi_EMToEssentia.set(
-                new GT_MetaTileEntity_EM_essentiaDequantizer(
-                        15324,
-                        "multimachine.em.emtoessentia",
-                        "Essentia Dequantizer").getStackForm(1L));
-
-        Machine_Multi_Scanner.set(
-                new GT_MetaTileEntity_EM_scanner(15330, "multimachine.em.scanner", "Elemental Scanner")
-                        .getStackForm(1L));
         Machine_Multi_Research.set(
                 new GT_MetaTileEntity_EM_research(15331, "multimachine.em.research", "Research station")
-                        .getStackForm(1L));
-
-        Machine_Multi_Collider.set(
-                new GT_MetaTileEntity_EM_collider(15340, "multimachine.em.collider", "Matter Collider")
                         .getStackForm(1L));
 
         Machine_Multi_Infuser.set(
                 new GT_MetaTileEntity_EM_infuser(15350, "multimachine.em.infuser", "Energy Infuser").getStackForm(1));
 
-        Machine_Multi_EMmachine.set(
-                new GT_MetaTileEntity_EM_machine(15360, "multimachine.em.processing", "Quantum Processing Machine")
-                        .getStackForm(1L));
-
-        Machine_Multi_EMCrafter.set(
-                new GT_MetaTileEntity_EM_crafting(15370, "multimachine.em.crafter", "Matter Assembler")
-                        .getStackForm(1L));
-
-        Machine_Multi_Stabilizer.set(
-                new GT_MetaTileEntity_EM_stabilizer(15380, "multimachine.em.stabilizer", "Elemental Stabilizer")
-                        .getStackForm(1L));
-
-        Machine_Multi_Wormhole
-                .set(new GT_MetaTileEntity_EM_wormhole(15390, "multimachine.em.wormhole", "Wormhole").getStackForm(1L));
-
-        Machine_Multi_Decay.set(
-                new GT_MetaTileEntity_EM_decay(15400, "multimachine.em.decay", "Decay Generator").getStackForm(1L));
-        Machine_Multi_Annihilation.set(
-                new GT_MetaTileEntity_EM_annihilation(15405, "multimachine.em.annihilation", "Annihilation Generator")
-                        .getStackForm(1L));
         Machine_Multi_EyeOfHarmony.set(
                 new GT_MetaTileEntity_EM_EyeOfHarmony(15410, "multimachine.em.eye_of_harmony", "Eye of Harmony")
                         .getStackForm(1L));
@@ -2338,13 +2114,10 @@ public class MachineLoader implements Runnable {
         // Pipes
         // ===================================================================================================
 
-        EMpipe.set(new GT_MetaTileEntity_Pipe_EM(15460, "pipe.elementalmatter", "Quantum \"Tunnel\"").getStackForm(1L));
         LASERpipe.set(
                 new GT_MetaTileEntity_Pipe_Energy(15465, "pipe.energystream", "Laser Vacuum Pipe").getStackForm(1L));
         DATApipe.set(new GT_MetaTileEntity_Pipe_Data(15470, "pipe.datastream", "Optical Fiber Cable").getStackForm(1L));
-        EMpipeBlock.set(
-                new GT_MetaTileEntity_PipeBlock_EM(15471, "pipe.elementalmatter.block", "Quantum \"Tunnel\" Casing")
-                        .getStackForm(1L));
+
         LASERpipeBlock.set(
                 new GT_MetaTileEntity_PipeBlock_Energy(15472, "pipe.energystream.block", "Laser Vacuum Pipe Casing")
                         .getStackForm(1L));
@@ -2359,8 +2132,6 @@ public class MachineLoader implements Runnable {
         Machine_OwnerDetector.set(
                 new GT_MetaTileEntity_OwnerDetector(15480, "machine.tt.ownerdetector", "Owner detector", 3)
                         .getStackForm(1L));
-        Machine_DataReader.set(
-                new GT_MetaTileEntity_DataReader(15481, "machine.tt.datareader", "Data Reader", 5).getStackForm(1L));
 
         // ===================================================================================================
         // Buck Converters

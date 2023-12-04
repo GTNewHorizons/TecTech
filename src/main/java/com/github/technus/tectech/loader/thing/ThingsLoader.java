@@ -2,11 +2,8 @@ package com.github.technus.tectech.loader.thing;
 
 import static com.github.technus.tectech.Reference.MODID;
 import static com.github.technus.tectech.TecTech.tectechTexturePage1;
-import static gregtech.api.enums.Mods.OpenModularTurrets;
 
 import com.github.technus.tectech.TecTech;
-import com.github.technus.tectech.compatibility.openmodularturrets.blocks.turretbases.TurretBaseEM;
-import com.github.technus.tectech.compatibility.openmodularturrets.blocks.turretheads.TurretHeadEM;
 import com.github.technus.tectech.thing.block.QuantumGlassBlock;
 import com.github.technus.tectech.thing.block.ReactorSimBlock;
 import com.github.technus.tectech.thing.block.TileEyeOfHarmony;
@@ -18,9 +15,7 @@ import com.github.technus.tectech.thing.casing.SpacetimeCompressionFieldCasing;
 import com.github.technus.tectech.thing.casing.StabilisationFieldCasing;
 import com.github.technus.tectech.thing.casing.TT_Container_Casings;
 import com.github.technus.tectech.thing.casing.TimeAccelerationFieldCasing;
-import com.github.technus.tectech.thing.item.DebugElementalInstanceContainer_EM;
-import com.github.technus.tectech.thing.item.ElementalDefinitionContainer_EM;
-import com.github.technus.tectech.thing.item.ElementalDefinitionScanStorage_EM;
+import com.github.technus.tectech.thing.item.AstralArrayFabricator;
 import com.github.technus.tectech.thing.item.EnderFluidLinkCover;
 import com.github.technus.tectech.thing.item.EuMeterGT;
 import com.github.technus.tectech.thing.item.ParametrizerMemoryCard;
@@ -74,18 +69,10 @@ public class ThingsLoader implements Runnable {
         QuantumGlassBlock.run();
         TecTech.LOGGER.info("Quantum Glass registered");
 
-        if (OpenModularTurrets.isModLoaded()) {
-            TurretHeadEM.run();
-            TecTech.LOGGER.info("TurretHeadEM registered");
-            TurretBaseEM.run();
-            TecTech.LOGGER.info("TurretBaseEM registered");
-        }
-
         ReactorSimBlock.run();
         TecTech.LOGGER.info("Reactor Simulator registered");
 
         ParametrizerMemoryCard.run();
-        ElementalDefinitionScanStorage_EM.run();
         EuMeterGT.run();
         TeslaStaff.run();
         TeslaCoilCover.run();
@@ -95,10 +82,9 @@ public class ThingsLoader implements Runnable {
         TecTech.LOGGER.info("Useful Items registered");
 
         TeslaCoilComponent.run();
+        AstralArrayFabricator.run();
         TecTech.LOGGER.info("Crafting Components registered");
 
-        ElementalDefinitionContainer_EM.run();
-        DebugElementalInstanceContainer_EM.run();
         TecTech.LOGGER.info("Debug Items registered");
     }
 }

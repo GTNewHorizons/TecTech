@@ -10,16 +10,11 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
 
 import com.github.technus.tectech.TecTech;
-import com.github.technus.tectech.mechanics.elementalMatter.core.definitions.IEMDefinition;
-import com.github.technus.tectech.mechanics.elementalMatter.core.maps.EMConstantStackMap;
-import com.github.technus.tectech.mechanics.elementalMatter.core.stacks.EMDefinitionStack;
 import com.github.technus.tectech.thing.CustomItemList;
-import com.github.technus.tectech.thing.item.ElementalDefinitionContainer_EM;
-import com.github.technus.tectech.thing.metaTileEntity.multi.GT_MetaTileEntity_EM_crafting;
-import com.github.technus.tectech.thing.metaTileEntity.multi.em_machine.GT_MetaTileEntity_EM_machine;
 
 import cpw.mods.fml.common.registry.GameRegistry;
 import gregtech.api.enums.ItemList;
+import gregtech.api.recipe.RecipeMaps;
 import gregtech.api.util.GT_OreDictUnificator;
 import gregtech.api.util.GT_Recipe;
 import gregtech.api.util.GT_Recipe.GT_Recipe_AssemblyLine;
@@ -54,7 +49,7 @@ public class TT_recipeAdder extends GT_RecipeAdder {
         }
         researchAmperage = GT_Utility.clamp(researchAmperage, 1, Short.MAX_VALUE);
         computationRequiredPerSec = GT_Utility.clamp(computationRequiredPerSec, 1, Short.MAX_VALUE);
-        TT_recipe.GT_Recipe_MapTT.sResearchableFakeRecipes.addFakeRecipe(
+        TecTechRecipeMaps.researchStationFakeRecipes.addFakeRecipe(
                 false,
                 new ItemStack[] { aResearchItem },
                 new ItemStack[] { aOutput },
@@ -64,7 +59,7 @@ public class TT_recipeAdder extends GT_RecipeAdder {
                 totalComputationRequired,
                 researchEUt,
                 researchAmperage | computationRequiredPerSec << 16);
-        GT_Recipe.GT_Recipe_Map.sAssemblylineVisualRecipes.addFakeRecipe(
+        RecipeMaps.assemblylineVisualRecipes.addFakeRecipe(
                 false,
                 aInputs,
                 new ItemStack[] { aOutput },
@@ -84,7 +79,7 @@ public class TT_recipeAdder extends GT_RecipeAdder {
                         aOutput,
                         assDuration,
                         assEUt));
-        TT_recipe.GT_Recipe_MapTT.sAssemblylineRecipes.add(
+        TecTechRecipeMaps.researchableALRecipeList.add(
                 new GT_Recipe.GT_Recipe_AssemblyLine(
                         aResearchItem,
                         totalComputationRequired / computationRequiredPerSec,
@@ -124,8 +119,7 @@ public class TT_recipeAdder extends GT_RecipeAdder {
                 tAlts[i] = null;
                 tPersistentHash = tPersistentHash * 31 + GT_Utility.persistentHash(tInputs[i], true, false);
                 continue;
-            } else if (obj instanceof ItemStack[]) {
-                ItemStack[] aStacks = (ItemStack[]) obj;
+            } else if (obj instanceof ItemStack[]aStacks) {
                 if (aStacks.length > 0) {
                     tInputs[i] = aStacks[0];
                     tAlts[i] = Arrays.copyOf(aStacks, aStacks.length);
@@ -135,8 +129,7 @@ public class TT_recipeAdder extends GT_RecipeAdder {
                     tPersistentHash *= 31;
                     continue;
                 }
-            } else if (obj instanceof Object[]) {
-                Object[] objs = (Object[]) obj;
+            } else if (obj instanceof Object[]objs) {
                 List<ItemStack> tList;
                 if (objs.length >= 2 && !(tList = GT_OreDictUnificator.getOres(objs[0])).isEmpty()) {
                     try {
@@ -187,7 +180,7 @@ public class TT_recipeAdder extends GT_RecipeAdder {
         tPersistentHash = tPersistentHash * 31 + researchEUt;
         tPersistentHash = tPersistentHash * 31 + assDuration;
         tPersistentHash = tPersistentHash * 31 + assEUt;
-        TT_recipe.GT_Recipe_MapTT.sResearchableFakeRecipes.addFakeRecipe(
+        TecTechRecipeMaps.researchStationFakeRecipes.addFakeRecipe(
                 false,
                 new ItemStack[] { aResearchItem },
                 new ItemStack[] { aOutput },
@@ -197,7 +190,7 @@ public class TT_recipeAdder extends GT_RecipeAdder {
                 totalComputationRequired,
                 researchEUt,
                 researchAmperage | computationRequiredPerSec << 16);
-        GT_Recipe.GT_Recipe_Map.sAssemblylineVisualRecipes.addFakeRecipe(
+        RecipeMaps.assemblylineVisualRecipes.addFakeRecipe(
                 false,
                 tInputs,
                 new ItemStack[] { aOutput },
@@ -230,223 +223,7 @@ public class TT_recipeAdder extends GT_RecipeAdder {
                 assEUt,
                 tAlts);
         recipeTT.setPersistentHash(tPersistentHash);
-        TT_recipe.GT_Recipe_MapTT.sAssemblylineRecipes.add(recipeTT);
-        return true;
-    }
-
-    public static boolean addResearchableEMmachineRecipe(ItemStack aResearchItem, int totalComputationRequired,
-            int computationRequiredPerSec, int researchEUt, int researchAmperage, ItemStack[] aInputs,
-            FluidStack[] aFluidInputs, EMConstantStackMap[] eInputs, ItemStack aOutput, int machineDuration,
-            int machineEUt, int machineAmperage) {
-        if (aInputs == null) {
-            aInputs = nullItem;
-        }
-        if (aFluidInputs == null) {
-            aFluidInputs = nullFluid;
-        }
-        if (aResearchItem == null || totalComputationRequired <= 0 || aOutput == null) {
-            return false;
-        }
-        for (ItemStack tItem : aInputs) {
-            if (tItem == null) {
-                TecTech.LOGGER.error(
-                        "addResearchableEMmachineRecipe " + aResearchItem.getDisplayName()
-                                + " --> "
-                                + aOutput.getUnlocalizedName()
-                                + " there is some null item in that recipe");
-            }
-        }
-        if (researchAmperage <= 0) {
-            researchAmperage = 1;
-        } else if (researchAmperage > Short.MAX_VALUE) {
-            researchAmperage = Short.MAX_VALUE;
-        }
-        if (computationRequiredPerSec <= 0) {
-            computationRequiredPerSec = 1;
-        } else if (computationRequiredPerSec > Short.MAX_VALUE) {
-            computationRequiredPerSec = Short.MAX_VALUE;
-        }
-        TT_recipe.GT_Recipe_MapTT.sResearchableFakeRecipes.addFakeRecipe(
-                false,
-                new ItemStack[] { aResearchItem },
-                new ItemStack[] { aOutput },
-                new ItemStack[] { ItemList.Tool_DataOrb
-                        .getWithName(1L, "Writes Research result for " + GT_MetaTileEntity_EM_machine.machine) },
-                null,
-                null,
-                totalComputationRequired,
-                researchEUt,
-                researchAmperage | computationRequiredPerSec << 16);
-        TT_recipe.TT_Recipe_Map.sMachineRecipes.add(
-                new TT_recipe.TT_assLineRecipe(
-                        false,
-                        aResearchItem,
-                        aInputs,
-                        new ItemStack[] { aOutput },
-                        new ItemStack[] { ItemList.Tool_DataOrb.getWithName(1L, "Reads Research result") },
-                        aFluidInputs,
-                        machineDuration,
-                        machineEUt,
-                        machineAmperage,
-                        eInputs));
-        return true;
-    }
-
-    public static boolean addResearchableEMcrafterRecipe(ItemStack aResearchItem, int totalComputationRequired,
-            int computationRequiredPerSec, int researchEUt, int researchAmperage, EMConstantStackMap[] eInputs,
-            EMConstantStackMap[] catalyst, TT_recipe.IAdditionalCheck check, ItemStack aOutput, int crafterDuration,
-            int crafterEUt, int crafterAmperage) {
-        if (aResearchItem == null || totalComputationRequired <= 0 || aOutput == null) {
-            return false;
-        }
-        if (researchAmperage <= 0) {
-            researchAmperage = 1;
-        } else if (researchAmperage > Short.MAX_VALUE) {
-            researchAmperage = Short.MAX_VALUE;
-        }
-        if (computationRequiredPerSec <= 0) {
-            computationRequiredPerSec = 1;
-        } else if (computationRequiredPerSec > Short.MAX_VALUE) {
-            computationRequiredPerSec = Short.MAX_VALUE;
-        }
-        TT_recipe.GT_Recipe_MapTT.sResearchableFakeRecipes.addFakeRecipe(
-                false,
-                new ItemStack[] { aResearchItem },
-                new ItemStack[] { aOutput },
-                new ItemStack[] { ItemList.Tool_DataOrb
-                        .getWithName(1L, "Writes Research result for " + GT_MetaTileEntity_EM_crafting.crafter) },
-                null,
-                null,
-                totalComputationRequired,
-                researchEUt,
-                researchAmperage | computationRequiredPerSec << 16);
-        TT_recipe.TT_Recipe_Map.sCrafterRecipes.add(
-                new TT_recipe.TT_assLineRecipe(
-                        false,
-                        aResearchItem,
-                        null,
-                        new ItemStack[] { aOutput },
-                        new ItemStack[] { ItemList.Tool_DataOrb.getWithName(1L, "Reads Research result") },
-                        null,
-                        crafterDuration,
-                        crafterEUt,
-                        crafterAmperage,
-                        eInputs,
-                        null,
-                        catalyst,
-                        check));
-        return true;
-    }
-
-    public static boolean addScannableEMmachineRecipe(IEMDefinition aResearchEM, int totalComputationRequired,
-            int computationRequiredPerSec, int researchEUt, int researchAmperage, ItemStack[] aInputs,
-            FluidStack[] aFluidInputs, EMConstantStackMap[] eInputs, ItemStack aOutput, int machineDuration,
-            int machineEUt, int machineAmperage) {
-        if (aInputs == null) {
-            aInputs = nullItem;
-        }
-        if (aFluidInputs == null) {
-            aFluidInputs = nullFluid;
-        }
-        if (aResearchEM == null || totalComputationRequired <= 0 || aOutput == null) {
-            return false;
-        }
-        for (ItemStack tItem : aInputs) {
-            if (tItem == null) {
-                TecTech.LOGGER.error(
-                        "addScannableEMmachineRecipe " + aResearchEM
-                                + " --> "
-                                + aOutput.getUnlocalizedName()
-                                + " there is some null item in that recipe");
-            }
-        }
-        if (researchAmperage <= 0) {
-            researchAmperage = 1;
-        } else if (researchAmperage > Short.MAX_VALUE) {
-            researchAmperage = Short.MAX_VALUE;
-        }
-        if (computationRequiredPerSec <= 0) {
-            computationRequiredPerSec = 1;
-        } else if (computationRequiredPerSec > Short.MAX_VALUE) {
-            computationRequiredPerSec = Short.MAX_VALUE;
-        }
-        ItemStack placeholder = new ItemStack(ElementalDefinitionContainer_EM.INSTANCE);
-        ElementalDefinitionContainer_EM
-                .setContent(placeholder, new EMConstantStackMap(new EMDefinitionStack(aResearchEM, 1)));
-        GT_Recipe thisRecipe = TT_recipe.GT_Recipe_MapTT.sScannableFakeRecipes.addFakeRecipe(
-                false,
-                new ItemStack[] { placeholder },
-                new ItemStack[] { aOutput },
-                new ItemStack[] { ItemList.Tool_DataOrb
-                        .getWithName(1L, "Writes Research result for " + GT_MetaTileEntity_EM_machine.machine) },
-                null,
-                null,
-                totalComputationRequired,
-                researchEUt,
-                researchAmperage | computationRequiredPerSec << 16);
-        TT_recipe.TT_Recipe_Map_EM.sMachineRecipesEM.add(
-                new TT_recipe.TT_EMRecipe(
-                        false,
-                        thisRecipe,
-                        aResearchEM,
-                        aInputs,
-                        new ItemStack[] { aOutput },
-                        new ItemStack[] { ItemList.Tool_DataOrb.getWithName(1L, "Reads Research result") },
-                        aFluidInputs,
-                        machineDuration,
-                        machineEUt,
-                        machineAmperage,
-                        eInputs));
-        return true;
-    }
-
-    public static boolean addScannableEMcrafterRecipe(IEMDefinition aResearchEM, int totalComputationRequired,
-            int computationRequiredPerSec, int researchEUt, int researchAmperage, EMConstantStackMap[] eInputs,
-            EMConstantStackMap[] catalyst, TT_recipe.IAdditionalCheck check, ItemStack aOutput, int crafterDuration,
-            int crafterEUt, int crafterAmperage) {
-        if (aResearchEM == null || totalComputationRequired <= 0 || aOutput == null) {
-            return false;
-        }
-        if (researchAmperage <= 0) {
-            researchAmperage = 1;
-        } else if (researchAmperage > Short.MAX_VALUE) {
-            researchAmperage = Short.MAX_VALUE;
-        }
-        if (computationRequiredPerSec <= 0) {
-            computationRequiredPerSec = 1;
-        } else if (computationRequiredPerSec > Short.MAX_VALUE) {
-            computationRequiredPerSec = Short.MAX_VALUE;
-        }
-        ItemStack placeholder = new ItemStack(ElementalDefinitionContainer_EM.INSTANCE);
-        ElementalDefinitionContainer_EM
-                .setContent(placeholder, new EMConstantStackMap(new EMDefinitionStack(aResearchEM, 1)));
-        GT_Recipe thisRecipe = TT_recipe.GT_Recipe_MapTT.sScannableFakeRecipes.addFakeRecipe(
-                false,
-                new ItemStack[] { placeholder },
-                new ItemStack[] { aOutput },
-                new ItemStack[] { ItemList.Tool_DataOrb
-                        .getWithName(1L, "Writes Research result for " + GT_MetaTileEntity_EM_crafting.crafter) },
-                null,
-                null,
-                totalComputationRequired,
-                researchEUt,
-                researchAmperage | computationRequiredPerSec << 16);
-        TT_recipe.TT_Recipe_Map_EM.sCrafterRecipesEM.add(
-                new TT_recipe.TT_EMRecipe(
-                        false,
-                        thisRecipe,
-                        aResearchEM,
-                        null,
-                        new ItemStack[] { aOutput },
-                        new ItemStack[] { ItemList.Tool_DataOrb.getWithName(1L, "Reads Research result") },
-                        null,
-                        crafterDuration,
-                        crafterEUt,
-                        crafterAmperage,
-                        eInputs,
-                        null,
-                        catalyst,
-                        check));
+        TecTechRecipeMaps.researchableALRecipeList.add(recipeTT);
         return true;
     }
 
@@ -472,4 +249,5 @@ public class TT_recipeAdder extends GT_RecipeAdder {
                 .addRecipe(false, null, null, null, afluidInputs, fluidOutputs, machineDuration, machineEUt, 0);
         return true;
     }
+
 }

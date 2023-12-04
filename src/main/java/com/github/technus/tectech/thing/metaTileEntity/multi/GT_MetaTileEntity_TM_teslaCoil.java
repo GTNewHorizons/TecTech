@@ -28,6 +28,7 @@ import static gregtech.api.enums.GT_HatchElement.InputHatch;
 import static gregtech.api.enums.GT_HatchElement.Maintenance;
 import static gregtech.api.enums.GT_HatchElement.OutputHatch;
 import static gregtech.api.util.GT_StructureUtility.buildHatchAdder;
+import static gregtech.api.util.GT_Utility.filterValidMTEs;
 import static java.lang.Math.min;
 import static net.minecraft.util.StatCollector.translateToLocal;
 
@@ -55,6 +56,7 @@ import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.FluidStack;
 
 import org.apache.commons.lang3.tuple.Pair;
+import org.jetbrains.annotations.NotNull;
 
 import com.github.technus.tectech.TecTech;
 import com.github.technus.tectech.loader.NetworkDispatcher;
@@ -100,7 +102,8 @@ import gregtech.api.metatileentity.implementations.GT_MetaTileEntity_Hatch_Energ
 import gregtech.api.metatileentity.implementations.GT_MetaTileEntity_Hatch_Input;
 import gregtech.api.metatileentity.implementations.GT_MetaTileEntity_Hatch_Maintenance;
 import gregtech.api.metatileentity.implementations.GT_MetaTileEntity_Hatch_Output;
-import gregtech.api.metatileentity.implementations.GT_MetaTileEntity_MultiBlockBase;
+import gregtech.api.recipe.check.CheckRecipeResult;
+import gregtech.api.recipe.check.SimpleCheckRecipeResult;
 import gregtech.api.util.GT_Multiblock_Tooltip_Builder;
 import gregtech.api.util.GT_OreDictUnificator;
 import gregtech.api.util.GT_Utility;
@@ -213,7 +216,8 @@ public class GT_MetaTileEntity_TM_teslaCoil extends GT_MetaTileEntity_Multiblock
             .addElement(
                     'D',
                     ofBlocksTiered(
-                            (block, meta) -> block != sBlockCasingsBA0 ? -1 : meta <= 5 ? meta : meta == 9 ? 6 : -1,
+                            (block, meta) -> block != sBlockCasingsBA0 ? null
+                                    : meta <= 5 ? Integer.valueOf(meta) : meta == 9 ? 6 : null,
                             IntStream.range(0, 7).map(tier -> tier == 6 ? 9 : tier)
                                     .mapToObj(meta -> Pair.of(sBlockCasingsBA0, meta)).collect(Collectors.toList()),
                             -1,
@@ -240,8 +244,7 @@ public class GT_MetaTileEntity_TM_teslaCoil extends GT_MetaTileEntity_Multiblock
                 @Override
                 public boolean check(GT_MetaTileEntity_TM_teslaCoil t, World world, int x, int y, int z) {
                     TileEntity tBase = world.getTileEntity(x, y, z);
-                    if (tBase instanceof BaseMetaPipeEntity) {
-                        BaseMetaPipeEntity tPipeBase = (BaseMetaPipeEntity) tBase;
+                    if (tBase instanceof BaseMetaPipeEntity tPipeBase) {
                         if (tPipeBase.isInvalidTileEntity()) return false;
                         return tPipeBase.getMetaTileEntity() instanceof GT_MetaPipeEntity_Frame;
                     }
@@ -265,9 +268,9 @@ public class GT_MetaTileEntity_TM_teslaCoil extends GT_MetaTileEntity_Multiblock
                 public boolean placeBlock(GT_MetaTileEntity_TM_teslaCoil t, World world, int x, int y, int z,
                         ItemStack trigger) {
                     ItemStack tFrameStack = GT_OreDictUnificator.get(OrePrefixes.frameGt, Materials.Titanium, 1);
-                    if (!GT_Utility.isStackValid(tFrameStack) || !(tFrameStack.getItem() instanceof ItemBlock))
+                    if (!GT_Utility.isStackValid(tFrameStack)
+                            || !(tFrameStack.getItem() instanceof ItemBlock tFrameStackItem))
                         return false;
-                    ItemBlock tFrameStackItem = (ItemBlock) tFrameStack.getItem();
                     return tFrameStackItem.placeBlockAt(
                             tFrameStack,
                             null,
@@ -548,20 +551,16 @@ public class GT_MetaTileEntity_TM_teslaCoil extends GT_MetaTileEntity_Multiblock
 
     @Override
     public boolean checkMachine_EM(IGregTechTileEntity iGregTechTileEntity, ItemStack itemStack) {
-        for (GT_MetaTileEntity_Hatch_Capacitor cap : eCapacitorHatches) {
-            if (isValidMetaTileEntity(cap)) {
-                cap.getBaseMetaTileEntity().setActive(false);
-            }
+        for (GT_MetaTileEntity_Hatch_Capacitor cap : filterValidMTEs(eCapacitorHatches)) {
+            cap.getBaseMetaTileEntity().setActive(false);
         }
         eCapacitorHatches.clear();
 
         mTier = -1;
 
         if (structureCheck_EM("main", 3, 16, 0)) {
-            for (GT_MetaTileEntity_Hatch_Capacitor cap : eCapacitorHatches) {
-                if (isValidMetaTileEntity(cap)) {
-                    cap.getBaseMetaTileEntity().setActive(iGregTechTileEntity.isActive());
-                }
+            for (GT_MetaTileEntity_Hatch_Capacitor cap : filterValidMTEs(eCapacitorHatches)) {
+                cap.getBaseMetaTileEntity().setActive(iGregTechTileEntity.isActive());
             }
 
             // Only recalculate offsets on orientation or rotation change
@@ -587,27 +586,28 @@ public class GT_MetaTileEntity_TM_teslaCoil extends GT_MetaTileEntity_Multiblock
     }
 
     @Override
-    public boolean checkRecipe_EM(ItemStack itemStack) {
+    @NotNull
+    protected CheckRecipeResult checkProcessing_EM() {
         checkPlasmaBoost();
 
-        if (!histHighSetting.getStatus(false).isOk || !histLowSetting.getStatus(false).isOk
-                || !transferRadiusTowerSetting.getStatus(false).isOk
-                || !transferRadiusTransceiverSetting.getStatus(false).isOk
-                || !transferRadiusCoverUltimateSetting.getStatus(false).isOk
-                || !outputVoltageSetting.getStatus(false).isOk
-                || !outputCurrentSetting.getStatus(false).isOk
-                || !sortTimeMinSetting.getStatus(false).isOk
-                || !overDriveSetting.getStatus(false).isOk)
-            return false;
+        if (!histHighSetting.getStatus(false).isOk || !histLowSetting.getStatus(false).isOk)
+            return SimpleCheckRecipeResult.ofFailure("invalid_hysteresis");
+        if (!transferRadiusTowerSetting.getStatus(false).isOk || !transferRadiusTransceiverSetting.getStatus(false).isOk
+                || !transferRadiusCoverUltimateSetting.getStatus(false).isOk)
+            return SimpleCheckRecipeResult.ofFailure("invalid_transfer_radius");
+        if (!outputVoltageSetting.getStatus(false).isOk)
+            return SimpleCheckRecipeResult.ofFailure("invalid_voltage_setting");
+        if (!outputCurrentSetting.getStatus(false).isOk)
+            return SimpleCheckRecipeResult.ofFailure("invalid_current_setting");
+        if (!sortTimeMinSetting.getStatus(false).isOk) return SimpleCheckRecipeResult.ofFailure("invalid_time_setting");
+        if (!overDriveSetting.getStatus(false).isOk)
+            return SimpleCheckRecipeResult.ofFailure("invalid_overdrive_setting");
 
         mEfficiencyIncrease = 10000;
         mMaxProgresstime = 20;
         vTier = -1;
         long[] capacitorData;
-        for (GT_MetaTileEntity_Hatch_Capacitor cap : eCapacitorHatches) {
-            if (!GT_MetaTileEntity_MultiBlockBase.isValidMetaTileEntity(cap)) {
-                continue;
-            }
+        for (GT_MetaTileEntity_Hatch_Capacitor cap : filterValidMTEs(eCapacitorHatches)) {
             if (cap.getCapacitors()[0] > vTier) {
                 vTier = (int) cap.getCapacitors()[0];
             }
@@ -619,16 +619,13 @@ public class GT_MetaTileEntity_TM_teslaCoil extends GT_MetaTileEntity_Multiblock
         if (vTier < 0) {
             // Returning true to allow for 'passive running'
             outputVoltageMax = 0;
-            return true;
+            return SimpleCheckRecipeResult.ofSuccess("routing");
         } else if (vTier > mTier && getEUVar() > 0) {
             explodeMultiblock();
         }
 
         outputVoltageMax = V[vTier + 1];
-        for (GT_MetaTileEntity_Hatch_Capacitor cap : eCapacitorHatches) {
-            if (!GT_MetaTileEntity_MultiBlockBase.isValidMetaTileEntity(cap)) {
-                continue;
-            }
+        for (GT_MetaTileEntity_Hatch_Capacitor cap : filterValidMTEs(eCapacitorHatches)) {
             cap.getBaseMetaTileEntity().setActive(true);
             capacitorData = cap.getCapacitors();
             if (capacitorData[0] < vTier) {
@@ -641,7 +638,7 @@ public class GT_MetaTileEntity_TM_teslaCoil extends GT_MetaTileEntity_Multiblock
                 energyCapacity += capacitorData[2];
             }
         }
-        return true;
+        return SimpleCheckRecipeResult.ofSuccess("routing");
     }
 
     @Override
@@ -705,10 +702,8 @@ public class GT_MetaTileEntity_TM_teslaCoil extends GT_MetaTileEntity_Multiblock
         super.onRemoval();
         if (!getBaseMetaTileEntity().isClientSide()) {
             teslaSimpleNodeSetRemove(this);
-            for (GT_MetaTileEntity_Hatch_Capacitor cap : eCapacitorHatches) {
-                if (GT_MetaTileEntity_MultiBlockBase.isValidMetaTileEntity(cap)) {
-                    cap.getBaseMetaTileEntity().setActive(false);
-                }
+            for (GT_MetaTileEntity_Hatch_Capacitor cap : filterValidMTEs(eCapacitorHatches)) {
+                cap.getBaseMetaTileEntity().setActive(false);
             }
         }
     }
