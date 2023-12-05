@@ -56,6 +56,8 @@ import gregtech.api.interfaces.metatileentity.IMetaTileEntity;
 import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
 import gregtech.api.metatileentity.implementations.GT_MetaTileEntity_Hatch;
 import gregtech.api.metatileentity.implementations.GT_MetaTileEntity_Hatch_Input;
+import gregtech.api.recipe.RecipeMap;
+import gregtech.api.recipe.RecipeMaps;
 import gregtech.api.util.*;
 import gregtech.common.tileentities.machines.GT_MetaTileEntity_Hatch_OutputBus_ME;
 import gregtech.common.tileentities.machines.GT_MetaTileEntity_Hatch_Output_ME;
@@ -477,8 +479,8 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
     }
 
     @Override
-    public GT_Recipe.GT_Recipe_Map getRecipeMap() {
-        return GT_Recipe.GT_Recipe_Map.sBlastRecipes;
+    public RecipeMap<?> getRecipeMap() {
+        return RecipeMaps.blastFurnaceRecipes;
     }
 
     @Override
@@ -533,22 +535,24 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
                         .addTooltip(translateToLocal("fog.upgrade.tt.1")).setPos(130, 230)).addChild(
                                 new TextWidget(translateToLocal("fog.upgrade.tt.1")).setTextAlignment(Alignment.Center)
                                         .setScale(0.57f).setMaxWidth(35).setPos(133, 233)))
-        .widget(new MultiChildWidget().addChild(new ButtonWidget().setOnClick((clickData, widget) -> {
-            upgradeID = 1;
-            if (!widget.isClient()) {
-                widget.getContext().openSyncedWindow(11);
-            }
-        }).setSize(40, 15).setBackground(GT_UITextures.BUTTON_STANDARD).addTooltip(translateToLocal("fog.upgrade.tt.2")).setPos(130, 70)).addChild(
-                new TextWidget(translateToLocal("fog.upgrade.tt.2")).setTextAlignment(Alignment.Center).setScale(0.57f)
-                        .setMaxWidth(36).setPos(133, 73)))
-        .widget(new MultiChildWidget().addChild(new ButtonWidget().setOnClick((clickData, widget) -> {
-            upgradeID = 2;
-            if (!widget.isClient()) {
-                widget.getContext().openSyncedWindow(11);
-            }
-        }).setSize(40, 15).setBackground(GT_UITextures.BUTTON_STANDARD).addTooltip(translateToLocal("fog.upgrade.tt.3")).setPos(70, 130)).addChild(
-                new TextWidget(translateToLocal("fog.upgrade.tt.3")).setTextAlignment(Alignment.Center).setScale(0.57f)
-                        .setMaxWidth(36).setPos(73, 133)));
+                .widget(new MultiChildWidget().addChild(new ButtonWidget().setOnClick((clickData, widget) -> {
+                    upgradeID = 1;
+                    if (!widget.isClient()) {
+                        widget.getContext().openSyncedWindow(11);
+                    }
+                }).setSize(40, 15).setBackground(GT_UITextures.BUTTON_STANDARD)
+                        .addTooltip(translateToLocal("fog.upgrade.tt.2")).setPos(130, 70)).addChild(
+                                new TextWidget(translateToLocal("fog.upgrade.tt.2")).setTextAlignment(Alignment.Center)
+                                        .setScale(0.57f).setMaxWidth(36).setPos(133, 73)))
+                .widget(new MultiChildWidget().addChild(new ButtonWidget().setOnClick((clickData, widget) -> {
+                    upgradeID = 2;
+                    if (!widget.isClient()) {
+                        widget.getContext().openSyncedWindow(11);
+                    }
+                }).setSize(40, 15).setBackground(GT_UITextures.BUTTON_STANDARD)
+                        .addTooltip(translateToLocal("fog.upgrade.tt.3")).setPos(70, 130)).addChild(
+                                new TextWidget(translateToLocal("fog.upgrade.tt.3")).setTextAlignment(Alignment.Center)
+                                        .setScale(0.57f).setMaxWidth(36).setPos(73, 133)));
         return builder.build();
     }
 

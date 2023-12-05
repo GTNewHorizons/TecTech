@@ -20,6 +20,7 @@ import gregtech.api.interfaces.ITexture;
 import gregtech.api.interfaces.metatileentity.IMetaTileEntity;
 import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
 import gregtech.api.metatileentity.implementations.GT_MetaTileEntity_Hatch_InputBus;
+import gregtech.api.recipe.RecipeMaps;
 import gregtech.api.util.*;
 
 public class GT_MetaTileEntity_EM_quark_gluon_plasma extends GT_MetaTileEntity_EM_BaseModule
@@ -77,7 +78,7 @@ public class GT_MetaTileEntity_EM_quark_gluon_plasma extends GT_MetaTileEntity_E
         byte tTier = (byte) Math.max(1, GT_Utility.getTier(tVoltage));
         long tEnergy = maxParallel * tVoltage;
 
-        GT_Recipe tRecipe = GT_Recipe.GT_Recipe_Map.sBlastRecipes.findRecipe(
+        GT_Recipe tRecipe = RecipeMaps.blastFurnaceRecipes.findRecipe(
                 getBaseMetaTileEntity(),
                 false,
                 false,
@@ -86,8 +87,8 @@ public class GT_MetaTileEntity_EM_quark_gluon_plasma extends GT_MetaTileEntity_E
                 aItemInputs);
 
         GT_ParallelHelper helper = new GT_ParallelHelper().setRecipe(tRecipe).setItemInputs(aItemInputs)
-                .setFluidInputs(aFluidInputs).setAvailableEUt(tEnergy).setMaxParallel(maxParallel).enableConsumption()
-                .enableOutputCalculation();
+                .setFluidInputs(aFluidInputs).setAvailableEUt(tEnergy).setMaxParallel(maxParallel).setConsumption(true)
+                .setOutputCalculation(true);
 
         helper.build();
 
@@ -100,7 +101,7 @@ public class GT_MetaTileEntity_EM_quark_gluon_plasma extends GT_MetaTileEntity_E
                 .setDuration(tRecipe.mDuration).setParallel((int) Math.floor(helper.getCurrentParallel())).calculate();
 
         lEUt = -calculator.getConsumption();
-        mMaxProgresstime = (int) Math.ceil(calculator.getDuration() * helper.getDurationMultiplier());
+        mMaxProgresstime = (int) Math.ceil(calculator.getDuration() * helper.getDurationMultiplierDouble());
         mEfficiency = 10000;
         mEfficiencyIncrease = 10000;
         mOutputItems = helper.getItemOutputs();

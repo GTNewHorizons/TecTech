@@ -21,8 +21,8 @@ public class ForgeOfGodsBlock extends Block {
         super(Material.iron);
         this.setResistance(20f);
         this.setHardness(-1.0f);
-        this.setCreativeTab(TecTech.creativeTabEM);
-        this.setBlockName("Forge of Gods Renderer");
+        this.setCreativeTab(TecTech.creativeTabTecTech);
+        this.setBlockName("Forge of the Gods Renderer");
         this.setLightLevel(100.0f);
         registerOther(this);
     }

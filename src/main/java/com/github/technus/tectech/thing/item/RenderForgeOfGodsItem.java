@@ -1,7 +1,6 @@
 package com.github.technus.tectech.thing.item;
 
-import static com.github.technus.tectech.thing.block.RenderEyeOfHarmony.*;
-import static com.github.technus.tectech.thing.block.RenderEyeOfHarmony.starModel;
+import static com.github.technus.tectech.rendering.EOH.EOH_TESR.*;
 import static java.lang.Math.pow;
 
 import net.minecraft.item.ItemStack;

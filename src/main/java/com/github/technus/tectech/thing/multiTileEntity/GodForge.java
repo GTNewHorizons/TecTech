@@ -18,8 +18,8 @@ import com.gtnewhorizon.structurelib.util.Vec3Impl;
 import gregtech.api.GregTech_API;
 import gregtech.api.logic.ComplexParallelProcessingLogic;
 import gregtech.api.multitileentity.multiblock.base.ComplexParallelController;
+import gregtech.api.recipe.RecipeMaps;
 import gregtech.api.util.GT_Multiblock_Tooltip_Builder;
-import gregtech.api.util.GT_Recipe;
 
 public class GodForge extends ComplexParallelController<GodForge> {
 
@@ -33,9 +33,7 @@ public class GodForge extends ComplexParallelController<GodForge> {
 
     public GodForge() {
         super();
-        processingLogic = new ComplexParallelProcessingLogic(
-                GT_Recipe.GT_Recipe_Map_LargeChemicalReactor.sChemicalRecipes,
-                MAX_PROCESSES);
+        processingLogic = new ComplexParallelProcessingLogic(RecipeMaps.chemicalReactorRecipes, MAX_PROCESSES);
     }
 
     @Override

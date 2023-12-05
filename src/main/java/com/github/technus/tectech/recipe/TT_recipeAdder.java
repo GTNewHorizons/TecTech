@@ -233,7 +233,7 @@ public class TT_recipeAdder extends GT_RecipeAdder {
             itemInputs = nullItem;
         }
 
-        TT_recipe.GT_Recipe_MapTT.sGodforgePlasmaRecipes
+        TecTechRecipeMaps.godforgePlasmaRecipes
                 .addRecipe(false, itemInputs, null, null, null, fluidOutputs, machineDuration, machineEUt, 0);
         return true;
     }
@@ -245,7 +245,7 @@ public class TT_recipeAdder extends GT_RecipeAdder {
             afluidInputs = nullFluid;
         }
 
-        TT_recipe.GT_Recipe_MapTT.sGodforgePlasmaRecipes
+        TecTechRecipeMaps.godforgePlasmaRecipes
                 .addRecipe(false, null, null, null, afluidInputs, fluidOutputs, machineDuration, machineEUt, 0);
         return true;
     }

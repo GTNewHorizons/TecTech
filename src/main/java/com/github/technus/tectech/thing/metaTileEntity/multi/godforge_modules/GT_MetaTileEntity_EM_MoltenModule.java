@@ -102,8 +102,8 @@ public class GT_MetaTileEntity_EM_MoltenModule extends GT_MetaTileEntity_EM_Base
         }
 
         GT_ParallelHelper helper = new GT_ParallelHelper().setRecipe(tRecipe).setItemInputs(aItemInputs)
-                .setFluidInputs(aFluidInputs).setAvailableEUt(tEnergy).setMaxParallel(maxParallel).enableConsumption()
-                .enableOutputCalculation();
+                .setFluidInputs(aFluidInputs).setAvailableEUt(tEnergy).setMaxParallel(maxParallel).setConsumption(true)
+                .setOutputCalculation(true);
 
         helper.enableBatchMode((int) batchParam.get());
 
@@ -120,8 +120,8 @@ public class GT_MetaTileEntity_EM_MoltenModule extends GT_MetaTileEntity_EM_Base
                 .setDuration(tRecipe.mDuration).setAmperage(helper.getCurrentParallel())
                 .setParallel(helper.getCurrentParallel()).calculate();
 
-        EUt = (long) (-calculator.getConsumption() / helper.getDurationMultiplier());
-        mMaxProgresstime = (int) Math.ceil(calculator.getDuration() * helper.getDurationMultiplier());
+        EUt = (long) (-calculator.getConsumption() / helper.getDurationMultiplierDouble());
+        mMaxProgresstime = (int) Math.ceil(calculator.getDuration() * helper.getDurationMultiplierDouble());
 
         if (!addEUToGlobalEnergyMap(userUUID, EUt * mMaxProgresstime)) {
             stopMachine();

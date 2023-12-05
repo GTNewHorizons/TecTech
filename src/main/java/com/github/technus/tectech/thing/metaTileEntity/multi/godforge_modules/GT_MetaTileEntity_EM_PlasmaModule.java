@@ -1,6 +1,6 @@
 package com.github.technus.tectech.thing.metaTileEntity.multi.godforge_modules;
 
-import static com.github.technus.tectech.recipe.TT_recipe.GT_Recipe_MapTT.sGodforgePlasmaRecipes;
+import static com.github.technus.tectech.recipe.TecTechRecipeMaps.godforgePlasmaRecipes;
 import static com.github.technus.tectech.thing.casing.GT_Block_CasingsTT.texturePage;
 import static gregtech.api.util.GT_Utility.formatNumbers;
 import static net.minecraft.util.EnumChatFormatting.*;
@@ -85,7 +85,7 @@ public class GT_MetaTileEntity_EM_PlasmaModule extends GT_MetaTileEntity_EM_Base
         byte tTier = (byte) Math.max(1, GT_Utility.getTier(tVoltage));
         long tEnergy = maxParallel * tVoltage;
 
-        GT_Recipe tRecipe = sGodforgePlasmaRecipes.findRecipe(
+        GT_Recipe tRecipe = godforgePlasmaRecipes.findRecipe(
                 getBaseMetaTileEntity(),
                 false,
                 gregtech.api.enums.GT_Values.V[tTier],
@@ -97,8 +97,8 @@ public class GT_MetaTileEntity_EM_PlasmaModule extends GT_MetaTileEntity_EM_Base
         }
 
         GT_ParallelHelper helper = new GT_ParallelHelper().setRecipe(tRecipe).setItemInputs(aItemInputs)
-                .setFluidInputs(aFluidInputs).setAvailableEUt(tEnergy).setMaxParallel(maxParallel).enableConsumption()
-                .enableOutputCalculation();
+                .setFluidInputs(aFluidInputs).setAvailableEUt(tEnergy).setMaxParallel(maxParallel).setConsumption(true)
+                .setOutputCalculation(true);
 
         helper.build();
 
@@ -114,7 +114,7 @@ public class GT_MetaTileEntity_EM_PlasmaModule extends GT_MetaTileEntity_EM_Base
                 .setParallel(helper.getCurrentParallel()).calculate();
 
         EUt = -calculator.getConsumption();
-        mMaxProgresstime = (int) Math.ceil(calculator.getDuration() * helper.getDurationMultiplier());
+        mMaxProgresstime = (int) Math.ceil(calculator.getDuration() * helper.getDurationMultiplierDouble());
 
         if (!addEUToGlobalEnergyMap(userUUID, EUt * mMaxProgresstime)) {
             stopMachine();

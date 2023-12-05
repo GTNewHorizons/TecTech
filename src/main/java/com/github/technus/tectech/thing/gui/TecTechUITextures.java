@@ -116,8 +116,7 @@ public class TecTechUITextures {
     public static final UITexture PICTURE_PARAMETER_GRAY = UITexture.fullImage(MODID, "gui/picture/parameter_gray");
     public static final UITexture PICTURE_UNCERTAINTY_MONITOR_MULTIMACHINE = UITexture
             .fullImage(MODID, "gui/picture/uncertainty/monitor_multimachine");
-    public static final UITexture PICTURE_UPGRADE_CONNECTOR_FULL = UITexture
-            .fullImage(MODID, "gui/picture/connector");
+    public static final UITexture PICTURE_UPGRADE_CONNECTOR_FULL = UITexture.fullImage(MODID, "gui/picture/connector");
     public static final UITexture PICTURE_UPGRADE_CONNECTOR_EMPTY = UITexture
             .fullImage(MODID, "gui/picture/connector_empty");
     public static final UITexture PICTURE_UPGRADE_CONNECTOR_SWITCH = UITexture
