@@ -1,6 +1,7 @@
 package com.github.technus.tectech.recipe;
 
 import static com.github.technus.tectech.util.CommonValues.EOH_TIER_FANCY_NAMES;
+import static com.github.technus.tectech.util.TT_Utility.toStandardForm;
 import static com.google.common.math.LongMath.pow;
 import static gregtech.api.util.GT_Utility.formatNumbers;
 import static java.lang.Math.min;
@@ -242,7 +243,7 @@ public class TT_recipe extends GT_Recipe {
                 } else {
                     result.add(
                             GT_LanguageManager.addStringLocalization("EOH.Recipe.EU.Out", "EU Output") + ": "
-                                    + ReadableNumberConverter.INSTANCE.toWideReadableForm(recipe.getEUOutput())
+                                    + toStandardForm(recipe.getEUOutput())
                                     + " EU");
                 }
 
@@ -254,7 +255,7 @@ public class TT_recipe extends GT_Recipe {
                 } else {
                     result.add(
                             GT_LanguageManager.addStringLocalization("EOH.Recipe.EU.In", "EU Input") + ": "
-                                    + ReadableNumberConverter.INSTANCE.toWideReadableForm(recipe.getEUStartCost())
+                                    + toStandardForm(recipe.getEUStartCost())
                                     + " EU");
                 }
 
