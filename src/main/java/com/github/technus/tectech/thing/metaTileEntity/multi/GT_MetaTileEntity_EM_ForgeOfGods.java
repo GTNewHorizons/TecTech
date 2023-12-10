@@ -294,7 +294,7 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
             return false;
         }
 
-        // Make sure there are 2 input hatches.
+        // Make sure there are at least 2 input hatches.
         if (mInputHatches.size() != 1) {
             return false;
         }
@@ -586,7 +586,7 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
                                                                                                                      // Input
                                                                                                                      // Hatch
                 .addInputBus("Any Infinite Spacetime Casing", 1).addOutputBus("Any Infinite Spacetime Casing", 1)
-                .addOutputHatch("Any Infinite Spacetime Casing", 1).toolTipFinisher(CommonValues.TEC_MARK_EM);
+                .addOutputHatch("Any Infinite Spacetime Casing", 1).toolTipFinisher(CommonValues.GODFORGE_MARK);
         return tt;
     }
 

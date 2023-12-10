@@ -1,5 +1,6 @@
 package com.github.technus.tectech.thing.casing;
 
+import static com.github.technus.tectech.util.CommonValues.GODFORGE_MARK;
 import static gregtech.api.enums.GT_Values.AuthorColen;
 
 import java.util.List;
@@ -12,14 +13,15 @@ import net.minecraft.util.EnumChatFormatting;
 import gregtech.api.util.GT_LanguageManager;
 import gregtech.common.blocks.GT_Item_Casings_Abstract;
 
-public class GT_Item_Casings_GravitonModulation extends GT_Item_Casings_Abstract {
+public class GT_Item_Casings_Godforge extends GT_Item_Casings_Abstract {
 
-    public GT_Item_Casings_GravitonModulation(Block par1) {
+    public GT_Item_Casings_Godforge(Block par1) {
         super(par1);
     }
 
     @Override
     public void addInformation(ItemStack aStack, EntityPlayer aPlayer, List aList, boolean aF3_H) {
+        aList.add(GODFORGE_MARK);
         switch (aStack.getItemDamage()) {
             case 0:
             case 1:

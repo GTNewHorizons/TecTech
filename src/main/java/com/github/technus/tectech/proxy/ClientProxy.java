@@ -18,6 +18,8 @@ import net.minecraftforge.common.util.ForgeDirection;
 import com.github.technus.tectech.Reference;
 import com.github.technus.tectech.rendering.EOH.EOH_ItemRenderer;
 import com.github.technus.tectech.rendering.EOH.EOH_TESR;
+import com.github.technus.tectech.thing.block.GodforgeGlassBlock;
+import com.github.technus.tectech.thing.block.GodforgeGlassRender;
 import com.github.technus.tectech.thing.block.QuantumGlassBlock;
 import com.github.technus.tectech.thing.block.QuantumGlassRender;
 import com.github.technus.tectech.thing.block.RenderForgeOfGods;
@@ -37,6 +39,8 @@ public class ClientProxy extends CommonProxy {
     public void registerRenderInfo() {
         QuantumGlassBlock.renderID = RenderingRegistry.getNextAvailableRenderId();
         RenderingRegistry.registerBlockHandler(QuantumGlassBlock.renderID, new QuantumGlassRender());
+        GodforgeGlassBlock.renderID = RenderingRegistry.getNextAvailableRenderId();
+        RenderingRegistry.registerBlockHandler(GodforgeGlassBlock.renderID, new GodforgeGlassRender());
 
         MinecraftForgeClient
                 .registerItemRenderer(Item.getItemFromBlock(eyeOfHarmonyRenderBlock), new EOH_ItemRenderer());

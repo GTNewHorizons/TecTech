@@ -437,15 +437,14 @@ public enum CustomItemList implements IItemContainer {
     StabilisationFieldGeneratorTier7,
     StabilisationFieldGeneratorTier8,
 
-    GravitonFlowModulatorTier0,
-    GravitonFlowModulatorTier1,
-    GravitonFlowModulatorTier2,
-    GravitonFlowModulatorTier3,
-    GravitonFlowModulatorTier4,
-    GravitonFlowModulatorTier5,
-    GravitonFlowModulatorTier6,
-    GravitonFlowModulatorTier7,
-    GravitonFlowModulatorTier8,
+    Godforge_Gravitational_Lens,
+    Godforge_Singularity_Shielding_Casing,
+    Godforge_Guidance_Casing,
+    Godforge_Boundless_Structure_Casing,
+    Godforge_Magnetic_Confinement_Casing,
+    Godforge_GravitonFlowModulatorTier1,
+    Godforge_GravitonFlowModulatorTier2,
+    Godforge_GravitonFlowModulatorTier3,
 
     astralArrayFabricator;
 

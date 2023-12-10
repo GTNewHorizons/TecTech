@@ -22,7 +22,7 @@ public final class TT_Container_Casings {
     public static Block eyeOfHarmonyRenderBlock = new EOH_RenderBlock();
     public static Block forgeOfGodsRenderBlock = new ForgeOfGodsBlock();
 
-    public static Block GravitonFlowModulators;
+    public static Block GodforgeCasings;
 
     private TT_Container_Casings() {}
 }

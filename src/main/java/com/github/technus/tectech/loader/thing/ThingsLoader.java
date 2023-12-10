@@ -4,13 +4,14 @@ import static com.github.technus.tectech.Reference.MODID;
 import static com.github.technus.tectech.TecTech.tectechTexturePage1;
 
 import com.github.technus.tectech.TecTech;
+import com.github.technus.tectech.thing.block.GodforgeGlassBlock;
 import com.github.technus.tectech.thing.block.QuantumGlassBlock;
 import com.github.technus.tectech.thing.block.ReactorSimBlock;
 import com.github.technus.tectech.thing.block.TileEyeOfHarmony;
 import com.github.technus.tectech.thing.block.TileForgeOfGods;
 import com.github.technus.tectech.thing.casing.GT_Block_CasingsBA0;
 import com.github.technus.tectech.thing.casing.GT_Block_CasingsTT;
-import com.github.technus.tectech.thing.casing.GravitonModulationCasing;
+import com.github.technus.tectech.thing.casing.GodforgeCasings;
 import com.github.technus.tectech.thing.casing.SpacetimeCompressionFieldCasing;
 import com.github.technus.tectech.thing.casing.StabilisationFieldCasing;
 import com.github.technus.tectech.thing.casing.TT_Container_Casings;
@@ -63,8 +64,11 @@ public class ThingsLoader implements Runnable {
 
         TT_Container_Casings.StabilisationFieldGenerators = new StabilisationFieldCasing();
 
-        TT_Container_Casings.GravitonFlowModulators = new GravitonModulationCasing();
-        TecTech.LOGGER.info("Graviton Flow Modulators registered.");
+        TT_Container_Casings.GodforgeCasings = new GodforgeCasings();
+        TecTech.LOGGER.info("Godforge blocks registered.");
+
+        GodforgeGlassBlock.run();
+        TecTech.LOGGER.info("Godforge Glass registered");
 
         QuantumGlassBlock.run();
         TecTech.LOGGER.info("Quantum Glass registered");

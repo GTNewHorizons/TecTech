@@ -10,6 +10,10 @@ tile.quantumGlass.name=Quantum Glass
 tile.quantumGlass.desc.0=Dense yet transparent
 tile.quantumGlass.desc.1=Glassy & Classy
 
+tile.spatiallyTranscendentGravitationalLens.name=Spatially Transcendent Gravitational Lens Block
+tile.godforgeGlass.desc.0=Gravitational lensing taken literal
+tile.godforgeGlass.desc.1=GraviLens 9000!
+
 tile.reactorSim.name=Reactor Simulator
 tile.reactorSim.desc.0=Fission Reaction Uncertainty Resolver 9001
 tile.reactorSim.desc.1=Explodes, but not as much...
@@ -864,7 +868,7 @@ achievement.gt.stabilisation_field_generator.6=Perfect Stabilisation Field Gener
 achievement.gt.stabilisation_field_generator.7=Tipler Stabilisation Field Generator
 achievement.gt.stabilisation_field_generator.8=Gallifreyan Stabilisation Field Generator
 
-# Forge of Gods
+# Forge of Gods / Godforge
 achievement.gt.blockmachines.multimachine.em.forge_of_gods=FOG
 fog.upgrade.tt.1=Innumerably Construct
 fog.upgrade.tt.2=Gravitational Cleansing
