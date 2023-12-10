@@ -39,8 +39,8 @@ import gregtech.nei.formatter.INEISpecialInfoFormatter;
 @MethodsReturnNonnullByDefault
 public class EyeOfHarmonyFrontend extends RecipeMapFrontend {
 
-    private static final int xDirMaxCount = 9;
-    private static final int itemRows = 9, fluidRows = 2;
+    private static final int xDirMaxCount = 20;
+    public static final int itemRows = 9, fluidRows = 2;
     public static final int maxItemInputs = 1, maxItemOutputs = xDirMaxCount * itemRows, maxFluidInputs = 0,
             maxFluidOutputs = xDirMaxCount * fluidRows;
     private static final int yOrigin = 8;
@@ -49,21 +49,21 @@ public class EyeOfHarmonyFrontend extends RecipeMapFrontend {
     public EyeOfHarmonyFrontend(BasicUIPropertiesBuilder uiPropertiesBuilder,
             NEIRecipePropertiesBuilder neiPropertiesBuilder) {
         super(
-                uiPropertiesBuilder.logoPos(new Pos2d(8, yOrigin)),
-                neiPropertiesBuilder.recipeBackgroundSize(new Size(170, 117 + (itemRows + fluidRows - 4) * 18))
+                uiPropertiesBuilder.logoPos(new Pos2d(-1000, -1000)),
+                neiPropertiesBuilder.recipeBackgroundOffset(new Pos2d(3-100, 3)).recipeBackgroundSize(new Size(370, 117 + (itemRows + fluidRows - 4) * 18))
                         .neiSpecialInfoFormatter(new EyeOfHarmonySpecialValueFormatter()));
     }
 
     @Override
     public List<Pos2d> getItemInputPositions(int itemInputCount) {
-        return UIHelper.getGridPositions(itemInputCount, 79, yOrigin, 1, 1);
+        return UIHelper.getGridPositions(itemInputCount, 80, yOrigin, 1, 1);
     }
 
-    public static final int maxItemsToRender = 80;
+    public static final int maxItemsToRender = itemRows * xDirMaxCount - 1;
 
     @Override
     public List<Pos2d> getItemOutputPositions(int itemOutputCount) {
-        return UIHelper.getGridPositions(min(itemOutputCount, maxItemsToRender + 1), 7, yOrigin + 36, xDirMaxCount, 12);
+        return UIHelper.getGridPositions(min(itemOutputCount, maxItemsToRender + 1), 7-100, yOrigin + 36, xDirMaxCount, 12);
     }
 
     @Override
@@ -73,7 +73,7 @@ public class EyeOfHarmonyFrontend extends RecipeMapFrontend {
 
     @Override
     public List<Pos2d> getFluidOutputPositions(int fluidOutputCount) {
-        return UIHelper.getGridPositions(fluidOutputCount, 7, yOrigin + 13 * 17 - 7 - 16, xDirMaxCount, 3);
+        return UIHelper.getGridPositions(fluidOutputCount, 7-100, yOrigin + 13 * 17 - 7 - 16, xDirMaxCount, 3);
     }
 
     @Override

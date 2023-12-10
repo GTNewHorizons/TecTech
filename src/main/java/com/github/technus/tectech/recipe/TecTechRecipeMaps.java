@@ -13,6 +13,9 @@ import gregtech.api.recipe.RecipeMapBackend;
 import gregtech.api.recipe.RecipeMapBuilder;
 import gregtech.api.util.GT_Recipe;
 
+import static com.github.technus.tectech.recipe.EyeOfHarmonyFrontend.fluidRows;
+import static com.github.technus.tectech.recipe.EyeOfHarmonyFrontend.itemRows;
+
 public class TecTechRecipeMaps {
 
     public static void init() {}
@@ -28,7 +31,7 @@ public class TecTechRecipeMaps {
             .minInputs(1, 0).progressBar(GT_UITextures.PROGRESSBAR_HAMMER, ProgressBar.Direction.DOWN)
             .progressBarPos(78, 24 + 2).logoPos(10, 10)
             .neiHandlerInfo(
-                    builder -> builder.setDisplayStack(CustomItemList.Machine_Multi_EyeOfHarmony.get(1))
+                    builder -> builder.setDisplayStack(CustomItemList.Machine_Multi_EyeOfHarmony.get(1)).setWidth(370).setHeight(117 + (itemRows + fluidRows - 4) * 18)
                             .setMaxRecipesPerPage(1))
             .frontend(EyeOfHarmonyFrontend::new).build();
     public static final RecipeMap<RecipeMapBackend> researchStationFakeRecipes = RecipeMapBuilder

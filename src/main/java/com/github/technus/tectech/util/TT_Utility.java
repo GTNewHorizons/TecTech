@@ -169,6 +169,21 @@ public final class TT_Utility {
         return mantissa + "*10^" + exponent;
     }
 
+    public static String formatNumberWithPostfix(long number) {
+        if (number < 1_000) {
+            return String.valueOf(number);
+        } else if (number < 1_000_000) {
+            return (number / 1000) + "K";
+        } else if (number < 1_000_000_000) {
+            return (number / 1_000_000) + "M";
+        } else if (number < 1_000_000_000_000L) {
+            return (number / 1_000_000_000) + "B";
+        } else {
+            return (number / 1_000_000_000_000L) + "T";
+        }
+    }
+
+
     public static String doubleToString(double value) {
         if (value == (long) value) {
             return Long.toString((long) value);
