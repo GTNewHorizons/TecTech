@@ -154,6 +154,21 @@ public final class TT_Utility {
         return previousValue;
     }
 
+    // Formats to standard form.
+    public static String toStandardForm(long number) {
+        if (number == 0) {
+            return "0";
+        }
+
+        int exponent = (int) Math.floor(Math.log10(Math.abs(number)));
+        double mantissa = number / Math.pow(10, exponent);
+
+        // Round the mantissa to two decimal places
+        mantissa = Math.round(mantissa * 100.0) / 100.0;
+
+        return mantissa + "*10^" + exponent;
+    }
+
     public static String doubleToString(double value) {
         if (value == (long) value) {
             return Long.toString((long) value);
