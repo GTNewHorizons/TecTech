@@ -2,9 +2,31 @@ package com.github.technus.tectech.loader.recipe;
 
 import static com.github.technus.tectech.loader.recipe.BaseRecipeLoader.getItemContainer;
 import static com.google.common.math.LongMath.pow;
-import static gregtech.api.enums.Mods.*;
+import static gregtech.api.enums.Mods.Avaritia;
+import static gregtech.api.enums.Mods.AvaritiaAddons;
+import static gregtech.api.enums.Mods.BartWorks;
+import static gregtech.api.enums.Mods.BloodMagic;
+import static gregtech.api.enums.Mods.DraconicEvolution;
+import static gregtech.api.enums.Mods.EternalSingularity;
+import static gregtech.api.enums.Mods.ExtraUtilities;
+import static gregtech.api.enums.Mods.GTNHIntergalactic;
+import static gregtech.api.enums.Mods.GTPlusPlus;
+import static gregtech.api.enums.Mods.GTPlusPlusEverglades;
+import static gregtech.api.enums.Mods.GalaxySpace;
+import static gregtech.api.enums.Mods.GoodGenerator;
+import static gregtech.api.enums.Mods.GraviSuite;
+import static gregtech.api.enums.Mods.GregTech;
+import static gregtech.api.enums.Mods.IndustrialCraft2;
+import static gregtech.api.enums.Mods.KekzTech;
+import static gregtech.api.enums.Mods.KubaTech;
+import static gregtech.api.enums.Mods.NewHorizonsCoreMod;
+import static gregtech.api.enums.Mods.SGCraft;
+import static gregtech.api.enums.Mods.SuperSolarPanels;
+import static gregtech.api.enums.Mods.Thaumcraft;
+import static gregtech.api.enums.Mods.TinkersGregworks;
 import static gregtech.api.util.GT_ModHandler.getModItem;
 import static gregtech.api.util.GT_RecipeBuilder.MINUTES;
+import static gregtech.api.util.GT_RecipeBuilder.SECONDS;
 
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.Fluid;
@@ -3021,6 +3043,34 @@ public class ResearchStationAssemblyLine implements Runnable {
                     10_000,
                     (int) TierEU.RECIPE_UMV);
         }
+
+        // Astral Array Fabricator
+        TT_recipeAdder.addResearchableAssemblylineRecipe(
+                CustomItemList.SpacetimeCompressionFieldGeneratorTier8.get(1),
+                480_000_000,
+                32_768,
+                (int) TierEU.RECIPE_MAX,
+                64,
+                new Object[] { GT_OreDictUnificator.get(OrePrefixes.frameGt, MaterialsUEVplus.WhiteDwarfMatter, 8),
+                        GT_OreDictUnificator.get(OrePrefixes.frameGt, MaterialsUEVplus.BlackDwarfMatter, 8),
+                        ItemList.EnergisedTesseract.get(32),
+                        GT_OreDictUnificator.get(OrePrefixes.nanite, MaterialsUEVplus.Eternity, 16),
+                        CustomItemList.SpacetimeCompressionFieldGeneratorTier8.get(64),
+                        CustomItemList.SpacetimeCompressionFieldGeneratorTier8.get(64),
+                        CustomItemList.SpacetimeCompressionFieldGeneratorTier8.get(10),
+                        CustomItemList.TimeAccelerationFieldGeneratorTier8.get(64),
+                        CustomItemList.TimeAccelerationFieldGeneratorTier8.get(64),
+                        CustomItemList.TimeAccelerationFieldGeneratorTier8.get(40),
+                        CustomItemList.StabilisationFieldGeneratorTier8.get(48),
+                        CustomItemList.EOH_Infinite_Energy_Casing.get(32),
+                        CustomItemList.EOH_Reinforced_Temporal_Casing.get(64),
+                        CustomItemList.EOH_Reinforced_Spatial_Casing.get(64), ItemList.Field_Generator_UMV.get(16) },
+                new FluidStack[] { MaterialsUEVplus.Space.getMolten(32_768L * 64),
+                        MaterialsUEVplus.Eternity.getMolten(16_384L * 64),
+                        MaterialsUEVplus.ExcitedDTSC.getFluid(8_192L * 64) },
+                CustomItemList.astralArrayFabricator.get(1),
+                300 * SECONDS,
+                (int) TierEU.RECIPE_UXV);
 
     }
 

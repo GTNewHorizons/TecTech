@@ -3,9 +3,18 @@ package com.github.technus.tectech.thing.metaTileEntity.multi.base;
 import static com.github.technus.tectech.loader.TecTechConfig.DEBUG_MODE;
 import static com.github.technus.tectech.loader.TecTechConfig.POWERLESS_MODE;
 import static com.github.technus.tectech.thing.casing.GT_Block_CasingsTT.texturePage;
-import static com.github.technus.tectech.util.CommonValues.*;
+import static com.github.technus.tectech.util.CommonValues.MULTI_CHECK_AT;
+import static com.github.technus.tectech.util.CommonValues.RECIPE_AT;
+import static com.github.technus.tectech.util.CommonValues.TEC_MARK_GENERAL;
+import static com.github.technus.tectech.util.CommonValues.V;
+import static com.github.technus.tectech.util.CommonValues.VN;
 import static com.github.technus.tectech.util.TT_Utility.getTier;
-import static gregtech.api.enums.GT_HatchElement.*;
+import static gregtech.api.enums.GT_HatchElement.InputBus;
+import static gregtech.api.enums.GT_HatchElement.InputHatch;
+import static gregtech.api.enums.GT_HatchElement.Maintenance;
+import static gregtech.api.enums.GT_HatchElement.Muffler;
+import static gregtech.api.enums.GT_HatchElement.OutputBus;
+import static gregtech.api.enums.GT_HatchElement.OutputHatch;
 import static gregtech.api.metatileentity.BaseTileEntity.TOOLTIP_DELAY;
 import static gregtech.api.util.GT_Utility.filterValidMTEs;
 import static java.lang.Math.min;
@@ -90,7 +99,6 @@ import gregtech.api.recipe.check.CheckRecipeResult;
 import gregtech.api.recipe.check.CheckRecipeResultRegistry;
 import gregtech.api.util.GT_HatchElementBuilder;
 import gregtech.api.util.GT_Multiblock_Tooltip_Builder;
-import gregtech.api.util.GT_Recipe;
 import gregtech.api.util.GT_Utility;
 import gregtech.api.util.IGT_HatchAdder;
 import gregtech.common.GT_Pollution;
@@ -847,14 +855,6 @@ public abstract class GT_MetaTileEntity_MultiblockBase_EM
         for (int i = 0; i < parametrization.eParamsOutStatus.length; i++) {
             parametrization.eParamsOutStatus[i] = LedStatus.getStatus(paramOs.getByte(Integer.toString(i)));
         }
-    }
-
-    /**
-     * If you want to use GT recipe maps.
-     */
-    @Override
-    public GT_Recipe.GT_Recipe_Map getRecipeMap() {
-        return null;
     }
 
     /**

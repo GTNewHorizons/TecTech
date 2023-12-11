@@ -1,7 +1,7 @@
 package com.github.technus.tectech.recipe;
 
 import static com.github.technus.tectech.recipe.EyeOfHarmonyRecipe.processHelper;
-import static com.github.technus.tectech.recipe.TT_recipe.GT_Recipe_MapTT.sEyeofHarmonyRecipes;
+import static com.github.technus.tectech.recipe.TecTechRecipeMaps.eyeOfHarmonyRecipes;
 import static java.lang.Math.pow;
 
 import java.util.ArrayList;
@@ -10,13 +10,16 @@ import java.util.HashSet;
 
 import net.minecraft.block.Block;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.fluids.FluidStack;
 
 import org.apache.commons.lang3.tuple.Pair;
 
+import com.github.technus.tectech.util.FluidStackLong;
 import com.github.technus.tectech.util.ItemStackLong;
 import com.google.common.math.LongMath;
 
 import gregtech.api.enums.Materials;
+import gregtech.api.enums.MaterialsUEVplus;
 import gregtech.api.enums.OrePrefixes;
 import gregtech.api.util.GT_OreDictUnificator;
 import pers.gwyog.gtneioreplugin.plugin.block.BlockDimensionDisplay;
@@ -99,17 +102,23 @@ public class EyeOfHarmonyRecipeStorage {
                 outputItems.add(itemStackLong.itemStack);
             }
 
+            ArrayList<FluidStack> outputFluids = new ArrayList<>();
+            for (FluidStackLong fluidStackLong : recipe.getOutputFluids()) {
+                outputFluids.add(fluidStackLong.fluidStack);
+            }
+
             ItemStack planetItem = recipe.getRecipeTriggerItem().copy();
             planetItem.stackSize = 0;
 
-            sEyeofHarmonyRecipes.addRecipe(
+            eyeOfHarmonyRecipes.addRecipe(
                     false,
                     new ItemStack[] { planetItem },
                     outputItems.toArray(new ItemStack[0]),
                     recipe,
                     null,
-                    null,
-                    recipe.getOutputFluids(),
+                    new FluidStack[] { Materials.Hydrogen.getGas(0), Materials.Helium.getGas(0),
+                            MaterialsUEVplus.RawStarMatter.getFluid(0) },
+                    outputFluids.toArray(new FluidStack[0]),
                     (int) recipe.getRecipeTimeInTicks(),
                     0,
                     0);

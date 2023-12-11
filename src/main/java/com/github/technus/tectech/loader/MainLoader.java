@@ -1,6 +1,9 @@
 package com.github.technus.tectech.loader;
 
-import static com.github.technus.tectech.TecTech.*;
+import static com.github.technus.tectech.TecTech.LOGGER;
+import static com.github.technus.tectech.TecTech.configTecTech;
+import static com.github.technus.tectech.TecTech.creativeTabTecTech;
+import static com.github.technus.tectech.TecTech.proxy;
 import static com.github.technus.tectech.loader.TecTechConfig.DEBUG_MODE;
 import static gregtech.api.enums.Mods.NewHorizonsCoreMod;
 import static gregtech.api.enums.Mods.TwilightForest;
@@ -25,6 +28,7 @@ import cpw.mods.fml.common.ProgressManager;
 import cpw.mods.fml.common.registry.GameRegistry;
 import gregtech.api.GregTech_API;
 import gregtech.api.enums.Materials;
+import gregtech.api.recipe.RecipeMaps;
 import gregtech.api.util.GT_Recipe;
 
 @SuppressWarnings("deprecation")
@@ -143,7 +147,7 @@ public final class MainLoader {
                 }
             }
         }
-        for (GT_Recipe r : GT_Recipe.GT_Recipe_Map.sFusionRecipes.mRecipeList) {
+        for (GT_Recipe r : RecipeMaps.fusionRecipes.getAllRecipes()) {
             Fluid fluid = binds.get(r.mFluidOutputs[0].getFluid());
             if (fluid != null) {
                 if (DEBUG_MODE) {
