@@ -2237,7 +2237,7 @@ public class MachineLoader implements Runnable {
                         .getStackForm(1L));
         UnusedStuff.set(new ItemStack(Blocks.air));
         hatch_CreativeUncertainty.set(
-                new GT_MetaTileEntity_Hatch_CreativeUncertainty(15510, "debug.tt.certain", "Uncertainty Resolution", 10)
+                new GT_MetaTileEntity_Hatch_CreativeUncertainty(15510, "debug.tt.certain", "Uncertainty Resolution", 14)
                         .getStackForm(1));
 
         // ===================================================================================================
