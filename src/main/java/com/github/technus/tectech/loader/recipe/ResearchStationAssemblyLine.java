@@ -25,9 +25,11 @@ import static gregtech.api.enums.Mods.SuperSolarPanels;
 import static gregtech.api.enums.Mods.Thaumcraft;
 import static gregtech.api.enums.Mods.TinkersGregworks;
 import static gregtech.api.util.GT_ModHandler.getModItem;
+import static gregtech.api.util.GT_RecipeBuilder.INGOTS;
 import static gregtech.api.util.GT_RecipeBuilder.MINUTES;
 import static gregtech.api.util.GT_RecipeBuilder.SECONDS;
 
+import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
@@ -1222,6 +1224,28 @@ public class ResearchStationAssemblyLine implements Runnable {
                 6000,
                 500000);
 
+        if (GTPlusPlus.isModLoaded()) {
+            // Debug uncertainty resolver
+            TT_recipeAdder.addResearchableAssemblylineRecipe(
+                    CustomItemList.UncertaintyX_Hatch.get(1L),
+                    720_000_000,
+                    5_120,
+                    16_000_000,
+                    6,
+                    new Object[] { CustomItemList.UncertaintyX_Hatch.get(1L),
+                            CustomItemList.hatch_CreativeMaintenance.get(1), ItemList.Field_Generator_UIV.get(1L),
+                            GregtechItemList.Laser_Lens_Special.get(4),
+                            new Object[] { OrePrefixes.circuit.get(Materials.Piko), 1 },
+                            new Object[] { OrePrefixes.circuit.get(Materials.Piko), 1 },
+                            CustomItemList.DATApipe.get(64), CustomItemList.DATApipe.get(64),
+                            ItemList.Cover_Screen.get(1), new ItemStack(Blocks.stone_button, 16) },
+                    new FluidStack[] { Materials.Iridium.getMolten(INGOTS * 100),
+                            new FluidStack(ELEMENT.getInstance().NEPTUNIUM.getPlasma(), 20000),
+                            new FluidStack(ELEMENT.getInstance().FERMIUM.getPlasma(), 20000) },
+                    CustomItemList.hatch_CreativeUncertainty.get(1),
+                    200 * 20,
+                    (int) TierEU.RECIPE_UIV);
+        }
     }
 
     private void itemPartsUHVAsslineRecipes() {

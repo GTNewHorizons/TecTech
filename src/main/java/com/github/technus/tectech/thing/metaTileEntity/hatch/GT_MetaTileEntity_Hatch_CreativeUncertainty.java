@@ -30,11 +30,11 @@ public class GT_MetaTileEntity_Hatch_CreativeUncertainty extends GT_MetaTileEnti
     public String[] getDescription() {
         return new String[] { CommonValues.TEC_MARK_EM, translateToLocal("gt.blockmachines.debug.tt.certain.desc.0"), // Feeling
                                                                                                                       // certain,
-                                                                                                                      // isn't
-                                                                                                                      // it?
+                                                                                                                      // for
+                                                                                                                      // sure
                 EnumChatFormatting.AQUA.toString() + EnumChatFormatting.BOLD
-                        + translateToLocal("gt.blockmachines.debug.tt.certain.desc.1") // Schrödinger's cat ran out of
-                                                                                       // the box
+                        + translateToLocal("gt.blockmachines.debug.tt.certain.desc.1") // Schrödinger's cat escaped the
+                                                                                       // box
         };
     }
 
