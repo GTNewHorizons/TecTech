@@ -9,7 +9,7 @@ dependencies {
     compileOnly("TGregworks:TGregworks:1.7.10-GTNH-1.0.23:deobf") {transitive=false}
     compileOnly('com.github.GTNewHorizons:TinkersConstruct:1.11.5-GTNH:dev') {transitive=false}
     compileOnly('com.github.GTNewHorizons:OpenComputers:1.10.6-GTNH:dev') {transitive=false}
-    compileOnly('com.github.GTNewHorizons:GTplusplus:1.11.13:dev') {transitive=false}
+    compileOnly('com.github.GTNewHorizons:GTplusplus:1.11.15:dev') {transitive=false}
     compileOnly('com.github.GTNewHorizons:Avaritia:1.49:dev') {transitive=false}
 
     compileOnly('thaumcraft:Thaumcraft:1.7.10-4.2.3.5:dev') {transitive=false}
@@ -19,7 +19,7 @@ dependencies {
     //runtimeOnlyNonPublishable("TGregworks:TGregworks:1.7.10-GTNH-1.0.23:deobf")
     //runtimeOnlyNonPublishable('com.github.GTNewHorizons:TinkersConstruct:1.11.5-GTNH:dev')
     //runtimeOnlyNonPublishable('com.github.GTNewHorizons:NewHorizonsCoreMod:2.3.13:dev')
-    //runtimeOnlyNonPublishable('com.github.GTNewHorizons:GoodGenerator:0.8.2:dev') {
+    //runtimeOnlyNonPublishable('com.github.GTNewHorizons:GoodGenerator:0.8.4:dev') {
     //    exclude group: "com.github.GTNewHorizons", module: "TecTech"
     //}
     //runtimeOnlyNonPublishable("curse.maven:extra-utilities-225561:2264384") {transitive=false}
