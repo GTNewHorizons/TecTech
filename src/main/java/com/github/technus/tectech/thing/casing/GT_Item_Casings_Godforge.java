@@ -72,12 +72,11 @@ public class GT_Item_Casings_Godforge extends GT_Item_Casings_Abstract {
                 aList.add(
                         GT_LanguageManager.addStringLocalization(
                                 "godforge.casings.4.Tooltip.0",
-                                "Controls the flow of gravitons to manipulate gravity"));
+                                "Taps into streams of stellar matter to harness its heat energy"));
                 aList.add(
                         AQUA.toString() + BOLD
-                                + GT_LanguageManager.addStringLocalization(
-                                        "godforge.casings.4.Tooltip.1",
-                                        "Exponential scaling past 800 Galaxies"));
+                                + GT_LanguageManager
+                                        .addStringLocalization("godforge.casings.4.Tooltip.1", "Turn up the heat!"));
                 break;
             case 5:
                 aList.add(
@@ -86,8 +85,9 @@ public class GT_Item_Casings_Godforge extends GT_Item_Casings_Abstract {
                                 "Controls the flow of gravitons to manipulate gravity"));
                 aList.add(
                         AQUA.toString() + BOLD
-                                + GT_LanguageManager
-                                        .addStringLocalization("godforge.casings.5.Tooltip.1", "Getting closer..."));
+                                + GT_LanguageManager.addStringLocalization(
+                                        "godforge.casings.5.Tooltip.1",
+                                        "Exponential scaling past 800 Galaxies"));
                 break;
             case 6:
                 aList.add(
@@ -97,7 +97,17 @@ public class GT_Item_Casings_Godforge extends GT_Item_Casings_Abstract {
                 aList.add(
                         AQUA.toString() + BOLD
                                 + GT_LanguageManager
-                                        .addStringLocalization("godforge.casings.6.Tooltip.1", "Gravity Central"));
+                                        .addStringLocalization("godforge.casings.6.Tooltip.1", "Getting closer..."));
+                break;
+            case 7:
+                aList.add(
+                        GT_LanguageManager.addStringLocalization(
+                                "godforge.casings.7.Tooltip.0",
+                                "Controls the flow of gravitons to manipulate gravity"));
+                aList.add(
+                        AQUA.toString() + BOLD
+                                + GT_LanguageManager
+                                        .addStringLocalization("godforge.casings.7.Tooltip.1", "Gravity Central"));
                 break;
             default:
                 aList.add(
