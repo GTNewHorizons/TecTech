@@ -25,6 +25,7 @@ public class GodforgeCasings extends GT_Block_Casings_Abstract {
     private static IIcon GodforgeInner;
     private static IIcon GodforgeSupport;
     private static IIcon GodforgeOuter;
+    private static IIcon GodforgeEnergy;
     private static IIcon GravitonModulatorT1;
     private static IIcon GravitonModulatorT2;
     private static IIcon GravitonModulatorT3;
@@ -47,17 +48,19 @@ public class GodforgeCasings extends GT_Block_Casings_Abstract {
         GT_LanguageManager.addStringLocalization(
                 getUnlocalizedName() + ".3.name",
                 "Transcendentally Amplified Magnetic Confinement Casing");
-        GT_LanguageManager.addStringLocalization(getUnlocalizedName() + ".4.name", "Remote Graviton Flow Modulator");
-        GT_LanguageManager.addStringLocalization(getUnlocalizedName() + ".5.name", "Medial Graviton Flow Modulator");
-        GT_LanguageManager.addStringLocalization(getUnlocalizedName() + ".6.name", "Central Graviton Flow Modulator");
+        GT_LanguageManager.addStringLocalization(getUnlocalizedName() + ".4.name", "Stellar Energy Siphon Casing");
+        GT_LanguageManager.addStringLocalization(getUnlocalizedName() + ".5.name", "Remote Graviton Flow Modulator");
+        GT_LanguageManager.addStringLocalization(getUnlocalizedName() + ".6.name", "Medial Graviton Flow Modulator");
+        GT_LanguageManager.addStringLocalization(getUnlocalizedName() + ".7.name", "Central Graviton Flow Modulator");
 
         CustomItemList.Godforge_Singularity_Shielding_Casing.set(new ItemStack(this, 1, 0));
         CustomItemList.Godforge_Guidance_Casing.set(new ItemStack(this, 1, 1));
         CustomItemList.Godforge_Boundless_Structure_Casing.set(new ItemStack(this, 1, 2));
         CustomItemList.Godforge_Magnetic_Confinement_Casing.set(new ItemStack(this, 1, 3));
-        CustomItemList.Godforge_GravitonFlowModulatorTier1.set(new ItemStack(this, 1, 4));
-        CustomItemList.Godforge_GravitonFlowModulatorTier2.set(new ItemStack(this, 1, 5));
-        CustomItemList.Godforge_GravitonFlowModulatorTier3.set(new ItemStack(this, 1, 6));
+        CustomItemList.Godforge_Stellar_Energy_Siphon_Casing.set(new ItemStack(this, 1, 4));
+        CustomItemList.Godforge_GravitonFlowModulatorTier1.set(new ItemStack(this, 1, 5));
+        CustomItemList.Godforge_GravitonFlowModulatorTier2.set(new ItemStack(this, 1, 6));
+        CustomItemList.Godforge_GravitonFlowModulatorTier3.set(new ItemStack(this, 1, 7));
     }
 
     @Override
@@ -66,6 +69,7 @@ public class GodforgeCasings extends GT_Block_Casings_Abstract {
         GodforgeInner = aIconRegister.registerIcon("gregtech:iconsets/GODFORGE_INNER");
         GodforgeSupport = aIconRegister.registerIcon("gregtech:iconsets/GODFORGE_SUPPORT");
         GodforgeOuter = aIconRegister.registerIcon("gregtech:iconsets/GRAVITON_TOP_BOTTOM");
+        GodforgeEnergy = aIconRegister.registerIcon("gregtech:iconsets/GODFORGE_ENERGY");
         GravitonModulatorT1 = aIconRegister.registerIcon("gregtech:iconsets/GRAVITON_CASING_2");
         GravitonModulatorT2 = aIconRegister.registerIcon("gregtech:iconsets/GRAVITON_CASING_1");
         GravitonModulatorT3 = aIconRegister.registerIcon("gregtech:iconsets/GRAVITON_CASING_0");
@@ -83,16 +87,18 @@ public class GodforgeCasings extends GT_Block_Casings_Abstract {
             case 3:
                 return GodforgeOuter;
             case 4:
-                if (aSide < 2) {
-                    return GodforgeOuter;
-                }
-                return GravitonModulatorT1;
+                return GodforgeEnergy;
             case 5:
                 if (aSide < 2) {
                     return GodforgeOuter;
                 }
-                return GravitonModulatorT2;
+                return GravitonModulatorT1;
             case 6:
+                if (aSide < 2) {
+                    return GodforgeOuter;
+                }
+                return GravitonModulatorT2;
+            case 7:
                 if (aSide < 2) {
                     return GodforgeOuter;
                 }
@@ -112,7 +118,7 @@ public class GodforgeCasings extends GT_Block_Casings_Abstract {
     @SuppressWarnings("unchecked")
     @Override
     public void getSubBlocks(Item aItem, CreativeTabs par2CreativeTabs, List aList) {
-        for (int i = 0; i <= 6; i++) {
+        for (int i = 0; i <= 7; i++) {
             aList.add(new ItemStack(aItem, 1, i));
         }
     }

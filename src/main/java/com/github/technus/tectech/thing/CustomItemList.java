@@ -442,6 +442,7 @@ public enum CustomItemList implements IItemContainer {
     Godforge_Guidance_Casing,
     Godforge_Boundless_Structure_Casing,
     Godforge_Magnetic_Confinement_Casing,
+    Godforge_Stellar_Energy_Siphon_Casing,
     Godforge_GravitonFlowModulatorTier1,
     Godforge_GravitonFlowModulatorTier2,
     Godforge_GravitonFlowModulatorTier3,
