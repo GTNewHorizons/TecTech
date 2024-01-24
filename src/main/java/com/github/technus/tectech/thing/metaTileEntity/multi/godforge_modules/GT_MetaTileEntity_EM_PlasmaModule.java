@@ -7,11 +7,14 @@ import static net.minecraft.util.EnumChatFormatting.*;
 import static net.minecraft.util.EnumChatFormatting.RESET;
 import static net.minecraft.util.StatCollector.translateToLocal;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
 
-import net.minecraft.item.ItemStack;
+import javax.annotation.Nonnull;
+
 import net.minecraftforge.common.util.ForgeDirection;
-import net.minecraftforge.fluids.FluidStack;
+
+import org.jetbrains.annotations.NotNull;
 
 import com.github.technus.tectech.thing.metaTileEntity.multi.GT_MetaTileEntity_EM_ForgeOfGods;
 import com.github.technus.tectech.thing.metaTileEntity.multi.base.*;
@@ -23,7 +26,10 @@ import gregtech.api.interfaces.IGlobalWirelessEnergy;
 import gregtech.api.interfaces.ITexture;
 import gregtech.api.interfaces.metatileentity.IMetaTileEntity;
 import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
-import gregtech.api.metatileentity.implementations.GT_MetaTileEntity_Hatch_InputBus;
+import gregtech.api.logic.ProcessingLogic;
+import gregtech.api.recipe.RecipeMap;
+import gregtech.api.recipe.check.CheckRecipeResult;
+import gregtech.api.recipe.check.CheckRecipeResultRegistry;
 import gregtech.api.util.*;
 
 public class GT_MetaTileEntity_EM_PlasmaModule extends GT_MetaTileEntity_EM_BaseModule
@@ -31,8 +37,8 @@ public class GT_MetaTileEntity_EM_PlasmaModule extends GT_MetaTileEntity_EM_Base
 
     Parameters.Group.ParameterIn parallelParam;
     private int solenoidCoilMetadata = 7;
-    private static long EUt = 0;
-    private static int currentParallel = 0;
+    private long EUt = 0;
+    private int currentParallel = 0;
 
     public GT_MetaTileEntity_EM_PlasmaModule(int aID, String aName, String aNameRegional) {
         super(aID, aName, aNameRegional);
@@ -47,85 +53,49 @@ public class GT_MetaTileEntity_EM_PlasmaModule extends GT_MetaTileEntity_EM_Base
         return new GT_MetaTileEntity_EM_PlasmaModule(mName);
     }
 
+    long wirelessEUt = 0;
+
     @Override
-    public boolean checkRecipe_EM(ItemStack aStack) {
-        ItemStack[] tInputs;
-        FluidStack[] tFluids = this.getStoredFluids().toArray(new FluidStack[0]);
+    protected ProcessingLogic createProcessingLogic() {
+        return new ProcessingLogic() {
 
-        if (inputSeparation) {
-            ArrayList<ItemStack> tInputList = new ArrayList<>();
-            for (GT_MetaTileEntity_Hatch_InputBus tHatch : mInputBusses) {
-                IGregTechTileEntity tInputBus = tHatch.getBaseMetaTileEntity();
-                for (int i = tInputBus.getSizeInventory() - 1; i >= 0; i--) {
-                    if (tInputBus.getStackInSlot(i) != null) tInputList.add(tInputBus.getStackInSlot(i));
+            @NotNull
+            @Override
+            protected CheckRecipeResult validateRecipe(@Nonnull GT_Recipe recipe) {
+                maxParallel = (int) parallelParam.get();
+                wirelessEUt = (long) recipe.mEUt * maxParallel;
+                if (getUserEU(userUUID).compareTo(BigInteger.valueOf(wirelessEUt * recipe.mDuration)) < 0) {
+                    return CheckRecipeResultRegistry.insufficientPower(wirelessEUt * recipe.mDuration);
                 }
-                tInputs = tInputList.toArray(new ItemStack[0]);
-
-                if (processRecipe(tInputs, tFluids)) return true;
-                else tInputList.clear();
+                return CheckRecipeResultRegistry.SUCCESSFUL;
             }
-        } else {
-            tInputs = getStoredInputs().toArray(new ItemStack[0]);
-            return processRecipe(tInputs, tFluids);
-        }
-        return false;
+
+            @NotNull
+            @Override
+            protected CheckRecipeResult onRecipeStart(@Nonnull GT_Recipe recipe) {
+                wirelessEUt = (long) recipe.mEUt * maxParallel;
+                if (!addEUToGlobalEnergyMap(userUUID, -calculatedEut * duration)) {
+                    return CheckRecipeResultRegistry.insufficientPower(wirelessEUt * recipe.mDuration);
+                }
+                currentParallel = calculatedParallels;
+                EUt = calculatedEut;
+                setCalculatedEut(0);
+                return CheckRecipeResultRegistry.SUCCESSFUL;
+            }
+
+            @Nonnull
+            @Override
+            protected GT_OverclockCalculator createOverclockCalculator(@Nonnull GT_Recipe recipe) {
+                return GT_OverclockCalculator.ofNoOverclock(recipe);
+            }
+        };
     }
 
-    public boolean processRecipe(ItemStack[] aItemInputs, FluidStack[] aFluidInputs) {
-        // Reset outputs and progress stats
-        this.lEUt = 0;
-        EUt = 0;
-        currentParallel = 0;
-        this.mMaxProgresstime = 0;
-        this.mOutputItems = new ItemStack[] {};
-        this.mOutputFluids = new FluidStack[] {};
-        int maxParallel = (int) parallelParam.get();
-
-        long tVoltage = TierEU.MAX * (long) Math.pow(4, (solenoidCoilMetadata - 7));
-        byte tTier = (byte) Math.max(1, GT_Utility.getTier(tVoltage));
-        long tEnergy = maxParallel * tVoltage;
-
-        GT_Recipe tRecipe = godforgePlasmaRecipes.findRecipe(
-                getBaseMetaTileEntity(),
-                false,
-                gregtech.api.enums.GT_Values.V[tTier],
-                aFluidInputs,
-                aItemInputs);
-
-        if (tRecipe == null) {
-            return false;
-        }
-
-        GT_ParallelHelper helper = new GT_ParallelHelper().setRecipe(tRecipe).setItemInputs(aItemInputs)
-                .setFluidInputs(aFluidInputs).setAvailableEUt(tEnergy).setMaxParallel(maxParallel).setConsumption(true)
-                .setOutputCalculation(true);
-
-        helper.build();
-
-        if (helper.getCurrentParallel() == 0) {
-            return false;
-        }
-
-        this.mEfficiency = (10000 - (getIdealStatus() - getRepairStatus()) * 1000);
-        this.mEfficiencyIncrease = 10000;
-
-        GT_OverclockCalculator calculator = new GT_OverclockCalculator().setRecipeEUt(tRecipe.mEUt).setEUt(tVoltage)
-                .setDuration(tRecipe.mDuration).setAmperage(helper.getCurrentParallel())
-                .setParallel(helper.getCurrentParallel()).calculate();
-
-        EUt = -calculator.getConsumption();
-        mMaxProgresstime = (int) Math.ceil(calculator.getDuration() * helper.getDurationMultiplierDouble());
-
-        if (!addEUToGlobalEnergyMap(userUUID, EUt * mMaxProgresstime)) {
-            stopMachine();
-            return false;
-        }
-
-        mOutputItems = helper.getItemOutputs();
-        mOutputFluids = helper.getFluidOutputs();
-        currentParallel = helper.getCurrentParallel();
-        updateSlots();
-        return true;
+    @Override
+    protected void setProcessingLogicPower(ProcessingLogic logic) {
+        logic.setAvailableVoltage(Long.MAX_VALUE);
+        logic.setAvailableAmperage(Integer.MAX_VALUE);
+        logic.setAmperageOC(false);
     }
 
     @Override
@@ -162,6 +132,11 @@ public class GT_MetaTileEntity_EM_PlasmaModule extends GT_MetaTileEntity_EM_Base
     }
 
     @Override
+    public RecipeMap<?> getRecipeMap() {
+        return godforgePlasmaRecipes;
+    }
+
+    @Override
     public String[] getInfoData() {
         ArrayList<String> str = new ArrayList<>();
         str.add(
@@ -173,7 +148,7 @@ public class GT_MetaTileEntity_EM_PlasmaModule extends GT_MetaTileEntity_EM_Base
                         + GT_Utility.formatNumbers(mMaxProgresstime / 20)
                         + RESET
                         + " s");
-        str.add("Currently using: " + RED + formatNumbers(-EUt) + RESET + " EU/t");
+        str.add("Currently using: " + RED + formatNumbers(EUt) + RESET + " EU/t");
         str.add(YELLOW + "Max Parallel: " + RESET + formatNumbers(GT_MetaTileEntity_EM_ForgeOfGods.getMaxParallels()));
         str.add(YELLOW + "Current Parallel: " + RESET + formatNumbers(currentParallel));
         return str.toArray(new String[0]);

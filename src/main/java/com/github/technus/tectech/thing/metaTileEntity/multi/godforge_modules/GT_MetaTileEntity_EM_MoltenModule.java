@@ -2,19 +2,25 @@ package com.github.technus.tectech.thing.metaTileEntity.multi.godforge_modules;
 
 import static com.github.technus.tectech.thing.casing.GT_Block_CasingsTT.texturePage;
 import static gregtech.api.util.GT_OreDictUnificator.getAssociation;
+import static gregtech.api.util.GT_ParallelHelper.addFluidsLong;
+import static gregtech.api.util.GT_ParallelHelper.addItemsLong;
+import static gregtech.api.util.GT_RecipeBuilder.BUCKETS;
+import static gregtech.api.util.GT_RecipeBuilder.INGOTS;
 import static gregtech.api.util.GT_Utility.formatNumbers;
 import static net.minecraft.util.EnumChatFormatting.*;
 import static net.minecraft.util.EnumChatFormatting.RESET;
 import static net.minecraft.util.StatCollector.translateToLocal;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
 
-import javax.annotation.Nullable;
+import javax.annotation.Nonnull;
 
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.oredict.OreDictionary;
+
+import org.jetbrains.annotations.NotNull;
 
 import com.github.technus.tectech.thing.metaTileEntity.multi.GT_MetaTileEntity_EM_ForgeOfGods;
 import com.github.technus.tectech.thing.metaTileEntity.multi.base.*;
@@ -26,8 +32,10 @@ import gregtech.api.interfaces.IGlobalWirelessEnergy;
 import gregtech.api.interfaces.ITexture;
 import gregtech.api.interfaces.metatileentity.IMetaTileEntity;
 import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
-import gregtech.api.metatileentity.implementations.GT_MetaTileEntity_Hatch_InputBus;
+import gregtech.api.logic.ProcessingLogic;
 import gregtech.api.objects.ItemData;
+import gregtech.api.recipe.check.CheckRecipeResult;
+import gregtech.api.recipe.check.CheckRecipeResultRegistry;
 import gregtech.api.util.*;
 
 public class GT_MetaTileEntity_EM_MoltenModule extends GT_MetaTileEntity_EM_BaseModule
@@ -36,8 +44,8 @@ public class GT_MetaTileEntity_EM_MoltenModule extends GT_MetaTileEntity_EM_Base
     Parameters.Group.ParameterIn parallelParam;
     Parameters.Group.ParameterIn batchParam;
     private int solenoidCoilMetadata = 7;
-    private static long EUt = 0;
-    private static int currentParallel = 0;
+    private long EUt = 0;
+    private int currentParallel = 0;
 
     public GT_MetaTileEntity_EM_MoltenModule(int aID, String aName, String aNameRegional) {
         super(aID, aName, aNameRegional);
@@ -52,115 +60,110 @@ public class GT_MetaTileEntity_EM_MoltenModule extends GT_MetaTileEntity_EM_Base
         return new GT_MetaTileEntity_EM_MoltenModule(mName);
     }
 
+    long wirelessEUt = 0;
+
     @Override
-    public boolean checkRecipe_EM(ItemStack aStack) {
-        ItemStack[] tInputs;
-        FluidStack[] tFluids = this.getStoredFluids().toArray(new FluidStack[0]);
+    protected ProcessingLogic createProcessingLogic() {
+        return new ProcessingLogic() {
 
-        if (inputSeparation) {
-            ArrayList<ItemStack> tInputList = new ArrayList<>();
-            for (GT_MetaTileEntity_Hatch_InputBus tHatch : mInputBusses) {
-                IGregTechTileEntity tInputBus = tHatch.getBaseMetaTileEntity();
-                for (int i = tInputBus.getSizeInventory() - 1; i >= 0; i--) {
-                    if (tInputBus.getStackInSlot(i) != null) tInputList.add(tInputBus.getStackInSlot(i));
+            private FluidStack[] meltableItems;
+
+            @NotNull
+            @Override
+            protected CheckRecipeResult validateRecipe(@Nonnull GT_Recipe recipe) {
+                maxParallel = (int) parallelParam.get();
+                wirelessEUt = (long) recipe.mEUt * maxParallel;
+                if (getUserEU(userUUID).compareTo(BigInteger.valueOf(wirelessEUt * recipe.mDuration)) < 0) {
+                    return CheckRecipeResultRegistry.insufficientPower(wirelessEUt * recipe.mDuration);
                 }
-                tInputs = tInputList.toArray(new ItemStack[0]);
 
-                if (processRecipe(tInputs, tFluids)) return true;
-                else tInputList.clear();
+                meltableItems = new FluidStack[recipe.mOutputs.length];
+                for (int i = 0; i < recipe.mOutputs.length; i++) {
+                    ItemStack item = recipe.getOutput(i);
+                    if (item == null) {
+                        continue;
+                    }
+                    ItemData data = getAssociation(item);
+                    Materials mat = data == null ? null : data.mMaterial.mMaterial;
+                    if (mat != null) {
+                        if (mat.mStandardMoltenFluid != null) {
+                            meltableItems[i] = mat.getMolten(INGOTS);
+                        } else if (mat.mFluid != null) {
+                            meltableItems[i] = mat.getFluid(BUCKETS);
+                        }
+                    }
+                }
+
+                return CheckRecipeResultRegistry.SUCCESSFUL;
             }
-        } else {
-            tInputs = getStoredInputs().toArray(new ItemStack[0]);
-            return processRecipe(tInputs, tFluids);
-        }
-        return false;
+
+            @Nonnull
+            @Override
+            protected GT_OverclockCalculator createOverclockCalculator(@Nonnull GT_Recipe recipe) {
+                return super.createOverclockCalculator(recipe).setEUt(TierEU.MAX).setRecipeHeat(recipe.mSpecialValue)
+                        .setHeatOC(true).setHeatDiscount(true)
+                        .setMachineHeat(13501 + 100 * (GT_Utility.getTier(TierEU.MAX) - 2));
+
+            }
+
+            @NotNull
+            @Override
+            protected CheckRecipeResult onRecipeStart(@Nonnull GT_Recipe recipe) {
+                if (!addEUToGlobalEnergyMap(userUUID, -calculatedEut * duration)) {
+                    return CheckRecipeResultRegistry.insufficientPower(calculatedEut * duration);
+                }
+                currentParallel = calculatedParallels;
+                EUt = calculatedEut;
+                setCalculatedEut(0);
+                return CheckRecipeResultRegistry.SUCCESSFUL;
+            }
+
+            @Nonnull
+            @Override
+            protected GT_ParallelHelper createParallelHelper(@Nonnull GT_Recipe recipe) {
+                return super.createParallelHelper(recipe).setCustomItemOutputCalculation(currentParallel -> {
+                    ArrayList<ItemStack> outputItems = new ArrayList<>();
+                    for (int i = 0; i < recipe.mOutputs.length; i++) {
+                        ItemStack item = recipe.getOutput(i);
+                        if (item == null || meltableItems[i] != null) {
+                            continue;
+                        }
+                        ItemStack itemToAdd = item.copy();
+                        addItemsLong(outputItems, itemToAdd, (long) item.stackSize * currentParallel);
+                    }
+                    return outputItems.toArray(new ItemStack[0]);
+                }).setCustomFluidOutputCalculation(currentParallel -> {
+                    ArrayList<FluidStack> fluids = new ArrayList<>();
+
+                    for (int i = 0; i < recipe.mOutputs.length; i++) {
+                        FluidStack fluid = meltableItems[i];
+                        if (fluid == null) {
+                            continue;
+                        }
+                        FluidStack fluidToAdd = fluid.copy();
+                        long fluidAmount = (long) fluidToAdd.amount * recipe.mOutputs[i].stackSize * currentParallel;
+                        addFluidsLong(fluids, fluidToAdd, fluidAmount);
+                    }
+
+                    for (int i = 0; i < recipe.mFluidOutputs.length; i++) {
+                        FluidStack fluid = recipe.getFluidOutput(i);
+                        if (fluid == null) {
+                            continue;
+                        }
+                        FluidStack fluidToAdd = fluid.copy();
+                        addFluidsLong(fluids, fluidToAdd, (long) fluidToAdd.amount * currentParallel);
+                    }
+                    return fluids.toArray(new FluidStack[0]);
+                });
+            }
+        };
     }
 
-    public boolean processRecipe(ItemStack[] aItemInputs, FluidStack[] aFluidInputs) {
-        // Reset outputs and progress stats
-        this.lEUt = 0;
-        EUt = 0;
-        currentParallel = 0;
-        this.mMaxProgresstime = 0;
-        this.mOutputItems = new ItemStack[] {};
-        this.mOutputFluids = new FluidStack[] {};
-        int maxParallel = (int) parallelParam.get();
-
-        long tVoltage = TierEU.MAX * (long) Math.pow(4, (solenoidCoilMetadata - 7));
-        byte tTier = (byte) Math.max(1, GT_Utility.getTier(tVoltage));
-        long tEnergy = maxParallel * tVoltage;
-
-        GT_Recipe tRecipe = this.getRecipeMap().findRecipe(
-                getBaseMetaTileEntity(),
-                false,
-                gregtech.api.enums.GT_Values.V[tTier],
-                aFluidInputs,
-                aItemInputs);
-
-        if (tRecipe == null) {
-            return false;
-        }
-
-        GT_ParallelHelper helper = new GT_ParallelHelper().setRecipe(tRecipe).setItemInputs(aItemInputs)
-                .setFluidInputs(aFluidInputs).setAvailableEUt(tEnergy).setMaxParallel(maxParallel).setConsumption(true)
-                .setOutputCalculation(true);
-
-        helper.enableBatchMode((int) batchParam.get());
-
-        helper.build();
-
-        if (helper.getCurrentParallel() == 0) {
-            return false;
-        }
-
-        this.mEfficiency = (10000 - (getIdealStatus() - getRepairStatus()) * 1000);
-        this.mEfficiencyIncrease = 10000;
-
-        GT_OverclockCalculator calculator = new GT_OverclockCalculator().setRecipeEUt(tRecipe.mEUt).setEUt(tVoltage)
-                .setDuration(tRecipe.mDuration).setAmperage(helper.getCurrentParallel())
-                .setParallel(helper.getCurrentParallel()).calculate();
-
-        EUt = (long) (-calculator.getConsumption() / helper.getDurationMultiplierDouble());
-        mMaxProgresstime = (int) Math.ceil(calculator.getDuration() * helper.getDurationMultiplierDouble());
-
-        if (!addEUToGlobalEnergyMap(userUUID, EUt * mMaxProgresstime)) {
-            stopMachine();
-            return false;
-        }
-
-        mOutputItems = helper.getItemOutputs();
-        mOutputFluids = helper.getFluidOutputs();
-
-        ArrayList<ItemStack> ItemOutputs = new ArrayList<>();
-        ArrayList<FluidStack> FluidOutputs = new ArrayList<>();
-        currentParallel = helper.getCurrentParallel();
-        for (int i = 0; i < mOutputItems.length; i++) {
-            FluidStack foundFluid = tryConvertItemStackToFluidMaterial(tRecipe.getOutput(i));
-            ItemData data = getAssociation(tRecipe.getOutput(i));
-            Materials mat = data == null ? null : data.mMaterial.mMaterial;
-            if (i < tRecipe.mOutputs.length) {
-                if (foundFluid != null) {
-                    FluidOutputs.add(foundFluid);
-                } else if (mat.getMolten(0) != null) {
-                    FluidOutputs.add(mat.getMolten(tRecipe.getOutput(i).stackSize * 144L * currentParallel));
-                } else if (mat.getFluid(0) != null) {
-                    FluidOutputs.add(mat.getFluid(tRecipe.getOutput(i).stackSize * 1000L * currentParallel));
-                } else {
-                    ItemStack aItem = tRecipe.getOutput(i);
-                    ItemOutputs.add(GT_Utility.copyAmountUnsafe((long) aItem.stackSize * currentParallel, aItem));
-                }
-                for (int j = 0; j < mOutputFluids.length; j++) {
-                    FluidOutputs.add(tRecipe.getFluidOutput(j));
-                }
-            } else {
-                FluidStack aFluid = tRecipe.getFluidOutput(i - tRecipe.mOutputs.length);
-                FluidOutputs.add(new FluidStack(aFluid, aFluid.amount * currentParallel));
-            }
-        }
-        mOutputItems = ItemOutputs.toArray(new ItemStack[0]);
-        mOutputFluids = FluidOutputs.toArray(new FluidStack[0]);
-        updateSlots();
-        return true;
+    @Override
+    protected void setProcessingLogicPower(ProcessingLogic logic) {
+        logic.setAvailableVoltage(Long.MAX_VALUE);
+        logic.setAvailableAmperage(Integer.MAX_VALUE);
+        logic.setAmperageOC(false);
     }
 
     @Override
@@ -202,29 +205,6 @@ public class GT_MetaTileEntity_EM_MoltenModule extends GT_MetaTileEntity_EM_Base
         return new ITexture[] { Textures.BlockIcons.getCasingTextureForId(texturePage << 7) };
     }
 
-    @Nullable
-    public static FluidStack tryConvertItemStackToFluidMaterial(ItemStack input) {
-        ArrayList<String> oreDicts = new ArrayList<>();
-        for (int id : OreDictionary.getOreIDs(input)) {
-            oreDicts.add(OreDictionary.getOreName(id));
-        }
-
-        for (String dict : oreDicts) {
-            OrePrefixes orePrefix;
-            try {
-                orePrefix = OrePrefixes.valueOf(findBestPrefix(dict));
-            } catch (Exception e) {
-                continue;
-            }
-
-            String strippedOreDict = dict.substring(orePrefix.toString().length());
-
-            // Prevents things like AnyCopper or AnyIron from messing the search up.
-            if (strippedOreDict.contains("Any")) continue;
-        }
-        return null;
-    }
-
     @Override
     public String[] getInfoData() {
         ArrayList<String> str = new ArrayList<>();
@@ -237,7 +217,7 @@ public class GT_MetaTileEntity_EM_MoltenModule extends GT_MetaTileEntity_EM_Base
                         + GT_Utility.formatNumbers(mMaxProgresstime / 20)
                         + RESET
                         + " s");
-        str.add("Currently using: " + RED + formatNumbers(-EUt) + RESET + " EU/t");
+        str.add("Currently using: " + RED + formatNumbers(EUt) + RESET + " EU/t");
         str.add(YELLOW + "Max Parallel: " + RESET + formatNumbers(GT_MetaTileEntity_EM_ForgeOfGods.getMaxParallels()));
         str.add(YELLOW + "Current Parallel: " + RESET + formatNumbers(currentParallel));
         return str.toArray(new String[0]);
