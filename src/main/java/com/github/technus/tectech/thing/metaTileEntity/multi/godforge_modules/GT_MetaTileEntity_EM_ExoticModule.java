@@ -23,23 +23,22 @@ import gregtech.api.metatileentity.implementations.GT_MetaTileEntity_Hatch_Input
 import gregtech.api.recipe.RecipeMaps;
 import gregtech.api.util.*;
 
-public class GT_MetaTileEntity_EM_quark_gluon_plasma extends GT_MetaTileEntity_EM_BaseModule
-        implements IGlobalWirelessEnergy {
+public class GT_MetaTileEntity_EM_ExoticModule extends GT_MetaTileEntity_EM_BaseModule {
 
     Parameters.Group.ParameterIn[] parallelParameter;
     private int solenoidCoilMetadata = -1;
 
-    public GT_MetaTileEntity_EM_quark_gluon_plasma(int aID, String aName, String aNameRegional) {
+    public GT_MetaTileEntity_EM_ExoticModule(int aID, String aName, String aNameRegional) {
         super(aID, aName, aNameRegional);
     }
 
-    public GT_MetaTileEntity_EM_quark_gluon_plasma(String aName) {
+    public GT_MetaTileEntity_EM_ExoticModule(String aName) {
         super(aName);
     }
 
     @Override
     public IMetaTileEntity newMetaEntity(IGregTechTileEntity aTileEntity) {
-        return new GT_MetaTileEntity_EM_quark_gluon_plasma(mName);
+        return new GT_MetaTileEntity_EM_ExoticModule(mName);
     }
 
     @Override

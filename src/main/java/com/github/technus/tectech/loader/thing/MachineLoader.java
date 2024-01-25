@@ -326,10 +326,10 @@ import com.github.technus.tectech.thing.metaTileEntity.multi.GT_MetaTileEntity_E
 import com.github.technus.tectech.thing.metaTileEntity.multi.GT_MetaTileEntity_EM_transformer;
 import com.github.technus.tectech.thing.metaTileEntity.multi.GT_MetaTileEntity_TM_microwave;
 import com.github.technus.tectech.thing.metaTileEntity.multi.GT_MetaTileEntity_TM_teslaCoil;
+import com.github.technus.tectech.thing.metaTileEntity.multi.godforge_modules.GT_MetaTileEntity_EM_ExoticModule;
 import com.github.technus.tectech.thing.metaTileEntity.multi.godforge_modules.GT_MetaTileEntity_EM_MoltenModule;
 import com.github.technus.tectech.thing.metaTileEntity.multi.godforge_modules.GT_MetaTileEntity_EM_PlasmaModule;
 import com.github.technus.tectech.thing.metaTileEntity.multi.godforge_modules.GT_MetaTileEntity_EM_SmeltingModule;
-import com.github.technus.tectech.thing.metaTileEntity.multi.godforge_modules.GT_MetaTileEntity_EM_quark_gluon_plasma;
 import com.github.technus.tectech.thing.metaTileEntity.pipe.GT_MetaTileEntity_PipeBlock_Data;
 import com.github.technus.tectech.thing.metaTileEntity.pipe.GT_MetaTileEntity_PipeBlock_Energy;
 import com.github.technus.tectech.thing.metaTileEntity.pipe.GT_MetaTileEntity_Pipe_Data;
@@ -2046,10 +2046,8 @@ public class MachineLoader implements Runnable {
                 new GT_MetaTileEntity_EM_PlasmaModule(15414, "multimachine.em.plasma_module", "Plasma Module")
                         .getStackForm(1L));
         Machine_Multi_QuarkGluonPlasmaModule.set(
-                new GT_MetaTileEntity_EM_quark_gluon_plasma(
-                        15415,
-                        "multimachine.em.quark_gluon_plasma_module",
-                        "Quark Gluon Plasma Module").getStackForm(1L));
+                new GT_MetaTileEntity_EM_ExoticModule(15415, "multimachine.em.exotic_module", "Exotic Matter Module")
+                        .getStackForm(1L));
 
         // ===================================================================================================
         // Hatches
