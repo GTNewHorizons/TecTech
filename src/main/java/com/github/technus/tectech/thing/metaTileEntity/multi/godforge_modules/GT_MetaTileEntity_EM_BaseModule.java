@@ -1,6 +1,8 @@
 package com.github.technus.tectech.thing.metaTileEntity.multi.godforge_modules;
 
 import static com.github.technus.tectech.thing.casing.GT_Block_CasingsTT.texturePage;
+import static gregtech.common.misc.WirelessNetworkManager.addEUToGlobalEnergyMap;
+import static gregtech.common.misc.WirelessNetworkManager.strongCheckOrAddUser;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -17,7 +19,6 @@ import com.gtnewhorizon.structurelib.structure.StructureUtility;
 
 import gregtech.api.enums.OrePrefixes;
 import gregtech.api.enums.Textures;
-import gregtech.api.interfaces.IGlobalWirelessEnergy;
 import gregtech.api.interfaces.ITexture;
 import gregtech.api.interfaces.metatileentity.IMetaTileEntity;
 import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
@@ -26,8 +27,7 @@ import gregtech.api.recipe.RecipeMaps;
 import gregtech.api.util.GT_StructureUtility;
 import gregtech.api.util.GT_Utility;
 
-public class GT_MetaTileEntity_EM_BaseModule extends GT_MetaTileEntity_MultiblockBase_EM
-        implements IGlobalWirelessEnergy {
+public class GT_MetaTileEntity_EM_BaseModule extends GT_MetaTileEntity_MultiblockBase_EM {
 
     protected final int tier = getTier();
     protected boolean isConnected = false;

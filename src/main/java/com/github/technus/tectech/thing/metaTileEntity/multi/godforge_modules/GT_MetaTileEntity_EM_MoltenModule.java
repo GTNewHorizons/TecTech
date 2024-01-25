@@ -7,6 +7,8 @@ import static gregtech.api.util.GT_ParallelHelper.addItemsLong;
 import static gregtech.api.util.GT_RecipeBuilder.BUCKETS;
 import static gregtech.api.util.GT_RecipeBuilder.INGOTS;
 import static gregtech.api.util.GT_Utility.formatNumbers;
+import static gregtech.common.misc.WirelessNetworkManager.addEUToGlobalEnergyMap;
+import static gregtech.common.misc.WirelessNetworkManager.getUserEU;
 import static net.minecraft.util.EnumChatFormatting.*;
 import static net.minecraft.util.EnumChatFormatting.RESET;
 import static net.minecraft.util.StatCollector.translateToLocal;
@@ -28,7 +30,6 @@ import com.github.technus.tectech.thing.metaTileEntity.multi.base.render.TT_Rend
 import com.github.technus.tectech.util.CommonValues;
 
 import gregtech.api.enums.*;
-import gregtech.api.interfaces.IGlobalWirelessEnergy;
 import gregtech.api.interfaces.ITexture;
 import gregtech.api.interfaces.metatileentity.IMetaTileEntity;
 import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
@@ -38,8 +39,7 @@ import gregtech.api.recipe.check.CheckRecipeResult;
 import gregtech.api.recipe.check.CheckRecipeResultRegistry;
 import gregtech.api.util.*;
 
-public class GT_MetaTileEntity_EM_MoltenModule extends GT_MetaTileEntity_EM_BaseModule
-        implements IGlobalWirelessEnergy {
+public class GT_MetaTileEntity_EM_MoltenModule extends GT_MetaTileEntity_EM_BaseModule {
 
     Parameters.Group.ParameterIn parallelParam;
     Parameters.Group.ParameterIn batchParam;
