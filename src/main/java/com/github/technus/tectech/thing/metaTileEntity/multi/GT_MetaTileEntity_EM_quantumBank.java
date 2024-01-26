@@ -16,15 +16,13 @@ import static gregtech.api.util.GT_StructureUtility.buildHatchAdder;
 import static gregtech.api.util.GT_StructureUtility.ofFrame;
 
 import com.github.technus.tectech.thing.casing.TT_Container_Casings;
-import com.github.technus.tectech.util.SyncArrayListPacket;
 import com.google.common.collect.ImmutableList;
 import com.gtnewhorizon.structurelib.structure.IItemSource;
 import com.gtnewhorizons.modularui.api.drawable.Text;
 import com.gtnewhorizons.modularui.api.math.Alignment;
 import com.gtnewhorizons.modularui.api.math.CrossAxisAlignment;
 import com.gtnewhorizons.modularui.api.math.MainAxisAlignment;
-import com.gtnewhorizons.modularui.common.widget.Row;
-import cpw.mods.fml.common.network.simpleimpl.SimpleNetworkWrapper;
+import com.gtnewhorizons.modularui.common.widget.DynamicPositionedRow;
 import gregtech.api.util.GT_Utility;
 import static net.minecraft.util.StatCollector.translateToLocal;
 
@@ -54,7 +52,6 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.util.ForgeDirection;
@@ -84,6 +81,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class GT_MetaTileEntity_EM_quantumBank extends GT_MetaTileEntity_MultiblockBase_EM
         implements ISurvivalConstructable {
@@ -95,10 +93,10 @@ public class GT_MetaTileEntity_EM_quantumBank extends GT_MetaTileEntity_Multiblo
     private int numberOfUnlockedSlots = 144; //Minimum quantity possible
     private int usedSlotCount = 0; //For GUI to show total used so far
     private int storageTier = -1; //funny metaData
-
     private ArrayList<String> friendsList = new ArrayList();
     protected static int FRIENDSLIST_WINDOW_ID = 592;
     private String owner_name;
+
 
 
 
@@ -396,9 +394,6 @@ public class GT_MetaTileEntity_EM_quantumBank extends GT_MetaTileEntity_Multiblo
 
     protected ModularWindow createFriendsConfigWindow(final EntityPlayer player){
         ModularWindow.Builder currentWindow = ModularWindow.builder(158, 180);
-
-
-
         currentWindow.setBackground(TecTechUITextures.BACKGROUND_SCREEN_BLUE);
         //TO-DO
         /*
@@ -408,34 +403,43 @@ public class GT_MetaTileEntity_EM_quantumBank extends GT_MetaTileEntity_Multiblo
         -Probably networking friendsList back to server, who knows
         */
 
-        ArrayList<String> activePlayerList = new ArrayList<>();
-
-        currentWindow.widget(new FakeSyncWidget.StringSyncer(() -> owner_name, val -> owner_name = val));
-        System.out.println("OWNER_NAME:"+owner_name);
-        for (EntityPlayer playerEntity : player.getEntityWorld().playerEntities) {
-            if (playerEntity.getDisplayName().equals(owner_name) && !friendsList.contains(owner_name)){
-                friendsList.add(playerEntity.getDisplayName());
-                System.out.println("Inside activePlayerList check, added owner");
-            } else if (!friendsList.contains(playerEntity.getDisplayName())) {
-                activePlayerList.add(playerEntity.getDisplayName());
-            }
-        }
-        if(getBaseMetaTileEntity().isServerSide()){
-            if (player instanceof EntityPlayerMP) {
-                sendArrayListToClient(friendsList, (EntityPlayerMP) player);
-               // System.out.println("SERVER: sendArrayListToClient-Length: " + friendsList.size());
-            }
-        }
         DynamicPositionedColumn friendsContainer = new DynamicPositionedColumn();
 
-        friendsContainer.widget(new TextWidget("Friends List").setTextAlignment(Alignment.TopCenter).setDefaultColor(COLOR_TEXT_WHITE.get()));
+        //friendsContainer.widget(new TextWidget("Friends list").setTextAlignment(Alignment.TopCenter).setDefaultColor(COLOR_TEXT_WHITE.get()));
+
+
+ /*
+        friendsContainer.widget(new DynamicPositionedRow().setAlignment(MainAxisAlignment.SPACE_BETWEEN, CrossAxisAlignment.CENTER)
+                .widget(TextWidget.dynamicString(() -> ("§9" + friendsList.get(0) + " (owner)")))
+                .widget(new TextWidget(" ")) //Space_Between can div by zero without a spare 2nd element
+                .setMaxWidth(142));
+   */
+
+        System.out.println("friendsList.size:"+friendsList.size());
+
+        for (int i = 0; i < friendsList.size(); i++){
+            int finalI = i;
+            friendsContainer.widget(new DynamicPositionedRow().setSynced(false)
+                    .setAlignment(MainAxisAlignment.SPACE_BETWEEN, CrossAxisAlignment.CENTER)
+                    .widget(TextWidget.dynamicString(() -> ("§9" + friendsList.get(finalI))))
+                    .widget(new TextWidget(" ")) //Space_Between can div by zero without a spare 2nd element
+                    .widget(new ButtonWidget().setOnClick(((clickData,widget) -> {
+                              // friendsList.remove(friendsList.get(finalI));
+                            }))
+                            .setBackground(new Text("§c-"))
+                            .setSize(8,8))
+                    .setMaxWidth(142));
+        }
+
+
+
+/*
 
         for (String friend : friendsList){
-            System.out.println("We are inside window, friend:friendsList");
-            System.out.println(friend + ":" + friendsList.get(0));
             //Sync our friendsList from client -> Server
             if (friend == friendsList.get(0)){ //We know owner is always index 0
                 friendsContainer.widget(new Row().setAlignment(MainAxisAlignment.SPACE_BETWEEN, CrossAxisAlignment.CENTER)
+                        .widget(TextWidget.dynamicString(() -> ("§9" + friendsList.get(0))))
                         .widget(new TextWidget("§9"+friend + " (owner)"))
                         .widget(new TextWidget(" ")) //Space_Between can div by zero without a spare 2nd element
                         .setMaxWidth(142));
@@ -445,36 +449,49 @@ public class GT_MetaTileEntity_EM_quantumBank extends GT_MetaTileEntity_Multiblo
                         .widget(new TextWidget(" ")) //Space_Between can div by zero without a spare 2nd element
                         .widget(new ButtonWidget().setOnClick(((clickData,widget) -> {
                             friendsList.remove(friend);
-                            sendArrayListToServer(friendsList);
+                          //  sendArrayListToServer(friendsList);
                         }))
                                 .setBackground(new Text("§c-"))
                                 .setSize(8,8)).setMaxWidth(142));
             }
 
         }
+*/
 
-        friendsContainer.widget(new TextWidget("Active Players").setTextAlignment(Alignment.TopCenter).setDefaultColor(COLOR_TEXT_WHITE.get()));
+        //friendsContainer.widget(new TextWidget("Active Players").setTextAlignment(Alignment.TopCenter).setDefaultColor(COLOR_TEXT_WHITE.get()));
 
-        for (String activePlayer : activePlayerList) {
-                if(friendsList.contains(activePlayer)){
-                    activePlayerList.remove(activePlayer);
-                }
-
-
-            friendsContainer.widget(new Row().setAlignment(MainAxisAlignment.SPACE_BETWEEN, CrossAxisAlignment.CENTER)
-                    .widget(new TextWidget(activePlayer))
-                    .widget(new TextWidget(" ")) //Space_Between can div by zero without a spare 2nd element
-                    .widget(new ButtonWidget().setOnClick(((clickData, widget) -> {
-                        if (!friendsList.contains(activePlayer)) {friendsList.add(activePlayer);}
-                        sendArrayListToServer(friendsList);
-                    }))
-                            .setBackground(new Text("§a+"))
-                            .setSize(8, 8)).setMaxWidth(142));
+        ArrayList<String> activePlayerList = new ArrayList<>();
+        for (EntityPlayer playerEntity : player.getEntityWorld().playerEntities){
+            String playerEntityName = playerEntity.getDisplayName();
+            if (!activePlayerList.contains(playerEntityName) && !friendsList.contains(playerEntityName))
+            activePlayerList.add(playerEntityName);
         }
 
 
 
-        currentWindow.widget(friendsContainer.setPos(7, 8));
+        currentWindow.widget(new FakeSyncWidget.IntegerSyncer(() -> friendsList.size(), val -> {
+           // System.out.println(val);
+            /*
+            for (int i = 0; i < val; i++){
+                int finalI = i;
+                friendsContainer.widget(new DynamicPositionedRow().setAlignment(MainAxisAlignment.SPACE_BETWEEN, CrossAxisAlignment.CENTER)
+                        .widget(TextWidget.dynamicString(() -> ( "§9" + activePlayerList.get(finalI))))
+                        .widget(new TextWidget(" ")) //Space_Between can div by zero without a spare 2nd element
+                        .widget(new ButtonWidget().setOnClick(((clickData,widget) -> {
+                                    friendsList.add(activePlayerList.get(finalI));
+                                    System.out.println("Adding Friend!");
+                                }))
+                                .setBackground(new Text("§a+"))
+                                .setSize(8,8)).setMaxWidth(142));
+            }
+             */
+        }));
+
+
+
+      //  currentWindow.widget(friendsContainer.setPos(7, 8));
+
+
         return currentWindow.build();
     }
 
@@ -485,8 +502,7 @@ public class GT_MetaTileEntity_EM_quantumBank extends GT_MetaTileEntity_Multiblo
                     TecTech.proxy.playSound(getBaseMetaTileEntity(), "fx_click");
                     if (!widget.isClient()) {
                         widget.getContext().openSyncedWindow(FRIENDSLIST_WINDOW_ID);
-                        sendArrayListToClient(friendsList, (EntityPlayerMP) widget.getContext().getPlayer());
-                        System.out.println("createFriendsButton CALLED -> sendArrayListToClient");
+                       // sendArrayListToClient(friendsList, (EntityPlayerMP) widget.getContext().getPlayer());
                     }
                 }).setPlayClickSound(false)
                 .setBackground(TecTechUITextures.BUTTON_STANDARD_16x16, TecTechUITextures.OVERLAY_BUTTON_FRIEND_MENU)
@@ -553,25 +569,5 @@ public class GT_MetaTileEntity_EM_quantumBank extends GT_MetaTileEntity_Multiblo
 
         builder.widget(createFriendsButton());
         buildContext.addSyncedWindow(FRIENDSLIST_WINDOW_ID, this::createFriendsConfigWindow);
-    }
-
-    public ArrayList<String> getFriendsList() {
-        return friendsList;
-    }
-    public void setFriendsList(ArrayList<String> arrayList) {
-        friendsList = arrayList;
-        System.out.println("CLIENT: setFriendsList -> "+ friendsList.get(0));
-    }
-
-    public void sendArrayListToServer(ArrayList<String> arrayList){
-        SimpleNetworkWrapper networkWrapper = TecTech.networkWrapper;
-        SyncArrayListPacket packet = new SyncArrayListPacket(arrayList, this);
-        networkWrapper.sendToServer(packet);
-    }
-
-    public void sendArrayListToClient(ArrayList<String> arrayList, EntityPlayerMP entityPlayerMP){
-        SimpleNetworkWrapper networkWrapper = TecTech.networkWrapper;
-        SyncArrayListPacket packet = new SyncArrayListPacket(arrayList, this);
-        networkWrapper.sendTo(packet, entityPlayerMP);
     }
 }

@@ -68,13 +68,13 @@ public class SyncArrayListPacket implements IMessage {
     public static class Handler implements IMessageHandler<SyncArrayListPacket, IMessage> {
         public IMessage onMessage(SyncArrayListPacket message, MessageContext ctx) {
             if (ctx.side.isServer()){
-                    getQuantumTE().sendArrayListToClient(message.getSyncedList(), ctx.getServerHandler().playerEntity);
+                   // getQuantumTE().sendArrayListToClient(message.getSyncedList(), ctx.getServerHandler().playerEntity);
                     System.out.println("onMessage:Server:Client -> " + message.getSyncedList().size());
             } else {
                 if (getQuantumTE() == null) {
-                    GT_MetaTileEntity_EM_quantumBank.setFriendsList(message.getSyncedList());
+                   // GT_MetaTileEntity_EM_quantumBank.setFriendsList(message.getSyncedList());
                 } else {
-                    getQuantumTE().setFriendsList(message.getSyncedList());
+                   // getQuantumTE().setFriendsList(message.getSyncedList());
                     System.out.println("onMessage:Client:Server -> " + message.getSyncedList().size());
                 }
             }
@@ -84,6 +84,7 @@ public class SyncArrayListPacket implements IMessage {
     }
 
     private GT_MetaTileEntity_EM_quantumBank getTEFromContext(MessageContext ctx){
-        ctx.getClientHandler().
+       // ctx.getClientHandler().
+        return null;
     }
 }
