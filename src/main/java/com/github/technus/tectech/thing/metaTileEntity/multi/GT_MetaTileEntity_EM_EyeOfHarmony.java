@@ -47,6 +47,7 @@ import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.MathHelper;
 import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 
 import org.apache.commons.lang3.tuple.Pair;
@@ -77,7 +78,6 @@ import gregtech.api.interfaces.IGlobalWirelessEnergy;
 import gregtech.api.interfaces.ITexture;
 import gregtech.api.interfaces.metatileentity.IMetaTileEntity;
 import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
-import gregtech.api.metatileentity.implementations.GT_MetaTileEntity_Hatch_Input;
 import gregtech.api.recipe.RecipeMap;
 import gregtech.api.recipe.check.CheckRecipeResult;
 import gregtech.api.recipe.check.CheckRecipeResultRegistry;
@@ -768,9 +768,9 @@ public class GT_MetaTileEntity_EM_EyeOfHarmony extends GT_MetaTileEntity_Multibl
     private void calculateInputFluidExcessValues(final long hydrogenRecipeRequirement,
             final long heliumRecipeRequirement) {
 
-        double hydrogenStored = validFluidMap.get(Materials.Hydrogen.getGas(1L));
-        double heliumStored = validFluidMap.get(Materials.Helium.getGas(1L));
-        double stellarPlasmaStored = validFluidMap.get(MaterialsUEVplus.RawStarMatter.getFluid(1L));
+        double hydrogenStored = getHydrogenStored();
+        double heliumStored = getHeliumStored();
+        double stellarPlasmaStored = getStellarPlasmaStored();
 
         double hydrogenExcessPercentage = hydrogenStored / hydrogenRecipeRequirement - 1;
         double heliumExcessPercentage = heliumStored / heliumRecipeRequirement - 1;
@@ -1075,33 +1075,26 @@ public class GT_MetaTileEntity_EM_EyeOfHarmony extends GT_MetaTileEntity_Multibl
         structureBuild_EM(STRUCTURE_PIECE_MAIN, 16, 16, 0, stackSize, hintsOnly);
     }
 
-    private final Map<FluidStack, Long> validFluidMap = new HashMap<>() {
+    private final Map<Fluid, Long> validFluidMap = new HashMap<>() {
 
         private static final long serialVersionUID = -8452610443191188130L;
 
         {
-            put(Materials.Hydrogen.getGas(1), 0L);
-            put(Materials.Helium.getGas(1), 0L);
-            put(MaterialsUEVplus.RawStarMatter.getFluid(1), 0L);
+            put(Materials.Hydrogen.mGas, 0L);
+            put(Materials.Helium.mGas, 0L);
+            put(MaterialsUEVplus.RawStarMatter.mFluid, 0L);
         }
     };
 
     private void drainFluidFromHatchesAndStoreInternally() {
-        for (GT_MetaTileEntity_Hatch_Input inputHatch : mInputHatches) {
-            FluidStack fluidInHatch = inputHatch.getFluid();
-
-            if (fluidInHatch == null) {
-                continue;
-            }
-
-            // Iterate over valid fluids and store them in a hashmap.
-            for (FluidStack validFluid : validFluidMap.keySet()) {
-                if (fluidInHatch.isFluidEqual(validFluid)) {
-                    validFluidMap.put(validFluid, validFluidMap.get(validFluid) + (long) fluidInHatch.amount);
-                    inputHatch.setFillableStack(null);
-                }
+        List<FluidStack> fluidStacks = getStoredFluids();
+        for (FluidStack fluidStack : fluidStacks) {
+            if (validFluidMap.containsKey(fluidStack.getFluid())) {
+                validFluidMap.merge(fluidStack.getFluid(), (long) fluidStack.amount, Long::sum);
+                fluidStack.amount = 0;
             }
         }
+        updateSlots();
     }
 
     @Override
@@ -1275,9 +1268,12 @@ public class GT_MetaTileEntity_EM_EyeOfHarmony extends GT_MetaTileEntity_Multibl
         currentRecipeRocketTier = currentRecipe.getRocketTier();
 
         // Reduce internal storage by input fluid quantity required for recipe.
-        validFluidMap.put(Materials.Hydrogen.getGas(1), 0L);
-        validFluidMap.put(Materials.Helium.getGas(1), 0L);
-        validFluidMap.put(MaterialsUEVplus.RawStarMatter.getFluid(1), 0L);
+        if (parallelAmount > 1) {
+            validFluidMap.put(MaterialsUEVplus.RawStarMatter.mFluid, 0L);
+        } else {
+            validFluidMap.put(Materials.Hydrogen.mGas, 0L);
+            validFluidMap.put(Materials.Helium.mGas, 0L);
+        }
 
         double yield = recipeYieldCalculator();
         if (EOH_DEBUG_MODE) {
@@ -1420,7 +1416,7 @@ public class GT_MetaTileEntity_EM_EyeOfHarmony extends GT_MetaTileEntity_Multibl
             strongCheckOrAddUser(userUUID, userName);
         }
 
-        if (!recipeRunning) {
+        if (!recipeRunning && mMachine) {
             if ((aTick % TICKS_BETWEEN_HATCH_DRAIN) == 0) {
                 drainFluidFromHatchesAndStoreInternally();
             }
