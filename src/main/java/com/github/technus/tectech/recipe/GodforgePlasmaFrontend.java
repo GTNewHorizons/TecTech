@@ -44,18 +44,11 @@ public class GodforgePlasmaFrontend extends RecipeMapFrontend {
         if (recipeInfo.recipe.mSpecialItems.toString().equals("true")) {
             multistep = "Yes";
         }
-        String requiredUpgrade = "";
-        switch (recipeInfo.recipe.mSpecialValue) {
-            case 1:
-                requiredUpgrade = "T3-T5";
-                break;
-            case 2:
-                requiredUpgrade = "Exotic";
-                break;
-            default:
-                requiredUpgrade = "T1-T2";
-                break;
-        }
+        String requiredUpgrade = switch (recipeInfo.recipe.mSpecialValue) {
+            case 1 -> "T4-T5";
+            case 2 -> "Exotic";
+            default -> "T1-T3";
+        };
 
         recipeInfo.drawText(trans("152", "Total: ") + GT_Utility.formatNumbers(eut * duration) + " EU");
         recipeInfo.drawText(trans("153", "Usage: ") + GT_Utility.formatNumbers(eut) + " EU/t");
