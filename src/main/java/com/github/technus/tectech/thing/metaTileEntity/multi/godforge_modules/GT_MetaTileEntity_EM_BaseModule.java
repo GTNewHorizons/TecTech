@@ -4,10 +4,7 @@ import static com.github.technus.tectech.thing.casing.GT_Block_CasingsTT.texture
 import static gregtech.common.misc.WirelessNetworkManager.addEUToGlobalEnergyMap;
 import static gregtech.common.misc.WirelessNetworkManager.strongCheckOrAddUser;
 
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.StatCollector;
 import net.minecraftforge.common.util.ForgeDirection;
 
 import com.github.technus.tectech.thing.casing.TT_Container_Casings;
@@ -16,16 +13,20 @@ import com.github.technus.tectech.thing.metaTileEntity.multi.base.render.TT_Rend
 import com.gtnewhorizon.structurelib.structure.IStructureDefinition;
 import com.gtnewhorizon.structurelib.structure.StructureDefinition;
 import com.gtnewhorizon.structurelib.structure.StructureUtility;
+import com.gtnewhorizons.modularui.api.screen.ModularWindow;
+import com.gtnewhorizons.modularui.api.screen.UIBuildContext;
+import com.gtnewhorizons.modularui.common.widget.DrawableWidget;
+import com.gtnewhorizons.modularui.common.widget.DynamicPositionedColumn;
+import com.gtnewhorizons.modularui.common.widget.SlotWidget;
 
-import gregtech.api.enums.OrePrefixes;
 import gregtech.api.enums.Textures;
+import gregtech.api.gui.modularui.GT_UITextures;
 import gregtech.api.interfaces.ITexture;
 import gregtech.api.interfaces.metatileentity.IMetaTileEntity;
 import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
 import gregtech.api.recipe.RecipeMap;
 import gregtech.api.recipe.RecipeMaps;
 import gregtech.api.util.GT_StructureUtility;
-import gregtech.api.util.GT_Utility;
 
 public class GT_MetaTileEntity_EM_BaseModule extends GT_MetaTileEntity_MultiblockBase_EM {
 
@@ -70,21 +71,6 @@ public class GT_MetaTileEntity_EM_BaseModule extends GT_MetaTileEntity_Multibloc
             if (aTick % 400 == 0) fixAllIssues();
             if (mEfficiency < 0) mEfficiency = 0;
         }
-    }
-
-    protected static String findBestPrefix(String oreDict) {
-        int longestPrefixLength = 0;
-        String matchingPrefix = null;
-        for (OrePrefixes prefix : OrePrefixes.values()) {
-            String name = prefix.toString();
-            if (oreDict.startsWith(name)) {
-                if (name.length() > longestPrefixLength) {
-                    longestPrefixLength = name.length();
-                    matchingPrefix = name;
-                }
-            }
-        }
-        return matchingPrefix;
     }
 
     @Override
@@ -158,23 +144,43 @@ public class GT_MetaTileEntity_EM_BaseModule extends GT_MetaTileEntity_Multibloc
         }
     }
 
-    protected boolean inputSeparation = false;
-    protected static String INPUT_SEPARATION_NBT_KEY = "inputSeparation";
-
     @Override
-    public final void onScrewdriverRightClick(ForgeDirection side, EntityPlayer aPlayer, float aX, float aY, float aZ) {
-        inputSeparation = !inputSeparation;
-        GT_Utility.sendChatToPlayer(
-                aPlayer,
-                StatCollector.translateToLocal("GT5U.machines.separatebus") + " " + inputSeparation);
+    public void addUIWidgets(ModularWindow.Builder builder, UIBuildContext buildContext) {
+        builder.widget(
+                new DrawableWidget().setDrawable(GT_UITextures.PICTURE_SCREEN_BLACK).setPos(4, 4).setSize(190, 85));
+        final SlotWidget inventorySlot = new SlotWidget(inventoryHandler, 1);
+        builder.widget(inventorySlot.setPos(173, 167).setBackground(GT_UITextures.SLOT_DARK_GRAY));
+
+        final DynamicPositionedColumn screenElements = new DynamicPositionedColumn();
+        drawTexts(screenElements, inventorySlot);
+        builder.widget(screenElements);
+
+        builder.widget(createPowerSwitchButton(builder)).widget(createVoidExcessButton(builder))
+                .widget(createInputSeparationButton(builder)).widget(createBatchModeButton(builder))
+                .widget(createLockToSingleRecipeButton(builder));
     }
 
     @Override
-    public void loadNBTData(NBTTagCompound aNBT) {
-        super.loadNBTData(aNBT);
-        if (!aNBT.hasKey(INPUT_SEPARATION_NBT_KEY)) {
-            inputSeparation = aNBT.getBoolean("separateBusses");
-        }
+    public void addGregTechLogo(ModularWindow.Builder builder) {}
+
+    @Override
+    public boolean supportsInputSeparation() {
+        return true;
+    }
+
+    @Override
+    public boolean supportsBatchMode() {
+        return true;
+    }
+
+    @Override
+    public boolean supportsVoidProtection() {
+        return true;
+    }
+
+    @Override
+    public boolean supportsSingleRecipeLocking() {
+        return true;
     }
 
     @Override
