@@ -1230,19 +1230,19 @@ public class GT_MetaTileEntity_EM_EyeOfHarmony extends GT_MetaTileEntity_Multibl
         startEU = recipeObject.getEUStartCost();
 
         // Determine EU recipe output
-        outputEU_BigInt = BigInteger.valueOf(recipeObject.getEUOutput());
+        outputEU_BigInt = BigInteger.valueOf(recipeObject.getEUOutput())
+                .multiply(
+                        BigInteger.valueOf(
+                                (long) (1 - ((TOTAL_CASING_TIERS_WITH_POWER_PENALTY - stabilisationFieldMetadata)
+                                        * STABILITY_INCREASE_PROBABILITY_DECREASE_YIELD_PER_TIER)) * 100))
+                .divide(BigInteger.valueOf(100));
 
         double multiplier = 1;
 
         // Calculate actual EU values
         if (parallelAmount > 1) {
             multiplier = PARALLEL_MULTIPLIER_CONSTANT / POWER_DIVISION_CONSTANT;
-            outputEU_BigInt = outputEU_BigInt
-                    .multiply(
-                            BigInteger.valueOf(
-                                    (long) (1 - ((TOTAL_CASING_TIERS_WITH_POWER_PENALTY - stabilisationFieldMetadata)
-                                            * STABILITY_INCREASE_PROBABILITY_DECREASE_YIELD_PER_TIER)) * 100))
-                    .divide(BigInteger.valueOf(9 * 100))
+            outputEU_BigInt = outputEU_BigInt.divide(BigInteger.valueOf(9))
                     .multiply(BigInteger.valueOf((long) (powerMultiplier * precisionMultiplier)))
                     .divide(BigInteger.valueOf(precisionMultiplier));
         }
