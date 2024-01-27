@@ -824,21 +824,6 @@ public class GT_MetaTileEntity_EM_EyeOfHarmony extends GT_MetaTileEntity_Multibl
         return (int) Math.max(recipeTimeDiscounted, 1.0);
     }
 
-    private void overclockCalculator() {
-        // Perform 3x -> 3.4x -> 3.8x ... power exponent
-        double powerMultiplier = 1;
-        long ocPrecisionMultiplier = (long) pow(5, currentCircuitMultiplier);
-        for (int i = 0; i < currentCircuitMultiplier; i++) {
-            powerMultiplier *= 15 + 2 * i;
-            if (powerMultiplier * (15 + 2 * (i + 1)) > Long.MAX_VALUE) {
-                usedEU = usedEU.multiply(BigInteger.valueOf((long) powerMultiplier));
-                powerMultiplier = 1;
-            }
-        }
-        usedEU = usedEU.multiply(BigInteger.valueOf((long) powerMultiplier))
-                .divide(BigInteger.valueOf(ocPrecisionMultiplier));
-    }
-
     @Override
     public IStructureDefinition<GT_MetaTileEntity_EM_EyeOfHarmony> getStructure_EM() {
         return STRUCTURE_DEFINITION;
@@ -1004,12 +989,8 @@ public class GT_MetaTileEntity_EM_EyeOfHarmony extends GT_MetaTileEntity_Multibl
                 .addInfo(TOOLTIP_BAR)
                 .addInfo("This multiblock can be overclocked by placing a programmed circuit into the input bus.")
                 .addInfo(
-                        "Every OC will add 0.4 to power exponent. E.g. A circuit of 1 will provide 1 OC, 3x EU consumed and")
-                .addInfo(
-                        "0.5x the time; a circuit of 2 will provide 2 OCs, 10.2x (3 x 3.4) EU consumed and 0.25x the time.")
-                .addInfo(
-                        "All outputs are equal. All item and fluid output chances & amounts per recipe are unaffected.")
-                .addInfo(TOOLTIP_BAR)
+                        "E.g. A circuit of 2 will provide 2 OCs, 16x EU consumed and 0.25x the time. All outputs are equal.")
+                .addInfo("All item and fluid output chances & amounts per recipe are unaffected.").addInfo(TOOLTIP_BAR)
                 .addInfo(
                         "If a recipe fails the EOH will output " + GREEN
                                 + "successChance * "
@@ -1260,10 +1241,10 @@ public class GT_MetaTileEntity_EM_EyeOfHarmony extends GT_MetaTileEntity_Multibl
                     .divide(BigInteger.valueOf(precisionMultiplier));
         }
         usedEU = BigInteger.valueOf((long) (-startEU * multiplier))
-                .multiply(BigInteger.valueOf((long) (powerMultiplier * precisionMultiplier)))
+                .multiply(
+                        BigInteger.valueOf((long) Math.pow(4, currentCircuitMultiplier))
+                                .multiply(BigInteger.valueOf((long) (powerMultiplier * precisionMultiplier))))
                 .divide(BigInteger.valueOf(precisionMultiplier));
-        // Calculate OC EU consumption multiplier and change usedEU
-        overclockCalculator();
 
         // Remove EU from the users network.
         if (!addEUToGlobalEnergyMap(userUUID, usedEU)) {
