@@ -21,8 +21,9 @@ public class Godforge implements Runnable {
             // Fusion tier 1-3
             {
                 // Single step
-                ItemStack[] solids_t0_1step = { Materials.Aluminium.getDust(1) };
-                FluidStack[] solid_plasmas_t0_1step = { Materials.Aluminium.getPlasma(144) };
+                ItemStack[] solids_t0_1step = { Materials.Aluminium.getDust(1), Materials.Iron.getDust(1) };
+                FluidStack[] solid_plasmas_t0_1step = { Materials.Aluminium.getPlasma(144),
+                        Materials.Iron.getPlasma(144) };
 
                 for (int i = 0; i < solids_t0_1step.length; i++) {
                     TT_recipeAdder.addFOGPlasmaRecipe(
@@ -35,8 +36,11 @@ public class Godforge implements Runnable {
                 }
 
                 // Multi-step
-                ItemStack[] solids_t0_xstep = { Materials.Force.getDust(1) };
-                FluidStack[] solid_plasmas_t0_xstep = { new FluidStack(ELEMENT.STANDALONE.FORCE.getPlasma(), 144) };
+                ItemStack[] solids_t0_xstep = { Materials.Force.getDust(1), Materials.Bismuth.getDust(1),
+                        ELEMENT.STANDALONE.ADVANCED_NITINOL.getDust(1) };
+                FluidStack[] solid_plasmas_t0_xstep = { new FluidStack(ELEMENT.STANDALONE.FORCE.getPlasma(), 144),
+                        Materials.Bismuth.getPlasma(144),
+                        new FluidStack(ELEMENT.STANDALONE.ADVANCED_NITINOL.getPlasma(), 144) };
 
                 for (int i = 0; i < solids_t0_xstep.length; i++) {
                     TT_recipeAdder.addFOGPlasmaRecipe(
@@ -51,8 +55,8 @@ public class Godforge implements Runnable {
             // Fusion tier 4-5
             {
                 // Single step
-                ItemStack[] solids_t1_1step = { Materials.Iron.getDust(1), Materials.Lead.getDust(1) };
-                FluidStack[] solid_plasmas_t1_1step = { Materials.Iron.getPlasma(144), Materials.Lead.getPlasma(144) };
+                ItemStack[] solids_t1_1step = { Materials.Lead.getDust(1) };
+                FluidStack[] solid_plasmas_t1_1step = { Materials.Lead.getPlasma(144) };
 
                 for (int i = 0; i < solids_t1_1step.length; i++) {
                     TT_recipeAdder.addFOGPlasmaRecipe(
@@ -65,10 +69,10 @@ public class Godforge implements Runnable {
                 }
 
                 // Multi-step
-                ItemStack[] solids_t1_xstep = { Materials.Bismuth.getDust(1),
-                        ELEMENT.STANDALONE.ADVANCED_NITINOL.getDust(1) };
-                FluidStack[] solid_plasmas_t1_xstep = { Materials.Bismuth.getPlasma(144),
-                        new FluidStack(ELEMENT.STANDALONE.ADVANCED_NITINOL.getPlasma(), 144) };
+                ItemStack[] solids_t1_xstep = { ELEMENT.getInstance().NEPTUNIUM.getDust(1),
+                        ELEMENT.getInstance().FERMIUM.getDust(1) };
+                FluidStack[] solid_plasmas_t1_xstep = { new FluidStack(ELEMENT.getInstance().NEPTUNIUM.getPlasma(), 144),
+                        new FluidStack(ELEMENT.getInstance().FERMIUM.getPlasma(), 144) };
 
                 for (int i = 0; i < solids_t1_xstep.length; i++) {
                     TT_recipeAdder.addFOGPlasmaRecipe(
@@ -150,32 +154,10 @@ public class Godforge implements Runnable {
             // Fusion tier 4-5
             {
                 // Single step
-                FluidStack[] fluids_t1_1step = { Materials.Radon.getGas(1000) };
-                FluidStack[] fluid_plasmas_t1_1step = { Materials.Radon.getPlasma(1000) };
-
-                for (int i = 0; i < fluids_t1_1step.length; i++) {
-                    TT_recipeAdder.addFOGPlasmaRecipe(
-                            new FluidStack[] { fluids_t1_1step[i] },
-                            new FluidStack[] { fluid_plasmas_t1_1step[i] },
-                            1 * SECONDS,
-                            (int) TierEU.RECIPE_MAX,
-                            false,
-                            1);
-                }
+                // None yet
 
                 // Multi-step
-                FluidStack[] fluids_t1_xstep = { ELEMENT.getInstance().XENON.getFluidStack(1000) };
-                FluidStack[] fluid_plasmas_t1_xstep = { new FluidStack(ELEMENT.getInstance().XENON.getPlasma(), 1000) };
-
-                for (int i = 0; i < fluids_t1_xstep.length; i++) {
-                    TT_recipeAdder.addFOGPlasmaRecipe(
-                            new FluidStack[] { fluids_t1_xstep[i] },
-                            new FluidStack[] { fluid_plasmas_t1_xstep[i] },
-                            1 * SECONDS,
-                            (int) TierEU.RECIPE_MAX,
-                            true,
-                            1);
-                }
+                // None yet
             }
             // Exotic
             {
