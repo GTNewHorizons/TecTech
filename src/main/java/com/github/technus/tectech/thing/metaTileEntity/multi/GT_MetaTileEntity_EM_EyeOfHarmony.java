@@ -1179,15 +1179,13 @@ public class GT_MetaTileEntity_EM_EyeOfHarmony extends GT_MetaTileEntity_Multibl
     public CheckRecipeResult processRecipe(EyeOfHarmonyRecipe recipeObject) {
 
         // Get circuit damage, clamp it and then use it later for overclocking.
-        boolean foundCircuit = false;
+        currentCircuitMultiplier = 0;
         for (ItemStack itemStack : mInputBusses.get(0).getRealInventory()) {
             if (GT_Utility.isAnyIntegratedCircuit(itemStack)) {
                 currentCircuitMultiplier = MathHelper.clamp_int(itemStack.getItemDamage(), 0, 24);
-                foundCircuit = true;
                 break;
             }
         }
-        if (!foundCircuit) currentCircuitMultiplier = 0;
 
         astralArrayAmount = 0;
 
