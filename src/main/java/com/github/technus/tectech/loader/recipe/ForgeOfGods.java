@@ -9,34 +9,161 @@ import com.github.technus.tectech.recipe.TT_recipeAdder;
 
 import gregtech.api.enums.Materials;
 import gregtech.api.enums.TierEU;
+import gtPlusPlus.core.material.ELEMENT;
 
 public class ForgeOfGods implements Runnable {
 
     @Override
     public void run() {
 
-        // GT solid to plasma recipes
-        ItemStack[] solids = { Materials.Tritanium.getDust(1), Materials.Aluminium.getDust(1) };
-        FluidStack[] solid_plasmas = { Materials.Tritanium.getPlasma(144), Materials.Aluminium.getPlasma(144) };
+        // Solid to plasma recipes
+        {
+            // Fusion tier 1-2
+            {
+                // Single step
+                ItemStack[] solids_t0_1step = { Materials.Aluminium.getDust(1) };
+                FluidStack[] solid_plasmas_t0_1step = { Materials.Aluminium.getPlasma(144) };
 
-        for (int i = 0; i < solids.length; i++) {
-            TT_recipeAdder.addFOGPlasmaRecipe(
-                    new ItemStack[] { solids[i] },
-                    new FluidStack[] { solid_plasmas[i] },
-                    1 * SECONDS,
-                    (int) TierEU.RECIPE_MAX);
+                for (int i = 0; i < solids_t0_1step.length; i++) {
+                    TT_recipeAdder.addFOGPlasmaRecipe(
+                            new ItemStack[] { solids_t0_1step[i] },
+                            new FluidStack[] { solid_plasmas_t0_1step[i] },
+                            1 * SECONDS,
+                            (int) TierEU.RECIPE_MAX,
+                            false,
+                            0);
+                }
+
+                // Multi-step
+                ItemStack[] solids_t0_xstep = { Materials.Force.getDust(1) };
+                FluidStack[] solid_plasmas_t0_xstep = { new FluidStack(ELEMENT.STANDALONE.FORCE.getPlasma(), 144) };
+
+                for (int i = 0; i < solids_t0_xstep.length; i++) {
+                    TT_recipeAdder.addFOGPlasmaRecipe(
+                            new ItemStack[] { solids_t0_xstep[i] },
+                            new FluidStack[] { solid_plasmas_t0_xstep[i] },
+                            1 * SECONDS,
+                            (int) TierEU.RECIPE_MAX,
+                            true,
+                            0);
+                }
+            }
+            // Fusion tier 3-4
+            {
+                // Single step
+                ItemStack[] solids_t1_1step = { Materials.Iron.getDust(1) };
+                FluidStack[] solid_plasmas_t1_1step = { Materials.Iron.getPlasma(144) };
+
+                for (int i = 0; i < solids_t1_1step.length; i++) {
+                    TT_recipeAdder.addFOGPlasmaRecipe(
+                            new ItemStack[] { solids_t1_1step[i] },
+                            new FluidStack[] { solid_plasmas_t1_1step[i] },
+                            1 * SECONDS,
+                            (int) TierEU.RECIPE_MAX,
+                            false,
+                            1);
+                }
+
+                // Multi-step
+                ItemStack[] solids_t1_xstep = { Materials.Bismuth.getDust(1),
+                        ELEMENT.STANDALONE.ADVANCED_NITINOL.getDust(1) };
+                FluidStack[] solid_plasmas_t1_xstep = { Materials.Bismuth.getPlasma(144),
+                        new FluidStack(ELEMENT.STANDALONE.ADVANCED_NITINOL.getPlasma(), 144) };
+
+                for (int i = 0; i < solids_t1_xstep.length; i++) {
+                    TT_recipeAdder.addFOGPlasmaRecipe(
+                            new ItemStack[] { solids_t1_xstep[i] },
+                            new FluidStack[] { solid_plasmas_t1_xstep[i] },
+                            1 * SECONDS,
+                            (int) TierEU.RECIPE_MAX,
+                            true,
+                            1);
+                }
+            }
+            // Fusion tier 5
+            {
+                // Single step
+                ItemStack[] solids_t2_1step = { Materials.Lead.getDust(1) };
+                FluidStack[] solid_plasmas_t2_1step = { Materials.Lead.getPlasma(144) };
+
+                for (int i = 0; i < solids_t2_1step.length; i++) {
+                    TT_recipeAdder.addFOGPlasmaRecipe(
+                            new ItemStack[] { solids_t2_1step[i] },
+                            new FluidStack[] { solid_plasmas_t2_1step[i] },
+                            1 * SECONDS,
+                            (int) TierEU.RECIPE_MAX,
+                            false,
+                            2);
+                }
+
+                // Multi-step (there are none yet)
+            }
+
         }
 
-        // GT fluid to plasma recipes
-        FluidStack[] fluids = { Materials.Helium.getGas(1000) };
-        FluidStack[] fluid_plasmas = { Materials.Helium.getPlasma(1000) };
+        // Fluid to plasma recipes
+        {
+            // Fusion tier 1-2
+            {
+                // Single step
+                FluidStack[] fluids_t0_1step = { Materials.Helium.getGas(1000) };
+                FluidStack[] fluid_plasmas_t0_1step = { Materials.Helium.getPlasma(1000) };
 
-        for (int i = 0; i < fluids.length; i++) {
-            TT_recipeAdder.addFOGPlasmaRecipe(
-                    new FluidStack[] { fluids[i] },
-                    new FluidStack[] { fluid_plasmas[i] },
-                    1 * SECONDS,
-                    (int) TierEU.RECIPE_MAX);
+                for (int i = 0; i < fluids_t0_1step.length; i++) {
+                    TT_recipeAdder.addFOGPlasmaRecipe(
+                            new FluidStack[] { fluids_t0_1step[i] },
+                            new FluidStack[] { fluid_plasmas_t0_1step[i] },
+                            1 * SECONDS,
+                            (int) TierEU.RECIPE_MAX,
+                            false,
+                            0);
+                }
+
+                // Multi-step
+                FluidStack[] fluids_t0_xstep = { ELEMENT.getInstance().NEON.getFluidStack(1000) };
+                FluidStack[] fluid_plasmas_t0_xstep = { new FluidStack(ELEMENT.getInstance().NEON.getPlasma(), 1000) };
+
+                for (int i = 0; i < fluids_t0_xstep.length; i++) {
+                    TT_recipeAdder.addFOGPlasmaRecipe(
+                            new FluidStack[] { fluids_t0_xstep[i] },
+                            new FluidStack[] { fluid_plasmas_t0_xstep[i] },
+                            1 * SECONDS,
+                            (int) TierEU.RECIPE_MAX,
+                            true,
+                            0);
+                }
+            }
+            // Fusion tier 3-4
+            {
+                // Single step
+                FluidStack[] fluids_t1_1step = { Materials.Radon.getGas(1000) };
+                FluidStack[] fluid_plasmas_t1_1step = { Materials.Radon.getPlasma(1000) };
+
+                for (int i = 0; i < fluids_t1_1step.length; i++) {
+                    TT_recipeAdder.addFOGPlasmaRecipe(
+                            new FluidStack[] { fluids_t1_1step[i] },
+                            new FluidStack[] { fluid_plasmas_t1_1step[i] },
+                            1 * SECONDS,
+                            (int) TierEU.RECIPE_MAX,
+                            false,
+                            1);
+                }
+
+                // Multi-step
+                FluidStack[] fluids_t1_xstep = { ELEMENT.getInstance().XENON.getFluidStack(1000) };
+                FluidStack[] fluid_plasmas_t1_xstep = { new FluidStack(ELEMENT.getInstance().XENON.getPlasma(), 1000) };
+
+                for (int i = 0; i < fluids_t1_xstep.length; i++) {
+                    TT_recipeAdder.addFOGPlasmaRecipe(
+                            new FluidStack[] { fluids_t1_xstep[i] },
+                            new FluidStack[] { fluid_plasmas_t1_xstep[i] },
+                            1 * SECONDS,
+                            (int) TierEU.RECIPE_MAX,
+                            true,
+                            1);
+                }
+            }
+            // Fusion tier 5 (there are none yet)
         }
     }
 }

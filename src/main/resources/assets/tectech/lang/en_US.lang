@@ -891,6 +891,8 @@ achievement.gt.godforgecasing.7=Central Graviton Flow Modulator
 gt.blockmachines.multimachine.FOG.parallel=Parallel
 gt.blockmachines.multimachine.FOG.batch=Batch Size
 gt.blockmachines.multimachine.FOG.fuelconsumption=Stellar Fuel Consumption Factor
+gt.blockmachines.multimachine.FOG.plasmamultistep=Multi-Step plasma
+gt.blockmachines.multimachine.FOG.plasmarecipetier=Fusion Tier
 
 # Optical Circuits
 achievement.gt.metaitem.03.32155=Optical Assembly
@@ -1015,6 +1017,7 @@ GT5U.gui.text.invalid_current_setting=§7Invalid current setting
 GT5U.gui.text.invalid_time_setting=§7Invalid time setting
 GT5U.gui.text.invalid_overdrive_setting=§7Invalid overdrive setting
 GT5U.gui.text.insufficient_power_no_val=§7Insufficient power
+GT5U.gui.text.missing_upgrades=§7Missing upgrades
 
 # RecipeMaps
 gt.recipe.eyeofharmony=Eye of Harmony

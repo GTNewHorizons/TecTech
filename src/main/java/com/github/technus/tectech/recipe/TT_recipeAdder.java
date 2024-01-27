@@ -228,25 +228,41 @@ public class TT_recipeAdder extends GT_RecipeAdder {
     }
 
     public static boolean addFOGPlasmaRecipe(ItemStack[] itemInputs, FluidStack[] fluidOutputs, int machineDuration,
-            int machineEUt) {
+            int machineEUt, boolean multiStep, int recipeTier) {
         if (itemInputs == null) {
             itemInputs = nullItem;
         }
 
-        TecTechRecipeMaps.godforgePlasmaRecipes
-                .addRecipe(false, itemInputs, null, null, null, fluidOutputs, machineDuration, machineEUt, 0);
+        TecTechRecipeMaps.godforgePlasmaRecipes.addRecipe(
+                false,
+                itemInputs,
+                null,
+                multiStep,
+                null,
+                fluidOutputs,
+                machineDuration,
+                machineEUt,
+                recipeTier);
         return true;
     }
 
     public static boolean addFOGPlasmaRecipe(FluidStack[] afluidInputs, FluidStack[] fluidOutputs, int machineDuration,
-            int machineEUt) {
+            int machineEUt, boolean multiStep, int recipeTier) {
 
         if (afluidInputs == null) {
             afluidInputs = nullFluid;
         }
 
-        TecTechRecipeMaps.godforgePlasmaRecipes
-                .addRecipe(false, null, null, null, afluidInputs, fluidOutputs, machineDuration, machineEUt, 0);
+        TecTechRecipeMaps.godforgePlasmaRecipes.addRecipe(
+                false,
+                null,
+                null,
+                multiStep,
+                afluidInputs,
+                fluidOutputs,
+                machineDuration,
+                machineEUt,
+                recipeTier);
         return true;
     }
 
