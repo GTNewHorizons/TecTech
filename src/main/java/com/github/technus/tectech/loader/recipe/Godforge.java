@@ -18,7 +18,7 @@ public class Godforge implements Runnable {
 
         // Solid to plasma recipes
         {
-            // Fusion tier 1-2
+            // Fusion tier 1-3
             {
                 // Single step
                 ItemStack[] solids_t0_1step = { Materials.Aluminium.getDust(1) };
@@ -48,7 +48,7 @@ public class Godforge implements Runnable {
                             0);
                 }
             }
-            // Fusion tier 3-5
+            // Fusion tier 4-5
             {
                 // Single step
                 ItemStack[] solids_t1_1step = { Materials.Iron.getDust(1), Materials.Lead.getDust(1) };
@@ -83,10 +83,8 @@ public class Godforge implements Runnable {
             // Exotic Plasmas
             {
                 // Single step
-                ItemStack[] solids_t2_1step = { ELEMENT.STANDALONE.HYPOGEN.getDust(1),
-                        Materials.Tritanium.getDust(1) };
-                FluidStack[] solid_plasmas_t2_1step = { new FluidStack(ELEMENT.STANDALONE.HYPOGEN.getPlasma(), 144),
-                        Materials.Tritanium.getPlasma(144) };
+                ItemStack[] solids_t2_1step = { ELEMENT.STANDALONE.RHUGNOR.getDust(1) };
+                FluidStack[] solid_plasmas_t2_1step = { new FluidStack(ELEMENT.STANDALONE.RHUGNOR.getPlasma(), 144) };
 
                 for (int i = 0; i < solids_t2_1step.length; i++) {
                     TT_recipeAdder.addFOGPlasmaRecipe(
@@ -98,13 +96,28 @@ public class Godforge implements Runnable {
                             2);
                 }
 
+                // Multi-step
+                ItemStack[] solids_t2_xstep = { ELEMENT.STANDALONE.HYPOGEN.getDust(1), Materials.Tritanium.getDust(1) };
+                FluidStack[] solid_plasmas_t2_xstep = { new FluidStack(ELEMENT.STANDALONE.HYPOGEN.getPlasma(), 144),
+                        Materials.Tritanium.getPlasma(144) };
+
+                for (int i = 0; i < solids_t2_xstep.length; i++) {
+                    TT_recipeAdder.addFOGPlasmaRecipe(
+                            new ItemStack[] { solids_t2_xstep[i] },
+                            new FluidStack[] { solid_plasmas_t2_xstep[i] },
+                            1 * SECONDS,
+                            (int) TierEU.RECIPE_MAX,
+                            true,
+                            2);
+                }
+
             }
 
         }
 
         // Fluid to plasma recipes
         {
-            // Fusion tier 1-2
+            // Fusion tier 1-3
             {
                 // Single step
                 FluidStack[] fluids_t0_1step = { Materials.Helium.getGas(1000) };
@@ -134,7 +147,7 @@ public class Godforge implements Runnable {
                             0);
                 }
             }
-            // Fusion tier 3-5
+            // Fusion tier 4-5
             {
                 // Single step
                 FluidStack[] fluids_t1_1step = { Materials.Radon.getGas(1000) };
@@ -163,6 +176,10 @@ public class Godforge implements Runnable {
                             true,
                             1);
                 }
+            }
+            // Exotic
+            {
+                // None yet
             }
         }
     }
