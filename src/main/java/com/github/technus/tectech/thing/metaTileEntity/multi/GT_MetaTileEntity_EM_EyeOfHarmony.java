@@ -1139,12 +1139,8 @@ public class GT_MetaTileEntity_EM_EyeOfHarmony extends GT_MetaTileEntity_Multibl
                 return CheckRecipeResultRegistry.NO_RECIPE;
             }
             CheckRecipeResult result = processRecipe(currentRecipe);
-
-            if (result.wasSuccessful()) {
-                return result;
-            }
-
-            currentRecipe = null;
+            if (!result.wasSuccessful()) currentRecipe = null;
+            return result;
         }
         return CheckRecipeResultRegistry.NO_RECIPE;
     }
