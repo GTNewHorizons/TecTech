@@ -854,6 +854,11 @@ public class GT_MetaTileEntity_EM_EyeOfHarmony extends GT_MetaTileEntity_Multibl
             return false;
         }
 
+        // Make sure there are no Crafting Input Buffers/Buses/Slaves.
+        if (!mDualInputHatches.isEmpty()) {
+            return false;
+        }
+
         // Check if there is 1 output bus, and it is a ME output bus.
         {
             if (mOutputBusses.size() != 1) {
