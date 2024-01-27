@@ -34,7 +34,7 @@ public class BaseRecipeLoader {
     }
 
     public void run() {
-        new ForgeOfGods().run();
+        new Godforge().run();
         // todo: Move those recipes in NHCore
         if (NewHorizonsCoreMod.isModLoaded()) {
             new Assembler().run();

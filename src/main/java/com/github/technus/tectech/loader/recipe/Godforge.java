@@ -11,7 +11,7 @@ import gregtech.api.enums.Materials;
 import gregtech.api.enums.TierEU;
 import gtPlusPlus.core.material.ELEMENT;
 
-public class ForgeOfGods implements Runnable {
+public class Godforge implements Runnable {
 
     @Override
     public void run() {
@@ -48,11 +48,11 @@ public class ForgeOfGods implements Runnable {
                             0);
                 }
             }
-            // Fusion tier 3-4
+            // Fusion tier 3-5
             {
                 // Single step
-                ItemStack[] solids_t1_1step = { Materials.Iron.getDust(1) };
-                FluidStack[] solid_plasmas_t1_1step = { Materials.Iron.getPlasma(144) };
+                ItemStack[] solids_t1_1step = { Materials.Iron.getDust(1), Materials.Lead.getDust(1) };
+                FluidStack[] solid_plasmas_t1_1step = { Materials.Iron.getPlasma(144), Materials.Lead.getPlasma(144) };
 
                 for (int i = 0; i < solids_t1_1step.length; i++) {
                     TT_recipeAdder.addFOGPlasmaRecipe(
@@ -80,11 +80,13 @@ public class ForgeOfGods implements Runnable {
                             1);
                 }
             }
-            // Fusion tier 5
+            // Exotic Plasmas
             {
                 // Single step
-                ItemStack[] solids_t2_1step = { Materials.Lead.getDust(1) };
-                FluidStack[] solid_plasmas_t2_1step = { Materials.Lead.getPlasma(144) };
+                ItemStack[] solids_t2_1step = { ELEMENT.STANDALONE.HYPOGEN.getDust(1),
+                        Materials.Tritanium.getDust(1) };
+                FluidStack[] solid_plasmas_t2_1step = { new FluidStack(ELEMENT.STANDALONE.HYPOGEN.getPlasma(), 144),
+                        Materials.Tritanium.getPlasma(144) };
 
                 for (int i = 0; i < solids_t2_1step.length; i++) {
                     TT_recipeAdder.addFOGPlasmaRecipe(
@@ -96,7 +98,6 @@ public class ForgeOfGods implements Runnable {
                             2);
                 }
 
-                // Multi-step (there are none yet)
             }
 
         }
@@ -133,7 +134,7 @@ public class ForgeOfGods implements Runnable {
                             0);
                 }
             }
-            // Fusion tier 3-4
+            // Fusion tier 3-5
             {
                 // Single step
                 FluidStack[] fluids_t1_1step = { Materials.Radon.getGas(1000) };
@@ -163,7 +164,6 @@ public class ForgeOfGods implements Runnable {
                             1);
                 }
             }
-            // Fusion tier 5 (there are none yet)
         }
     }
 }

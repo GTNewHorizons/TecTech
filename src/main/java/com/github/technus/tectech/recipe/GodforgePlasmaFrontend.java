@@ -47,10 +47,10 @@ public class GodforgePlasmaFrontend extends RecipeMapFrontend {
         String requiredUpgrade = "";
         switch (recipeInfo.recipe.mSpecialValue) {
             case 1:
-                requiredUpgrade = "T3-T4";
+                requiredUpgrade = "T3-T5";
                 break;
             case 2:
-                requiredUpgrade = "T5";
+                requiredUpgrade = "Exotic";
                 break;
             default:
                 requiredUpgrade = "T1-T2";
