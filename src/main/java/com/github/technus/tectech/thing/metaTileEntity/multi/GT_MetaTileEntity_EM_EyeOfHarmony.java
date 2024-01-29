@@ -1189,7 +1189,7 @@ public class GT_MetaTileEntity_EM_EyeOfHarmony extends GT_MetaTileEntity_Multibl
         if (parallelAmount > 1) {
             if ((EOH_DEBUG_MODE && getStellarPlasmaStored() < 100) || (!EOH_DEBUG_MODE && getStellarPlasmaStored()
                     < currentRecipe.getHeliumRequirement() * (12.4 / 1_000_000f) * parallelAmount)) {
-                return SimpleCheckRecipeResult.ofFailure("no_stellarPlasma");
+                return SimpleCheckRecipeResult.ofFailure("no_stellar_plasma");
             }
         }
 
