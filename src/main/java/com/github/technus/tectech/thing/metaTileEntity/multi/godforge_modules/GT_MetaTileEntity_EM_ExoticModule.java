@@ -1,32 +1,71 @@
 package com.github.technus.tectech.thing.metaTileEntity.multi.godforge_modules;
 
+import static com.github.technus.tectech.loader.recipe.Godforge.exoticModulePlasmaFluidMap;
+import static com.github.technus.tectech.loader.recipe.Godforge.exoticModulePlasmaItemMap;
+import static com.github.technus.tectech.recipe.TecTechRecipeMaps.godforgeExoticMatterRecipes;
 import static com.github.technus.tectech.thing.casing.GT_Block_CasingsTT.texturePage;
+import static com.github.technus.tectech.util.TT_Utility.getRandomIntInRange;
+import static gregtech.api.util.GT_OreDictUnificator.getAssociation;
+import static gregtech.api.util.GT_RecipeBuilder.INGOTS;
+import static gregtech.api.util.GT_RecipeBuilder.SECONDS;
+import static gregtech.common.misc.WirelessNetworkManager.addEUToGlobalEnergyMap;
+import static gregtech.common.misc.WirelessNetworkManager.getUserEU;
 
+import java.math.BigInteger;
+import java.util.List;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Map;
+import java.util.stream.Stream;
+
+import javax.annotation.Nonnull;
 
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.FluidStack;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
 import com.github.technus.tectech.thing.metaTileEntity.multi.base.GT_MetaTileEntity_MultiblockBase_EM;
-import com.github.technus.tectech.thing.metaTileEntity.multi.base.Parameters;
 import com.github.technus.tectech.thing.metaTileEntity.multi.base.render.TT_RenderedExtendedFacingTexture;
 import com.github.technus.tectech.util.CommonValues;
 
+import gregtech.api.enums.Materials;
+import gregtech.api.enums.MaterialsUEVplus;
 import gregtech.api.enums.Textures;
 import gregtech.api.enums.TierEU;
-import gregtech.api.interfaces.IGlobalWirelessEnergy;
 import gregtech.api.interfaces.ITexture;
 import gregtech.api.interfaces.metatileentity.IMetaTileEntity;
 import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
-import gregtech.api.metatileentity.implementations.GT_MetaTileEntity_Hatch_InputBus;
-import gregtech.api.recipe.RecipeMaps;
+import gregtech.api.logic.ProcessingLogic;
+import gregtech.api.objects.ItemData;
+import gregtech.api.recipe.RecipeMap;
+import gregtech.api.recipe.RecipeMapBackend;
+import gregtech.api.recipe.RecipeMapBuilder;
+import gregtech.api.recipe.check.CheckRecipeResult;
+import gregtech.api.recipe.check.CheckRecipeResultRegistry;
+import gregtech.api.recipe.check.SimpleCheckRecipeResult;
 import gregtech.api.util.*;
 
 public class GT_MetaTileEntity_EM_ExoticModule extends GT_MetaTileEntity_EM_BaseModule {
 
-    Parameters.Group.ParameterIn[] parallelParameter;
     private int solenoidCoilMetadata = -1;
+    private int numberOfFluids = 0;
+    private int numberOfItems = 0;
+    private int inputAmount = 0;
+    private int currentParallel = 0;
+    private long wirelessEUt = 0;
+    private long EUt = 0;
+    private boolean recipeInProgress = false;
+    private FluidStack[] randomizedFluidInput = new FluidStack[] {};
+    private ItemStack[] randomizedItemInput = new ItemStack[] {};
+    List<FluidStack> inputPlasmas = new ArrayList<>();
+    private GT_Recipe plasmaRecipe = null;
+    private static RecipeMap<RecipeMapBackend> tempRecipeMap = null;
+    private static final RecipeMap<RecipeMapBackend> emptyRecipeMap = RecipeMapBuilder.of("hey").maxIO(0, 0, 7, 2)
+            .build();
+    private static final int NUMBER_OF_INPUTS = 7;
 
     public GT_MetaTileEntity_EM_ExoticModule(int aID, String aName, String aNameRegional) {
         super(aID, aName, aNameRegional);
@@ -42,69 +81,104 @@ public class GT_MetaTileEntity_EM_ExoticModule extends GT_MetaTileEntity_EM_Base
     }
 
     @Override
-    public boolean checkRecipe_EM(ItemStack aStack) {
-        ItemStack[] tInputs;
-        FluidStack[] tFluids = this.getStoredFluids().toArray(new FluidStack[0]);
+    protected ProcessingLogic createProcessingLogic() {
+        return new ProcessingLogic() {
 
-        if (inputSeparation) {
-            ArrayList<ItemStack> tInputList = new ArrayList<>();
-            for (GT_MetaTileEntity_Hatch_InputBus tHatch : mInputBusses) {
-                IGregTechTileEntity tInputBus = tHatch.getBaseMetaTileEntity();
-                for (int i = tInputBus.getSizeInventory() - 1; i >= 0; i--) {
-                    if (tInputBus.getStackInSlot(i) != null) tInputList.add(tInputBus.getStackInSlot(i));
+            @NotNull
+            @Override
+            protected Stream<GT_Recipe> findRecipeMatches(@Nullable RecipeMap<?> map) {
+                if (!recipeInProgress) {
+                    tempRecipeMap = emptyRecipeMap;
+                    numberOfFluids = getRandomIntInRange(0, NUMBER_OF_INPUTS);
+                    numberOfItems = NUMBER_OF_INPUTS - numberOfFluids;
+                    randomizedFluidInput = getRandomFluidInputs(numberOfFluids);
+                    randomizedItemInput = getRandomItemInputs(numberOfItems);
+                    inputPlasmas = new ArrayList<>(Arrays.asList(convertToPlasma(randomizedItemInput, 1)));
+                    inputPlasmas.addAll(Arrays.asList(randomizedFluidInput));
+
+                    if (numberOfFluids != 0) {
+                        for (FluidStack fluidStack : randomizedFluidInput) {
+                            fluidStack.amount = 1000;
+                        }
+                    }
+
+                    plasmaRecipe = new GT_Recipe(
+                            false,
+                            null,
+                            null,
+                            null,
+                            null,
+                            inputPlasmas.toArray(new FluidStack[0]),
+                            new FluidStack[] { MaterialsUEVplus.PrimordialMatter.getFluid(1000) },
+                            10 * SECONDS,
+                            (int) TierEU.RECIPE_MAX,
+                            0);
+
+                    tempRecipeMap.add(plasmaRecipe);
                 }
-                tInputs = tInputList.toArray(new ItemStack[0]);
-
-                if (processRecipe(tInputs, tFluids)) return true;
-                else tInputList.clear();
+                return tempRecipeMap.getAllRecipes().parallelStream();
             }
-        } else {
-            tInputs = getStoredInputs().toArray(new ItemStack[0]);
-            return processRecipe(tInputs, tFluids);
-        }
-        return false;
+
+            @NotNull
+            @Override
+            protected CheckRecipeResult validateRecipe(@Nonnull GT_Recipe recipe) {
+                if (!recipeInProgress) {
+                    maxParallel = 1;
+                    wirelessEUt = (long) recipe.mEUt * maxParallel;
+                    if (getUserEU(userUUID).compareTo(BigInteger.valueOf(wirelessEUt * recipe.mDuration)) < 0) {
+                        tempRecipeMap = emptyRecipeMap;
+                        return CheckRecipeResultRegistry.insufficientPower(wirelessEUt * recipe.mDuration);
+                    }
+
+                    if (numberOfFluids != 0) {
+                        for (FluidStack fluidStack : randomizedFluidInput) {
+                            dumpFluid(mOutputHatches, new FluidStack(fluidStack.getFluid(), 1), false);
+                        }
+                    }
+
+                    if (numberOfItems != 0) {
+                        for (ItemStack itemStack : randomizedItemInput) {
+                            addOutput(itemStack);
+                        }
+                    }
+
+                    recipeInProgress = true;
+                }
+                if (getFluidsStored().containsAll(inputPlasmas)) {
+                    return CheckRecipeResultRegistry.SUCCESSFUL;
+                }
+                return SimpleCheckRecipeResult.ofFailure("waiting_for_inputs");
+            }
+
+            @NotNull
+            @Override
+            protected CheckRecipeResult onRecipeStart(@Nonnull GT_Recipe recipe) {
+                wirelessEUt = (long) recipe.mEUt * maxParallel;
+                if (!addEUToGlobalEnergyMap(userUUID, -calculatedEut * duration)) {
+                    return CheckRecipeResultRegistry.insufficientPower(wirelessEUt * recipe.mDuration);
+                }
+                currentParallel = calculatedParallels;
+                EUt = calculatedEut;
+                setCalculatedEut(0);
+                tempRecipeMap = emptyRecipeMap;
+                recipeInProgress = false;
+                return CheckRecipeResultRegistry.SUCCESSFUL;
+            }
+
+            @Nonnull
+            @Override
+            protected GT_OverclockCalculator createOverclockCalculator(@Nonnull GT_Recipe recipe) {
+                return super.createOverclockCalculator(recipe).setEUt(TierEU.MAX);
+            }
+
+        };
     }
 
-    private boolean processRecipe(ItemStack[] aItemInputs, FluidStack[] aFluidInputs) {
-        // Reset outputs and progress stats
-        this.lEUt = 0;
-        this.mMaxProgresstime = 0;
-        this.mOutputItems = new ItemStack[] {};
-        this.mOutputFluids = new FluidStack[] {};
-        int maxParallel = (int) parallelParameter[0].get();
-
-        long tVoltage = TierEU.MAX * (long) Math.pow(4, (solenoidCoilMetadata - 7));
-        byte tTier = (byte) Math.max(1, GT_Utility.getTier(tVoltage));
-        long tEnergy = maxParallel * tVoltage;
-
-        GT_Recipe tRecipe = RecipeMaps.blastFurnaceRecipes.findRecipe(
-                getBaseMetaTileEntity(),
-                false,
-                false,
-                gregtech.api.enums.GT_Values.V[tTier],
-                aFluidInputs,
-                aItemInputs);
-
-        GT_ParallelHelper helper = new GT_ParallelHelper().setRecipe(tRecipe).setItemInputs(aItemInputs)
-                .setFluidInputs(aFluidInputs).setAvailableEUt(tEnergy).setMaxParallel(maxParallel).setConsumption(true)
-                .setOutputCalculation(true);
-
-        helper.build();
-
-        if (helper.getCurrentParallel() == 0) {
-            return false;
-        }
-
-        GT_OverclockCalculator calculator = new GT_OverclockCalculator().setRecipeEUt(tRecipe.mEUt)
-                .setEUt(gregtech.api.enums.GT_Values.V[tTier] * helper.getCurrentParallel())
-                .setDuration(tRecipe.mDuration).setParallel((int) Math.floor(helper.getCurrentParallel())).calculate();
-
-        lEUt = -calculator.getConsumption();
-        mMaxProgresstime = (int) Math.ceil(calculator.getDuration() * helper.getDurationMultiplierDouble());
-        mEfficiency = 10000;
-        mEfficiencyIncrease = 10000;
-        mOutputItems = helper.getItemOutputs();
-        return true;
+    @Override
+    protected void setProcessingLogicPower(ProcessingLogic logic) {
+        logic.setAvailableVoltage(Long.MAX_VALUE);
+        logic.setAvailableAmperage(Integer.MAX_VALUE);
+        logic.setAmperageOC(false);
     }
 
     @Override
@@ -117,6 +191,80 @@ public class GT_MetaTileEntity_EM_ExoticModule extends GT_MetaTileEntity_EM_Base
                                     : GT_MetaTileEntity_MultiblockBase_EM.ScreenOFF) };
         }
         return new ITexture[] { Textures.BlockIcons.getCasingTextureForId(texturePage << 7) };
+    }
+
+    @Override
+    public RecipeMap<?> getRecipeMap() {
+        return godforgeExoticMatterRecipes;
+    }
+
+    private FluidStack[] getRandomFluidInputs(int numberOfFluids) {
+        int cumulativeWeight = 0;
+
+        List<Map.Entry<FluidStack, Integer>> fluidEntryList = new ArrayList<>(exoticModulePlasmaFluidMap.entrySet());
+
+        List<Integer> cumulativeWeights = new ArrayList<>();
+        for (Map.Entry<FluidStack, Integer> entry : fluidEntryList) {
+            cumulativeWeight += entry.getValue();
+            cumulativeWeights.add(cumulativeWeight);
+        }
+
+        List<FluidStack> pickedFluids = new ArrayList<>();
+        for (int i = 0; i < numberOfFluids; i++) {
+            int randomWeight = getRandomIntInRange(1, cumulativeWeight);
+            // Find the corresponding FluidStack based on randomWeight
+            for (int j = 0; j < cumulativeWeights.size(); j++) {
+                if (randomWeight <= cumulativeWeights.get(j)) {
+                    pickedFluids.add(fluidEntryList.get(j).getKey());
+                    break;
+                }
+            }
+        }
+
+        return pickedFluids.toArray(new FluidStack[0]);
+
+    }
+
+    private ItemStack[] getRandomItemInputs(int numberOfItems) {
+        int cumulativeWeight = 0;
+
+        List<Map.Entry<ItemStack, Integer>> ItemEntryList = new ArrayList<>(exoticModulePlasmaItemMap.entrySet());
+
+        List<Integer> cumulativeWeights = new ArrayList<>();
+        for (Map.Entry<ItemStack, Integer> entry : ItemEntryList) {
+            cumulativeWeight += entry.getValue();
+            cumulativeWeights.add(cumulativeWeight);
+        }
+
+        List<ItemStack> pickedItems = new ArrayList<>();
+        for (int i = 0; i < numberOfItems; i++) {
+            int randomWeight = getRandomIntInRange(1, cumulativeWeight);
+            // Find the corresponding ItemStack based on randomWeight
+            for (int j = 0; j < cumulativeWeights.size(); j++) {
+                if (randomWeight <= cumulativeWeights.get(j)) {
+                    pickedItems.add(ItemEntryList.get(j).getKey());
+                    break;
+                }
+            }
+        }
+        return pickedItems.toArray(new ItemStack[0]);
+
+    }
+
+    private FluidStack[] convertToPlasma(ItemStack[] items, long multiplier) {
+        List<FluidStack> plasmas = new ArrayList<>();
+
+        for (ItemStack itemStack : items) {
+            ItemData data = getAssociation(itemStack);
+            Materials mat = data == null ? null : data.mMaterial.mMaterial;
+            plasmas.add(mat.getPlasma(INGOTS * multiplier));
+        }
+
+        return plasmas.toArray(new FluidStack[0]);
+    }
+
+    private ArrayList<FluidStack> getFluidsStored() {
+        return this.getStoredFluids();
     }
 
     @Override
