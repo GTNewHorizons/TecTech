@@ -189,7 +189,7 @@ public class Godforge implements Runnable {
         }
 
         // Exotic module plasma material maps
-        // GT Materials
+        // GT materials
         plasmaGTMaterialList.addAll(
                 Arrays.asList(
                         new Object[] { Materials.Aluminium, Materials.Americium, Materials.Antimony, Materials.Ardite,
@@ -239,32 +239,31 @@ public class Godforge implements Runnable {
                                 6000 /* Uranium 238 */, 6000 /* Vanadium */, 2000 /* Ytterbium */, 6000 /* Yttrium */,
                                 6000 /* Zinc */, 1000 /* Flerovium */ }));
 
-        /* will deal with this later
-         * GT++ Materials exoticModulePlasmaItemMap.putIfAbsent(ELEMENT.getInstance().ZIRCONIUM.getTinyDust(1), 6000);
-         * exoticModulePlasmaItemMap.putIfAbsent(ELEMENT.getInstance().THORIUM232.getTinyDust(1), 6000);
-         * exoticModulePlasmaItemMap.putIfAbsent(ELEMENT.getInstance().GERMANIUM.getTinyDust(1), 2000);
-         * exoticModulePlasmaItemMap.putIfAbsent(ELEMENT.getInstance().THALLIUM.getTinyDust(1), 2000);
-         * exoticModulePlasmaItemMap.putIfAbsent(ELEMENT.getInstance().RUTHENIUM.getTinyDust(1), 6000);
-         * exoticModulePlasmaItemMap.putIfAbsent(ELEMENT.getInstance().RHENIUM.getTinyDust(1), 2000);
-         * exoticModulePlasmaItemMap.putIfAbsent(ELEMENT.getInstance().RHODIUM.getTinyDust(1), 6000);
-         * exoticModulePlasmaItemMap.putIfAbsent(ELEMENT.getInstance().IODINE.getTinyDust(1), 6000);
-         * exoticModulePlasmaItemMap.putIfAbsent(ELEMENT.STANDALONE.ASTRAL_TITANIUM.getTinyDust(1), 8000);
-         * exoticModulePlasmaItemMap.putIfAbsent(ELEMENT.STANDALONE.ADVANCED_NITINOL.getTinyDust(1), 8000);
-         * exoticModulePlasmaItemMap.putIfAbsent(ELEMENT.STANDALONE.FORCE.getTinyDust(1), 8000);
-         * exoticModulePlasmaItemMap.putIfAbsent(ELEMENT.getInstance().HAFNIUM.getTinyDust(1), 6000);
-         * exoticModulePlasmaItemMap.putIfAbsent(ELEMENT.getInstance().CALIFORNIUM.getTinyDust(1), 1000);
-         */
+        // GT++ materials
+        exoticModulePlasmaItemMap.putIfAbsent(ELEMENT.getInstance().ZIRCONIUM.getTinyDust(1), 6000);
+        exoticModulePlasmaItemMap.putIfAbsent(ELEMENT.getInstance().THORIUM232.getTinyDust(1), 6000);
+        exoticModulePlasmaItemMap.putIfAbsent(ELEMENT.getInstance().GERMANIUM.getTinyDust(1), 2000);
+        exoticModulePlasmaItemMap.putIfAbsent(ELEMENT.getInstance().THALLIUM.getTinyDust(1), 2000);
+        exoticModulePlasmaItemMap.putIfAbsent(ELEMENT.getInstance().RUTHENIUM.getTinyDust(1), 6000);
+        exoticModulePlasmaItemMap.putIfAbsent(ELEMENT.getInstance().RHENIUM.getTinyDust(1), 2000);
+        exoticModulePlasmaItemMap.putIfAbsent(ELEMENT.getInstance().RHODIUM.getTinyDust(1), 6000);
+        exoticModulePlasmaItemMap.putIfAbsent(ELEMENT.getInstance().IODINE.getTinyDust(1), 6000);
+        exoticModulePlasmaItemMap.putIfAbsent(ELEMENT.STANDALONE.ASTRAL_TITANIUM.getTinyDust(1), 8000);
+        exoticModulePlasmaItemMap.putIfAbsent(ELEMENT.STANDALONE.ADVANCED_NITINOL.getTinyDust(1), 8000);
+        exoticModulePlasmaItemMap.putIfAbsent(ELEMENT.STANDALONE.FORCE.getTinyDust(1), 8000);
+        exoticModulePlasmaItemMap.putIfAbsent(ELEMENT.getInstance().HAFNIUM.getTinyDust(1), 6000);
+        exoticModulePlasmaItemMap.putIfAbsent(ELEMENT.getInstance().CALIFORNIUM.getTinyDust(1), 1000);
 
-        exoticModulePlasmaFluidMap.putIfAbsent(new FluidStack(ELEMENT.getInstance().XENON.getPlasma(), 1), 8000);
-        exoticModulePlasmaFluidMap.putIfAbsent(new FluidStack(ELEMENT.getInstance().KRYPTON.getPlasma(), 1), 8000);
-        exoticModulePlasmaFluidMap.putIfAbsent(new FluidStack(ELEMENT.getInstance().NEON.getPlasma(), 1), 8000);
+        exoticModulePlasmaFluidMap.putIfAbsent(new FluidStack(ELEMENT.getInstance().XENON.getFluid(), 1), 8000);
+        exoticModulePlasmaFluidMap.putIfAbsent(new FluidStack(ELEMENT.getInstance().KRYPTON.getFluid(), 1), 8000);
+        exoticModulePlasmaFluidMap.putIfAbsent(new FluidStack(ELEMENT.getInstance().NEON.getFluid(), 1), 8000);
         // These are here because they cant be solidified
-        exoticModulePlasmaFluidMap.putIfAbsent(new FluidStack(ELEMENT.getInstance().CURIUM.getPlasma(), 1), 10000);
-        exoticModulePlasmaFluidMap.putIfAbsent(new FluidStack(ELEMENT.getInstance().NEPTUNIUM.getPlasma(), 1), 800);
-        exoticModulePlasmaFluidMap.putIfAbsent(new FluidStack(ELEMENT.getInstance().FERMIUM.getPlasma(), 1), 800);
+        exoticModulePlasmaFluidMap.putIfAbsent(new FluidStack(ELEMENT.getInstance().CURIUM.getFluid(), 1), 10000);
+        exoticModulePlasmaFluidMap.putIfAbsent(new FluidStack(ELEMENT.getInstance().NEPTUNIUM.getFluid(), 1), 800);
+        exoticModulePlasmaFluidMap.putIfAbsent(new FluidStack(ELEMENT.getInstance().FERMIUM.getFluid(), 1), 800);
 
         // Mercury is weird, it has neither dust nor gas, so it needs to be added separately
-        exoticModulePlasmaFluidMap.putIfAbsent(Materials.Mercury.getPlasma(1), 6000);
+        exoticModulePlasmaFluidMap.putIfAbsent(Materials.Mercury.getFluid(1), 6000);
 
         // Loop for adding all GT plasma materials
         for (int i = 0; i < plasmaGTMaterialList.size(); i++) {
@@ -273,7 +272,7 @@ public class Godforge implements Runnable {
                         .putIfAbsent(plasmaGTMaterialList.get(i).getDustTiny(1), plasmaGTWeightList.get(i));
             } else {
                 exoticModulePlasmaFluidMap
-                        .putIfAbsent(plasmaGTMaterialList.get(i).getPlasma(1), plasmaGTWeightList.get(i));
+                        .putIfAbsent(plasmaGTMaterialList.get(i).getGas(1), plasmaGTWeightList.get(i));
             }
         }
 

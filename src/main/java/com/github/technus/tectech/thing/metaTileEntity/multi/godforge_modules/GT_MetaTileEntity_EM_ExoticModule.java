@@ -5,7 +5,6 @@ import static com.github.technus.tectech.loader.recipe.Godforge.exoticModulePlas
 import static com.github.technus.tectech.recipe.TecTechRecipeMaps.godforgeExoticMatterRecipes;
 import static com.github.technus.tectech.thing.casing.GT_Block_CasingsTT.texturePage;
 import static com.github.technus.tectech.util.TT_Utility.getRandomIntInRange;
-import static gregtech.api.util.GT_OreDictUnificator.getAssociation;
 import static gregtech.api.util.GT_RecipeBuilder.INGOTS;
 import static gregtech.api.util.GT_RecipeBuilder.SECONDS;
 import static gregtech.common.misc.WirelessNetworkManager.addEUToGlobalEnergyMap;
@@ -22,7 +21,9 @@ import javax.annotation.Nonnull;
 
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.oredict.OreDictionary;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -31,7 +32,6 @@ import com.github.technus.tectech.thing.metaTileEntity.multi.base.GT_MetaTileEnt
 import com.github.technus.tectech.thing.metaTileEntity.multi.base.render.TT_RenderedExtendedFacingTexture;
 import com.github.technus.tectech.util.CommonValues;
 
-import gregtech.api.enums.Materials;
 import gregtech.api.enums.MaterialsUEVplus;
 import gregtech.api.enums.Textures;
 import gregtech.api.enums.TierEU;
@@ -39,7 +39,6 @@ import gregtech.api.interfaces.ITexture;
 import gregtech.api.interfaces.metatileentity.IMetaTileEntity;
 import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
 import gregtech.api.logic.ProcessingLogic;
-import gregtech.api.objects.ItemData;
 import gregtech.api.recipe.RecipeMap;
 import gregtech.api.recipe.RecipeMapBackend;
 import gregtech.api.recipe.RecipeMapBuilder;
@@ -106,8 +105,8 @@ public class GT_MetaTileEntity_EM_ExoticModule extends GT_MetaTileEntity_EM_Base
                         }
                     }
 
-                    inputPlasmas = new ArrayList<>(Arrays.asList(convertToPlasma(randomizedItemInput, 1)));
-                    inputPlasmas.addAll(Arrays.asList(randomizedFluidInput));
+                    inputPlasmas = new ArrayList<>(Arrays.asList(convertItemToPlasma(randomizedItemInput, 1)));
+                    inputPlasmas.addAll(Arrays.asList(convertFluidToPlasma(randomizedFluidInput, 1)));
 
                     plasmaRecipe = new GT_Recipe(
                             false,
@@ -273,14 +272,31 @@ public class GT_MetaTileEntity_EM_ExoticModule extends GT_MetaTileEntity_EM_Base
 
     }
 
-    private FluidStack[] convertToPlasma(ItemStack[] items, long multiplier) {
+    private FluidStack[] convertItemToPlasma(ItemStack[] items, long multiplier) {
         List<FluidStack> plasmas = new ArrayList<>();
 
         for (ItemStack itemStack : items) {
-            ItemData data = getAssociation(itemStack);
-            Materials mat = data == null ? null : data.mMaterial.mMaterial;
-            assert mat != null;
-            plasmas.add(mat.getPlasma(INGOTS * multiplier * itemStack.stackSize));
+            String dict = OreDictionary.getOreName(OreDictionary.getOreIDs(itemStack)[0]);
+            // substring 8 because dustTiny is 8 characters long and there is no other possible oreDict
+            String strippedOreDict = dict.substring(8);
+            plasmas.add(
+                    FluidRegistry.getFluidStack(
+                            "plasma." + strippedOreDict.toLowerCase(),
+                            (int) (INGOTS * multiplier * itemStack.stackSize)));
+        }
+
+        return plasmas.toArray(new FluidStack[0]);
+    }
+
+    private FluidStack[] convertFluidToPlasma(FluidStack[] fluids, long multiplier) {
+        List<FluidStack> plasmas = new ArrayList<>();
+
+        for (FluidStack fluidStack : fluids) {
+            String[] fluidName = fluidStack.getUnlocalizedName().split("\\.");
+            plasmas.add(
+                    FluidRegistry.getFluidStack(
+                            "plasma." + fluidName[fluidName.length - 1],
+                            (int) (multiplier * fluidStack.amount)));
         }
 
         return plasmas.toArray(new FluidStack[0]);
