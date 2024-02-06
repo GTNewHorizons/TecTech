@@ -20,6 +20,7 @@ import java.util.stream.Stream;
 import javax.annotation.Nonnull;
 
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
@@ -304,6 +305,61 @@ public class GT_MetaTileEntity_EM_ExoticModule extends GT_MetaTileEntity_EM_Base
 
     private ArrayList<FluidStack> getFluidsStored() {
         return this.getStoredFluids();
+    }
+
+    @Override
+    public boolean supportsSingleRecipeLocking() {
+        return false;
+    }
+
+    @Override
+    public boolean supportsBatchMode() {
+        return false;
+    }
+
+    @Override
+    public void saveNBTData(NBTTagCompound NBT) {
+
+        NBT.setBoolean("recipeInProgress", recipeInProgress);
+
+        // Store damage values/stack sizes of input plasmas
+        NBTTagCompound fluidStackListNBTTag = new NBTTagCompound();
+
+        int indexFluids = 0;
+        for (FluidStack fluidStack : inputPlasmas) {
+            // Save fluid amount to NBT
+            fluidStackListNBTTag.setLong(indexFluids + "fluidAmount", fluidStack.amount);
+
+            // Save FluidStack to NBT
+            NBT.setTag(indexFluids + "fluidStack", fluidStack.writeToNBT(new NBTTagCompound()));
+
+            indexFluids++;
+        }
+
+        NBT.setTag("inputPlasmas", fluidStackListNBTTag);
+        super.saveNBTData(NBT);
+    }
+
+    @Override
+    public void loadNBTData(final NBTTagCompound NBT) {
+
+        recipeInProgress = NBT.getBoolean("recipeInProgress");
+
+        // Load damage values/fluid amounts of input plasmas and convert back to fluids
+        NBTTagCompound tempFluidTag = NBT.getCompoundTag("inputPlasmas");
+
+        // Iterate over all stored fluids
+        for (int indexFluids = 0; indexFluids < 7; indexFluids++) {
+
+            // Load fluid amount from NBT
+            int fluidAmount = tempFluidTag.getInteger(indexFluids + "fluidAmount");
+
+            // Load FluidStack from NBT
+            FluidStack fluidStack = FluidStack.loadFluidStackFromNBT(NBT.getCompoundTag(indexFluids + "fluidStack"));
+
+            inputPlasmas.add(new FluidStack(fluidStack, fluidAmount));
+        }
+        super.loadNBTData(NBT);
     }
 
     @Override

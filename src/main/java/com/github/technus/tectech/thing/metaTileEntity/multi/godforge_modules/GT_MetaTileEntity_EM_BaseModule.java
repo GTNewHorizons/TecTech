@@ -5,6 +5,7 @@ import static gregtech.common.misc.WirelessNetworkManager.addEUToGlobalEnergyMap
 import static gregtech.common.misc.WirelessNetworkManager.strongCheckOrAddUser;
 
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.util.ForgeDirection;
 
 import com.github.technus.tectech.thing.casing.TT_Container_Casings;
@@ -191,6 +192,18 @@ public class GT_MetaTileEntity_EM_BaseModule extends GT_MetaTileEntity_Multibloc
     @Override
     public boolean willExplodeInRain() {
         return false;
+    }
+
+    @Override
+    public void saveNBTData(NBTTagCompound NBT) {
+        NBT.setBoolean("isConnected", isConnected);
+        super.saveNBTData(NBT);
+    }
+
+    @Override
+    public void loadNBTData(final NBTTagCompound NBT) {
+        isConnected = NBT.getBoolean("isConnected");
+        super.loadNBTData(NBT);
     }
 
     @Override
