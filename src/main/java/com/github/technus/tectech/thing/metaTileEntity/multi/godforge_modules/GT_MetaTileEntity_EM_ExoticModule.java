@@ -93,14 +93,21 @@ public class GT_MetaTileEntity_EM_ExoticModule extends GT_MetaTileEntity_EM_Base
                     numberOfItems = NUMBER_OF_INPUTS - numberOfFluids;
                     randomizedFluidInput = getRandomFluidInputs(numberOfFluids);
                     randomizedItemInput = getRandomItemInputs(numberOfItems);
-                    inputPlasmas = new ArrayList<>(Arrays.asList(convertToPlasma(randomizedItemInput, 1)));
-                    inputPlasmas.addAll(Arrays.asList(randomizedFluidInput));
 
                     if (numberOfFluids != 0) {
                         for (FluidStack fluidStack : randomizedFluidInput) {
-                            fluidStack.amount = 1000;
+                            fluidStack.amount = 1000 * getRandomIntInRange(1, 64);
                         }
                     }
+
+                    if (numberOfItems != 0) {
+                        for (ItemStack itemStack : randomizedItemInput) {
+                            itemStack.stackSize = getRandomIntInRange(1, 64);
+                        }
+                    }
+
+                    inputPlasmas = new ArrayList<>(Arrays.asList(convertToPlasma(randomizedItemInput, 1)));
+                    inputPlasmas.addAll(Arrays.asList(randomizedFluidInput));
 
                     plasmaRecipe = new GT_Recipe(
                             false,
@@ -132,7 +139,10 @@ public class GT_MetaTileEntity_EM_ExoticModule extends GT_MetaTileEntity_EM_Base
 
                     if (numberOfFluids != 0) {
                         for (FluidStack fluidStack : randomizedFluidInput) {
-                            dumpFluid(mOutputHatches, new FluidStack(fluidStack.getFluid(), 1), false);
+                            dumpFluid(
+                                    mOutputHatches,
+                                    new FluidStack(fluidStack.getFluid(), fluidStack.amount / 1000),
+                                    false);
                         }
                     }
 
@@ -269,7 +279,8 @@ public class GT_MetaTileEntity_EM_ExoticModule extends GT_MetaTileEntity_EM_Base
         for (ItemStack itemStack : items) {
             ItemData data = getAssociation(itemStack);
             Materials mat = data == null ? null : data.mMaterial.mMaterial;
-            plasmas.add(mat.getPlasma(INGOTS * multiplier));
+            assert mat != null;
+            plasmas.add(mat.getPlasma(INGOTS * multiplier * itemStack.stackSize));
         }
 
         return plasmas.toArray(new FluidStack[0]);
