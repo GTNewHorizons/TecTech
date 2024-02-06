@@ -12,9 +12,9 @@ import static gregtech.common.misc.WirelessNetworkManager.addEUToGlobalEnergyMap
 import static gregtech.common.misc.WirelessNetworkManager.getUserEU;
 
 import java.math.BigInteger;
-import java.util.List;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
 
@@ -215,7 +215,13 @@ public class GT_MetaTileEntity_EM_ExoticModule extends GT_MetaTileEntity_EM_Base
             // Find the corresponding FluidStack based on randomWeight
             for (int j = 0; j < cumulativeWeights.size(); j++) {
                 if (randomWeight <= cumulativeWeights.get(j)) {
-                    pickedFluids.add(fluidEntryList.get(j).getKey());
+                    FluidStack pickedFluid = fluidEntryList.get(j).getKey();
+                    // prevent duplicates
+                    if (pickedFluids.contains(pickedFluid)) {
+                        i--;
+                        break;
+                    }
+                    pickedFluids.add(pickedFluid);
                     break;
                 }
             }
@@ -228,10 +234,10 @@ public class GT_MetaTileEntity_EM_ExoticModule extends GT_MetaTileEntity_EM_Base
     private ItemStack[] getRandomItemInputs(int numberOfItems) {
         int cumulativeWeight = 0;
 
-        List<Map.Entry<ItemStack, Integer>> ItemEntryList = new ArrayList<>(exoticModulePlasmaItemMap.entrySet());
+        List<Map.Entry<ItemStack, Integer>> itemEntryList = new ArrayList<>(exoticModulePlasmaItemMap.entrySet());
 
         List<Integer> cumulativeWeights = new ArrayList<>();
-        for (Map.Entry<ItemStack, Integer> entry : ItemEntryList) {
+        for (Map.Entry<ItemStack, Integer> entry : itemEntryList) {
             cumulativeWeight += entry.getValue();
             cumulativeWeights.add(cumulativeWeight);
         }
@@ -242,7 +248,13 @@ public class GT_MetaTileEntity_EM_ExoticModule extends GT_MetaTileEntity_EM_Base
             // Find the corresponding ItemStack based on randomWeight
             for (int j = 0; j < cumulativeWeights.size(); j++) {
                 if (randomWeight <= cumulativeWeights.get(j)) {
-                    pickedItems.add(ItemEntryList.get(j).getKey());
+                    ItemStack pickedItem = itemEntryList.get(j).getKey();
+                    // prevent duplicates
+                    if (pickedItems.contains(pickedItem)) {
+                        i--;
+                        break;
+                    }
+                    pickedItems.add(pickedItem);
                     break;
                 }
             }
