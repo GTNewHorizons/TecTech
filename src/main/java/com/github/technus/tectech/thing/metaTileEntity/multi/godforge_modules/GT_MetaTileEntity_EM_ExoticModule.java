@@ -1,5 +1,7 @@
 package com.github.technus.tectech.thing.metaTileEntity.multi.godforge_modules;
 
+import static com.github.technus.tectech.loader.recipe.Godforge.exoticModuleMagmatterFluidMap;
+import static com.github.technus.tectech.loader.recipe.Godforge.exoticModuleMagmatterItemMap;
 import static com.github.technus.tectech.loader.recipe.Godforge.exoticModulePlasmaFluidMap;
 import static com.github.technus.tectech.loader.recipe.Godforge.exoticModulePlasmaItemMap;
 import static com.github.technus.tectech.recipe.TecTechRecipeMaps.godforgeExoticMatterRecipes;
@@ -19,6 +21,7 @@ import static net.minecraft.util.EnumChatFormatting.YELLOW;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
@@ -40,16 +43,15 @@ import com.github.technus.tectech.thing.metaTileEntity.multi.base.GT_MetaTileEnt
 import com.github.technus.tectech.thing.metaTileEntity.multi.base.render.TT_RenderedExtendedFacingTexture;
 import com.github.technus.tectech.util.CommonValues;
 import com.gtnewhorizons.modularui.api.drawable.IDrawable;
+import com.gtnewhorizons.modularui.api.drawable.UITexture;
 import com.gtnewhorizons.modularui.api.screen.ModularWindow;
 import com.gtnewhorizons.modularui.api.screen.UIBuildContext;
 import com.gtnewhorizons.modularui.api.widget.IWidgetBuilder;
 import com.gtnewhorizons.modularui.api.widget.Widget;
 import com.gtnewhorizons.modularui.common.widget.ButtonWidget;
-import com.gtnewhorizons.modularui.common.widget.DrawableWidget;
 import com.gtnewhorizons.modularui.common.widget.FakeSyncWidget;
 
 import gregtech.api.enums.MaterialsUEVplus;
-import gregtech.api.enums.SoundResource;
 import gregtech.api.enums.Textures;
 import gregtech.api.enums.TierEU;
 import gregtech.api.gui.modularui.GT_UITextures;
@@ -74,7 +76,7 @@ public class GT_MetaTileEntity_EM_ExoticModule extends GT_MetaTileEntity_EM_Base
     private long wirelessEUt = 0;
     private long EUt = 0;
     private boolean recipeInProgress = false;
-    private boolean magmatterCapable = false;
+    private boolean magmatterCapable = true;
     private boolean magmatterMode = false;
     private FluidStack[] randomizedFluidInput = new FluidStack[] {};
     private ItemStack[] randomizedItemInput = new ItemStack[] {};
@@ -82,7 +84,7 @@ public class GT_MetaTileEntity_EM_ExoticModule extends GT_MetaTileEntity_EM_Base
     private GT_Recipe plasmaRecipe = null;
     private static RecipeMap<RecipeMapBackend> tempRecipeMap = null;
     private static final RecipeMap<RecipeMapBackend> emptyRecipeMap = RecipeMapBuilder.of("hey").maxIO(0, 0, 7, 2)
-            .build();
+            .disableRegisterNEI().build();
     private static final int NUMBER_OF_INPUTS = 7;
 
     public GT_MetaTileEntity_EM_ExoticModule(int aID, String aName, String aNameRegional) {
@@ -106,11 +108,21 @@ public class GT_MetaTileEntity_EM_ExoticModule extends GT_MetaTileEntity_EM_Base
             @Override
             protected Stream<GT_Recipe> findRecipeMatches(@Nullable RecipeMap<?> map) {
                 if (!recipeInProgress) {
+                    HashMap<FluidStack, Integer> fluidMap = exoticModulePlasmaFluidMap;
+                    HashMap<ItemStack, Integer> itemMap = exoticModulePlasmaItemMap;
+                    FluidStack outputFluid = MaterialsUEVplus.QuarkGluonPlasma.getFluid(1000);
+
+                    if (magmatterMode) {
+                        fluidMap = exoticModuleMagmatterFluidMap;
+                        itemMap = exoticModuleMagmatterItemMap;
+                        outputFluid = MaterialsUEVplus.MagMatter.getMolten(144);
+                    }
+
                     tempRecipeMap = emptyRecipeMap;
                     numberOfFluids = getRandomIntInRange(0, NUMBER_OF_INPUTS);
                     numberOfItems = NUMBER_OF_INPUTS - numberOfFluids;
-                    randomizedFluidInput = getRandomFluidInputs(numberOfFluids);
-                    randomizedItemInput = getRandomItemInputs(numberOfItems);
+                    randomizedFluidInput = getRandomFluidInputs(fluidMap, numberOfFluids);
+                    randomizedItemInput = getRandomItemInputs(itemMap, numberOfItems);
 
                     if (numberOfFluids != 0) {
                         for (FluidStack fluidStack : randomizedFluidInput) {
@@ -134,7 +146,7 @@ public class GT_MetaTileEntity_EM_ExoticModule extends GT_MetaTileEntity_EM_Base
                             null,
                             null,
                             inputPlasmas.toArray(new FluidStack[0]),
-                            new FluidStack[] { MaterialsUEVplus.PrimordialMatter.getFluid(1000) },
+                            new FluidStack[] { outputFluid },
                             10 * SECONDS,
                             (int) TierEU.RECIPE_MAX,
                             0);
@@ -226,10 +238,10 @@ public class GT_MetaTileEntity_EM_ExoticModule extends GT_MetaTileEntity_EM_Base
         return godforgeExoticMatterRecipes;
     }
 
-    private FluidStack[] getRandomFluidInputs(int numberOfFluids) {
+    private FluidStack[] getRandomFluidInputs(HashMap<FluidStack, Integer> fluidMap, int numberOfFluids) {
         int cumulativeWeight = 0;
 
-        List<Map.Entry<FluidStack, Integer>> fluidEntryList = new ArrayList<>(exoticModulePlasmaFluidMap.entrySet());
+        List<Map.Entry<FluidStack, Integer>> fluidEntryList = new ArrayList<>(fluidMap.entrySet());
 
         List<Integer> cumulativeWeights = new ArrayList<>();
         for (Map.Entry<FluidStack, Integer> entry : fluidEntryList) {
@@ -259,10 +271,10 @@ public class GT_MetaTileEntity_EM_ExoticModule extends GT_MetaTileEntity_EM_Base
 
     }
 
-    private ItemStack[] getRandomItemInputs(int numberOfItems) {
+    private ItemStack[] getRandomItemInputs(HashMap<ItemStack, Integer> itemMap, int numberOfItems) {
         int cumulativeWeight = 0;
 
-        List<Map.Entry<ItemStack, Integer>> itemEntryList = new ArrayList<>(exoticModulePlasmaItemMap.entrySet());
+        List<Map.Entry<ItemStack, Integer>> itemEntryList = new ArrayList<>(itemMap.entrySet());
 
         List<Integer> cumulativeWeights = new ArrayList<>();
         for (Map.Entry<ItemStack, Integer> entry : itemEntryList) {
@@ -339,6 +351,7 @@ public class GT_MetaTileEntity_EM_ExoticModule extends GT_MetaTileEntity_EM_Base
     public void saveNBTData(NBTTagCompound NBT) {
 
         NBT.setBoolean("recipeInProgress", recipeInProgress);
+        NBT.setBoolean("magmatterMode", magmatterMode);
 
         // Store damage values/stack sizes of input plasmas
         NBTTagCompound fluidStackListNBTTag = new NBTTagCompound();
@@ -363,6 +376,7 @@ public class GT_MetaTileEntity_EM_ExoticModule extends GT_MetaTileEntity_EM_Base
     public void loadNBTData(final NBTTagCompound NBT) {
 
         recipeInProgress = NBT.getBoolean("recipeInProgress");
+        magmatterMode = NBT.getBoolean("magmatterMode");
 
         // Load damage values/fluid amounts of input plasmas and convert back to fluids
         NBTTagCompound tempFluidTag = NBT.getCompoundTag("inputPlasmas");
@@ -384,39 +398,50 @@ public class GT_MetaTileEntity_EM_ExoticModule extends GT_MetaTileEntity_EM_Base
     @Override
     public void addUIWidgets(ModularWindow.Builder builder, UIBuildContext buildContext) {
         super.addUIWidgets(builder, buildContext);
-        if (magmatterCapable) {
-            builder.widget(magmatterSwitch(builder));
-        } else {
-            builder.widget(magmatterSwitchLocked());
-        }
+        builder.widget(magmatterSwitch(builder));
+
     }
 
     protected ButtonWidget magmatterSwitch(IWidgetBuilder<?> builder) {
-        Widget button = new ButtonWidget().setOnClick((clickData, widget) -> { magmatterMode = !magmatterMode; })
-                .setPlayClickSoundResource(
-                        () -> isAllowedToWork() ? SoundResource.GUI_BUTTON_UP.resourceLocation
-                                : SoundResource.GUI_BUTTON_DOWN.resourceLocation)
-                .setBackground(() -> {
-                    if (magmatterMode) {
-                        return new IDrawable[] { GT_UITextures.BUTTON_STANDARD_PRESSED,
-                                GT_UITextures.OVERLAY_BUTTON_CHECKMARK };
-                    } else {
-                        return new IDrawable[] { GT_UITextures.BUTTON_STANDARD, GT_UITextures.OVERLAY_BUTTON_CROSS };
-                    }
-                }).attachSyncer(new FakeSyncWidget.BooleanSyncer(this::isAllowedToWork, val -> {
-                    if (val) enableWorking();
-                    else disableWorking();
-                }), builder).addTooltip("Magmatter Mode").setTooltipShowUpDelay(TOOLTIP_DELAY).setPos(174, 91)
-                .setSize(16, 16);
+        Widget button = new ButtonWidget().setOnClick((clickData, widget) -> {
+            if (magmatterCapable) {
+                magmatterMode = !magmatterMode;
+            }
+        }).setPlayClickSound(isMagmatterModeOn()).setBackground(() -> {
+            List<UITexture> ret = new ArrayList<>();
+            if (isMagmatterModeOn()) {
+                ret.add(GT_UITextures.BUTTON_STANDARD_PRESSED);
+                if (magmatterCapable) {
+                    ret.add(GT_UITextures.OVERLAY_BUTTON_CHECKMARK);
+                } else {
+                    ret.add(GT_UITextures.OVERLAY_BUTTON_DISABLE);
+                }
+            } else {
+                ret.add(GT_UITextures.BUTTON_STANDARD);
+                if (magmatterCapable) {
+                    ret.add(GT_UITextures.OVERLAY_BUTTON_CROSS);
+                } else {
+                    ret.add(GT_UITextures.OVERLAY_BUTTON_DISABLE);
+                }
+            }
+            if (!magmatterCapable) {
+                ret.add(GT_UITextures.OVERLAY_BUTTON_DISABLE);
+            }
+            return ret.toArray(new IDrawable[0]);
+        }).attachSyncer(new FakeSyncWidget.BooleanSyncer(this::isMagmatterModeOn, this::setMagmatterMode), builder)
+                .addTooltip("Magmatter Mode").setTooltipShowUpDelay(TOOLTIP_DELAY).setPos(174, 91).setSize(16, 16);
+        if (!magmatterCapable) {
+            button.addTooltip("Magmatter Mode Locked, missing upgrade");
+        }
         return (ButtonWidget) button;
     }
 
-    protected DrawableWidget magmatterSwitchLocked() {
-        Widget icon = new DrawableWidget()
-                .setBackground(GT_UITextures.BUTTON_STANDARD, GT_UITextures.OVERLAY_BUTTON_DISABLE)
-                .addTooltip("Magmatter Mode Locked, missing upgrade").setTooltipShowUpDelay(TOOLTIP_DELAY)
-                .setPos(174, 91).setSize(16, 16);
-        return (DrawableWidget) icon;
+    private boolean isMagmatterModeOn() {
+        return magmatterMode;
+    }
+
+    public void setMagmatterMode(boolean enabled) {
+        magmatterMode = enabled;
     }
 
     @Override

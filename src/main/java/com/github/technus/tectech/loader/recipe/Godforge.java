@@ -21,6 +21,8 @@ public class Godforge implements Runnable {
     public static final ArrayList<Integer> plasmaGTWeightList = new ArrayList<>();
     public static final HashMap<ItemStack, Integer> exoticModulePlasmaItemMap = new HashMap<>();
     public static final HashMap<FluidStack, Integer> exoticModulePlasmaFluidMap = new HashMap<>();
+    public static final HashMap<ItemStack, Integer> exoticModuleMagmatterItemMap = new HashMap<>();
+    public static final HashMap<FluidStack, Integer> exoticModuleMagmatterFluidMap = new HashMap<>();
 
     @Override
     public void run() {
@@ -275,6 +277,23 @@ public class Godforge implements Runnable {
                         .putIfAbsent(plasmaGTMaterialList.get(i).getGas(1), plasmaGTWeightList.get(i));
             }
         }
+
+        // Magmatter maps
+        exoticModuleMagmatterItemMap.putAll(exoticModulePlasmaItemMap);
+        exoticModuleMagmatterFluidMap.putAll(exoticModulePlasmaFluidMap);
+
+        // GT materials
+        exoticModuleMagmatterItemMap.put(Materials.CosmicNeutronium.getDustTiny(1), 100000);
+        exoticModuleMagmatterItemMap.put(Materials.Draconium.getDustTiny(1), 100000);
+        exoticModuleMagmatterItemMap.put(Materials.Ichorium.getDustTiny(1), 100000);
+        exoticModuleMagmatterItemMap.put(Materials.Neutronium.getDustTiny(1), 100000);
+
+        // GT++ materials
+        exoticModuleMagmatterItemMap.put(ELEMENT.STANDALONE.CELESTIAL_TUNGSTEN.getTinyDust(1), 100000);
+        exoticModuleMagmatterFluidMap.put(ELEMENT.STANDALONE.HYPOGEN.getFluidStack(1), 100000);
+        exoticModuleMagmatterFluidMap.put(ELEMENT.STANDALONE.RHUGNOR.getFluidStack(1), 100000);
+        exoticModuleMagmatterFluidMap.put(ELEMENT.STANDALONE.CHRONOMATIC_GLASS.getFluidStack(1), 100000);
+        exoticModuleMagmatterFluidMap.put(ELEMENT.STANDALONE.DRAGON_METAL.getFluidStack(1), 100000);
 
     }
 }
