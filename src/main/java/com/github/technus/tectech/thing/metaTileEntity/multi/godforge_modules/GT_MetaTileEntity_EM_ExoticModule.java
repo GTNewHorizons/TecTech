@@ -5,10 +5,16 @@ import static com.github.technus.tectech.loader.recipe.Godforge.exoticModulePlas
 import static com.github.technus.tectech.recipe.TecTechRecipeMaps.godforgeExoticMatterRecipes;
 import static com.github.technus.tectech.thing.casing.GT_Block_CasingsTT.texturePage;
 import static com.github.technus.tectech.util.TT_Utility.getRandomIntInRange;
+import static gregtech.api.metatileentity.BaseTileEntity.TOOLTIP_DELAY;
 import static gregtech.api.util.GT_RecipeBuilder.INGOTS;
 import static gregtech.api.util.GT_RecipeBuilder.SECONDS;
+import static gregtech.api.util.GT_Utility.formatNumbers;
 import static gregtech.common.misc.WirelessNetworkManager.addEUToGlobalEnergyMap;
 import static gregtech.common.misc.WirelessNetworkManager.getUserEU;
+import static net.minecraft.util.EnumChatFormatting.GREEN;
+import static net.minecraft.util.EnumChatFormatting.RED;
+import static net.minecraft.util.EnumChatFormatting.RESET;
+import static net.minecraft.util.EnumChatFormatting.YELLOW;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
@@ -29,13 +35,24 @@ import net.minecraftforge.oredict.OreDictionary;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import com.github.technus.tectech.thing.metaTileEntity.multi.GT_MetaTileEntity_EM_ForgeOfGods;
 import com.github.technus.tectech.thing.metaTileEntity.multi.base.GT_MetaTileEntity_MultiblockBase_EM;
 import com.github.technus.tectech.thing.metaTileEntity.multi.base.render.TT_RenderedExtendedFacingTexture;
 import com.github.technus.tectech.util.CommonValues;
+import com.gtnewhorizons.modularui.api.drawable.IDrawable;
+import com.gtnewhorizons.modularui.api.screen.ModularWindow;
+import com.gtnewhorizons.modularui.api.screen.UIBuildContext;
+import com.gtnewhorizons.modularui.api.widget.IWidgetBuilder;
+import com.gtnewhorizons.modularui.api.widget.Widget;
+import com.gtnewhorizons.modularui.common.widget.ButtonWidget;
+import com.gtnewhorizons.modularui.common.widget.DrawableWidget;
+import com.gtnewhorizons.modularui.common.widget.FakeSyncWidget;
 
 import gregtech.api.enums.MaterialsUEVplus;
+import gregtech.api.enums.SoundResource;
 import gregtech.api.enums.Textures;
 import gregtech.api.enums.TierEU;
+import gregtech.api.gui.modularui.GT_UITextures;
 import gregtech.api.interfaces.ITexture;
 import gregtech.api.interfaces.metatileentity.IMetaTileEntity;
 import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
@@ -53,11 +70,12 @@ public class GT_MetaTileEntity_EM_ExoticModule extends GT_MetaTileEntity_EM_Base
     private int solenoidCoilMetadata = -1;
     private int numberOfFluids = 0;
     private int numberOfItems = 0;
-    private int inputAmount = 0;
     private int currentParallel = 0;
     private long wirelessEUt = 0;
     private long EUt = 0;
     private boolean recipeInProgress = false;
+    private boolean magmatterCapable = false;
+    private boolean magmatterMode = false;
     private FluidStack[] randomizedFluidInput = new FluidStack[] {};
     private ItemStack[] randomizedItemInput = new ItemStack[] {};
     List<FluidStack> inputPlasmas = new ArrayList<>();
@@ -178,7 +196,7 @@ public class GT_MetaTileEntity_EM_ExoticModule extends GT_MetaTileEntity_EM_Base
             @Nonnull
             @Override
             protected GT_OverclockCalculator createOverclockCalculator(@Nonnull GT_Recipe recipe) {
-                return super.createOverclockCalculator(recipe).setEUt(TierEU.MAX);
+                return super.createOverclockCalculator(recipe).setEUt(TierEU.MAX).setNoOverclock(true);
             }
 
         };
@@ -324,6 +342,7 @@ public class GT_MetaTileEntity_EM_ExoticModule extends GT_MetaTileEntity_EM_Base
 
         // Store damage values/stack sizes of input plasmas
         NBTTagCompound fluidStackListNBTTag = new NBTTagCompound();
+        fluidStackListNBTTag.setLong("numberOfPlasmas", inputPlasmas.size());
 
         int indexFluids = 0;
         for (FluidStack fluidStack : inputPlasmas) {
@@ -349,7 +368,7 @@ public class GT_MetaTileEntity_EM_ExoticModule extends GT_MetaTileEntity_EM_Base
         NBTTagCompound tempFluidTag = NBT.getCompoundTag("inputPlasmas");
 
         // Iterate over all stored fluids
-        for (int indexFluids = 0; indexFluids < 7; indexFluids++) {
+        for (int indexFluids = 0; indexFluids < tempFluidTag.getLong("numberOfPlasmas"); indexFluids++) {
 
             // Load fluid amount from NBT
             int fluidAmount = tempFluidTag.getInteger(indexFluids + "fluidAmount");
@@ -363,6 +382,44 @@ public class GT_MetaTileEntity_EM_ExoticModule extends GT_MetaTileEntity_EM_Base
     }
 
     @Override
+    public void addUIWidgets(ModularWindow.Builder builder, UIBuildContext buildContext) {
+        super.addUIWidgets(builder, buildContext);
+        if (magmatterCapable) {
+            builder.widget(magmatterSwitch(builder));
+        } else {
+            builder.widget(magmatterSwitchLocked());
+        }
+    }
+
+    protected ButtonWidget magmatterSwitch(IWidgetBuilder<?> builder) {
+        Widget button = new ButtonWidget().setOnClick((clickData, widget) -> { magmatterMode = !magmatterMode; })
+                .setPlayClickSoundResource(
+                        () -> isAllowedToWork() ? SoundResource.GUI_BUTTON_UP.resourceLocation
+                                : SoundResource.GUI_BUTTON_DOWN.resourceLocation)
+                .setBackground(() -> {
+                    if (magmatterMode) {
+                        return new IDrawable[] { GT_UITextures.BUTTON_STANDARD_PRESSED,
+                                GT_UITextures.OVERLAY_BUTTON_CHECKMARK };
+                    } else {
+                        return new IDrawable[] { GT_UITextures.BUTTON_STANDARD, GT_UITextures.OVERLAY_BUTTON_CROSS };
+                    }
+                }).attachSyncer(new FakeSyncWidget.BooleanSyncer(this::isAllowedToWork, val -> {
+                    if (val) enableWorking();
+                    else disableWorking();
+                }), builder).addTooltip("Magmatter Mode").setTooltipShowUpDelay(TOOLTIP_DELAY).setPos(174, 91)
+                .setSize(16, 16);
+        return (ButtonWidget) button;
+    }
+
+    protected DrawableWidget magmatterSwitchLocked() {
+        Widget icon = new DrawableWidget()
+                .setBackground(GT_UITextures.BUTTON_STANDARD, GT_UITextures.OVERLAY_BUTTON_DISABLE)
+                .addTooltip("Magmatter Mode Locked, missing upgrade").setTooltipShowUpDelay(TOOLTIP_DELAY)
+                .setPos(174, 91).setSize(16, 16);
+        return (DrawableWidget) icon;
+    }
+
+    @Override
     public GT_Multiblock_Tooltip_Builder createTooltip() {
         final GT_Multiblock_Tooltip_Builder tt = new GT_Multiblock_Tooltip_Builder();
         tt.addMachineType("Quark Gluon Plasma Module") // Machine Type:
@@ -373,6 +430,24 @@ public class GT_MetaTileEntity_EM_ExoticModule extends GT_MetaTileEntity_EM_Base
                 .addMaintenanceHatch("Any Infinite Spacetime Casing", 1) // Maintenance
                 .toolTipFinisher(CommonValues.TEC_MARK_EM);
         return tt;
+    }
+
+    @Override
+    public String[] getInfoData() {
+        ArrayList<String> str = new ArrayList<>();
+        str.add(
+                "Progress: " + GREEN
+                        + GT_Utility.formatNumbers(mProgresstime / 20)
+                        + RESET
+                        + " s / "
+                        + YELLOW
+                        + GT_Utility.formatNumbers(mMaxProgresstime / 20)
+                        + RESET
+                        + " s");
+        str.add("Currently using: " + RED + formatNumbers(EUt) + RESET + " EU/t");
+        str.add(YELLOW + "Max Parallel: " + RESET + formatNumbers(GT_MetaTileEntity_EM_ForgeOfGods.getMaxParallels()));
+        str.add(YELLOW + "Current Parallel: " + RESET + formatNumbers(currentParallel));
+        return str.toArray(new String[0]);
     }
 
 }
