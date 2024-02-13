@@ -82,7 +82,8 @@ public class GT_MetaTileEntity_EM_ExoticModule extends GT_MetaTileEntity_EM_Base
     private ItemStack[] randomizedItemInput = new ItemStack[] {};
     List<FluidStack> inputPlasmas = new ArrayList<>();
     private GT_Recipe plasmaRecipe = null;
-    private static RecipeMap<RecipeMapBackend> tempRecipeMap = null;
+    private static RecipeMap<RecipeMapBackend> tempRecipeMap = RecipeMapBuilder.of("bye").maxIO(0, 0, 7, 2)
+            .disableRegisterNEI().build();
     private static final RecipeMap<RecipeMapBackend> emptyRecipeMap = RecipeMapBuilder.of("hey").maxIO(0, 0, 7, 2)
             .disableRegisterNEI().build();
     private static final int NUMBER_OF_INPUTS = 7;
@@ -392,6 +393,25 @@ public class GT_MetaTileEntity_EM_ExoticModule extends GT_MetaTileEntity_EM_Base
 
             inputPlasmas.add(new FluidStack(fluidStack, fluidAmount));
         }
+        FluidStack outputFluid = MaterialsUEVplus.QuarkGluonPlasma.getFluid(1000);
+
+        if (magmatterMode) {
+            outputFluid = MaterialsUEVplus.MagMatter.getMolten(144);
+        }
+
+        tempRecipeMap.add(
+                new GT_Recipe(
+                        false,
+                        null,
+                        null,
+                        null,
+                        null,
+                        inputPlasmas.toArray(new FluidStack[0]),
+                        new FluidStack[] { outputFluid },
+                        10 * SECONDS,
+                        (int) TierEU.RECIPE_MAX,
+                        0));
+
         super.loadNBTData(NBT);
     }
 
