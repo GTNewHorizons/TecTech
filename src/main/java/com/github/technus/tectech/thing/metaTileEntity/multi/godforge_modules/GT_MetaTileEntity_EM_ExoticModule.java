@@ -22,6 +22,7 @@ import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
@@ -185,7 +186,7 @@ public class GT_MetaTileEntity_EM_ExoticModule extends GT_MetaTileEntity_EM_Base
 
                     recipeInProgress = true;
                 }
-                if (getFluidsStored().containsAll(inputPlasmas)) {
+                if (new HashSet<>(Arrays.asList(inputFluids)).containsAll(inputPlasmas)) {
                     return CheckRecipeResultRegistry.SUCCESSFUL;
                 }
                 return SimpleCheckRecipeResult.ofFailure("waiting_for_inputs");
@@ -332,10 +333,6 @@ public class GT_MetaTileEntity_EM_ExoticModule extends GT_MetaTileEntity_EM_Base
         }
 
         return plasmas.toArray(new FluidStack[0]);
-    }
-
-    private ArrayList<FluidStack> getFluidsStored() {
-        return this.getStoredFluids();
     }
 
     @Override
