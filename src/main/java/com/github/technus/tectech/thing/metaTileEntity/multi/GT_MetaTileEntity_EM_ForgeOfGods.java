@@ -39,6 +39,7 @@ import com.gtnewhorizon.structurelib.structure.IStructureDefinition;
 import com.gtnewhorizons.modularui.api.drawable.IDrawable;
 import com.gtnewhorizons.modularui.api.drawable.UITexture;
 import com.gtnewhorizons.modularui.api.math.Alignment;
+import com.gtnewhorizons.modularui.api.math.Pos2d;
 import com.gtnewhorizons.modularui.api.screen.ModularWindow;
 import com.gtnewhorizons.modularui.api.screen.UIBuildContext;
 import com.gtnewhorizons.modularui.api.widget.Widget;
@@ -522,56 +523,82 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
                 }));
     }
 
-    private int upgradeID = 0;
+    private int currentUpgradeID = 0;
 
     protected ModularWindow createUpgradeTreeWindow(final EntityPlayer player) {
-        ModularWindow.Builder builder = ModularWindow.builder(300, 300);
-        builder.setBackground(TecTechUITextures.BACKGROUND_STAR)
+        final Scrollable scrollable = new Scrollable().setVerticalScroll();
+        final int PARENT_WIDTH = 300;
+        final int PARENT_HEIGHT = 1000;
+        ModularWindow.Builder builder = ModularWindow.builder(PARENT_WIDTH, PARENT_HEIGHT);
+        scrollable.widget(createUpgradeBox(0, new Pos2d(126, 56))).widget(createUpgradeBox(11, new Pos2d(126, 116)))
+                .widget(createUpgradeBox(21, new Pos2d(96, 176))).widget(createUpgradeBox(22, new Pos2d(156, 176)))
+                .widget(createUpgradeBox(31, new Pos2d(66, 236))).widget(createUpgradeBox(32, new Pos2d(126, 236)))
+                .widget(createUpgradeBox(33, new Pos2d(186, 236))).widget(createUpgradeBox(41, new Pos2d(126, 296)))
+                .widget(createUpgradeBox(51, new Pos2d(56, 356))).widget(createUpgradeBox(52, new Pos2d(126, 356)))
+                .widget(createUpgradeBox(53, new Pos2d(196, 356))).widget(createUpgradeBox(61, new Pos2d(126, 416)))
+                .widget(createUpgradeBox(71, new Pos2d(66, 476))).widget(createUpgradeBox(72, new Pos2d(126, 476)))
+                .widget(createUpgradeBox(73, new Pos2d(186, 476))).widget(createUpgradeBox(74, new Pos2d(246, 496)))
+                .widget(createUpgradeBox(80, new Pos2d(6, 556))).widget(createUpgradeBox(81, new Pos2d(66, 536)))
+                .widget(createUpgradeBox(82, new Pos2d(126, 536))).widget(createUpgradeBox(83, new Pos2d(186, 536)))
+                .widget(createUpgradeBox(91, new Pos2d(66, 596))).widget(createUpgradeBox(92, new Pos2d(126, 596)))
+                .widget(createUpgradeBox(93, new Pos2d(186, 596))).widget(createUpgradeBox(101, new Pos2d(126, 656)))
+                .widget(createUpgradeBox(111, new Pos2d(126, 718))).widget(createUpgradeBox(121, new Pos2d(36, 758)))
+                .widget(createUpgradeBox(131, new Pos2d(36, 848))).widget(createUpgradeBox(141, new Pos2d(126, 888)))
+                .widget(createUpgradeBox(151, new Pos2d(216, 848))).widget(createUpgradeBox(161, new Pos2d(216, 758)))
+                .widget(createUpgradeBox(200, new Pos2d(126, 798))).widget(new TextWidget("").setPos(0, 1000));
+
+        builder.widget(
+                new DrawableWidget().setDrawable(TecTechUITextures.BACKGROUND_STAR).setPos(0, 350).setSize(300, 300))
                 .widget(ButtonWidget.closeWindowButton(true).setPos(284, 4))
-                .widget(new MultiChildWidget().addChild(new ButtonWidget().setOnClick((clickData, widget) -> {
-                    upgradeID = 0;
-                    if (!widget.isClient()) widget.getContext().openSyncedWindow(11);
-                }).setSize(40, 15).setBackground(GT_UITextures.BUTTON_STANDARD)
-                        .addTooltip(translateToLocal("fog.upgrade.tt.1")).setPos(130, 230)).addChild(
-                                new TextWidget(translateToLocal("fog.upgrade.tt.1")).setTextAlignment(Alignment.Center)
-                                        .setScale(0.57f).setMaxWidth(35).setPos(133, 233)))
-                .widget(new MultiChildWidget().addChild(new ButtonWidget().setOnClick((clickData, widget) -> {
-                    upgradeID = 1;
-                    if (!widget.isClient()) {
-                        widget.getContext().openSyncedWindow(11);
-                    }
-                }).setSize(40, 15).setBackground(GT_UITextures.BUTTON_STANDARD)
-                        .addTooltip(translateToLocal("fog.upgrade.tt.2")).setPos(130, 70)).addChild(
-                                new TextWidget(translateToLocal("fog.upgrade.tt.2")).setTextAlignment(Alignment.Center)
-                                        .setScale(0.57f).setMaxWidth(36).setPos(133, 73)))
-                .widget(new MultiChildWidget().addChild(new ButtonWidget().setOnClick((clickData, widget) -> {
-                    upgradeID = 2;
-                    if (!widget.isClient()) {
-                        widget.getContext().openSyncedWindow(11);
-                    }
-                }).setSize(40, 15).setBackground(GT_UITextures.BUTTON_STANDARD)
-                        .addTooltip(translateToLocal("fog.upgrade.tt.3")).setPos(70, 130)).addChild(
-                                new TextWidget(translateToLocal("fog.upgrade.tt.3")).setTextAlignment(Alignment.Center)
-                                        .setScale(0.57f).setMaxWidth(36).setPos(73, 133)));
+                .widget(scrollable.setSize(292, 292).setPos(4, 354));
         return builder.build();
     }
 
     protected ModularWindow createIndividualUpgradeWindow(final EntityPlayer player) {
         UITexture background;
-        if (upgradeID == 0) {
+        if (currentUpgradeID == 0) {
             background = TecTechUITextures.BACKGROUND_GLOW_ORANGE;
-        } else if (upgradeID == 1) {
+        } else if (currentUpgradeID == 1) {
             background = TecTechUITextures.BACKGROUND_GLOW_PURPLE;
         } else {
             background = TecTechUITextures.BACKGROUND_GLOW_BLUE;
         }
         ModularWindow.Builder builder = ModularWindow.builder(200, 200).setBackground(background)
-                .widget(ButtonWidget.closeWindowButton(true).setPos(185, 3)).widget(
-                        new MultiChildWidget().addChild(
-                                new TextWidget(translateToLocal("fog.upgrade.text." + (upgradeID + 1)))
-                                        .setTextAlignment(Alignment.Center).setMaxWidth(185).setDefaultColor(0x9c9c9c)
-                                        .setPos(7, 35)));
+                .widget(ButtonWidget.closeWindowButton(true).setPos(185, 3))
+                .widget(
+                        new MultiChildWidget()
+                                .addChild(
+                                        new TextWidget(translateToLocal("fog.upgrade.text." + (currentUpgradeID + 1)))
+                                                .setTextAlignment(Alignment.Center).setMaxWidth(185)
+                                                .setDefaultColor(0x9c9c9c).setPos(9, 35))
+                                .addChild(
+                                        new TextWidget(translateToLocal("fog.upgrade.lore." + (currentUpgradeID + 1)))
+                                                .setTextAlignment(Alignment.Center).setMaxWidth(185)
+                                                .setDefaultColor(0x9c9c9c).setPos(9, 110))
+                                .setSize(200, 200))
+                .widget(new MultiChildWidget().addChild(new ButtonWidget().setOnClick((clickData, widget) -> {
+                    currentUpgradeID = 1;
+                    if (!widget.isClient()) {
+                        widget.getContext().openSyncedWindow(11);
+                    }
+                }).setSize(40, 15).setBackground(GT_UITextures.BUTTON_STANDARD)
+                        .addTooltip(translateToLocal("fog.upgrade.confirm")).setPos(79, 177)).addChild(
+                                new TextWidget(translateToLocal("fog.upgrade.confirm"))
+                                        .setTextAlignment(Alignment.Center).setScale(0.7f).setMaxWidth(36)
+                                        .setPos(82, 182)));
         return builder.build();
+    }
+
+    private Widget createUpgradeBox(int upgradeID, Pos2d pos) {
+        return new MultiChildWidget().addChild(new ButtonWidget().setOnClick((clickData, widget) -> {
+            currentUpgradeID = upgradeID;
+            if (!widget.isClient()) widget.getContext().openSyncedWindow(11);
+        }).setSize(40, 15).setBackground(GT_UITextures.BUTTON_STANDARD)
+                .addTooltip(translateToLocal("fog.upgrade.tt." + upgradeID)))
+                .addChild(
+                        new TextWidget(translateToLocal("fog.upgrade.tt." + upgradeID))
+                                .setTextAlignment(Alignment.Center).setScale(0.57f).setMaxWidth(36).setPos(3, 3))
+                .setPos(pos);
     }
 
     @Override
