@@ -524,28 +524,43 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
     }
 
     private int currentUpgradeID = 0;
+    private int currentColorCode = 0;
 
     protected ModularWindow createUpgradeTreeWindow(final EntityPlayer player) {
         final Scrollable scrollable = new Scrollable().setVerticalScroll();
         final int PARENT_WIDTH = 300;
         final int PARENT_HEIGHT = 1000;
         ModularWindow.Builder builder = ModularWindow.builder(PARENT_WIDTH, PARENT_HEIGHT);
-        scrollable.widget(createUpgradeBox(0, new Pos2d(126, 56))).widget(createUpgradeBox(11, new Pos2d(126, 116)))
-                .widget(createUpgradeBox(21, new Pos2d(96, 176))).widget(createUpgradeBox(22, new Pos2d(156, 176)))
-                .widget(createUpgradeBox(31, new Pos2d(66, 236))).widget(createUpgradeBox(32, new Pos2d(126, 236)))
-                .widget(createUpgradeBox(33, new Pos2d(186, 236))).widget(createUpgradeBox(41, new Pos2d(126, 296)))
-                .widget(createUpgradeBox(51, new Pos2d(56, 356))).widget(createUpgradeBox(52, new Pos2d(126, 356)))
-                .widget(createUpgradeBox(53, new Pos2d(196, 356))).widget(createUpgradeBox(61, new Pos2d(126, 416)))
-                .widget(createUpgradeBox(71, new Pos2d(66, 476))).widget(createUpgradeBox(72, new Pos2d(126, 476)))
-                .widget(createUpgradeBox(73, new Pos2d(186, 476))).widget(createUpgradeBox(74, new Pos2d(246, 496)))
-                .widget(createUpgradeBox(80, new Pos2d(6, 556))).widget(createUpgradeBox(81, new Pos2d(66, 536)))
-                .widget(createUpgradeBox(82, new Pos2d(126, 536))).widget(createUpgradeBox(83, new Pos2d(186, 536)))
-                .widget(createUpgradeBox(91, new Pos2d(66, 596))).widget(createUpgradeBox(92, new Pos2d(126, 596)))
-                .widget(createUpgradeBox(93, new Pos2d(186, 596))).widget(createUpgradeBox(101, new Pos2d(126, 656)))
-                .widget(createUpgradeBox(111, new Pos2d(126, 718))).widget(createUpgradeBox(121, new Pos2d(36, 758)))
-                .widget(createUpgradeBox(131, new Pos2d(36, 848))).widget(createUpgradeBox(141, new Pos2d(126, 888)))
-                .widget(createUpgradeBox(151, new Pos2d(216, 848))).widget(createUpgradeBox(161, new Pos2d(216, 758)))
-                .widget(createUpgradeBox(200, new Pos2d(126, 798))).widget(new TextWidget("").setPos(0, 1000));
+        scrollable.widget(createUpgradeBox(0, 0, new Pos2d(126, 56)))
+                .widget(createUpgradeBox(11, 0, new Pos2d(126, 116)))
+                .widget(createUpgradeBox(21, 0, new Pos2d(96, 176)))
+                .widget(createUpgradeBox(22, 0, new Pos2d(156, 176)))
+                .widget(createUpgradeBox(31, 0, new Pos2d(66, 236)))
+                .widget(createUpgradeBox(32, 0, new Pos2d(126, 236)))
+                .widget(createUpgradeBox(33, 0, new Pos2d(186, 236)))
+                .widget(createUpgradeBox(41, 0, new Pos2d(126, 296)))
+                .widget(createUpgradeBox(51, 0, new Pos2d(56, 356)))
+                .widget(createUpgradeBox(52, 0, new Pos2d(126, 356)))
+                .widget(createUpgradeBox(53, 0, new Pos2d(196, 356)))
+                .widget(createUpgradeBox(61, 0, new Pos2d(126, 416)))
+                .widget(createUpgradeBox(71, 1, new Pos2d(66, 476)))
+                .widget(createUpgradeBox(72, 2, new Pos2d(126, 476)))
+                .widget(createUpgradeBox(73, 3, new Pos2d(186, 476)))
+                .widget(createUpgradeBox(74, 3, new Pos2d(246, 496))).widget(createUpgradeBox(80, 1, new Pos2d(6, 556)))
+                .widget(createUpgradeBox(81, 1, new Pos2d(66, 536)))
+                .widget(createUpgradeBox(82, 2, new Pos2d(126, 536)))
+                .widget(createUpgradeBox(83, 3, new Pos2d(186, 536)))
+                .widget(createUpgradeBox(91, 1, new Pos2d(66, 596)))
+                .widget(createUpgradeBox(92, 2, new Pos2d(126, 596)))
+                .widget(createUpgradeBox(93, 3, new Pos2d(186, 596)))
+                .widget(createUpgradeBox(101, 0, new Pos2d(126, 656)))
+                .widget(createUpgradeBox(111, 0, new Pos2d(126, 718)))
+                .widget(createUpgradeBox(121, 0, new Pos2d(36, 758)))
+                .widget(createUpgradeBox(131, 0, new Pos2d(36, 848)))
+                .widget(createUpgradeBox(141, 0, new Pos2d(126, 888)))
+                .widget(createUpgradeBox(151, 0, new Pos2d(216, 848)))
+                .widget(createUpgradeBox(161, 0, new Pos2d(216, 758)))
+                .widget(createUpgradeBox(200, 0, new Pos2d(126, 798))).widget(new TextWidget("").setPos(0, 1000));
 
         builder.widget(
                 new DrawableWidget().setDrawable(TecTechUITextures.BACKGROUND_STAR).setPos(0, 350).setSize(300, 300))
@@ -555,14 +570,12 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
     }
 
     protected ModularWindow createIndividualUpgradeWindow(final EntityPlayer player) {
-        UITexture background;
-        if (currentUpgradeID == 0) {
-            background = TecTechUITextures.BACKGROUND_GLOW_ORANGE;
-        } else if (currentUpgradeID == 1) {
-            background = TecTechUITextures.BACKGROUND_GLOW_PURPLE;
-        } else {
-            background = TecTechUITextures.BACKGROUND_GLOW_BLUE;
-        }
+        UITexture background = switch (currentColorCode) {
+            case 1 -> TecTechUITextures.BACKGROUND_GLOW_PURPLE;
+            case 2 -> TecTechUITextures.BACKGROUND_GLOW_ORANGE;
+            case 3 -> TecTechUITextures.BACKGROUND_GLOW_GREEN;
+            default -> TecTechUITextures.BACKGROUND_GLOW_BLUE;
+        };
         ModularWindow.Builder builder = ModularWindow.builder(200, 200).setBackground(background)
                 .widget(ButtonWidget.closeWindowButton(true).setPos(185, 3))
                 .widget(
@@ -589,9 +602,10 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
         return builder.build();
     }
 
-    private Widget createUpgradeBox(int upgradeID, Pos2d pos) {
+    private Widget createUpgradeBox(int upgradeID, int colorCode, Pos2d pos) {
         return new MultiChildWidget().addChild(new ButtonWidget().setOnClick((clickData, widget) -> {
             currentUpgradeID = upgradeID;
+            currentColorCode = colorCode;
             if (!widget.isClient()) widget.getContext().openSyncedWindow(11);
         }).setSize(40, 15).setBackground(GT_UITextures.BUTTON_STANDARD)
                 .addTooltip(translateToLocal("fog.upgrade.tt." + upgradeID)))
