@@ -6,7 +6,6 @@ import static gregtech.api.GregTech_API.getUnificatedOreDictStack;
 import static gregtech.api.enums.Mods.NewHorizonsCoreMod;
 import static gregtech.api.util.GT_ModHandler.getModItem;
 import static gregtech.api.util.GT_Utility.getPlasmaFuelValueInEUPerLiterFromFluid;
-import static gregtech.api.util.GT_Utility.getPlasmaFuelValueInEUPerLiterFromMaterial;
 import static java.lang.Math.min;
 
 import java.util.ArrayList;
@@ -484,10 +483,10 @@ public class EyeOfHarmonyRecipe {
             Materials.Oxygen.getPlasma(1).getFluid(),
             Materials.Tin.getPlasma(1).getFluid(),
             FluidRegistry.getFluid("plasma.fermium"),
-            FluidRegistry.getFluid("plasma.neptunium")
-    ).collect(Collectors.toList());
+            FluidRegistry.getFluid("plasma.neptunium")).collect(Collectors.toList());
 
     private static final HashMap<String, Long> plasmaEnergyMap = new HashMap<>() {
+
         {
             for (Fluid fluid : VALID_PLASMAS) {
                 if (fluid == null) continue;
