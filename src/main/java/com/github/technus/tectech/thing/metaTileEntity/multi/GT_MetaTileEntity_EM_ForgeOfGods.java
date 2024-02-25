@@ -76,7 +76,8 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
     private static int spacetimeCompressionFieldMetadata = -1;
     private int solenoidCoilMetadata = -1;
     private static final int MODULE_CHECK_INTERVAL = 100;
-
+    private static final int[] FIRST_SPLIT_UPGRADES = new int[] { 12, 13, 14 };
+    private static final int[] RING_UPGRADES = new int[] { 26, 29 };
     private GT_MetaTileEntity_Hatch_Input fuelInputHatch;
     private String userUUID = "";
     protected static final String STRUCTURE_PIECE_MAIN = "main";
@@ -664,12 +665,12 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
                             }
                         } else if (unlockedPrereqUpgrades > 0 || prereqUpgrades.length == 0) {
                             if (isUpradeSplitStart) {
-                                for (int splitUpgrade : new int[] { 12, 13, 14 }) {
+                                for (int splitUpgrade : FIRST_SPLIT_UPGRADES) {
                                     if (upgrades[splitUpgrade]) {
                                         unlockedSplitUpgrades++;
                                     }
                                 }
-                                for (int maxSplitUpgrades : new int[] { 26, 29 }) {
+                                for (int maxSplitUpgrades : RING_UPGRADES) {
                                     if (upgrades[maxSplitUpgrades]) {
                                         unlockedSplitUpgrades--;
                                     }
