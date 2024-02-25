@@ -651,6 +651,7 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
                 .widget(new MultiChildWidget().addChild(new ButtonWidget().setOnClick((clickData, widget) -> {
                     int unlockedPrereqUpgrades = 0;
                     int unlockedFollowupUpgrades = 0;
+                    int unlockedSplitUpgrades = 0;
                     if (!upgrades[currentUpgradeID]) {
                         for (int prereqUpgrade : prereqUpgrades) {
                             if (upgrades[prereqUpgrade]) {
@@ -662,7 +663,21 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
                                 upgrades[currentUpgradeID] = true;
                             }
                         } else if (unlockedPrereqUpgrades > 0 || prereqUpgrades.length == 0) {
-                            upgrades[currentUpgradeID] = true;
+                            if (isUpradeSplitStart) {
+                                for (int splitUpgrade : new int[] { 12, 13, 14 }) {
+                                    if (upgrades[splitUpgrade]) {
+                                        unlockedSplitUpgrades++;
+                                    }
+                                }
+                                for (int maxSplitUpgrades : new int[] { 26, 29 }) {
+                                    if (upgrades[maxSplitUpgrades]) {
+                                        unlockedSplitUpgrades--;
+                                    }
+                                }
+                            }
+                            if (unlockedSplitUpgrades <= 0) {
+                                upgrades[currentUpgradeID] = true;
+                            }
                         }
                     } else {
                         for (int followupUpgrade : followupUpgrades) {
