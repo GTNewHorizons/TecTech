@@ -71,7 +71,7 @@ import com.gtnewhorizons.modularui.common.widget.DynamicPositionedColumn;
 import com.gtnewhorizons.modularui.common.widget.FakeSyncWidget;
 import com.gtnewhorizons.modularui.common.widget.SlotWidget;
 import com.gtnewhorizons.modularui.common.widget.TextWidget;
-import com.gtnewhorizons.modularui.common.widget.textfield.TextFieldWidget;
+import com.gtnewhorizons.modularui.common.widget.textfield.NumericWidget;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -2564,15 +2564,11 @@ public abstract class GT_MetaTileEntity_MultiblockBase_EM
                                 (screenSize.height / 2 - mainWindow.getSize().height / 2)))
                 .widget(ButtonWidget.closeWindowButton(true).setPos(85, 3))
                 .widget(
-                        new TextFieldWidget().setTextColor(Color.LIGHT_BLUE.normal).setNumbersDouble((val) -> val)
-                                .setGetter(() -> Double.toString(parametrization.iParamsIn[ledID])).setSetter(val -> {
-                                    try {
-                                        parametrization.iParamsIn[ledID] = Double.parseDouble(val);
-                                    } catch (Exception e) {
-                                        e.printStackTrace();
-                                    }
-                                }).setTextAlignment(Alignment.CenterLeft).setFocusOnGuiOpen(true)
-                                .setMaximumFractionDigits(8).setBackground(GT_UITextures.BACKGROUND_TEXT_FIELD)
+                        new NumericWidget().setGetter(() -> parametrization.iParamsIn[ledID])
+                                .setSetter(val -> parametrization.iParamsIn[ledID] = val).setIntegerOnly(false)
+                                .modifyNumberFormat(format -> format.setMaximumFractionDigits(8))
+                                .setTextColor(Color.LIGHT_BLUE.normal).setTextAlignment(Alignment.CenterLeft)
+                                .setFocusOnGuiOpen(true).setBackground(GT_UITextures.BACKGROUND_TEXT_FIELD)
                                 .setPos(5, 20).setSize(90, 15))
                 .widget(
                         new TextWidget((ledID % 10) + ":" + (ledID / 10) + ":I").setDefaultColor(Color.WHITE.normal)

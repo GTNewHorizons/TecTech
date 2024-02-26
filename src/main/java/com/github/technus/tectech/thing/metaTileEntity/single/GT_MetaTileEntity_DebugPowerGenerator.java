@@ -10,7 +10,8 @@ import static com.github.technus.tectech.util.CommonValues.VN;
 import static net.minecraft.util.StatCollector.translateToLocal;
 
 import java.util.function.Consumer;
-import java.util.function.Supplier;
+import java.util.function.IntConsumer;
+import java.util.function.IntSupplier;
 
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.player.EntityPlayer;
@@ -31,7 +32,7 @@ import com.gtnewhorizons.modularui.api.screen.UIBuildContext;
 import com.gtnewhorizons.modularui.common.widget.ButtonWidget;
 import com.gtnewhorizons.modularui.common.widget.DrawableWidget;
 import com.gtnewhorizons.modularui.common.widget.TextWidget;
-import com.gtnewhorizons.modularui.common.widget.textfield.TextFieldWidget;
+import com.gtnewhorizons.modularui.common.widget.textfield.NumericWidget;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -357,11 +358,10 @@ public class GT_MetaTileEntity_DebugPowerGenerator extends GT_MetaTileEntity_Tie
     }
 
     private void addLabelledIntegerTextField(ModularWindow.Builder builder, String label, int labelWidth,
-            Supplier<Integer> getter, Consumer<Integer> setter, int xPos, int yPos) {
-        TextFieldWidget itfw = new TextFieldWidget();
-        TextWidget ltw = new TextWidget(label);
-        builder.widget(ltw.setDefaultColor(COLOR_TEXT_WHITE.get()).setPos(xPos, yPos)).widget(
-                itfw.setSetterInt(setter).setGetterInt(getter).setTextColor(COLOR_TEXT_WHITE.get())
+            IntSupplier getter, IntConsumer setter, int xPos, int yPos) {
+        builder.widget(new TextWidget(label).setDefaultColor(COLOR_TEXT_WHITE.get()).setPos(xPos, yPos)).widget(
+                new NumericWidget().setGetter(() -> (double) getter.getAsInt())
+                        .setSetter(val -> setter.accept((int) val)).setTextColor(COLOR_TEXT_WHITE.get())
                         .setBackground(GT_UITextures.BACKGROUND_TEXT_FIELD.withOffset(-1, -1, 2, 2))
                         .setPos(xPos + labelWidth, yPos - 1).setSize(56, 10));
     }
