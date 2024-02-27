@@ -620,10 +620,12 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
             builder.widget(
                     new MultiChildWidget().addChild(
                             new ButtonWidget().setOnClick((clickData, widget) -> { upgrades = new boolean[31]; })
-                                    .setSize(40, 15).setBackground(GT_UITextures.BUTTON_STANDARD))
+                                    .setSize(40, 15).setBackground(GT_UITextures.BUTTON_STANDARD)
+                                    .addTooltip(translateToLocal("fog.debug.resetbutton.tooltip")))
                             .addChild(
-                                    new TextWidget("Reset").setTextAlignment(Alignment.Center).setScale(0.57f)
-                                            .setMaxWidth(36).setPos(3, 3))
+                                    new TextWidget(translateToLocal("fog.debug.resetbutton.text"))
+                                            .setTextAlignment(Alignment.Center).setScale(0.57f).setMaxWidth(36)
+                                            .setPos(3, 3))
                             .setPos(4, 354));
         }
         return builder.build();
@@ -725,8 +727,13 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
             followupUpgrades = followingUpgradeIDs;
             isUpradeSplitStart = isStartOfSplit;
             if (!widget.isClient()) widget.getContext().openSyncedWindow(11);
-        }).setSize(40, 15).setBackground(GT_UITextures.BUTTON_STANDARD)
-                .addTooltip(translateToLocal("fog.upgrade.tt." + upgradeID)))
+        }).setSize(40, 15).setBackground(() -> {
+            if (upgrades[upgradeID]) {
+                return new IDrawable[] { GT_UITextures.BUTTON_STANDARD_PRESSED };
+            } else {
+                return new IDrawable[] { GT_UITextures.BUTTON_STANDARD };
+            }
+        }).addTooltip(translateToLocal("fog.upgrade.tt." + upgradeID)))
                 .addChild(
                         new TextWidget(translateToLocal("fog.upgrade.tt." + upgradeID))
                                 .setTextAlignment(Alignment.Center).setScale(0.57f).setMaxWidth(36).setPos(3, 3))
