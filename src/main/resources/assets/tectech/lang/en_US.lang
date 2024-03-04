@@ -970,6 +970,8 @@ fog.upgrade.text.30=*insert text here* upgrade end
 fog.debug.resetbutton.text=Reset
 fog.debug.resetbutton.tooltip=Resets all upgrades to zero
 
+fog.button.fuelconfig.tooltip=Fuel Configuration Menu
+
 achievement.gt.blockmachines.multimachine.em.forge_of_gods=Forge of the Gods
 achievement.gt.godforgecasing.0=Singularity Reinforced Stellar Shielding Casing
 achievement.gt.godforgecasing.1=Celestial Matter Guidance Casing

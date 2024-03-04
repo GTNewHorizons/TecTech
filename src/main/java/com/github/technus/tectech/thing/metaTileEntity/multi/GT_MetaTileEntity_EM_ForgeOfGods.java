@@ -6,6 +6,7 @@ import static com.github.technus.tectech.thing.casing.TT_Container_Casings.sBloc
 import static com.github.technus.tectech.thing.casing.TT_Container_Casings.sBlockCasingsTT;
 import static com.gtnewhorizon.structurelib.structure.StructureUtility.*;
 import static gregtech.api.enums.GT_HatchElement.*;
+import static gregtech.api.metatileentity.BaseTileEntity.TOOLTIP_DELAY;
 import static gregtech.api.util.GT_StructureUtility.buildHatchAdder;
 import static gregtech.api.util.GT_Utility.formatNumbers;
 import static net.minecraft.util.StatCollector.translateToLocal;
@@ -24,6 +25,7 @@ import net.minecraftforge.fluids.FluidStack;
 
 import org.apache.commons.lang3.tuple.Pair;
 
+import com.github.technus.tectech.TecTech;
 import com.github.technus.tectech.thing.block.TileForgeOfGods;
 import com.github.technus.tectech.thing.casing.TT_Container_Casings;
 import com.github.technus.tectech.thing.gui.TecTechUITextures;
@@ -513,9 +515,9 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
                                 }).setSize(16, 16).setBackground(() -> {
                                     List<UITexture> button = new ArrayList<>();
                                     button.add(TecTechUITextures.BUTTON_CELESTIAL_32x32);
-                                    button.add(TecTechUITextures.OVERLAY_BUTTON_ARROW_BLUE_UP);
+                                    button.add(TecTechUITextures.OVERLAY_BUTTON_HEAT_ON);
                                     return button.toArray(new IDrawable[0]);
-                                }).addTooltip("Path of Celestial Transcendence").setPos(174, 129));
+                                }).addTooltip(translateToLocal("fog.button.fuelconfig.tooltip")).setPos(174, 129));
 
         Widget powerSwitchButton = createPowerSwitchButton();
         builder.widget(powerSwitchButton)
@@ -523,6 +525,29 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
                     if (val) getBaseMetaTileEntity().enableWorking();
                     else getBaseMetaTileEntity().disableWorking();
                 }));
+    }
+
+    @Override
+    protected ButtonWidget createPowerSwitchButton() {
+        Widget button = new ButtonWidget().setOnClick((clickData, widget) -> {
+            TecTech.proxy.playSound(getBaseMetaTileEntity(), "fx_click");
+            if (getBaseMetaTileEntity().isAllowedToWork()) {
+                getBaseMetaTileEntity().disableWorking();
+            } else {
+                getBaseMetaTileEntity().enableWorking();
+            }
+        }).setPlayClickSound(false).setBackground(() -> {
+            List<UITexture> ret = new ArrayList<>();
+            ret.add(TecTechUITextures.BUTTON_CELESTIAL_32x32);
+            if (getBaseMetaTileEntity().isAllowedToWork()) {
+                ret.add(TecTechUITextures.OVERLAY_BUTTON_POWER_SWITCH_ON);
+            } else {
+                ret.add(TecTechUITextures.OVERLAY_BUTTON_POWER_SWITCH_DISABLED);
+            }
+            return ret.toArray(new IDrawable[0]);
+        }).setPos(174, doesBindPlayerInventory() ? 148 : 172).setSize(16, 16);
+        button.addTooltip("Power Switch").setTooltipShowUpDelay(TOOLTIP_DELAY);
+        return (ButtonWidget) button;
     }
 
     protected ModularWindow createFuelConfigWindow(final EntityPlayer player) {
