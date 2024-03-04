@@ -39,11 +39,14 @@ import com.gtnewhorizon.structurelib.structure.IStructureDefinition;
 import com.gtnewhorizons.modularui.api.drawable.IDrawable;
 import com.gtnewhorizons.modularui.api.drawable.UITexture;
 import com.gtnewhorizons.modularui.api.math.Alignment;
+import com.gtnewhorizons.modularui.api.math.Color;
 import com.gtnewhorizons.modularui.api.math.Pos2d;
+import com.gtnewhorizons.modularui.api.math.Size;
 import com.gtnewhorizons.modularui.api.screen.ModularWindow;
 import com.gtnewhorizons.modularui.api.screen.UIBuildContext;
 import com.gtnewhorizons.modularui.api.widget.Widget;
 import com.gtnewhorizons.modularui.common.widget.*;
+import com.gtnewhorizons.modularui.common.widget.textfield.TextFieldWidget;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -70,12 +73,15 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
     private static Textures.BlockIcons.CustomIcon ScreenOFF;
     private static Textures.BlockIcons.CustomIcon ScreenON;
 
-    public static Parameters.Group.ParameterIn fuelConsumptionParameter;
+    public int fuelConsumptionFactor = 0;
     public ArrayList<GT_MetaTileEntity_EM_BaseModule> moduleHatches = new ArrayList<>();
 
     private static int spacetimeCompressionFieldMetadata = -1;
     private int solenoidCoilMetadata = -1;
     private static final int MODULE_CHECK_INTERVAL = 100;
+    private static final int FUEL_CONFIG_WINDOW_ID = 9;
+    private static final int UPGRADE_TREE_WINDOW_ID = 10;
+    private static final int INDIVIDUAL_UPGRADE_WINDOW_ID = 11;
     private static final int[] FIRST_SPLIT_UPGRADES = new int[] { 12, 13, 14 };
     private static final int[] RING_UPGRADES = new int[] { 26, 29 };
     private GT_MetaTileEntity_Hatch_Input fuelInputHatch;
@@ -180,20 +186,6 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
     }
 
     @Override
-    protected void parametersInstantiation_EM() {
-        super.parametersInstantiation_EM();
-        Parameters.Group param_2 = parametrization.getGroup(0, false);
-        fuelConsumptionParameter = param_2.makeInParameter(0, 1, FUEL_CONSUMPTION_PARAM_NAME, FUEL_CONSUMPTION_VALUE);
-    }
-
-    // Fuel consumption parameter localisation
-    private static final INameFunction<GT_MetaTileEntity_EM_ForgeOfGods> FUEL_CONSUMPTION_PARAM_NAME = (base,
-            p) -> translateToLocal("gt.blockmachines.multimachine.FOG.fuelconsumption");
-    // Fuel consumption parameter value
-    private static final IStatusFunction<GT_MetaTileEntity_EM_ForgeOfGods> FUEL_CONSUMPTION_VALUE = (base,
-            p) -> LedStatus.fromLimitsInclusiveOuterBoundary(p.get(), 0, 0, 10, 10);
-
-    @Override
     public void construct(ItemStack stackSize, boolean hintsOnly) {
         structureBuild_EM(STRUCTURE_PIECE_MAIN, 31, 34, 0, stackSize, hintsOnly);
     }
@@ -237,7 +229,7 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
             FluidStack fluidInHatch = fuelInputHatch.getFluid();
             // Iterate over valid fluids and drain them
             for (FluidStack validFluid : validFuelMap.keySet()) {
-                int drainAmount = (int) (validFuelMap.get(validFluid) * fuelConsumptionParameter.get());
+                int drainAmount = validFuelMap.get(validFluid) * fuelConsumptionFactor;
                 if (fluidInHatch.isFluidEqual(validFluid)) {
                     FluidStack tFluid = new FluidStack(validFluid, drainAmount);
                     FluidStack tLiquid = fuelInputHatch.drain(tFluid.amount, true);
@@ -498,25 +490,32 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
                     new DrawableWidget().setDrawable(TecTechUITextures.BACKGROUND_SCREEN_BLUE_NO_INVENTORY).setPos(4, 4)
                             .setSize(190, 171));
         }
-        if (doesBindPlayerInventory()) {
-            builder.widget(
-                    new DrawableWidget().setDrawable(TecTechUITextures.PICTURE_HEAT_SINK_SMALL).setPos(173, 185)
-                            .setSize(18, 6));
-        }
-        buildContext.addSyncedWindow(10, this::createUpgradeTreeWindow);
-        buildContext.addSyncedWindow(11, this::createIndividualUpgradeWindow);
+        buildContext.addSyncedWindow(UPGRADE_TREE_WINDOW_ID, this::createUpgradeTreeWindow);
+        buildContext.addSyncedWindow(INDIVIDUAL_UPGRADE_WINDOW_ID, this::createIndividualUpgradeWindow);
+        buildContext.addSyncedWindow(FUEL_CONFIG_WINDOW_ID, this::createFuelConfigWindow);
         builder.widget(
                 new ButtonWidget().setOnClick(
-                        (clickData, widget) -> { if (!widget.isClient()) widget.getContext().openSyncedWindow(10); })
-                        .setSize(18, 18).setBackground(() -> {
+                        (clickData, widget) -> {
+                            if (!widget.isClient()) widget.getContext().openSyncedWindow(UPGRADE_TREE_WINDOW_ID);
+                        }).setSize(16, 16).setBackground(() -> {
                             List<UITexture> button = new ArrayList<>();
                             button.add(TecTechUITextures.BUTTON_CELESTIAL_32x32);
                             button.add(TecTechUITextures.OVERLAY_BUTTON_ARROW_BLUE_UP);
                             return button.toArray(new IDrawable[0]);
-                        }).addTooltip("Path of Celestial Transcendence").setPos(173, 167))
+                        }).addTooltip("Path of Celestial Transcendence").setPos(174, 167))
                 .widget(
-                        new DrawableWidget().setDrawable(TecTechUITextures.PICTURE_HEAT_SINK_SMALL).setPos(173, 185)
-                                .setSize(18, 6));
+                        new DrawableWidget().setDrawable(TecTechUITextures.PICTURE_HEAT_SINK_SMALL).setPos(174, 183)
+                                .setSize(16, 6))
+                .widget(
+                        new ButtonWidget().setOnClick(
+                                (clickData, widget) -> {
+                                    if (!widget.isClient()) widget.getContext().openSyncedWindow(FUEL_CONFIG_WINDOW_ID);
+                                }).setSize(16, 16).setBackground(() -> {
+                                    List<UITexture> button = new ArrayList<>();
+                                    button.add(TecTechUITextures.BUTTON_CELESTIAL_32x32);
+                                    button.add(TecTechUITextures.OVERLAY_BUTTON_ARROW_BLUE_UP);
+                                    return button.toArray(new IDrawable[0]);
+                                }).addTooltip("Path of Celestial Transcendence").setPos(174, 129));
 
         Widget powerSwitchButton = createPowerSwitchButton();
         builder.widget(powerSwitchButton)
@@ -524,6 +523,31 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
                     if (val) getBaseMetaTileEntity().enableWorking();
                     else getBaseMetaTileEntity().disableWorking();
                 }));
+    }
+
+    protected ModularWindow createFuelConfigWindow(final EntityPlayer player) {
+        final int WIDTH = 78;
+        final int HEIGHT = 80;
+        final int PARENT_WIDTH = getGUIWidth();
+        final int PARENT_HEIGHT = getGUIHeight();
+        ModularWindow.Builder builder = ModularWindow.builder(WIDTH, HEIGHT);
+        builder.setBackground(GT_UITextures.BACKGROUND_SINGLEBLOCK_DEFAULT);
+        builder.setGuiTint(getGUIColorization());
+        builder.setDraggable(true);
+        builder.setPos(
+                (size, window) -> Alignment.Center.getAlignedPos(size, new Size(PARENT_WIDTH, PARENT_HEIGHT)).add(
+                        Alignment.TopRight.getAlignedPos(new Size(PARENT_WIDTH, PARENT_HEIGHT), new Size(WIDTH, HEIGHT))
+                                .add(WIDTH - 3, 0)));
+        builder.widget(
+                TextWidget.localised("gt.blockmachines.multimachine.FOG.fuelconsumption").setPos(3, 2).setSize(74, 34))
+                .widget(
+                        new TextFieldWidget().setSetterInt(val -> fuelConsumptionFactor = val)
+                                .setGetterInt(() -> fuelConsumptionFactor).setNumbers(1, Integer.MAX_VALUE)
+                                .setOnScrollNumbers(1, 4, 64).setTextAlignment(Alignment.Center)
+                                .setTextColor(Color.WHITE.normal).setSize(70, 18).setPos(3, 35)
+                                .setBackground(GT_UITextures.BACKGROUND_TEXT_FIELD));
+
+        return builder.build();
     }
 
     private int currentUpgradeID = 0;
@@ -726,7 +750,7 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
             allPrereqRequired = requireAllPrerequisites;
             followupUpgrades = followingUpgradeIDs;
             isUpradeSplitStart = isStartOfSplit;
-            if (!widget.isClient()) widget.getContext().openSyncedWindow(11);
+            if (!widget.isClient()) widget.getContext().openSyncedWindow(INDIVIDUAL_UPGRADE_WINDOW_ID);
         }).setSize(40, 15).setBackground(() -> {
             if (upgrades[upgradeID]) {
                 return new IDrawable[] { GT_UITextures.BUTTON_STANDARD_PRESSED };
