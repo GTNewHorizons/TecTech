@@ -39,6 +39,7 @@ import com.gtnewhorizon.structurelib.alignment.constructable.ISurvivalConstructa
 import com.gtnewhorizon.structurelib.structure.IItemSource;
 import com.gtnewhorizon.structurelib.structure.IStructureDefinition;
 import com.gtnewhorizons.modularui.api.drawable.IDrawable;
+import com.gtnewhorizons.modularui.api.drawable.Text;
 import com.gtnewhorizons.modularui.api.drawable.UITexture;
 import com.gtnewhorizons.modularui.api.math.Alignment;
 import com.gtnewhorizons.modularui.api.math.Color;
@@ -46,6 +47,7 @@ import com.gtnewhorizons.modularui.api.math.Pos2d;
 import com.gtnewhorizons.modularui.api.math.Size;
 import com.gtnewhorizons.modularui.api.screen.ModularWindow;
 import com.gtnewhorizons.modularui.api.screen.UIBuildContext;
+import com.gtnewhorizons.modularui.api.widget.IWidgetBuilder;
 import com.gtnewhorizons.modularui.api.widget.Widget;
 import com.gtnewhorizons.modularui.common.widget.*;
 import com.gtnewhorizons.modularui.common.widget.textfield.TextFieldWidget;
@@ -75,7 +77,8 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
     private static Textures.BlockIcons.CustomIcon ScreenOFF;
     private static Textures.BlockIcons.CustomIcon ScreenON;
 
-    public int fuelConsumptionFactor = 0;
+    private int fuelConsumptionFactor = 0;
+    private int selectedFuelType = 0;
     public ArrayList<GT_MetaTileEntity_EM_BaseModule> moduleHatches = new ArrayList<>();
 
     private static int spacetimeCompressionFieldMetadata = -1;
@@ -455,23 +458,6 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
         mCrowbar = true;
     }
 
-    @Override
-    public void loadNBTData(NBTTagCompound aNBT) {
-        spacetimeCompressionFieldMetadata = aNBT.getInteger("spacetimeCompressionTier") - 1;
-        solenoidCoilMetadata = aNBT.getInteger("solenoidCoilTier") + 7;
-        super.loadNBTData(aNBT);
-        if (!aNBT.hasKey(INPUT_SEPARATION_NBT_KEY)) {
-            inputSeparation = aNBT.getBoolean("separateBusses");
-        }
-    }
-
-    @Override
-    public void saveNBTData(NBTTagCompound aNBT) {
-        aNBT.setInteger("spacetimeCompressionTier", spacetimeCompressionFieldMetadata + 1);
-        aNBT.setInteger("solenoidCoilTier", solenoidCoilMetadata - 7);
-        super.saveNBTData(aNBT);
-    }
-
     public static int getMaxParallels() {
         return (int) (1024 * (Math.pow(2, spacetimeCompressionFieldMetadata)));
     }
@@ -552,7 +538,7 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
 
     protected ModularWindow createFuelConfigWindow(final EntityPlayer player) {
         final int WIDTH = 78;
-        final int HEIGHT = 80;
+        final int HEIGHT = 130;
         final int PARENT_WIDTH = getGUIWidth();
         final int PARENT_HEIGHT = getGUIHeight();
         ModularWindow.Builder builder = ModularWindow.builder(WIDTH, HEIGHT);
@@ -570,7 +556,104 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
                                 .setGetterInt(() -> fuelConsumptionFactor).setNumbers(1, Integer.MAX_VALUE)
                                 .setOnScrollNumbers(1, 4, 64).setTextAlignment(Alignment.Center)
                                 .setTextColor(Color.WHITE.normal).setSize(70, 18).setPos(3, 35)
-                                .setBackground(GT_UITextures.BACKGROUND_TEXT_FIELD));
+                                .setBackground(GT_UITextures.BACKGROUND_TEXT_FIELD))
+                .widget(
+                        new DrawableWidget().setDrawable(GT_UITextures.PICTURE_INFORMATION).setPos(65, 25)
+                                .setSize(4, 10)
+                                .addTooltip(translateToLocal("gt.blockmachines.multimachine.FOG.fuelinfo.0"))
+                                .addTooltip(translateToLocal("gt.blockmachines.multimachine.FOG.fuelinfo.1"))
+                                .addTooltip(translateToLocal("gt.blockmachines.multimachine.FOG.fuelinfo.2"))
+                                .addTooltip(translateToLocal("gt.blockmachines.multimachine.FOG.fuelinfo.3"))
+                                .addTooltip(translateToLocal("gt.blockmachines.multimachine.FOG.fuelinfo.4")))
+                .widget(
+                        TextWidget.localised("gt.blockmachines.multimachine.FOG.fueltype").setPos(3, 57)
+                                .setSize(74, 24))
+                .widget(
+                        TextWidget.localised("gt.blockmachines.multimachine.FOG.fuelusage").setPos(3, 100)
+                                .setSize(74, 20))
+                .widget(TextWidget.dynamicText(this::fuelUsage).setPos(3, 115).setSize(74, 15))
+                .widget(
+                        new MultiChildWidget().addChild(
+                                new FluidNameHolderWidget(
+                                        () -> MaterialsUEVplus.DimensionallyTranscendentResidue.getFluid(1)
+                                                .getUnlocalizedName().substring(6),
+                                        (String) -> MaterialsUEVplus.DimensionallyTranscendentResidue.getFluid(1)
+                                                .getUnlocalizedName()) {
+
+                                    @Override
+                                    public void buildTooltip(List<Text> tooltip) {
+                                        FluidStack fluid = createFluidStack();
+                                        addFluidNameInfo(tooltip, fluid);
+                                        addAdditionalFluidInfo(tooltip, fluid);
+                                    }
+                                }.setPos(1, 1).setSize(16, 16))
+                                .addChild(new ButtonWidget().setOnClick((clickData, widget) -> {
+                                    TecTech.proxy.playSound(getBaseMetaTileEntity(), "fx_click");
+                                    selectedFuelType = 0;
+                                }).setBackground(() -> {
+                                    if (selectedFuelType == 0) {
+                                        return new IDrawable[] { TecTechUITextures.SLOT_OUTLINE_GREEN };
+                                    } else {
+                                        return new IDrawable[] {};
+                                    }
+                                }).setSize(18, 18).attachSyncer(
+                                        new FakeSyncWidget.IntegerSyncer(this::getFuelType, this::setFuelType),
+                                        builder))
+
+                                .setPos(6, 82).setSize(18, 18))
+                .widget(
+                        new MultiChildWidget().addChild(
+                                new FluidNameHolderWidget(
+                                        () -> MaterialsUEVplus.RawStarMatter.getFluid(1).getUnlocalizedName()
+                                                .substring(6),
+                                        (String) -> MaterialsUEVplus.RawStarMatter.getFluid(1).getUnlocalizedName()) {
+
+                                    @Override
+                                    public void buildTooltip(List<Text> tooltip) {
+                                        FluidStack fluid = createFluidStack();
+                                        addFluidNameInfo(tooltip, fluid);
+                                        addAdditionalFluidInfo(tooltip, fluid);
+                                    }
+                                }.setPos(1, 1).setSize(16, 16))
+                                .addChild(new ButtonWidget().setOnClick((clickData, widget) -> {
+                                    TecTech.proxy.playSound(getBaseMetaTileEntity(), "fx_click");
+                                    selectedFuelType = 1;
+                                }).setBackground(() -> {
+                                    if (selectedFuelType == 1) {
+                                        return new IDrawable[] { TecTechUITextures.SLOT_OUTLINE_GREEN };
+                                    } else {
+                                        return new IDrawable[] {};
+                                    }
+                                }).setSize(18, 18)).setPos(29, 82).setSize(18, 18).attachSyncer(
+                                        new FakeSyncWidget.IntegerSyncer(this::getFuelType, this::setFuelType),
+                                        builder))
+                .widget(
+                        new MultiChildWidget().addChild(
+                                new FluidNameHolderWidget(
+                                        () -> MaterialsUEVplus.MagnetohydrodynamicallyConstrainedStarMatter.getMolten(1)
+                                                .getUnlocalizedName().substring(6),
+                                        (String) -> MaterialsUEVplus.MagnetohydrodynamicallyConstrainedStarMatter
+                                                .getMolten(1).getUnlocalizedName()) {
+
+                                    @Override
+                                    public void buildTooltip(List<Text> tooltip) {
+                                        FluidStack fluid = createFluidStack();
+                                        addFluidNameInfo(tooltip, fluid);
+                                        addAdditionalFluidInfo(tooltip, fluid);
+                                    }
+                                }.setPos(1, 1).setSize(16, 16))
+                                .addChild(new ButtonWidget().setOnClick((clickData, widget) -> {
+                                    TecTech.proxy.playSound(getBaseMetaTileEntity(), "fx_click");
+                                    selectedFuelType = 2;
+                                }).setBackground(() -> {
+                                    if (selectedFuelType == 2) {
+                                        return new IDrawable[] { TecTechUITextures.SLOT_OUTLINE_GREEN };
+                                    } else {
+                                        return new IDrawable[] {};
+                                    }
+                                }).setSize(18, 18)).setPos(52, 82).setSize(18, 18).attachSyncer(
+                                        new FakeSyncWidget.IntegerSyncer(this::getFuelType, this::setFuelType),
+                                        builder));
 
         return builder.build();
     }
@@ -581,20 +664,75 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
     private int[] followupUpgrades = new int[] {};
     private boolean allPrereqRequired = false;
     private boolean isUpradeSplitStart = false;
-    public boolean[] upgrades = new boolean[31];
+    private boolean[] upgrades = new boolean[31];
 
     protected ModularWindow createUpgradeTreeWindow(final EntityPlayer player) {
         final Scrollable scrollable = new Scrollable().setVerticalScroll();
         final int PARENT_WIDTH = 300;
         final int PARENT_HEIGHT = 1000;
         ModularWindow.Builder builder = ModularWindow.builder(PARENT_WIDTH, PARENT_HEIGHT);
-        scrollable.widget(createUpgradeBox(0, 0, new int[] {}, false, new int[] { 1 }, false, new Pos2d(126, 56)))
-                .widget(createUpgradeBox(1, 0, new int[] { 0 }, false, new int[] { 2, 3 }, false, new Pos2d(126, 116)))
-                .widget(createUpgradeBox(2, 0, new int[] { 1 }, false, new int[] { 4, 5 }, false, new Pos2d(96, 176)))
-                .widget(createUpgradeBox(3, 0, new int[] { 1 }, false, new int[] { 5, 6 }, false, new Pos2d(156, 176)))
-                .widget(createUpgradeBox(4, 0, new int[] { 2 }, false, new int[] { 8 }, false, new Pos2d(66, 236)))
-                .widget(createUpgradeBox(5, 0, new int[] { 2, 3 }, false, new int[] { 7 }, false, new Pos2d(126, 236)))
-                .widget(createUpgradeBox(6, 0, new int[] { 3 }, false, new int[] { 10 }, false, new Pos2d(186, 236)))
+        scrollable.widget(
+                createUpgradeBox(0, 0, new int[] {}, false, new int[] { 1 }, false, new Pos2d(126, 56), scrollable))
+                .widget(
+                        createUpgradeBox(
+                                1,
+                                0,
+                                new int[] { 0 },
+                                false,
+                                new int[] { 2, 3 },
+                                false,
+                                new Pos2d(126, 116),
+                                scrollable))
+                .widget(
+                        createUpgradeBox(
+                                2,
+                                0,
+                                new int[] { 1 },
+                                false,
+                                new int[] { 4, 5 },
+                                false,
+                                new Pos2d(96, 176),
+                                scrollable))
+                .widget(
+                        createUpgradeBox(
+                                3,
+                                0,
+                                new int[] { 1 },
+                                false,
+                                new int[] { 5, 6 },
+                                false,
+                                new Pos2d(156, 176),
+                                scrollable))
+                .widget(
+                        createUpgradeBox(
+                                4,
+                                0,
+                                new int[] { 2 },
+                                false,
+                                new int[] { 8 },
+                                false,
+                                new Pos2d(66, 236),
+                                scrollable))
+                .widget(
+                        createUpgradeBox(
+                                5,
+                                0,
+                                new int[] { 2, 3 },
+                                false,
+                                new int[] { 7 },
+                                false,
+                                new Pos2d(126, 236),
+                                scrollable))
+                .widget(
+                        createUpgradeBox(
+                                6,
+                                0,
+                                new int[] { 3 },
+                                false,
+                                new int[] { 10 },
+                                false,
+                                new Pos2d(186, 236),
+                                scrollable))
                 .widget(
                         createUpgradeBox(
                                 7,
@@ -603,10 +741,38 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
                                 false,
                                 new int[] { 8, 9, 10 },
                                 false,
-                                new Pos2d(126, 296)))
-                .widget(createUpgradeBox(8, 0, new int[] { 4, 7 }, true, new int[] { 11 }, false, new Pos2d(56, 356)))
-                .widget(createUpgradeBox(9, 0, new int[] { 7 }, false, new int[] {}, false, new Pos2d(126, 356)))
-                .widget(createUpgradeBox(10, 0, new int[] { 6, 7 }, true, new int[] { 11 }, false, new Pos2d(196, 356)))
+                                new Pos2d(126, 296),
+                                scrollable))
+                .widget(
+                        createUpgradeBox(
+                                8,
+                                0,
+                                new int[] { 4, 7 },
+                                true,
+                                new int[] { 11 },
+                                false,
+                                new Pos2d(56, 356),
+                                scrollable))
+                .widget(
+                        createUpgradeBox(
+                                9,
+                                0,
+                                new int[] { 7 },
+                                false,
+                                new int[] {},
+                                false,
+                                new Pos2d(126, 356),
+                                scrollable))
+                .widget(
+                        createUpgradeBox(
+                                10,
+                                0,
+                                new int[] { 6, 7 },
+                                true,
+                                new int[] { 11 },
+                                false,
+                                new Pos2d(196, 356),
+                                scrollable))
                 .widget(
                         createUpgradeBox(
                                 11,
@@ -615,9 +781,28 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
                                 false,
                                 new int[] { 12, 13, 14 },
                                 false,
-                                new Pos2d(126, 416)))
-                .widget(createUpgradeBox(12, 1, new int[] { 11 }, false, new int[] { 17 }, true, new Pos2d(66, 476)))
-                .widget(createUpgradeBox(13, 2, new int[] { 11 }, false, new int[] { 18 }, true, new Pos2d(126, 476)))
+                                new Pos2d(126, 416),
+                                scrollable))
+                .widget(
+                        createUpgradeBox(
+                                12,
+                                1,
+                                new int[] { 11 },
+                                false,
+                                new int[] { 17 },
+                                true,
+                                new Pos2d(66, 476),
+                                scrollable))
+                .widget(
+                        createUpgradeBox(
+                                13,
+                                2,
+                                new int[] { 11 },
+                                false,
+                                new int[] { 18 },
+                                true,
+                                new Pos2d(126, 476),
+                                scrollable))
                 .widget(
                         createUpgradeBox(
                                 14,
@@ -626,9 +811,28 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
                                 false,
                                 new int[] { 15, 19 },
                                 true,
-                                new Pos2d(186, 476)))
-                .widget(createUpgradeBox(15, 3, new int[] { 14 }, false, new int[] {}, false, new Pos2d(246, 496)))
-                .widget(createUpgradeBox(16, 1, new int[] { 17 }, false, new int[] {}, false, new Pos2d(6, 556)))
+                                new Pos2d(186, 476),
+                                scrollable))
+                .widget(
+                        createUpgradeBox(
+                                15,
+                                3,
+                                new int[] { 14 },
+                                false,
+                                new int[] {},
+                                false,
+                                new Pos2d(246, 496),
+                                scrollable))
+                .widget(
+                        createUpgradeBox(
+                                16,
+                                1,
+                                new int[] { 17 },
+                                false,
+                                new int[] {},
+                                false,
+                                new Pos2d(6, 556),
+                                scrollable))
                 .widget(
                         createUpgradeBox(
                                 17,
@@ -637,12 +841,58 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
                                 false,
                                 new int[] { 16, 20 },
                                 false,
-                                new Pos2d(66, 536)))
-                .widget(createUpgradeBox(18, 2, new int[] { 13 }, false, new int[] { 21 }, false, new Pos2d(126, 536)))
-                .widget(createUpgradeBox(19, 3, new int[] { 14 }, false, new int[] { 22 }, false, new Pos2d(186, 536)))
-                .widget(createUpgradeBox(20, 1, new int[] { 17 }, false, new int[] { 23 }, false, new Pos2d(66, 596)))
-                .widget(createUpgradeBox(21, 2, new int[] { 18 }, false, new int[] { 23 }, false, new Pos2d(126, 596)))
-                .widget(createUpgradeBox(22, 3, new int[] { 19 }, false, new int[] { 23 }, false, new Pos2d(186, 596)))
+                                new Pos2d(66, 536),
+                                scrollable))
+                .widget(
+                        createUpgradeBox(
+                                18,
+                                2,
+                                new int[] { 13 },
+                                false,
+                                new int[] { 21 },
+                                false,
+                                new Pos2d(126, 536),
+                                scrollable))
+                .widget(
+                        createUpgradeBox(
+                                19,
+                                3,
+                                new int[] { 14 },
+                                false,
+                                new int[] { 22 },
+                                false,
+                                new Pos2d(186, 536),
+                                scrollable))
+                .widget(
+                        createUpgradeBox(
+                                20,
+                                1,
+                                new int[] { 17 },
+                                false,
+                                new int[] { 23 },
+                                false,
+                                new Pos2d(66, 596),
+                                scrollable))
+                .widget(
+                        createUpgradeBox(
+                                21,
+                                2,
+                                new int[] { 18 },
+                                false,
+                                new int[] { 23 },
+                                false,
+                                new Pos2d(126, 596),
+                                scrollable))
+                .widget(
+                        createUpgradeBox(
+                                22,
+                                3,
+                                new int[] { 19 },
+                                false,
+                                new int[] { 23 },
+                                false,
+                                new Pos2d(186, 596),
+                                scrollable))
                 .widget(
                         createUpgradeBox(
                                 23,
@@ -651,14 +901,78 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
                                 false,
                                 new int[] { 24 },
                                 false,
-                                new Pos2d(126, 656)))
-                .widget(createUpgradeBox(24, 0, new int[] { 23 }, false, new int[] { 25 }, false, new Pos2d(126, 718)))
-                .widget(createUpgradeBox(25, 0, new int[] { 24 }, false, new int[] { 26 }, false, new Pos2d(36, 758)))
-                .widget(createUpgradeBox(26, 0, new int[] { 25 }, false, new int[] { 27 }, false, new Pos2d(36, 848)))
-                .widget(createUpgradeBox(27, 0, new int[] { 26 }, false, new int[] { 28 }, false, new Pos2d(126, 888)))
-                .widget(createUpgradeBox(28, 0, new int[] { 27 }, false, new int[] { 29 }, false, new Pos2d(216, 848)))
-                .widget(createUpgradeBox(29, 0, new int[] { 28 }, false, new int[] { 30 }, false, new Pos2d(216, 758)))
-                .widget(createUpgradeBox(30, 0, new int[] { 29 }, false, new int[] {}, false, new Pos2d(126, 798)))
+                                new Pos2d(126, 656),
+                                scrollable))
+                .widget(
+                        createUpgradeBox(
+                                24,
+                                0,
+                                new int[] { 23 },
+                                false,
+                                new int[] { 25 },
+                                false,
+                                new Pos2d(126, 718),
+                                scrollable))
+                .widget(
+                        createUpgradeBox(
+                                25,
+                                0,
+                                new int[] { 24 },
+                                false,
+                                new int[] { 26 },
+                                false,
+                                new Pos2d(36, 758),
+                                scrollable))
+                .widget(
+                        createUpgradeBox(
+                                26,
+                                0,
+                                new int[] { 25 },
+                                false,
+                                new int[] { 27 },
+                                false,
+                                new Pos2d(36, 848),
+                                scrollable))
+                .widget(
+                        createUpgradeBox(
+                                27,
+                                0,
+                                new int[] { 26 },
+                                false,
+                                new int[] { 28 },
+                                false,
+                                new Pos2d(126, 888),
+                                scrollable))
+                .widget(
+                        createUpgradeBox(
+                                28,
+                                0,
+                                new int[] { 27 },
+                                false,
+                                new int[] { 29 },
+                                false,
+                                new Pos2d(216, 848),
+                                scrollable))
+                .widget(
+                        createUpgradeBox(
+                                29,
+                                0,
+                                new int[] { 28 },
+                                false,
+                                new int[] { 30 },
+                                false,
+                                new Pos2d(216, 758),
+                                scrollable))
+                .widget(
+                        createUpgradeBox(
+                                30,
+                                0,
+                                new int[] { 29 },
+                                false,
+                                new int[] {},
+                                false,
+                                new Pos2d(126, 798),
+                                scrollable))
                 .widget(new TextWidget("").setPos(0, 1000));
 
         builder.widget(
@@ -767,7 +1081,8 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
      * @param pos                     Position of the upgrade inside the scrollableWidget
      */
     private Widget createUpgradeBox(int upgradeID, int colorCode, int[] prerequisiteUpgradeIDs,
-            boolean requireAllPrerequisites, int[] followingUpgradeIDs, boolean isStartOfSplit, Pos2d pos) {
+            boolean requireAllPrerequisites, int[] followingUpgradeIDs, boolean isStartOfSplit, Pos2d pos,
+            IWidgetBuilder<?> builder) {
         return new MultiChildWidget().addChild(new ButtonWidget().setOnClick((clickData, widget) -> {
             currentUpgradeID = upgradeID;
             currentColorCode = colorCode;
@@ -786,7 +1101,9 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
                 .addChild(
                         new TextWidget(translateToLocal("fog.upgrade.tt." + upgradeID))
                                 .setTextAlignment(Alignment.Center).setScale(0.57f).setMaxWidth(36).setPos(3, 3))
-                .setPos(pos);
+                .setPos(pos).attachSyncer(
+                        new FakeSyncWidget.BooleanSyncer(() -> upgrades[upgradeID], val -> upgrades[upgradeID] = val),
+                        builder);
     }
 
     @Override
@@ -813,5 +1130,75 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
     @Override
     public String[] getStructureDescription(ItemStack stackSize) {
         return new String[] { "Forge of Gods multiblock" };
+    }
+
+    private Integer getFuelType() {
+        return selectedFuelType;
+    }
+
+    private void setFuelType(Integer fuelType) {
+        selectedFuelType = fuelType;
+    }
+
+    public Integer getFuelFactor() {
+        return fuelConsumptionFactor;
+    }
+
+    public Boolean isUpgradeActive(Integer upgradeID) {
+        return upgrades[upgradeID];
+    }
+
+    public Integer getTotalActiveUpgrades() {
+        int totalUpgrades = 0;
+        for (boolean upgrade : upgrades) {
+            if (upgrade) {
+                totalUpgrades++;
+            }
+        }
+        return totalUpgrades;
+    }
+
+    private int tick = 0;
+
+    private Text fuelUsage() {
+        tick++;
+        return new Text(tick + " L/s");
+    }
+
+    @Override
+    public void saveNBTData(NBTTagCompound NBT) {
+        NBT.setInteger("spacetimeCompressionTier", spacetimeCompressionFieldMetadata + 1);
+        NBT.setInteger("solenoidCoilTier", solenoidCoilMetadata - 7);
+        NBT.setInteger("selectedFuelType", selectedFuelType);
+        NBT.setInteger("fuelConsumptionFactor", fuelConsumptionFactor);
+
+        // Store booleanArray of all upgrades
+        NBTTagCompound upgradeBooleanArrayNBTTag = new NBTTagCompound();
+
+        int upgradeIndex = 0;
+        for (Boolean upgrade : upgrades) {
+            upgradeBooleanArrayNBTTag.setBoolean("upgrade" + upgradeIndex, upgrade);
+            upgradeIndex++;
+        }
+
+        NBT.setTag("upgrades", upgradeBooleanArrayNBTTag);
+        super.saveNBTData(NBT);
+    }
+
+    @Override
+    public void loadNBTData(NBTTagCompound NBT) {
+        spacetimeCompressionFieldMetadata = NBT.getInteger("spacetimeCompressionTier") - 1;
+        solenoidCoilMetadata = NBT.getInteger("solenoidCoilTier") + 7;
+        selectedFuelType = NBT.getInteger("selectedFuelType");
+        fuelConsumptionFactor = NBT.getInteger("fuelConsumptionFactor");
+
+        NBTTagCompound tempBooleanTag = NBT.getCompoundTag("upgrades");
+
+        for (int upgradeIndex = 0; upgradeIndex < 31; upgradeIndex++) {
+            boolean upgrade = tempBooleanTag.getBoolean("upgrade" + upgradeIndex);
+            upgrades[upgradeIndex] = upgrade;
+        }
+
+        super.loadNBTData(NBT);
     }
 }

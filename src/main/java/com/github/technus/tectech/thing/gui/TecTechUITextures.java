@@ -122,4 +122,5 @@ public class TecTechUITextures {
             .fullImage(MODID, "gui/picture/connector_empty");
     public static final UITexture PICTURE_UPGRADE_CONNECTOR_SWITCH = UITexture
             .fullImage(MODID, "gui/picture/connector_switch");
+    public static final UITexture SLOT_OUTLINE_GREEN = UITexture.fullImage(MODID, "gui/picture/green_selector");
 }
