@@ -4,9 +4,11 @@ import static com.github.technus.tectech.thing.casing.GT_Block_CasingsTT.texture
 import static com.github.technus.tectech.thing.casing.TT_Container_Casings.forgeOfGodsRenderBlock;
 import static com.github.technus.tectech.thing.casing.TT_Container_Casings.sBlockCasingsBA0;
 import static com.github.technus.tectech.thing.casing.TT_Container_Casings.sBlockCasingsTT;
+import static com.github.technus.tectech.util.GodforgeMath.calculateFuelConsumption;
 import static com.gtnewhorizon.structurelib.structure.StructureUtility.*;
 import static gregtech.api.enums.GT_HatchElement.*;
 import static gregtech.api.metatileentity.BaseTileEntity.TOOLTIP_DELAY;
+import static gregtech.api.util.GT_RecipeBuilder.SECONDS;
 import static gregtech.api.util.GT_StructureUtility.buildHatchAdder;
 import static gregtech.api.util.GT_Utility.formatNumbers;
 import static net.minecraft.util.StatCollector.translateToLocal;
@@ -79,6 +81,7 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
 
     private int fuelConsumptionFactor = 0;
     private int selectedFuelType = 0;
+    private long fuelConsumption = 0;
     public ArrayList<GT_MetaTileEntity_EM_BaseModule> moduleHatches = new ArrayList<>();
 
     private static int spacetimeCompressionFieldMetadata = -1;
@@ -195,12 +198,12 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
         structureBuild_EM(STRUCTURE_PIECE_MAIN, 31, 34, 0, stackSize, hintsOnly);
     }
 
-    private final Map<FluidStack, Integer> validFuelMap = new HashMap<FluidStack, Integer>() {
+    private final ArrayList<FluidStack> validFuelList = new ArrayList<>() {
 
         {
-            put(MaterialsUEVplus.DimensionallyTranscendentResidue.getFluid(1), 2500);
-            put(MaterialsUEVplus.WhiteDwarfMatter.getMolten(1), 5);
-            put(MaterialsUEVplus.BlackDwarfMatter.getMolten(1), 3);
+            add(MaterialsUEVplus.DimensionallyTranscendentResidue.getFluid(1));
+            add(MaterialsUEVplus.RawStarMatter.getFluid(1));
+            add(MaterialsUEVplus.MagnetohydrodynamicallyConstrainedStarMatter.getMolten(1));
         }
     };
 
@@ -218,37 +221,6 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
     }
 
     private int ticker = 0;
-
-    @Override
-    public boolean onRunningTick(ItemStack aStack) {
-        if (!super.onRunningTick(aStack)) {
-            criticalStopMachine();
-            return false;
-        }
-
-        if (ticker % 100 == 0) {
-            if (fuelInputHatch == null) {
-                criticalStopMachine();
-                return false;
-            }
-            FluidStack fluidInHatch = fuelInputHatch.getFluid();
-            // Iterate over valid fluids and drain them
-            for (FluidStack validFluid : validFuelMap.keySet()) {
-                int drainAmount = validFuelMap.get(validFluid) * fuelConsumptionFactor;
-                if (fluidInHatch.isFluidEqual(validFluid)) {
-                    FluidStack tFluid = new FluidStack(validFluid, drainAmount);
-                    FluidStack tLiquid = fuelInputHatch.drain(tFluid.amount, true);
-                    if (tLiquid == null || tLiquid.amount < tFluid.amount) {
-                        criticalStopMachine();
-                    }
-                }
-            }
-            ticker = 0;
-        }
-        ticker++;
-
-        return true;
-    }
 
     @Override
     public boolean checkMachine_EM(IGregTechTileEntity iGregTechTileEntity, ItemStack itemStack) {
@@ -328,8 +300,28 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
     public void onPostTick(IGregTechTileEntity aBaseMetaTileEntity, long aTick) {
         super.onPostTick(aBaseMetaTileEntity, aTick);
         if (aBaseMetaTileEntity.isServerSide()) {
-            // Connect modules
             if (getBaseMetaTileEntity().isAllowedToWork()) {
+                // Check and drain fuel
+                if (aTick % SECONDS == 0) {
+                    if (fuelInputHatch == null) {
+                        criticalStopMachine();
+                    }
+                    FluidStack fluidInHatch = fuelInputHatch.getFluid();
+
+                    fuelConsumption = Math.round(calculateFuelConsumption(this));;
+                    if (fluidInHatch.isFluidEqual(validFuelList.get(selectedFuelType))) {
+                        FluidStack fluidNeeded = new FluidStack(
+                                validFuelList.get(selectedFuelType),
+                                (int) fuelConsumption);
+                        FluidStack fluidReal = fuelInputHatch.drain(fluidNeeded.amount, true);
+                        if (fluidReal == null || fluidReal.amount < fluidNeeded.amount) {
+                            criticalStopMachine();
+                        }
+                    } else {
+                        criticalStopMachine();
+                    }
+                }
+                // Connect modules
                 if (aTick % MODULE_CHECK_INTERVAL == 0) {
                     if (moduleHatches.size() > 0) {
                         for (GT_MetaTileEntity_EM_BaseModule module : moduleHatches) {
@@ -1132,7 +1124,7 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
         return new String[] { "Forge of Gods multiblock" };
     }
 
-    private Integer getFuelType() {
+    public Integer getFuelType() {
         return selectedFuelType;
     }
 
@@ -1158,11 +1150,8 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
         return totalUpgrades;
     }
 
-    private int tick = 0;
-
     private Text fuelUsage() {
-        tick++;
-        return new Text(tick + " L/s");
+        return new Text(fuelConsumption + " L/s");
     }
 
     @Override
