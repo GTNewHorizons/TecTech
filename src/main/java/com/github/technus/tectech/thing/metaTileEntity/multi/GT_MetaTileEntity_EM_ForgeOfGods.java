@@ -5,6 +5,7 @@ import static com.github.technus.tectech.thing.casing.TT_Container_Casings.forge
 import static com.github.technus.tectech.thing.casing.TT_Container_Casings.sBlockCasingsBA0;
 import static com.github.technus.tectech.thing.casing.TT_Container_Casings.sBlockCasingsTT;
 import static com.github.technus.tectech.util.GodforgeMath.calculateFuelConsumption;
+import static com.github.technus.tectech.util.GodforgeMath.calculateMaxHeatForModules;
 import static com.gtnewhorizon.structurelib.structure.StructureUtility.*;
 import static gregtech.api.enums.GT_HatchElement.*;
 import static gregtech.api.metatileentity.BaseTileEntity.TOOLTIP_DELAY;
@@ -86,7 +87,6 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
 
     private static int spacetimeCompressionFieldMetadata = -1;
     private int solenoidCoilMetadata = -1;
-    private static final int MODULE_CHECK_INTERVAL = 100;
     private static final int FUEL_CONFIG_WINDOW_ID = 9;
     private static final int UPGRADE_TREE_WINDOW_ID = 10;
     private static final int INDIVIDUAL_UPGRADE_WINDOW_ID = 11;
@@ -220,8 +220,6 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
         return false;
     }
 
-    private int ticker = 0;
-
     @Override
     public boolean checkMachine_EM(IGregTechTileEntity iGregTechTileEntity, ItemStack itemStack) {
 
@@ -308,7 +306,7 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
                     }
                     FluidStack fluidInHatch = fuelInputHatch.getFluid();
 
-                    fuelConsumption = Math.round(calculateFuelConsumption(this));;
+                    fuelConsumption = (long) calculateFuelConsumption(this);
                     if (fluidInHatch.isFluidEqual(validFuelList.get(selectedFuelType))) {
                         FluidStack fluidNeeded = new FluidStack(
                                 validFuelList.get(selectedFuelType),
@@ -320,12 +318,11 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
                     } else {
                         criticalStopMachine();
                     }
-                }
-                // Connect modules
-                if (aTick % MODULE_CHECK_INTERVAL == 0) {
+                    // Connect modules
                     if (moduleHatches.size() > 0) {
                         for (GT_MetaTileEntity_EM_BaseModule module : moduleHatches) {
                             module.connect();
+                            module.setHeat(calculateMaxHeatForModules(module, this));
                         }
                     }
                 }

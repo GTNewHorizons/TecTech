@@ -63,6 +63,11 @@ public class GT_MetaTileEntity_EM_SmeltingModule extends GT_MetaTileEntity_EM_Ba
             @NotNull
             @Override
             protected CheckRecipeResult validateRecipe(@Nonnull GT_Recipe recipe) {
+
+                if (recipe.mSpecialValue > machineHeat) {
+                    return CheckRecipeResultRegistry.insufficientHeat(recipe.mSpecialValue);
+                }
+
                 maxParallel = (int) parallelParam.get();
                 wirelessEUt = (long) recipe.mEUt * maxParallel;
                 if (getUserEU(userUUID).compareTo(BigInteger.valueOf(wirelessEUt * recipe.mDuration)) < 0) {
@@ -87,8 +92,7 @@ public class GT_MetaTileEntity_EM_SmeltingModule extends GT_MetaTileEntity_EM_Ba
             @Override
             protected GT_OverclockCalculator createOverclockCalculator(@Nonnull GT_Recipe recipe) {
                 return super.createOverclockCalculator(recipe).setEUt(TierEU.MAX).setRecipeHeat(recipe.mSpecialValue)
-                        .setHeatOC(true).setHeatDiscount(true)
-                        .setMachineHeat(13501 + 100 * (GT_Utility.getTier(TierEU.MAX) - 2));
+                        .setHeatOC(true).setHeatDiscount(true).setMachineHeat(machineHeat);
             }
         };
     }
@@ -148,6 +152,7 @@ public class GT_MetaTileEntity_EM_SmeltingModule extends GT_MetaTileEntity_EM_Ba
         str.add("Currently using: " + RED + formatNumbers(EUt) + RESET + " EU/t");
         str.add(YELLOW + "Max Parallel: " + RESET + formatNumbers(GT_MetaTileEntity_EM_ForgeOfGods.getMaxParallels()));
         str.add(YELLOW + "Current Parallel: " + RESET + formatNumbers(currentParallel));
+        str.add(YELLOW + "Heat Capacity: " + RESET + formatNumbers(machineHeat));
         return str.toArray(new String[0]);
     }
 

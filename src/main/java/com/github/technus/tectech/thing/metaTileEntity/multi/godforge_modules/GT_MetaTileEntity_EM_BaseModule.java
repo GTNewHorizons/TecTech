@@ -34,6 +34,7 @@ public class GT_MetaTileEntity_EM_BaseModule extends GT_MetaTileEntity_Multibloc
     protected final int tier = getTier();
     protected boolean isConnected = false;
     protected String userUUID = "";
+    protected int machineHeat = 0;
 
     private static final String STRUCTURE_PIECE_MAIN = "main";
     private static final IStructureDefinition<GT_MetaTileEntity_EM_BaseModule> STRUCTURE_DEFINITION = StructureDefinition
@@ -98,6 +99,10 @@ public class GT_MetaTileEntity_EM_BaseModule extends GT_MetaTileEntity_Multibloc
 
     public void disconnect() {
         isConnected = false;
+    }
+
+    public void setHeat(Integer heat) {
+        machineHeat = heat;
     }
 
     protected void fixAllIssues() {

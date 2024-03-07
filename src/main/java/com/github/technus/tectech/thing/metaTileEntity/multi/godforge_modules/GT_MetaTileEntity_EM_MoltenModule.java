@@ -20,7 +20,9 @@ import javax.annotation.Nonnull;
 
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.oredict.OreDictionary;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -71,6 +73,11 @@ public class GT_MetaTileEntity_EM_MoltenModule extends GT_MetaTileEntity_EM_Base
             @NotNull
             @Override
             protected CheckRecipeResult validateRecipe(@Nonnull GT_Recipe recipe) {
+
+                if (recipe.mSpecialValue > machineHeat) {
+                    return CheckRecipeResultRegistry.insufficientHeat(recipe.mSpecialValue);
+                }
+
                 maxParallel = (int) parallelParam.get();
                 wirelessEUt = (long) recipe.mEUt * maxParallel;
                 if (getUserEU(userUUID).compareTo(BigInteger.valueOf(wirelessEUt * recipe.mDuration)) < 0) {
@@ -83,6 +90,7 @@ public class GT_MetaTileEntity_EM_MoltenModule extends GT_MetaTileEntity_EM_Base
                     if (item == null) {
                         continue;
                     }
+                    // if this is null it has to be a gt++ material
                     ItemData data = getAssociation(item);
                     Materials mat = data == null ? null : data.mMaterial.mMaterial;
                     if (mat != null) {
@@ -91,6 +99,12 @@ public class GT_MetaTileEntity_EM_MoltenModule extends GT_MetaTileEntity_EM_Base
                         } else if (mat.mFluid != null) {
                             meltableItems[i] = mat.getFluid(BUCKETS);
                         }
+                    } else {
+                        String dict = OreDictionary.getOreName(OreDictionary.getOreIDs(item)[0]);
+                        // substring 8 because ingotHot is 8 characters long
+                        String strippedOreDict = dict.substring(8);
+                        meltableItems[i] = FluidRegistry
+                                .getFluidStack("molten." + strippedOreDict.toLowerCase(), (int) (INGOTS));
                     }
                 }
 
@@ -101,8 +115,7 @@ public class GT_MetaTileEntity_EM_MoltenModule extends GT_MetaTileEntity_EM_Base
             @Override
             protected GT_OverclockCalculator createOverclockCalculator(@Nonnull GT_Recipe recipe) {
                 return super.createOverclockCalculator(recipe).setEUt(TierEU.MAX).setRecipeHeat(recipe.mSpecialValue)
-                        .setHeatOC(true).setHeatDiscount(true)
-                        .setMachineHeat(13501 + 100 * (GT_Utility.getTier(TierEU.MAX) - 2));
+                        .setHeatOC(true).setHeatDiscount(true).setMachineHeat(machineHeat);
 
             }
 
@@ -220,6 +233,7 @@ public class GT_MetaTileEntity_EM_MoltenModule extends GT_MetaTileEntity_EM_Base
         str.add("Currently using: " + RED + formatNumbers(EUt) + RESET + " EU/t");
         str.add(YELLOW + "Max Parallel: " + RESET + formatNumbers(GT_MetaTileEntity_EM_ForgeOfGods.getMaxParallels()));
         str.add(YELLOW + "Current Parallel: " + RESET + formatNumbers(currentParallel));
+        str.add(YELLOW + "Heat Capacity: " + RESET + formatNumbers(machineHeat));
         return str.toArray(new String[0]);
     }
 
