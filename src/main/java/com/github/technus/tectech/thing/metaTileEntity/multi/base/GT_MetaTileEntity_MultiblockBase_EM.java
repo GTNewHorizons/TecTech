@@ -48,7 +48,6 @@ import com.github.technus.tectech.thing.metaTileEntity.hatch.GT_MetaTileEntity_H
 import com.github.technus.tectech.thing.metaTileEntity.hatch.GT_MetaTileEntity_Hatch_Param;
 import com.github.technus.tectech.thing.metaTileEntity.hatch.GT_MetaTileEntity_Hatch_Uncertainty;
 import com.github.technus.tectech.thing.metaTileEntity.multi.base.render.TT_RenderedExtendedFacingTexture;
-import com.github.technus.tectech.util.TT_Utility;
 import com.google.common.collect.Iterables;
 import com.gtnewhorizon.structurelib.StructureLibAPI;
 import com.gtnewhorizon.structurelib.alignment.IAlignment;
@@ -56,6 +55,7 @@ import com.gtnewhorizon.structurelib.alignment.IAlignmentProvider;
 import com.gtnewhorizon.structurelib.structure.IStructureDefinition;
 import com.gtnewhorizon.structurelib.structure.IStructureElement;
 import com.gtnewhorizon.structurelib.util.Vec3Impl;
+import com.gtnewhorizons.modularui.api.NumberFormatMUI;
 import com.gtnewhorizons.modularui.api.drawable.IDrawable;
 import com.gtnewhorizons.modularui.api.drawable.UITexture;
 import com.gtnewhorizons.modularui.api.math.Alignment;
@@ -205,6 +205,13 @@ public abstract class GT_MetaTileEntity_MultiblockBase_EM
     /** Flag if the new long power variable should be used */
     protected boolean useLongPower = false;
 
+    // Locale-aware formatting of numbers.
+    protected static NumberFormatMUI numberFormat;
+    static {
+        numberFormat = new NumberFormatMUI();
+        numberFormat.setMaximumFractionDigits(8);
+    }
+
     // endregion
 
     protected GT_MetaTileEntity_MultiblockBase_EM(int aID, String aName, String aNameRegional) {
@@ -342,7 +349,7 @@ public abstract class GT_MetaTileEntity_MultiblockBase_EM
         list.add(
                 EnumChatFormatting.WHITE + "Value: "
                         + EnumChatFormatting.AQUA
-                        + TT_Utility.doubleToString(parametrization.getIn(hatchNo, paramID)));
+                        + numberFormat.format(parametrization.getIn(hatchNo, paramID)));
         try {
             list.add(parametrization.groups[hatchNo].parameterIn[paramID].getBrief());
         } catch (NullPointerException | IndexOutOfBoundsException e) {
@@ -369,7 +376,7 @@ public abstract class GT_MetaTileEntity_MultiblockBase_EM
         list.add(
                 EnumChatFormatting.WHITE + "Value: "
                         + EnumChatFormatting.AQUA
-                        + TT_Utility.doubleToString(parametrization.getOut(hatchNo, paramID)));
+                        + numberFormat.format(parametrization.getOut(hatchNo, paramID)));
         try {
             list.add(parametrization.groups[hatchNo].parameterOut[paramID].getBrief());
         } catch (NullPointerException | IndexOutOfBoundsException e) {
