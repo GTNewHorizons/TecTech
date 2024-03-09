@@ -29,12 +29,14 @@ import gregtech.api.recipe.RecipeMap;
 import gregtech.api.recipe.RecipeMaps;
 import gregtech.api.util.GT_StructureUtility;
 
+import java.util.UUID;
+
 public class GT_MetaTileEntity_EM_BaseModule extends GT_MetaTileEntity_MultiblockBase_EM {
 
     protected final int tier = getTier();
     protected boolean isConnected = false;
     protected boolean isUpgrade83Unlocked = false;
-    protected String userUUID = "";
+    protected UUID userUUID = null;
     protected int machineHeat = 0;
     protected int maximumParallel = 0;
     protected float processingSpeedBonus = 0;
@@ -171,9 +173,8 @@ public class GT_MetaTileEntity_EM_BaseModule extends GT_MetaTileEntity_Multibloc
         super.onPreTick(aBaseMetaTileEntity, aTick);
 
         if (aTick == 1) {
-            userUUID = String.valueOf(getBaseMetaTileEntity().getOwnerUuid());
-            String userName = getBaseMetaTileEntity().getOwnerName();
-            strongCheckOrAddUser(userUUID, userName);
+            userUUID = getBaseMetaTileEntity().getOwnerUuid();
+            strongCheckOrAddUser(userUUID);
         }
     }
 
