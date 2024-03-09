@@ -11,7 +11,6 @@ import static gregtech.common.misc.WirelessNetworkManager.addEUToGlobalEnergyMap
 import static gregtech.common.misc.WirelessNetworkManager.getUserEU;
 import static net.minecraft.util.EnumChatFormatting.*;
 import static net.minecraft.util.EnumChatFormatting.RESET;
-import static net.minecraft.util.StatCollector.translateToLocal;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
@@ -26,7 +25,6 @@ import net.minecraftforge.oredict.OreDictionary;
 
 import org.jetbrains.annotations.NotNull;
 
-import com.github.technus.tectech.thing.metaTileEntity.multi.GT_MetaTileEntity_EM_ForgeOfGods;
 import com.github.technus.tectech.thing.metaTileEntity.multi.base.*;
 import com.github.technus.tectech.thing.metaTileEntity.multi.base.render.TT_RenderedExtendedFacingTexture;
 import com.github.technus.tectech.util.CommonValues;
@@ -43,9 +41,6 @@ import gregtech.api.util.*;
 
 public class GT_MetaTileEntity_EM_MoltenModule extends GT_MetaTileEntity_EM_BaseModule {
 
-    Parameters.Group.ParameterIn parallelParam;
-    Parameters.Group.ParameterIn batchParam;
-    private int solenoidCoilMetadata = 7;
     private long EUt = 0;
     private int currentParallel = 0;
 
@@ -74,12 +69,10 @@ public class GT_MetaTileEntity_EM_MoltenModule extends GT_MetaTileEntity_EM_Base
             @Override
             protected CheckRecipeResult validateRecipe(@Nonnull GT_Recipe recipe) {
 
-                if (recipe.mSpecialValue > machineHeat) {
+                if (recipe.mSpecialValue > getHeat()) {
                     return CheckRecipeResultRegistry.insufficientHeat(recipe.mSpecialValue);
                 }
-
-                maxParallel = (int) parallelParam.get();
-                wirelessEUt = (long) recipe.mEUt * maxParallel;
+                wirelessEUt = (long) recipe.mEUt * getMaxParallel();
                 if (getUserEU(userUUID).compareTo(BigInteger.valueOf(wirelessEUt * recipe.mDuration)) < 0) {
                     return CheckRecipeResultRegistry.insufficientPower(wirelessEUt * recipe.mDuration);
                 }
@@ -115,7 +108,7 @@ public class GT_MetaTileEntity_EM_MoltenModule extends GT_MetaTileEntity_EM_Base
             @Override
             protected GT_OverclockCalculator createOverclockCalculator(@Nonnull GT_Recipe recipe) {
                 return super.createOverclockCalculator(recipe).setEUt(TierEU.MAX).setRecipeHeat(recipe.mSpecialValue)
-                        .setHeatOC(true).setHeatDiscount(true).setMachineHeat(machineHeat);
+                        .setHeatOC(true).setHeatDiscount(true).setMachineHeat(getHeat());
 
             }
 
@@ -177,34 +170,9 @@ public class GT_MetaTileEntity_EM_MoltenModule extends GT_MetaTileEntity_EM_Base
         logic.setAvailableVoltage(Long.MAX_VALUE);
         logic.setAvailableAmperage(Integer.MAX_VALUE);
         logic.setAmperageOC(false);
+        logic.setMaxParallel(getMaxParallel());
+        logic.setSpeedBonus(getSpeedBonus());
     }
-
-    @Override
-    protected void parametersInstantiation_EM() {
-        super.parametersInstantiation_EM();
-        Parameters.Group param_1 = parametrization.getGroup(0, false);
-        parallelParam = param_1.makeInParameter(
-                0,
-                GT_MetaTileEntity_EM_ForgeOfGods.getMaxParallels(),
-                PARALLEL_PARAM_NAME,
-                PARALLEL_AMOUNT);
-        Parameters.Group param_4 = parametrization.getGroup(0, false);
-        batchParam = param_4.makeInParameter(1, 1, BATCH_PARAM_NAME, BATCH_SIZE);
-    }
-
-    private static final INameFunction<GT_MetaTileEntity_EM_MoltenModule> PARALLEL_PARAM_NAME = (base,
-            p) -> translateToLocal("gt.blockmachines.multimachine.FOG.parallel");
-    private static final IStatusFunction<GT_MetaTileEntity_EM_MoltenModule> PARALLEL_AMOUNT = (base, p) -> LedStatus
-            .fromLimitsInclusiveOuterBoundary(
-                    p.get(),
-                    1,
-                    0,
-                    GT_MetaTileEntity_EM_ForgeOfGods.getMaxParallels(),
-                    GT_MetaTileEntity_EM_ForgeOfGods.getMaxParallels());
-    private static final INameFunction<GT_MetaTileEntity_EM_MoltenModule> BATCH_PARAM_NAME = (base,
-            p) -> translateToLocal("gt.blockmachines.multimachine.FOG.batch");
-    private static final IStatusFunction<GT_MetaTileEntity_EM_MoltenModule> BATCH_SIZE = (base, p) -> LedStatus
-            .fromLimitsInclusiveOuterBoundary(p.get(), 1, 0, 128, 128);
 
     @Override
     public ITexture[] getTexture(IGregTechTileEntity aBaseMetaTileEntity, ForgeDirection side, ForgeDirection facing,
@@ -231,9 +199,10 @@ public class GT_MetaTileEntity_EM_MoltenModule extends GT_MetaTileEntity_EM_Base
                         + RESET
                         + " s");
         str.add("Currently using: " + RED + formatNumbers(EUt) + RESET + " EU/t");
-        str.add(YELLOW + "Max Parallel: " + RESET + formatNumbers(GT_MetaTileEntity_EM_ForgeOfGods.getMaxParallels()));
+        str.add(YELLOW + "Max Parallel: " + RESET + formatNumbers(getMaxParallel()));
         str.add(YELLOW + "Current Parallel: " + RESET + formatNumbers(currentParallel));
-        str.add(YELLOW + "Heat Capacity: " + RESET + formatNumbers(machineHeat));
+        str.add(YELLOW + "Heat Capacity: " + RESET + formatNumbers(getHeat()));
+        str.add(YELLOW + "Recipe time multiplier: " + RESET + formatNumbers(getSpeedBonus()));
         return str.toArray(new String[0]);
     }
 
