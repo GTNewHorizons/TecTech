@@ -56,7 +56,7 @@ import com.gtnewhorizons.modularui.api.screen.UIBuildContext;
 import com.gtnewhorizons.modularui.api.widget.IWidgetBuilder;
 import com.gtnewhorizons.modularui.api.widget.Widget;
 import com.gtnewhorizons.modularui.common.widget.*;
-import com.gtnewhorizons.modularui.common.widget.textfield.TextFieldWidget;
+import com.gtnewhorizons.modularui.common.widget.textfield.NumericWidget;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -500,9 +500,9 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
         builder.widget(
                 TextWidget.localised("gt.blockmachines.multimachine.FOG.fuelconsumption").setPos(3, 2).setSize(74, 34))
                 .widget(
-                        new TextFieldWidget().setSetterInt(val -> fuelConsumptionFactor = val)
-                                .setGetterInt(() -> fuelConsumptionFactor).setNumbers(1, calculateMaxFuelFactor(this))
-                                .setOnScrollNumbers(1, 4, 64).setTextAlignment(Alignment.Center)
+                        new NumericWidget().setSetter(val -> fuelConsumptionFactor = (int) val)
+                                .setGetter(() -> fuelConsumptionFactor).setBounds(1, calculateMaxFuelFactor(this))
+                                .setScrollValues(1, 4, 64).setTextAlignment(Alignment.Center)
                                 .setTextColor(Color.WHITE.normal).setSize(70, 18).setPos(3, 35)
                                 .setBackground(GT_UITextures.BACKGROUND_TEXT_FIELD))
                 .widget(
@@ -930,7 +930,7 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
         if (debugMode) {
             builder.widget(
                     new MultiChildWidget().addChild(
-                            new ButtonWidget().setOnClick((clickData, widget) -> { upgrades = new boolean[31]; })
+                            new ButtonWidget().setOnClick((clickData, widget) -> upgrades = new boolean[31])
                                     .setSize(40, 15).setBackground(GT_UITextures.BUTTON_STANDARD)
                                     .addTooltip(translateToLocal("fog.debug.resetbutton.tooltip")))
                             .addChild(
