@@ -5,7 +5,10 @@ import static com.github.technus.tectech.thing.casing.TT_Container_Casings.forge
 import static com.github.technus.tectech.thing.casing.TT_Container_Casings.sBlockCasingsBA0;
 import static com.github.technus.tectech.thing.casing.TT_Container_Casings.sBlockCasingsTT;
 import static com.github.technus.tectech.util.GodforgeMath.calculateFuelConsumption;
+import static com.github.technus.tectech.util.GodforgeMath.calculateMaxFuelFactor;
 import static com.github.technus.tectech.util.GodforgeMath.calculateMaxHeatForModules;
+import static com.github.technus.tectech.util.GodforgeMath.calucateMaxParallelForModules;
+import static com.github.technus.tectech.util.GodforgeMath.calucateSpeedBonusForModules;
 import static com.gtnewhorizon.structurelib.structure.StructureUtility.*;
 import static gregtech.api.enums.GT_HatchElement.*;
 import static gregtech.api.metatileentity.BaseTileEntity.TOOLTIP_DELAY;
@@ -22,7 +25,7 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.StatCollector;
+import net.minecraft.util.EnumChatFormatting;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.FluidStack;
 
@@ -65,13 +68,10 @@ import gregtech.api.interfaces.IHatchElement;
 import gregtech.api.interfaces.ITexture;
 import gregtech.api.interfaces.metatileentity.IMetaTileEntity;
 import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
-import gregtech.api.metatileentity.implementations.GT_MetaTileEntity_Hatch;
 import gregtech.api.metatileentity.implementations.GT_MetaTileEntity_Hatch_Input;
 import gregtech.api.recipe.RecipeMap;
 import gregtech.api.recipe.RecipeMaps;
 import gregtech.api.util.*;
-import gregtech.common.tileentities.machines.GT_MetaTileEntity_Hatch_OutputBus_ME;
-import gregtech.common.tileentities.machines.GT_MetaTileEntity_Hatch_Output_ME;
 
 public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_MultiblockBase_EM
         implements IConstructable, IGlobalWirelessEnergy, ISurvivalConstructable {
@@ -83,6 +83,7 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
     private int fuelConsumptionFactor = 0;
     private int selectedFuelType = 0;
     private long fuelConsumption = 0;
+    private int internalBattery = 0;
     public ArrayList<GT_MetaTileEntity_EM_BaseModule> moduleHatches = new ArrayList<>();
 
     private static int spacetimeCompressionFieldMetadata = -1;
@@ -92,7 +93,6 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
     private static final int INDIVIDUAL_UPGRADE_WINDOW_ID = 11;
     private static final int[] FIRST_SPLIT_UPGRADES = new int[] { 12, 13, 14 };
     private static final int[] RING_UPGRADES = new int[] { 26, 29 };
-    private GT_MetaTileEntity_Hatch_Input fuelInputHatch;
     private String userUUID = "";
     protected static final String STRUCTURE_PIECE_MAIN = "main";
 
@@ -152,9 +152,7 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
                             t -> spacetimeCompressionFieldMetadata))
             .addElement(
                     'F',
-                    buildHatchAdder(GT_MetaTileEntity_EM_ForgeOfGods.class)
-                            .hatchClass(GT_MetaTileEntity_Hatch_Input.class)
-                            .adder(GT_MetaTileEntity_EM_ForgeOfGods::addFuelInputToMachineList)
+                    buildHatchAdder(GT_MetaTileEntity_EM_ForgeOfGods.class).atLeast(InputHatch)
                             .casingIndex(texturePage << 7).dot(2).buildAndChain(sBlockCasingsBA0, 12))
             .addElement(
                     'G',
@@ -207,46 +205,14 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
         }
     };
 
-    public boolean addFuelInputToMachineList(IGregTechTileEntity aTileEntity, int aBaseCasingIndex) {
-        if (aTileEntity == null) return false;
-        IMetaTileEntity aMetaTileEntity = aTileEntity.getMetaTileEntity();
-        if (aMetaTileEntity == null) return false;
-        if (aMetaTileEntity instanceof GT_MetaTileEntity_Hatch_Input) {
-            ((GT_MetaTileEntity_Hatch) aMetaTileEntity).updateTexture(aBaseCasingIndex);
-            ((GT_MetaTileEntity_Hatch_Input) aMetaTileEntity).mRecipeMap = null;
-            fuelInputHatch = (GT_MetaTileEntity_Hatch_Input) aMetaTileEntity;
-            return true;
-        }
-        return false;
-    }
-
     @Override
     public boolean checkMachine_EM(IGregTechTileEntity iGregTechTileEntity, ItemStack itemStack) {
 
         spacetimeCompressionFieldMetadata = -1;
-        fuelInputHatch = null;
+        moduleHatches.clear();
 
         // Check structure of multi.
         if (!structureCheck_EM(STRUCTURE_PIECE_MAIN, 31, 34, 0)) {
-            return false;
-        }
-
-        // Check if there is 1 output bus, and it is a ME output bus.
-
-        if (mOutputBusses.size() != 1) {
-            return false;
-        }
-
-        if (!(mOutputBusses.get(0) instanceof GT_MetaTileEntity_Hatch_OutputBus_ME)) {
-            return false;
-        }
-
-        // Check if there is 1 output hatch, and they are ME output hatches.
-        if (mOutputHatches.size() != 1) {
-            return false;
-        }
-
-        if (!(mOutputHatches.get(0) instanceof GT_MetaTileEntity_Hatch_Output_ME)) {
             return false;
         }
 
@@ -265,12 +231,8 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
             return false;
         }
 
-        // Make sure there are at least 2 input hatches.
+        // Make sure there is 1 input hatch.
         if (mInputHatches.size() != 1) {
-            return false;
-        }
-
-        if (fuelInputHatch == null) {
             return false;
         }
 
@@ -294,35 +256,40 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
         }
     }
 
+    int ticker = 0;
+
     @Override
     public void onPostTick(IGregTechTileEntity aBaseMetaTileEntity, long aTick) {
         super.onPostTick(aBaseMetaTileEntity, aTick);
         if (aBaseMetaTileEntity.isServerSide()) {
             if (getBaseMetaTileEntity().isAllowedToWork()) {
+                ticker++;
                 // Check and drain fuel
-                if (aTick % SECONDS == 0) {
-                    if (fuelInputHatch == null) {
-                        criticalStopMachine();
-                    }
-                    FluidStack fluidInHatch = fuelInputHatch.getFluid();
+                if (ticker % SECONDS == 0) {
+                    ticker = 0;
+                    FluidStack fluidInHatch = mInputHatches.get(0).getFluid();
 
                     fuelConsumption = (long) calculateFuelConsumption(this);
-                    if (fluidInHatch.isFluidEqual(validFuelList.get(selectedFuelType))) {
+                    if (fluidInHatch != null && fluidInHatch.isFluidEqual(validFuelList.get(selectedFuelType))) {
                         FluidStack fluidNeeded = new FluidStack(
                                 validFuelList.get(selectedFuelType),
                                 (int) fuelConsumption);
-                        FluidStack fluidReal = fuelInputHatch.drain(fluidNeeded.amount, true);
+                        FluidStack fluidReal = mInputHatches.get(0).drain(fluidNeeded.amount, true);
                         if (fluidReal == null || fluidReal.amount < fluidNeeded.amount) {
-                            criticalStopMachine();
+                            reduceBattery(1);
+                        } else {
+                            increaseBattery(1);
                         }
                     } else {
-                        criticalStopMachine();
+                        reduceBattery(1);
                     }
-                    // Connect modules
-                    if (moduleHatches.size() > 0) {
+                    // Do module calculations and checks
+                    if (moduleHatches.size() > 0 && internalBattery > 0) {
                         for (GT_MetaTileEntity_EM_BaseModule module : moduleHatches) {
                             module.connect();
                             module.setHeat(calculateMaxHeatForModules(module, this));
+                            module.setSpeedBonus(calucateSpeedBonusForModules(module, this));
+                            module.setMaxParallel(calucateMaxParallelForModules(module, this));
                         }
                     }
                 }
@@ -338,16 +305,16 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
         }
     }
 
-    public boolean addModuleToMachineList(IGregTechTileEntity aTileEntity, int aBaseCasingIndex) {
-        if (aTileEntity == null) {
+    public boolean addModuleToMachineList(IGregTechTileEntity tileEntity, int baseCasingIndex) {
+        if (tileEntity == null) {
             return false;
         }
-        IMetaTileEntity aMetaTileEntity = aTileEntity.getMetaTileEntity();
-        if (aMetaTileEntity == null) {
+        IMetaTileEntity metaTileEntity = tileEntity.getMetaTileEntity();
+        if (metaTileEntity == null) {
             return false;
         }
-        if (aMetaTileEntity instanceof GT_MetaTileEntity_EM_BaseModule) {
-            return moduleHatches.add((GT_MetaTileEntity_EM_BaseModule) aMetaTileEntity);
+        if (metaTileEntity instanceof GT_MetaTileEntity_EM_BaseModule) {
+            return moduleHatches.add((GT_MetaTileEntity_EM_BaseModule) metaTileEntity);
         }
         return false;
     }
@@ -405,9 +372,6 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
         rendererTileEntity.setRenderRotationSpeed(5);
     }
 
-    protected boolean inputSeparation = false;
-    protected static String INPUT_SEPARATION_NBT_KEY = "inputSeparation";
-
     @Override
     public String[] getInfoData() {
         ArrayList<String> str = new ArrayList<>(Arrays.asList(super.getInfoData()));
@@ -421,10 +385,6 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
 
     @Override
     public final void onScrewdriverRightClick(ForgeDirection side, EntityPlayer aPlayer, float aX, float aY, float aZ) {
-        inputSeparation = !inputSeparation;
-        GT_Utility.sendChatToPlayer(
-                aPlayer,
-                StatCollector.translateToLocal("GT5U.machines.separatebus") + " " + inputSeparation);
         createRenderBlock();
     }
 
@@ -445,10 +405,6 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
         mHardHammer = true;
         mSolderingTool = true;
         mCrowbar = true;
-    }
-
-    public static int getMaxParallels() {
-        return (int) (1024 * (Math.pow(2, spacetimeCompressionFieldMetadata)));
     }
 
     @Override
@@ -492,7 +448,10 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
                                     button.add(TecTechUITextures.BUTTON_CELESTIAL_32x32);
                                     button.add(TecTechUITextures.OVERLAY_BUTTON_HEAT_ON);
                                     return button.toArray(new IDrawable[0]);
-                                }).addTooltip(translateToLocal("fog.button.fuelconfig.tooltip")).setPos(174, 129));
+                                }).addTooltip(translateToLocal("fog.button.fuelconfig.tooltip")).setPos(174, 129))
+                .widget(
+                        TextWidget.dynamicText(this::storedFuel).setDefaultColor(EnumChatFormatting.WHITE).setPos(3, 5)
+                                .setSize(74, 34));
 
         Widget powerSwitchButton = createPowerSwitchButton();
         builder.widget(powerSwitchButton)
@@ -542,7 +501,7 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
                 TextWidget.localised("gt.blockmachines.multimachine.FOG.fuelconsumption").setPos(3, 2).setSize(74, 34))
                 .widget(
                         new TextFieldWidget().setSetterInt(val -> fuelConsumptionFactor = val)
-                                .setGetterInt(() -> fuelConsumptionFactor).setNumbers(1, Integer.MAX_VALUE)
+                                .setGetterInt(() -> fuelConsumptionFactor).setNumbers(1, calculateMaxFuelFactor(this))
                                 .setOnScrollNumbers(1, 4, 64).setTextAlignment(Alignment.Center)
                                 .setTextColor(Color.WHITE.normal).setSize(70, 18).setPos(3, 35)
                                 .setBackground(GT_UITextures.BACKGROUND_TEXT_FIELD))
@@ -1151,12 +1110,40 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
         return new Text(fuelConsumption + " L/s");
     }
 
+    private Text storedFuel() {
+        return new Text(
+                translateToLocal("gt.blockmachines.multimachine.FOG.storedfuel") + " " + internalBattery + "/100");
+    }
+
+    private void increaseBattery(Integer amount) {
+        if ((internalBattery + amount) <= 100) {
+            internalBattery += amount;
+        }
+    }
+
+    private void reduceBattery(Integer amount) {
+        internalBattery -= amount;
+        if (internalBattery <= 0) {
+            internalBattery = 0;
+            if (moduleHatches.size() > 0) {
+                for (GT_MetaTileEntity_EM_BaseModule module : moduleHatches) {
+                    module.disconnect();
+                }
+            }
+
+        }
+    }
+
+    @Override
+    protected void setHatchRecipeMap(GT_MetaTileEntity_Hatch_Input hatch) {}
+
     @Override
     public void saveNBTData(NBTTagCompound NBT) {
         NBT.setInteger("spacetimeCompressionTier", spacetimeCompressionFieldMetadata + 1);
         NBT.setInteger("solenoidCoilTier", solenoidCoilMetadata - 7);
         NBT.setInteger("selectedFuelType", selectedFuelType);
         NBT.setInteger("fuelConsumptionFactor", fuelConsumptionFactor);
+        NBT.setInteger("internalBattery", internalBattery);
 
         // Store booleanArray of all upgrades
         NBTTagCompound upgradeBooleanArrayNBTTag = new NBTTagCompound();
@@ -1177,6 +1164,7 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
         solenoidCoilMetadata = NBT.getInteger("solenoidCoilTier") + 7;
         selectedFuelType = NBT.getInteger("selectedFuelType");
         fuelConsumptionFactor = NBT.getInteger("fuelConsumptionFactor");
+        internalBattery = NBT.getInteger("internalBattery");
 
         NBTTagCompound tempBooleanTag = NBT.getCompoundTag("upgrades");
 

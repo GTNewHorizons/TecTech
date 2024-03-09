@@ -994,6 +994,7 @@ gt.blockmachines.multimachine.FOG.fueltype=Click to Select Fuel Type
 gt.blockmachines.multimachine.FOG.fuelusage=Fuel Usage
 gt.blockmachines.multimachine.FOG.plasmamultistep=Multi-Step plasma
 gt.blockmachines.multimachine.FOG.plasmarecipetier=Fusion Tier
+gt.blockmachines.multimachine.FOG.storedfuel=Stored fuel amount:
 
 # Optical Circuits
 achievement.gt.metaitem.03.32155=Optical Assembly

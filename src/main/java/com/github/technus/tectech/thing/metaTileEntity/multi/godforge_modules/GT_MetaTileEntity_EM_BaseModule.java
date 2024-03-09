@@ -33,8 +33,11 @@ public class GT_MetaTileEntity_EM_BaseModule extends GT_MetaTileEntity_Multibloc
 
     protected final int tier = getTier();
     protected boolean isConnected = false;
+    protected boolean isUpgrade83Unlocked = false;
     protected String userUUID = "";
     protected int machineHeat = 0;
+    protected int maximumParallel = 0;
+    protected float processingSpeedBonus = 0;
 
     private static final String STRUCTURE_PIECE_MAIN = "main";
     private static final IStructureDefinition<GT_MetaTileEntity_EM_BaseModule> STRUCTURE_DEFINITION = StructureDefinition
@@ -103,6 +106,30 @@ public class GT_MetaTileEntity_EM_BaseModule extends GT_MetaTileEntity_Multibloc
 
     public void setHeat(Integer heat) {
         machineHeat = heat;
+    }
+
+    public Integer getHeat() {
+        return machineHeat;
+    }
+
+    public void setMaxParallel(Integer parallel) {
+        maximumParallel = parallel;
+    }
+
+    public Integer getMaxParallel() {
+        return maximumParallel;
+    }
+
+    public void setSpeedBonus(Float bonus) {
+        processingSpeedBonus = bonus;
+    }
+
+    public Float getSpeedBonus() {
+        return processingSpeedBonus;
+    }
+
+    public void setUpgrade83(Boolean upgrade) {
+        isUpgrade83Unlocked = upgrade;
     }
 
     protected void fixAllIssues() {
