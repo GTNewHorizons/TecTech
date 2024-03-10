@@ -2,7 +2,9 @@ package com.github.technus.tectech.thing.metaTileEntity.multi.godforge_modules;
 
 import static com.github.technus.tectech.thing.casing.GT_Block_CasingsTT.texturePage;
 import static gregtech.common.misc.WirelessNetworkManager.addEUToGlobalEnergyMap;
-import static gregtech.common.misc.WirelessNetworkManager.strongCheckOrAddUser;
+import static gregtech.common.misc.WirelessNetworkManager.processInitialSettings;
+
+import java.util.UUID;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -29,14 +31,12 @@ import gregtech.api.recipe.RecipeMap;
 import gregtech.api.recipe.RecipeMaps;
 import gregtech.api.util.GT_StructureUtility;
 
-import java.util.UUID;
-
 public class GT_MetaTileEntity_EM_BaseModule extends GT_MetaTileEntity_MultiblockBase_EM {
 
     protected final int tier = getTier();
     protected boolean isConnected = false;
     protected boolean isUpgrade83Unlocked = false;
-    protected UUID userUUID = null;
+    protected UUID userUUID;
     protected int machineHeat = 0;
     protected int maximumParallel = 0;
     protected float processingSpeedBonus = 0;
@@ -172,9 +172,8 @@ public class GT_MetaTileEntity_EM_BaseModule extends GT_MetaTileEntity_Multibloc
     public void onPreTick(IGregTechTileEntity aBaseMetaTileEntity, long aTick) {
         super.onPreTick(aBaseMetaTileEntity, aTick);
 
-        if (aTick == 1) {
-            userUUID = getBaseMetaTileEntity().getOwnerUuid();
-            strongCheckOrAddUser(userUUID);
+        if (aBaseMetaTileEntity.isServerSide() && (aTick == 1)) {
+            userUUID = processInitialSettings(aBaseMetaTileEntity);
         }
     }
 
