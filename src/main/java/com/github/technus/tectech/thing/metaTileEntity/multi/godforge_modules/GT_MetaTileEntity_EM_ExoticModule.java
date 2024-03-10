@@ -17,6 +17,7 @@ import static net.minecraft.util.EnumChatFormatting.GREEN;
 import static net.minecraft.util.EnumChatFormatting.RED;
 import static net.minecraft.util.EnumChatFormatting.RESET;
 import static net.minecraft.util.EnumChatFormatting.YELLOW;
+import static net.minecraft.util.StatCollector.translateToLocal;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
@@ -444,9 +445,10 @@ public class GT_MetaTileEntity_EM_ExoticModule extends GT_MetaTileEntity_EM_Base
             }
             return ret.toArray(new IDrawable[0]);
         }).attachSyncer(new FakeSyncWidget.BooleanSyncer(this::isMagmatterModeOn, this::setMagmatterMode), builder)
-                .addTooltip("Magmatter Mode").setTooltipShowUpDelay(TOOLTIP_DELAY).setPos(174, 91).setSize(16, 16);
+                .addTooltip(translateToLocal("fog.button.magmattermode.tooltip.01"))
+                .setTooltipShowUpDelay(TOOLTIP_DELAY).setPos(174, 91).setSize(16, 16);
         if (!magmatterCapable) {
-            button.addTooltip("Magmatter Mode Locked, missing upgrade");
+            button.addTooltip(translateToLocal("fog.button.magmattermode.tooltip.02"));
         }
         return (ButtonWidget) button;
     }
