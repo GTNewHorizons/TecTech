@@ -7,7 +7,7 @@ dependencies {
     implementation('com.github.GTNewHorizons:GTNEIOrePlugin:1.2.0:dev')
 
     compileOnly("TGregworks:TGregworks:1.7.10-GTNH-1.0.23:deobf") {transitive=false}
-    compileOnly('com.github.GTNewHorizons:TinkersConstruct:1.11.11-GTNH:dev') {transitive=false}
+    compileOnly('com.github.GTNewHorizons:TinkersConstruct:1.11.12-GTNH:dev') {transitive=false}
     compileOnly('com.github.GTNewHorizons:OpenComputers:1.10.7-GTNH:dev') {transitive=false}
     compileOnly('com.github.GTNewHorizons:GTplusplus:1.11.33:dev') {transitive=false}
     compileOnly('com.github.GTNewHorizons:Avaritia:1.49:dev') {transitive=false}
@@ -17,7 +17,7 @@ dependencies {
 
     // for testing EOH recipes
     //runtimeOnlyNonPublishable("TGregworks:TGregworks:1.7.10-GTNH-1.0.23:deobf")
-    //runtimeOnlyNonPublishable('com.github.GTNewHorizons:TinkersConstruct:1.11.11-GTNH:dev')
+    //runtimeOnlyNonPublishable('com.github.GTNewHorizons:TinkersConstruct:1.11.12-GTNH:dev')
     //runtimeOnlyNonPublishable('com.github.GTNewHorizons:NewHorizonsCoreMod:2.3.38:dev')
     //runtimeOnlyNonPublishable('com.github.GTNewHorizons:GoodGenerator:0.8.12:dev') {
     //    exclude group: "com.github.GTNewHorizons", module: "TecTech"
