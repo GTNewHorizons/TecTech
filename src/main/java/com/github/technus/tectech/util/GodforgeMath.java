@@ -55,7 +55,7 @@ public class GodforgeMath {
 
     public static Float calucateSpeedBonusForModules(GT_MetaTileEntity_EM_BaseModule module,
             GT_MetaTileEntity_EM_ForgeOfGods godforge) {
-        double speedBonus = 0;
+        double speedBonus = 1;
 
         if (godforge.isUpgradeActive(1)) {
             speedBonus = Math.pow(module.getHeat(), -0.01);
