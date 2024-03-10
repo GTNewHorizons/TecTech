@@ -63,7 +63,6 @@ import cpw.mods.fml.relauncher.SideOnly;
 import gregtech.api.GregTech_API;
 import gregtech.api.enums.*;
 import gregtech.api.gui.modularui.GT_UITextures;
-import gregtech.api.interfaces.IGlobalWirelessEnergy;
 import gregtech.api.interfaces.IHatchElement;
 import gregtech.api.interfaces.ITexture;
 import gregtech.api.interfaces.metatileentity.IMetaTileEntity;
@@ -74,13 +73,12 @@ import gregtech.api.recipe.RecipeMaps;
 import gregtech.api.util.*;
 
 public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_MultiblockBase_EM
-        implements IConstructable, IGlobalWirelessEnergy, ISurvivalConstructable {
+        implements IConstructable, ISurvivalConstructable {
 
-    // region variables
     private static Textures.BlockIcons.CustomIcon ScreenOFF;
     private static Textures.BlockIcons.CustomIcon ScreenON;
 
-    private int fuelConsumptionFactor = 0;
+    private int fuelConsumptionFactor = 1;
     private int selectedFuelType = 0;
     private long fuelConsumption = 0;
     private int internalBattery = 0;
@@ -93,7 +91,6 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
     private static final int INDIVIDUAL_UPGRADE_WINDOW_ID = 11;
     private static final int[] FIRST_SPLIT_UPGRADES = new int[] { 12, 13, 14 };
     private static final int[] RING_UPGRADES = new int[] { 26, 29 };
-    private String userUUID = "";
     protected static final String STRUCTURE_PIECE_MAIN = "main";
 
     private Boolean debugMode = true;
@@ -243,17 +240,6 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
         mSolderingTool = true;
         mWrench = true;
         return true;
-    }
-
-    @Override
-    public void onPreTick(IGregTechTileEntity aBaseMetaTileEntity, long aTick) {
-        super.onPreTick(aBaseMetaTileEntity, aTick);
-
-        if (aTick == 1) {
-            userUUID = String.valueOf(getBaseMetaTileEntity().getOwnerUuid());
-            String userName = getBaseMetaTileEntity().getOwnerName();
-            strongCheckOrAddUser(userUUID, userName);
-        }
     }
 
     int ticker = 0;
@@ -456,8 +442,11 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
         Widget powerSwitchButton = createPowerSwitchButton();
         builder.widget(powerSwitchButton)
                 .widget(new FakeSyncWidget.BooleanSyncer(() -> getBaseMetaTileEntity().isAllowedToWork(), val -> {
-                    if (val) getBaseMetaTileEntity().enableWorking();
-                    else getBaseMetaTileEntity().disableWorking();
+                    if (val) {
+                        getBaseMetaTileEntity().enableWorking();
+                    } else {
+                        getBaseMetaTileEntity().disableWorking();
+                    }
                 }));
     }
 
@@ -502,7 +491,7 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
                 .widget(
                         new NumericWidget().setSetter(val -> fuelConsumptionFactor = (int) val)
                                 .setGetter(() -> fuelConsumptionFactor).setBounds(1, calculateMaxFuelFactor(this))
-                                .setScrollValues(1, 4, 64).setTextAlignment(Alignment.Center)
+                                .setDefaultValue(1).setScrollValues(1, 4, 64).setTextAlignment(Alignment.Center)
                                 .setTextColor(Color.WHITE.normal).setSize(70, 18).setPos(3, 35)
                                 .setBackground(GT_UITextures.BACKGROUND_TEXT_FIELD))
                 .widget(
@@ -929,10 +918,11 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
                 .widget(ButtonWidget.closeWindowButton(true).setPos(282, 354));
         if (debugMode) {
             builder.widget(
-                    new MultiChildWidget().addChild(
-                            new ButtonWidget().setOnClick((clickData, widget) -> upgrades = new boolean[31])
-                                    .setSize(40, 15).setBackground(GT_UITextures.BUTTON_STANDARD)
-                                    .addTooltip(translateToLocal("fog.debug.resetbutton.tooltip")))
+                    new MultiChildWidget()
+                            .addChild(
+                                    new ButtonWidget().setOnClick((clickData, widget) -> upgrades = new boolean[31])
+                                            .setSize(40, 15).setBackground(GT_UITextures.BUTTON_STANDARD)
+                                            .addTooltip(translateToLocal("fog.debug.resetbutton.tooltip")))
                             .addChild(
                                     new TextWidget(translateToLocal("fog.debug.resetbutton.text"))
                                             .setTextAlignment(Alignment.Center).setScale(0.57f).setMaxWidth(36)
