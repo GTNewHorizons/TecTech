@@ -6,7 +6,7 @@ import static com.github.technus.tectech.loader.recipe.Godforge.exoticModulePlas
 import static com.github.technus.tectech.loader.recipe.Godforge.exoticModulePlasmaItemMap;
 import static com.github.technus.tectech.recipe.TecTechRecipeMaps.godforgeExoticMatterRecipes;
 import static com.github.technus.tectech.thing.casing.GT_Block_CasingsTT.texturePage;
-import static com.github.technus.tectech.util.TT_Utility.getRandomIntInRange;
+import static com.github.technus.tectech.util.GodforgeMath.getRandomIntInRange;
 import static gregtech.api.metatileentity.BaseTileEntity.TOOLTIP_DELAY;
 import static gregtech.api.util.GT_RecipeBuilder.INGOTS;
 import static gregtech.api.util.GT_RecipeBuilder.SECONDS;
@@ -39,7 +39,6 @@ import net.minecraftforge.oredict.OreDictionary;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import com.github.technus.tectech.thing.metaTileEntity.multi.GT_MetaTileEntity_EM_ForgeOfGods;
 import com.github.technus.tectech.thing.metaTileEntity.multi.base.GT_MetaTileEntity_MultiblockBase_EM;
 import com.github.technus.tectech.thing.metaTileEntity.multi.base.render.TT_RenderedExtendedFacingTexture;
 import com.github.technus.tectech.util.CommonValues;
@@ -70,7 +69,6 @@ import gregtech.api.util.*;
 
 public class GT_MetaTileEntity_EM_ExoticModule extends GT_MetaTileEntity_EM_BaseModule {
 
-    private int solenoidCoilMetadata = -1;
     private int numberOfFluids = 0;
     private int numberOfItems = 0;
     private int currentParallel = 0;
@@ -457,7 +455,7 @@ public class GT_MetaTileEntity_EM_ExoticModule extends GT_MetaTileEntity_EM_Base
         return magmatterMode;
     }
 
-    public void setMagmatterMode(boolean enabled) {
+    private void setMagmatterMode(boolean enabled) {
         magmatterMode = enabled;
     }
 
@@ -487,7 +485,7 @@ public class GT_MetaTileEntity_EM_ExoticModule extends GT_MetaTileEntity_EM_Base
                         + RESET
                         + " s");
         str.add("Currently using: " + RED + formatNumbers(EUt) + RESET + " EU/t");
-        str.add(YELLOW + "Max Parallel: " + RESET + formatNumbers(GT_MetaTileEntity_EM_ForgeOfGods.getMaxParallels()));
+        str.add(YELLOW + "Max Parallel: " + RESET + formatNumbers(getMaxParallel()));
         str.add(YELLOW + "Current Parallel: " + RESET + formatNumbers(currentParallel));
         return str.toArray(new String[0]);
     }

@@ -8,6 +8,10 @@ import com.github.technus.tectech.thing.metaTileEntity.multi.godforge_modules.GT
 
 public class GodforgeMath {
 
+    public static Integer getRandomIntInRange(int min, int max) {
+        return (int) (Math.random() * (max - min)) + min;
+    }
+
     public static double calculateFuelConsumption(GT_MetaTileEntity_EM_ForgeOfGods godforge) {
         double upgradeFactor = 1;
         if (godforge.isUpgradeActive(2)) {

@@ -161,8 +161,4 @@ public final class TT_Utility {
         return Double.toString(value);
     }
 
-    public static Integer getRandomIntInRange(int min, int max) {
-        return (int) (Math.random() * (max - min)) + min;
-    }
-
 }
