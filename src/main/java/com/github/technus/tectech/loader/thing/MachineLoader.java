@@ -2034,7 +2034,7 @@ public class MachineLoader implements Runnable {
                 new GT_MetaTileEntity_EM_EyeOfHarmony(15410, "multimachine.em.eye_of_harmony", "Eye of Harmony")
                         .getStackForm(1L));
         Machine_Multi_ForgeOfGods.set(
-                new GT_MetaTileEntity_EM_ForgeOfGods(15411, "multimachine.em.forge_of_gods", "Forge of Gods")
+                new GT_MetaTileEntity_EM_ForgeOfGods(15411, "multimachine.em.forge_of_gods", "Forge of the Gods")
                         .getStackForm(1L));
         Machine_Multi_SmeltingModule.set(
                 new GT_MetaTileEntity_EM_SmeltingModule(15412, "multimachine.em.smelting_module", "Smelting Module")

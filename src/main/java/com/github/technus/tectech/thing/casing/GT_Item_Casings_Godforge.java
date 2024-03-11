@@ -71,7 +71,7 @@ public class GT_Item_Casings_Godforge extends GT_Item_Casings_Abstract {
                 aList.add(
                         GT_LanguageManager.addStringLocalization(
                                 "godforge.casings.4.Tooltip.0",
-                                "Taps into streams of stellar matter to harness its heat energy"));
+                                "Taps into streams of stellar matter to harness their heat energy"));
                 aList.add(
                         AQUA.toString() + BOLD
                                 + GT_LanguageManager
