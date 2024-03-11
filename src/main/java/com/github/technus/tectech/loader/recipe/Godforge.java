@@ -1,5 +1,6 @@
 package com.github.technus.tectech.loader.recipe;
 
+import static gregtech.api.enums.Mods.GTPlusPlus;
 import static gregtech.api.util.GT_RecipeBuilder.SECONDS;
 
 import java.util.ArrayList;
@@ -363,29 +364,30 @@ public class Godforge implements Runnable {
                         1000 /* Flerovium */ ));
 
         // GT++ materials
-        exoticModulePlasmaItemMap.put(ELEMENT.getInstance().ZIRCONIUM.getTinyDust(1), 6000);
-        exoticModulePlasmaItemMap.put(ELEMENT.getInstance().THORIUM232.getTinyDust(1), 6000);
-        exoticModulePlasmaItemMap.put(ELEMENT.getInstance().GERMANIUM.getTinyDust(1), 2000);
-        exoticModulePlasmaItemMap.put(ELEMENT.getInstance().THALLIUM.getTinyDust(1), 2000);
-        exoticModulePlasmaItemMap.put(ELEMENT.getInstance().RUTHENIUM.getTinyDust(1), 6000);
-        exoticModulePlasmaItemMap.put(ELEMENT.getInstance().RHENIUM.getTinyDust(1), 2000);
-        exoticModulePlasmaItemMap.put(ELEMENT.getInstance().RHODIUM.getTinyDust(1), 6000);
-        exoticModulePlasmaItemMap.put(ELEMENT.getInstance().IODINE.getTinyDust(1), 6000);
-        exoticModulePlasmaItemMap.put(ELEMENT.STANDALONE.ASTRAL_TITANIUM.getTinyDust(1), 8000);
-        exoticModulePlasmaItemMap.put(ELEMENT.STANDALONE.ADVANCED_NITINOL.getTinyDust(1), 8000);
-        exoticModulePlasmaItemMap.put(ELEMENT.STANDALONE.FORCE.getTinyDust(1), 8000);
-        exoticModulePlasmaItemMap.put(ELEMENT.getInstance().HAFNIUM.getTinyDust(1), 6000);
-        exoticModulePlasmaItemMap.put(ELEMENT.getInstance().CALIFORNIUM.getTinyDust(1), 1000);
-        exoticModulePlasmaItemMap.put(ELEMENT.STANDALONE.RUNITE.getTinyDust(1), 8000);
+        if (GTPlusPlus.isModLoaded()) {
+            exoticModulePlasmaItemMap.put(ELEMENT.getInstance().ZIRCONIUM.getTinyDust(1), 6000);
+            exoticModulePlasmaItemMap.put(ELEMENT.getInstance().THORIUM232.getTinyDust(1), 6000);
+            exoticModulePlasmaItemMap.put(ELEMENT.getInstance().GERMANIUM.getTinyDust(1), 2000);
+            exoticModulePlasmaItemMap.put(ELEMENT.getInstance().THALLIUM.getTinyDust(1), 2000);
+            exoticModulePlasmaItemMap.put(ELEMENT.getInstance().RUTHENIUM.getTinyDust(1), 6000);
+            exoticModulePlasmaItemMap.put(ELEMENT.getInstance().RHENIUM.getTinyDust(1), 2000);
+            exoticModulePlasmaItemMap.put(ELEMENT.getInstance().RHODIUM.getTinyDust(1), 6000);
+            exoticModulePlasmaItemMap.put(ELEMENT.getInstance().IODINE.getTinyDust(1), 6000);
+            exoticModulePlasmaItemMap.put(ELEMENT.STANDALONE.ASTRAL_TITANIUM.getTinyDust(1), 8000);
+            exoticModulePlasmaItemMap.put(ELEMENT.STANDALONE.ADVANCED_NITINOL.getTinyDust(1), 8000);
+            exoticModulePlasmaItemMap.put(ELEMENT.STANDALONE.FORCE.getTinyDust(1), 8000);
+            exoticModulePlasmaItemMap.put(ELEMENT.getInstance().HAFNIUM.getTinyDust(1), 6000);
+            exoticModulePlasmaItemMap.put(ELEMENT.getInstance().CALIFORNIUM.getTinyDust(1), 1000);
+            exoticModulePlasmaItemMap.put(ELEMENT.STANDALONE.RUNITE.getTinyDust(1), 8000);
 
-        exoticModulePlasmaFluidMap.put(new FluidStack(ELEMENT.getInstance().XENON.getFluid(), 1), 8000);
-        exoticModulePlasmaFluidMap.put(new FluidStack(ELEMENT.getInstance().KRYPTON.getFluid(), 1), 8000);
-        exoticModulePlasmaFluidMap.put(new FluidStack(ELEMENT.getInstance().NEON.getFluid(), 1), 8000);
-        // These are here because they cant be solidified
-        exoticModulePlasmaFluidMap.put(new FluidStack(ELEMENT.getInstance().CURIUM.getFluid(), 1), 10000);
-        exoticModulePlasmaFluidMap.put(new FluidStack(ELEMENT.getInstance().NEPTUNIUM.getFluid(), 1), 800);
-        exoticModulePlasmaFluidMap.put(new FluidStack(ELEMENT.getInstance().FERMIUM.getFluid(), 1), 800);
-
+            exoticModulePlasmaFluidMap.put(new FluidStack(ELEMENT.getInstance().XENON.getFluid(), 1), 8000);
+            exoticModulePlasmaFluidMap.put(new FluidStack(ELEMENT.getInstance().KRYPTON.getFluid(), 1), 8000);
+            exoticModulePlasmaFluidMap.put(new FluidStack(ELEMENT.getInstance().NEON.getFluid(), 1), 8000);
+            // These are here because they cant be solidified
+            exoticModulePlasmaFluidMap.put(new FluidStack(ELEMENT.getInstance().CURIUM.getFluid(), 1), 10000);
+            exoticModulePlasmaFluidMap.put(new FluidStack(ELEMENT.getInstance().NEPTUNIUM.getFluid(), 1), 800);
+            exoticModulePlasmaFluidMap.put(new FluidStack(ELEMENT.getInstance().FERMIUM.getFluid(), 1), 800);
+        }
         // Mercury is weird, it has neither dust nor gas, so it needs to be added separately
         exoticModulePlasmaFluidMap.put(Materials.Mercury.getFluid(1), 6000);
 
@@ -410,11 +412,12 @@ public class Godforge implements Runnable {
         exoticModuleMagmatterItemMap.put(Materials.Neutronium.getDustTiny(1), 100000);
 
         // GT++ materials
-        exoticModuleMagmatterItemMap.put(ELEMENT.STANDALONE.CELESTIAL_TUNGSTEN.getTinyDust(1), 100000);
-        exoticModuleMagmatterFluidMap.put(ELEMENT.STANDALONE.HYPOGEN.getFluidStack(1), 100000);
-        exoticModuleMagmatterFluidMap.put(ELEMENT.STANDALONE.RHUGNOR.getFluidStack(1), 100000);
-        exoticModuleMagmatterFluidMap.put(ELEMENT.STANDALONE.CHRONOMATIC_GLASS.getFluidStack(1), 100000);
-        exoticModuleMagmatterFluidMap.put(ELEMENT.STANDALONE.DRAGON_METAL.getFluidStack(1), 100000);
-
+        if (GTPlusPlus.isModLoaded()) {
+            exoticModuleMagmatterItemMap.put(ELEMENT.STANDALONE.CELESTIAL_TUNGSTEN.getTinyDust(1), 100000);
+            exoticModuleMagmatterFluidMap.put(ELEMENT.STANDALONE.HYPOGEN.getFluidStack(1), 100000);
+            exoticModuleMagmatterFluidMap.put(ELEMENT.STANDALONE.RHUGNOR.getFluidStack(1), 100000);
+            exoticModuleMagmatterFluidMap.put(ELEMENT.STANDALONE.CHRONOMATIC_GLASS.getFluidStack(1), 100000);
+            exoticModuleMagmatterFluidMap.put(ELEMENT.STANDALONE.DRAGON_METAL.getFluidStack(1), 100000);
+        }
     }
 }
