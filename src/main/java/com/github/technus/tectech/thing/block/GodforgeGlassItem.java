@@ -22,9 +22,9 @@ public class GodforgeGlassItem extends ItemBlock {
     @Override
     public void addInformation(ItemStack aStack, EntityPlayer aPlayer, List<String> aList, boolean aF3_H) {
         aList.add(GODFORGE_MARK);
-        aList.add(translateToLocal("tile.godforgeGlass.desc.0")); // Dense yet transparent
+        aList.add(translateToLocal("tile.godforgeGlass.desc.0"));
         aList.add(
                 EnumChatFormatting.AQUA.toString() + EnumChatFormatting.BOLD
-                        + translateToLocal("tile.godforgeGlass.desc.1")); // Glassy & Classy
+                        + translateToLocal("tile.godforgeGlass.desc.1"));
     }
 }

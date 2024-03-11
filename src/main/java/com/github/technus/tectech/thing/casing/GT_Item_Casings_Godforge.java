@@ -1,7 +1,6 @@
 package com.github.technus.tectech.thing.casing;
 
 import static com.github.technus.tectech.util.CommonValues.GODFORGE_MARK;
-import static gregtech.api.enums.GT_Values.AuthorColen;
 import static net.minecraft.util.EnumChatFormatting.AQUA;
 import static net.minecraft.util.EnumChatFormatting.BOLD;
 
@@ -116,6 +115,5 @@ public class GT_Item_Casings_Godforge extends GT_Item_Casings_Abstract {
                                         "godforge.casings.Error.Tooltip",
                                         "Error, report to GTNH team"));
         }
-        aList.add(AuthorColen);
     }
 }
