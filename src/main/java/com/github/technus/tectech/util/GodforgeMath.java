@@ -8,7 +8,7 @@ import com.github.technus.tectech.thing.metaTileEntity.multi.godforge_modules.GT
 
 public class GodforgeMath {
 
-    public static Integer getRandomIntInRange(int min, int max) {
+    public static int getRandomIntInRange(int min, int max) {
         return (int) (Math.random() * (max - min)) + min;
     }
 
@@ -26,7 +26,7 @@ public class GodforgeMath {
         } else return Math.max(godforge.getFuelFactor() / 25 * upgradeFactor, 1);
     }
 
-    public static Integer calculateMaxFuelFactor(GT_MetaTileEntity_EM_ForgeOfGods godforge) {
+    public static int calculateMaxFuelFactor(GT_MetaTileEntity_EM_ForgeOfGods godforge) {
 
         if (godforge.isUpgradeActive(27)) {
             return Integer.MAX_VALUE;
@@ -43,7 +43,7 @@ public class GodforgeMath {
         return fuelCap;
     }
 
-    public static Integer calculateMaxHeatForModules(GT_MetaTileEntity_EM_BaseModule module,
+    public static int calculateMaxHeatForModules(GT_MetaTileEntity_EM_BaseModule module,
             GT_MetaTileEntity_EM_ForgeOfGods godforge) {
         double logBase = 1.5;
         int baseHeat = 12601;
@@ -57,7 +57,7 @@ public class GodforgeMath {
         return baseHeat + (int) (Math.log(godforge.getFuelFactor()) / Math.log(logBase) * 1000);
     }
 
-    public static Float calucateSpeedBonusForModules(GT_MetaTileEntity_EM_BaseModule module,
+    public static float calucateSpeedBonusForModules(GT_MetaTileEntity_EM_BaseModule module,
             GT_MetaTileEntity_EM_ForgeOfGods godforge) {
         double speedBonus = 1;
 
@@ -75,7 +75,7 @@ public class GodforgeMath {
         return (float) speedBonus;
     }
 
-    public static Integer calculateEffectiveFuelFactor(GT_MetaTileEntity_EM_ForgeOfGods godforge) {
+    public static int calculateEffectiveFuelFactor(GT_MetaTileEntity_EM_ForgeOfGods godforge) {
         int fuelFactor = godforge.getFuelFactor();
         if (fuelFactor <= 43) {
             return fuelFactor;
@@ -84,7 +84,7 @@ public class GodforgeMath {
         }
     }
 
-    public static Integer calucateMaxParallelForModules(GT_MetaTileEntity_EM_BaseModule module,
+    public static int calucateMaxParallelForModules(GT_MetaTileEntity_EM_BaseModule module,
             GT_MetaTileEntity_EM_ForgeOfGods godforge) {
         int baseParallel = 0;
         float fuelFactorMultiplier = 1;
