@@ -53,12 +53,10 @@ public class GodforgeGlassRender implements ISimpleBlockRenderingHandler {
 
         renderer.renderStandardBlock(block, x, y, z);
         Tessellator tes = Tessellator.instance;
-        GL11.glPushMatrix();
         tes.setNormal(0F, 1F, 0F);
         tes.setBrightness(15728880);
         tes.setColorOpaque_F(0F, 1F, 1F);
         IIcon side = GodforgeGlassBlock.Icon;
-        GL11.glDisable(GL11.GL_CULL_FACE);
 
         // South
         if (world.getBlock(x, y, z + 1).getClass() != GodforgeGlassBlock.class) {
@@ -103,8 +101,6 @@ public class GodforgeGlassRender implements ISimpleBlockRenderingHandler {
             tes.addVertexWithUV(x + 1, y + 0.001, z + 1, side.getMaxU(), side.getMinV());
             tes.addVertexWithUV(x + 1, y + 0.001, z, side.getMaxU(), side.getMaxV());
         }
-        GL11.glPopMatrix();
-        GL11.glEnable(GL11.GL_CULL_FACE);
         return true;
     }
 
