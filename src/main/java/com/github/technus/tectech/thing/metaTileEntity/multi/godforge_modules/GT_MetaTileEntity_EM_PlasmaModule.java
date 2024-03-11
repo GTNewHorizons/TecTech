@@ -132,8 +132,8 @@ public class GT_MetaTileEntity_EM_PlasmaModule extends GT_MetaTileEntity_EM_Base
         }
     }
 
-    protected ButtonWidget createTestButton(IWidgetBuilder<?> builder) {
-        Widget button = new ButtonWidget().setOnClick((clickData, widget) -> { multiStep = !multiStep; })
+    protected Widget createTestButton(IWidgetBuilder<?> builder) {
+        return new ButtonWidget().setOnClick((clickData, widget) -> { multiStep = !multiStep; })
                 .setPlayClickSoundResource(
                         () -> isAllowedToWork() ? SoundResource.GUI_BUTTON_UP.resourceLocation
                                 : SoundResource.GUI_BUTTON_DOWN.resourceLocation)
@@ -150,24 +150,20 @@ public class GT_MetaTileEntity_EM_PlasmaModule extends GT_MetaTileEntity_EM_Base
                     else disableWorking();
                 }), builder).addTooltip("multi-step").setTooltipShowUpDelay(TOOLTIP_DELAY).setPos(174, 100)
                 .setSize(16, 16);
-        return (ButtonWidget) button;
     }
 
-    protected TextFieldWidget createTestButton2() {
-        Widget button = new TextFieldWidget().setSetterInt(val -> fusionTier = val).setGetterInt(() -> fusionTier)
+    protected Widget createTestButton2() {
+        return new TextFieldWidget().setSetterInt(val -> fusionTier = val).setGetterInt(() -> fusionTier)
                 .setNumbers(0, 2).setTextAlignment(Alignment.Center).setTextColor(Color.WHITE.normal).setPos(3, 18)
                 .addTooltip("fusion tier").setTooltipShowUpDelay(TOOLTIP_DELAY).setSize(16, 16).setPos(174, 80)
                 .setBackground(GT_UITextures.BACKGROUND_TEXT_FIELD);
-        return (TextFieldWidget) button;
     }
 
-    protected TextFieldWidget createTestButton3() {
-        Widget button = new TextFieldWidget().setSetterInt(val -> inputMaxParallel = val)
-                .setGetterInt(() -> inputMaxParallel).setNumbers(0, Integer.MAX_VALUE)
-                .setTextAlignment(Alignment.Center).setTextColor(Color.WHITE.normal).setPos(3, 18)
-                .addTooltip("parallel").setTooltipShowUpDelay(TOOLTIP_DELAY).setSize(70, 16).setPos(174, 60)
-                .setBackground(GT_UITextures.BACKGROUND_TEXT_FIELD);
-        return (TextFieldWidget) button;
+    protected Widget createTestButton3() {
+        return new TextFieldWidget().setSetterInt(val -> inputMaxParallel = val).setGetterInt(() -> inputMaxParallel)
+                .setNumbers(0, Integer.MAX_VALUE).setTextAlignment(Alignment.Center).setTextColor(Color.WHITE.normal)
+                .setPos(3, 18).addTooltip("parallel").setTooltipShowUpDelay(TOOLTIP_DELAY).setSize(70, 16)
+                .setPos(174, 60).setBackground(GT_UITextures.BACKGROUND_TEXT_FIELD);
     }
 
     @Override
