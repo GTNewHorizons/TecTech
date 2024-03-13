@@ -1029,7 +1029,7 @@ public class GT_MetaTileEntity_EM_EyeOfHarmony extends GT_MetaTileEntity_Multibl
                 .addInfo(TOOLTIP_BAR)
                 .addInfo(
                         "This multiblock can perform parallel processing by placing Astral Array Fabricators into the input bus.")
-                .addInfo("The amount of parallel is calculated via this formula:")
+                .addInfo("The amount of parallel is calculated via these formulas:")
                 .addInfo(GREEN + "Parallel exponent = floor(log(8 * Astral Array amount) / log(1.7))")
                 .addInfo(GREEN + "Parallel = 2^(Parallel exponent)")
                 .addInfo("If the EOH is running parallel recipes, the power calculation changes.")
