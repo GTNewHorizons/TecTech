@@ -231,12 +231,10 @@ public class GT_MetaTileEntity_EM_SmeltingModule extends GT_MetaTileEntity_EM_Ba
     @Override
     public GT_Multiblock_Tooltip_Builder createTooltip() {
         final GT_Multiblock_Tooltip_Builder tt = new GT_Multiblock_Tooltip_Builder();
-        tt.addMachineType("Smelting Module") // Machine Type:
-                .addInfo("Controller block of the Smelting Module") // Controller
+        tt.addMachineType("Blast Furnace, Furnace").addInfo("Controller block of the Smelting Module")
                 .addInfo("Uses a Star to Smelt Metals").addSeparator().beginStructureBlock(1, 4, 2, false)
-                .addEnergyHatch("Any Infinite Spacetime Casing", 1) // Energy Hatch: Any
-                .addMaintenanceHatch("Any Infinite Spacetime Casing", 1) // Maintenance
-                .toolTipFinisher(CommonValues.TEC_MARK_EM);
+                .addEnergyHatch("Any Infinite Spacetime Casing", 1)
+                .addMaintenanceHatch("Any Infinite Spacetime Casing", 1).toolTipFinisher(CommonValues.GODFORGE_MARK);
         return tt;
     }
 

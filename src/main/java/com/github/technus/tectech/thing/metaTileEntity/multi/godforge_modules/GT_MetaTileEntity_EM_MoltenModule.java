@@ -105,7 +105,7 @@ public class GT_MetaTileEntity_EM_MoltenModule extends GT_MetaTileEntity_EM_Base
                         // substring 8 because ingotHot is 8 characters long
                         String strippedOreDict = dict.substring(8);
                         meltableItems[i] = FluidRegistry
-                                .getFluidStack("molten." + strippedOreDict.toLowerCase(), (int) (INGOTS));
+                                .getFluidStack("molten." + strippedOreDict.toLowerCase(), INGOTS);
                     }
                 }
 
@@ -217,12 +217,10 @@ public class GT_MetaTileEntity_EM_MoltenModule extends GT_MetaTileEntity_EM_Base
     @Override
     public GT_Multiblock_Tooltip_Builder createTooltip() {
         final GT_Multiblock_Tooltip_Builder tt = new GT_Multiblock_Tooltip_Builder();
-        tt.addMachineType("Molten Module") // Machine Type:
-                .addInfo("Controller block of the Molten Module") // Controller
+        tt.addMachineType("Blast Furnace").addInfo("Controller block of the Molten Module")
                 .addInfo("Uses a Star to to melt Metals").addSeparator().beginStructureBlock(1, 4, 2, false)
-                .addEnergyHatch("Any Infinite Spacetime Casing", 1) // Energy Hatch: Any
-                .addMaintenanceHatch("Any Infinite Spacetime Casing", 1) // Maintenance
-                .toolTipFinisher(CommonValues.TEC_MARK_EM);
+                .addEnergyHatch("Any Infinite Spacetime Casing", 1)
+                .addMaintenanceHatch("Any Infinite Spacetime Casing", 1).toolTipFinisher(CommonValues.GODFORGE_MARK);
         return tt;
     }
 

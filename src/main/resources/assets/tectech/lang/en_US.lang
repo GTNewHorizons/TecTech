@@ -1131,6 +1131,9 @@ GT5U.gui.text.waiting_for_inputs=§7Waiting for inputs
 # RecipeMaps
 gt.recipe.eyeofharmony=Eye of Harmony
 gt.recipe.researchStation=Research Station
+gt.recipe.fog_plasma=Heliothermal Plasma Fabricator
+gt.recipe.fog_exotic=Heliofusion Exoticizer
+
 
 # NEI
 tt.nei.eoh.total_items=Total Items: %s

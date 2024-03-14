@@ -133,7 +133,7 @@ public class GT_MetaTileEntity_EM_PlasmaModule extends GT_MetaTileEntity_EM_Base
     }
 
     protected Widget createTestButton(IWidgetBuilder<?> builder) {
-        return new ButtonWidget().setOnClick((clickData, widget) -> { multiStep = !multiStep; })
+        return new ButtonWidget().setOnClick((clickData, widget) -> multiStep = !multiStep)
                 .setPlayClickSoundResource(
                         () -> isAllowedToWork() ? SoundResource.GUI_BUTTON_UP.resourceLocation
                                 : SoundResource.GUI_BUTTON_DOWN.resourceLocation)
@@ -205,12 +205,10 @@ public class GT_MetaTileEntity_EM_PlasmaModule extends GT_MetaTileEntity_EM_Base
     @Override
     public GT_Multiblock_Tooltip_Builder createTooltip() {
         final GT_Multiblock_Tooltip_Builder tt = new GT_Multiblock_Tooltip_Builder();
-        tt.addMachineType("Plasma Module") // Machine Type:
-                .addInfo("Controller block of the Plasma Module") // Controller
+        tt.addMachineType("Plasma Fabricator").addInfo("Controller block of the Plasma Module")
                 .addInfo("Uses a Star to to turn Metals into Plasma").addSeparator().beginStructureBlock(1, 4, 2, false)
-                .addEnergyHatch("Any Infinite Spacetime Casing", 1) // Energy Hatch: Any
-                .addMaintenanceHatch("Any Infinite Spacetime Casing", 1) // Maintenance
-                .toolTipFinisher(CommonValues.TEC_MARK_EM);
+                .addEnergyHatch("Any Infinite Spacetime Casing", 1)
+                .addMaintenanceHatch("Any Infinite Spacetime Casing", 1).toolTipFinisher(CommonValues.GODFORGE_MARK);
         return tt;
     }
 

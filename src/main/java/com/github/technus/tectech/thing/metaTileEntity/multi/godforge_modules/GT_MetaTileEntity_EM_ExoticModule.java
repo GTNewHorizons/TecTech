@@ -467,13 +467,10 @@ public class GT_MetaTileEntity_EM_ExoticModule extends GT_MetaTileEntity_EM_Base
     @Override
     public GT_Multiblock_Tooltip_Builder createTooltip() {
         final GT_Multiblock_Tooltip_Builder tt = new GT_Multiblock_Tooltip_Builder();
-        tt.addMachineType("Quark Gluon Plasma Module") // Machine Type:
-                .addInfo("Controller block of the Quark Gluon Plasma Module") // Controller
+        tt.addMachineType("Exotic Matter Producer").addInfo("Controller block of the Quark Gluon Plasma Module")
                 .addInfo("Uses a Star to to turn Items into Quark Gluon Plasma").addSeparator()
-                .beginStructureBlock(1, 4, 2, false).addEnergyHatch("Any Infinite Spacetime Casing", 1) // Energy Hatch:
-                                                                                                        // Any
-                .addMaintenanceHatch("Any Infinite Spacetime Casing", 1) // Maintenance
-                .toolTipFinisher(CommonValues.TEC_MARK_EM);
+                .beginStructureBlock(1, 4, 2, false).addEnergyHatch("Any Infinite Spacetime Casing", 1)
+                .addMaintenanceHatch("Any Infinite Spacetime Casing", 1).toolTipFinisher(CommonValues.GODFORGE_MARK);
         return tt;
     }
 
