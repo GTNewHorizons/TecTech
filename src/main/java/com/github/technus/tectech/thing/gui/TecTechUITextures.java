@@ -79,6 +79,8 @@ public class TecTechUITextures {
             .fullImage(MODID, "gui/progressbar/research_station_2");
     public static final UITexture PROGRESSBAR_RESEARCH_STATION_3 = UITexture
             .fullImage(MODID, "gui/progressbar/research_station_3");
+    public static final UITexture PROGRESSBAR_GODFORGE_PLASMA = UITexture
+            .fullImage(MODID, "gui/progressbar/godforge_plasma");
 
     public static final UITexture PICTURE_TECTECH_LOGO = UITexture.fullImage(MODID, "gui/picture/tectech_logo");
     public static final UITexture PICTURE_TECTECH_LOGO_DARK = UITexture
