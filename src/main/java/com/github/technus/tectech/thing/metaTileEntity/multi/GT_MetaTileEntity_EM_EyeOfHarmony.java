@@ -982,7 +982,7 @@ public class GT_MetaTileEntity_EM_EyeOfHarmony extends GT_MetaTileEntity_Multibl
                                 + " per tier (additive). ")
                 .addInfo("  > Low tier stabilisation field generators have a power output penalty.")
                 .addInfo(
-                        "     The power output penalty for Crude Stabilisation Field Generator is " + RED
+                        "     The power output penalty for using Crude Stabilisation Field Generators is " + RED
                                 + formatNumbers(
                                         STABILITY_INCREASE_PROBABILITY_DECREASE_YIELD_PER_TIER
                                                 * TOTAL_CASING_TIERS_WITH_POWER_PENALTY
@@ -991,7 +991,7 @@ public class GT_MetaTileEntity_EM_EyeOfHarmony extends GT_MetaTileEntity_Multibl
                                 + GRAY
                                 + ".")
                 .addInfo(
-                        "     Decreases this penalty by " + RED
+                        "     This penalty decreases by " + RED
                                 + formatNumbers(STABILITY_INCREASE_PROBABILITY_DECREASE_YIELD_PER_TIER * 100)
                                 + "%"
                                 + GRAY
@@ -1044,7 +1044,7 @@ public class GT_MetaTileEntity_EM_EyeOfHarmony extends GT_MetaTileEntity_Multibl
                                 + "12.4 / 10^6 * Helium amount * Parallel"
                                 + GRAY
                                 + ".")
-                .addInfo("Each parallel success or not is calculated independently.").addInfo(TOOLTIP_BAR)
+                .addInfo("The success or failure of each parallel is determined independently.").addInfo(TOOLTIP_BAR)
                 .addInfo("Animations can be disabled by using a screwdriver on the multiblock.").addSeparator()
                 .addStructureInfo("Eye of Harmony structure is too complex! See schematic for details.")
                 .addStructureInfo(
@@ -1185,10 +1185,12 @@ public class GT_MetaTileEntity_EM_EyeOfHarmony extends GT_MetaTileEntity_Multibl
 
         // Get circuit damage, clamp it and then use it later for overclocking.
         currentCircuitMultiplier = 0;
-        for (ItemStack itemStack : mInputBusses.get(0).getRealInventory()) {
-            if (GT_Utility.isAnyIntegratedCircuit(itemStack)) {
-                currentCircuitMultiplier = MathHelper.clamp_int(itemStack.getItemDamage(), 0, 24);
-                break;
+        if (!mInputBusses.isEmpty()) {
+            for (ItemStack itemStack : mInputBusses.get(0).getRealInventory()) {
+                if (GT_Utility.isAnyIntegratedCircuit(itemStack)) {
+                    currentCircuitMultiplier = MathHelper.clamp_int(itemStack.getItemDamage(), 0, 24);
+                    break;
+                }
             }
         }
 
@@ -1502,30 +1504,42 @@ public class GT_MetaTileEntity_EM_EyeOfHarmony extends GT_MetaTileEntity_Multibl
     public String[] getInfoData() {
         ArrayList<String> str = new ArrayList<>(Arrays.asList(super.getInfoData()));
         str.add(GOLD + "---------------- Control Block Statistics ----------------");
-        str.add(
-                "Spacetime Compression Field Grade: " + EOH_TIER_FANCY_NAMES[spacetimeCompressionFieldMetadata]
-                        + RESET
-                        + " ("
-                        + YELLOW
-                        + spacetimeCompressionFieldMetadata
-                        + RESET
-                        + ")");
-        str.add(
-                "Time Dilation Field Grade: " + EOH_TIER_FANCY_NAMES[spacetimeCompressionFieldMetadata]
-                        + RESET
-                        + " ("
-                        + YELLOW
-                        + spacetimeCompressionFieldMetadata
-                        + RESET
-                        + ")");
-        str.add(
-                "Stabilisation Field Grade: " + EOH_TIER_FANCY_NAMES[spacetimeCompressionFieldMetadata]
-                        + RESET
-                        + " ("
-                        + YELLOW
-                        + spacetimeCompressionFieldMetadata
-                        + RESET
-                        + ")");
+        if (spacetimeCompressionFieldMetadata < 0) {
+            str.add("Spacetime Compression Field Grade: None");
+        } else {
+            str.add(
+                    "Spacetime Compression Field Grade: " + EOH_TIER_FANCY_NAMES[spacetimeCompressionFieldMetadata]
+                            + RESET
+                            + " ("
+                            + YELLOW
+                            + spacetimeCompressionFieldMetadata
+                            + RESET
+                            + ")");
+        }
+        if (timeAccelerationFieldMetadata < 0) {
+            str.add("Time Dilation Field Grade: None");
+        } else {
+            str.add(
+                    "Time Dilation Field Grade: " + EOH_TIER_FANCY_NAMES[timeAccelerationFieldMetadata]
+                            + RESET
+                            + " ("
+                            + YELLOW
+                            + timeAccelerationFieldMetadata
+                            + RESET
+                            + ")");
+        }
+        if (stabilisationFieldMetadata < 0) {
+            str.add("Stabilisation Field Grade: None");
+        } else {
+            str.add(
+                    "Stabilisation Field Grade: " + EOH_TIER_FANCY_NAMES[stabilisationFieldMetadata]
+                            + RESET
+                            + " ("
+                            + YELLOW
+                            + stabilisationFieldMetadata
+                            + RESET
+                            + ")");
+        }
         str.add(GOLD + "----------------- Internal Fluids Stored ----------------");
         validFluidMap.forEach(
                 (key, value) -> str.add(BLUE + key.getLocalizedName() + RESET + " : " + RED + formatNumbers(value)));
@@ -1536,7 +1550,7 @@ public class GT_MetaTileEntity_EM_EyeOfHarmony extends GT_MetaTileEntity_Multibl
             str.add("Astral Array Fabricators detected: " + RED + formatNumbers(astralArrayAmount));
             str.add("Total Parallel: " + RED + formatNumbers(parallelAmount));
             str.add("EU Output: " + RED + toStandardForm(outputEU_BigInt) + RESET + " EU");
-            str.add("EU Input: " + RED + toStandardForm(usedEU) + RESET + "EU");
+            str.add("EU Input:  " + RED + toStandardForm(usedEU.abs()) + RESET + " EU");
             int currentMaxProgresstime = Math.max(maxProgresstime(), 1);
             if (outputFluids.size() > 0) {
                 // Star matter is always the last element in the array.
