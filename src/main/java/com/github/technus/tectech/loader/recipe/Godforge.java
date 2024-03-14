@@ -139,7 +139,7 @@ public class Godforge implements Runnable {
                         TT_recipeAdder.addFOGPlasmaRecipe(
                                 new ItemStack[] { solids_t0_xstep[i] },
                                 new FluidStack[] { solid_plasmas_t0_xstep[i] },
-                                1 * SECONDS,
+                                3 * SECONDS,
                                 (int) TierEU.RECIPE_MAX,
                                 true,
                                 0);
@@ -157,7 +157,7 @@ public class Godforge implements Runnable {
                         TT_recipeAdder.addFOGPlasmaRecipe(
                                 new ItemStack[] { solids_t1_1step[i] },
                                 new FluidStack[] { solid_plasmas_t1_1step[i] },
-                                1 * SECONDS,
+                                5 * SECONDS,
                                 (int) TierEU.RECIPE_MAX,
                                 false,
                                 1);
@@ -174,7 +174,7 @@ public class Godforge implements Runnable {
                         TT_recipeAdder.addFOGPlasmaRecipe(
                                 new ItemStack[] { solids_t1_xstep[i] },
                                 new FluidStack[] { solid_plasmas_t1_xstep[i] },
-                                1 * SECONDS,
+                                7 * SECONDS,
                                 (int) TierEU.RECIPE_MAX,
                                 true,
                                 1);
@@ -197,7 +197,7 @@ public class Godforge implements Runnable {
                         TT_recipeAdder.addFOGPlasmaRecipe(
                                 new ItemStack[] { solids_t2_1step[i] },
                                 new FluidStack[] { solid_plasmas_t2_1step[i] },
-                                1 * SECONDS,
+                                15 * SECONDS,
                                 (int) TierEU.RECIPE_MAX,
                                 false,
                                 2);
@@ -215,7 +215,7 @@ public class Godforge implements Runnable {
                         TT_recipeAdder.addFOGPlasmaRecipe(
                                 new ItemStack[] { solids_t2_xstep[i] },
                                 new FluidStack[] { solid_plasmas_t2_xstep[i] },
-                                1 * SECONDS,
+                                25 * SECONDS,
                                 (int) TierEU.RECIPE_MAX,
                                 true,
                                 2);
@@ -266,7 +266,7 @@ public class Godforge implements Runnable {
                         TT_recipeAdder.addFOGPlasmaRecipe(
                                 new FluidStack[] { fluids_t0_xstep[i] },
                                 new FluidStack[] { fluid_plasmas_t0_xstep[i] },
-                                1 * SECONDS,
+                                3 * SECONDS,
                                 (int) TierEU.RECIPE_MAX,
                                 true,
                                 0);
