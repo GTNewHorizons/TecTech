@@ -1584,8 +1584,8 @@ public class GT_MetaTileEntity_EM_EyeOfHarmony extends GT_MetaTileEntity_Multibl
                     .divide(BigInteger.valueOf(currentMaxProgresstime));
 
             str.add("Estimated EU/t: " + RED + toStandardForm(euPerTick) + RESET + " EU/t");
-            str.add(GOLD + "-----------------------------------------------------");
         }
+        str.add(GOLD + "-----------------------------------------------------");
         return str.toArray(new String[0]);
     }
 
