@@ -17,26 +17,27 @@ public class GT_Cover_TM_TeslaCoil extends GT_CoverBehavior {
 
     public GT_Cover_TM_TeslaCoil() {}
 
-    private  TeslaCoverConnection mConnection;
-
     @Override
     public int doCoverThings(ForgeDirection side, byte aInputRedstone, int aCoverID, int aCoverVariable,
             ICoverable aTileEntity, long aTimer) {
         // Only do stuff if we're on top and have power
-        if(mConnection == null) {
-            mConnection = new TeslaCoverConnection(aTileEntity.getIGregTechTileEntityOffset(0, 0, 0),
-                    getTeslaReceptionCapability());
-        }
         if (side == ForgeDirection.UP || aTileEntity.getEUCapacity() > 0) {
             // Makes sure we're on the list
-            teslaSimpleNodeSetAdd(mConnection);
+            teslaSimpleNodeSetAdd(
+                    new TeslaCoverConnection(
+                            aTileEntity.getIGregTechTileEntityOffset(0, 0, 0),
+                            getTeslaReceptionCapability()));
         }
         return super.doCoverThings(side, aInputRedstone, aCoverID, aCoverVariable, aTileEntity, aTimer);
     }
 
     @Override
-    public boolean onCoverRemoval(ForgeDirection side, int aCoverID, int aCoverVariable, ICoverable aTileEntity, boolean aForced) {
-        teslaSimpleNodeSetRemove(mConnection);
+    public boolean onCoverRemoval(ForgeDirection side, int aCoverID, int aCoverVariable, ICoverable aTileEntity,
+            boolean aForced) {
+        teslaSimpleNodeSetRemove(
+                new TeslaCoverConnection(
+                        aTileEntity.getIGregTechTileEntityOffset(0, 0, 0),
+                        getTeslaReceptionCapability()));
         return super.onCoverRemoval(side, aCoverID, aCoverVariable, aTileEntity, aForced);
     }
 

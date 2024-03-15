@@ -239,7 +239,7 @@ public class GT_MetaTileEntity_TeslaCoil extends GT_MetaTileEntity_BasicBatteryB
 
     @Override
     public void onUnload() {
-        if(!this.getBaseMetaTileEntity().isClientSide()) {
+        if (!this.getBaseMetaTileEntity().isClientSide()) {
             teslaSimpleNodeSetRemove(this);
         }
     }

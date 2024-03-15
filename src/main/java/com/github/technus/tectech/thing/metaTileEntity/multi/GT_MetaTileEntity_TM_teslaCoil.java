@@ -710,7 +710,7 @@ public class GT_MetaTileEntity_TM_teslaCoil extends GT_MetaTileEntity_Multiblock
 
     @Override
     public void onUnload() {
-        if(!getBaseMetaTileEntity().isClientSide()) {
+        if (!getBaseMetaTileEntity().isClientSide()) {
             teslaSimpleNodeSetRemove(this);
         }
     }
