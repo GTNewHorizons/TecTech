@@ -1,6 +1,7 @@
 package com.github.technus.tectech.thing.cover;
 
 import static com.github.technus.tectech.mechanics.tesla.ITeslaConnectable.TeslaUtil.teslaSimpleNodeSetAdd;
+import static com.github.technus.tectech.mechanics.tesla.ITeslaConnectable.TeslaUtil.teslaSimpleNodeSetRemove;
 import static ic2.api.info.Info.DMG_ELECTRIC;
 
 import net.minecraft.entity.player.EntityPlayer;
@@ -16,18 +17,27 @@ public class GT_Cover_TM_TeslaCoil extends GT_CoverBehavior {
 
     public GT_Cover_TM_TeslaCoil() {}
 
+    private  TeslaCoverConnection mConnection;
+
     @Override
     public int doCoverThings(ForgeDirection side, byte aInputRedstone, int aCoverID, int aCoverVariable,
             ICoverable aTileEntity, long aTimer) {
         // Only do stuff if we're on top and have power
+        if(mConnection == null) {
+            mConnection = new TeslaCoverConnection(aTileEntity.getIGregTechTileEntityOffset(0, 0, 0),
+                    getTeslaReceptionCapability());
+        }
         if (side == ForgeDirection.UP || aTileEntity.getEUCapacity() > 0) {
             // Makes sure we're on the list
-            teslaSimpleNodeSetAdd(
-                    new TeslaCoverConnection(
-                            aTileEntity.getIGregTechTileEntityOffset(0, 0, 0),
-                            getTeslaReceptionCapability()));
+            teslaSimpleNodeSetAdd(mConnection);
         }
         return super.doCoverThings(side, aInputRedstone, aCoverID, aCoverVariable, aTileEntity, aTimer);
+    }
+
+    @Override
+    public boolean onCoverRemoval(ForgeDirection side, int aCoverID, int aCoverVariable, ICoverable aTileEntity, boolean aForced) {
+        teslaSimpleNodeSetRemove(mConnection);
+        return super.onCoverRemoval(side, aCoverID, aCoverVariable, aTileEntity, aForced);
     }
 
     @Override
