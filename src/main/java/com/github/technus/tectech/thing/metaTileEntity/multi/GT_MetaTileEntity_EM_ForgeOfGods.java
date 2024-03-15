@@ -4,11 +4,13 @@ import static com.github.technus.tectech.thing.casing.GT_Block_CasingsTT.texture
 import static com.github.technus.tectech.thing.casing.TT_Container_Casings.forgeOfGodsRenderBlock;
 import static com.github.technus.tectech.thing.casing.TT_Container_Casings.sBlockCasingsBA0;
 import static com.github.technus.tectech.thing.casing.TT_Container_Casings.sBlockCasingsTT;
+import static com.github.technus.tectech.util.GodforgeMath.calculateEnergyDiscountForModules;
 import static com.github.technus.tectech.util.GodforgeMath.calculateFuelConsumption;
 import static com.github.technus.tectech.util.GodforgeMath.calculateMaxFuelFactor;
 import static com.github.technus.tectech.util.GodforgeMath.calculateMaxHeatForModules;
-import static com.github.technus.tectech.util.GodforgeMath.calucateMaxParallelForModules;
-import static com.github.technus.tectech.util.GodforgeMath.calucateSpeedBonusForModules;
+import static com.github.technus.tectech.util.GodforgeMath.calculateMaxParallelForModules;
+import static com.github.technus.tectech.util.GodforgeMath.calculateSpeedBonusForModules;
+import static com.github.technus.tectech.util.GodforgeMath.setMiscModuleParameters;
 import static com.gtnewhorizon.structurelib.structure.StructureUtility.ofBlock;
 import static com.gtnewhorizon.structurelib.structure.StructureUtility.ofBlocksTiered;
 import static com.gtnewhorizon.structurelib.structure.StructureUtility.transpose;
@@ -95,8 +97,8 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
 
     private int fuelConsumptionFactor = 1;
     private int selectedFuelType = 0;
-    private long fuelConsumption = 0;
     private int internalBattery = 0;
+    private long fuelConsumption = 0;
     public ArrayList<GT_MetaTileEntity_EM_BaseModule> moduleHatches = new ArrayList<>();
 
     private static int spacetimeCompressionFieldMetadata = -1;
@@ -104,11 +106,12 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
     private static final int FUEL_CONFIG_WINDOW_ID = 9;
     private static final int UPGRADE_TREE_WINDOW_ID = 10;
     private static final int INDIVIDUAL_UPGRADE_WINDOW_ID = 11;
+    private static final int MAX_BATTERY_CHARGE = 100;
     private static final int[] FIRST_SPLIT_UPGRADES = new int[] { 12, 13, 14 };
     private static final int[] RING_UPGRADES = new int[] { 26, 29 };
     protected static final String STRUCTURE_PIECE_MAIN = "main";
 
-    private Boolean debugMode = true;
+    private boolean debugMode = true;
 
     public int survivalConstruct(ItemStack stackSize, int elementBudget, IItemSource source, EntityPlayerMP actor) {
         if (mMachine) return -1;
@@ -266,7 +269,7 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
             if (getBaseMetaTileEntity().isAllowedToWork()) {
                 ticker++;
                 // Check and drain fuel
-                if (ticker % SECONDS == 0) {
+                if (ticker % (5 * SECONDS) == 0) {
                     ticker = 0;
                     FluidStack fluidInHatch = mInputHatches.get(0).getFluid();
 
@@ -288,9 +291,11 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
                     if (moduleHatches.size() > 0 && internalBattery > 0) {
                         for (GT_MetaTileEntity_EM_BaseModule module : moduleHatches) {
                             module.connect();
-                            module.setHeat(calculateMaxHeatForModules(module, this));
-                            module.setSpeedBonus(calucateSpeedBonusForModules(module, this));
-                            module.setMaxParallel(calucateMaxParallelForModules(module, this));
+                            calculateMaxHeatForModules(module, this);
+                            calculateSpeedBonusForModules(module, this);
+                            calculateMaxParallelForModules(module, this);
+                            calculateEnergyDiscountForModules(module, this);
+                            setMiscModuleParameters(module, this);
                         }
                     }
                 }
@@ -1080,7 +1085,7 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
         return new String[] { "Forge of Gods multiblock" };
     }
 
-    public Integer getFuelType() {
+    public int getFuelType() {
         return selectedFuelType;
     }
 
@@ -1088,15 +1093,15 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
         selectedFuelType = fuelType;
     }
 
-    public Integer getFuelFactor() {
+    public int getFuelFactor() {
         return fuelConsumptionFactor;
     }
 
-    public Boolean isUpgradeActive(Integer upgradeID) {
+    public boolean isUpgradeActive(Integer upgradeID) {
         return upgrades[upgradeID];
     }
 
-    public Integer getTotalActiveUpgrades() {
+    public int getTotalActiveUpgrades() {
         int totalUpgrades = 0;
         for (boolean upgrade : upgrades) {
             if (upgrade) {
@@ -1116,12 +1121,12 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
     }
 
     private void increaseBattery(Integer amount) {
-        if ((internalBattery + amount) <= 100) {
+        if ((internalBattery + amount) <= MAX_BATTERY_CHARGE) {
             internalBattery += amount;
         }
     }
 
-    private void reduceBattery(Integer amount) {
+    public void reduceBattery(Integer amount) {
         internalBattery -= amount;
         if (internalBattery <= 0) {
             internalBattery = 0;
@@ -1132,6 +1137,14 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
             }
 
         }
+    }
+
+    public int getBatteryCharge() {
+        return internalBattery;
+    }
+
+    public int getMaxBatteryCharge() {
+        return MAX_BATTERY_CHARGE;
     }
 
     @Override

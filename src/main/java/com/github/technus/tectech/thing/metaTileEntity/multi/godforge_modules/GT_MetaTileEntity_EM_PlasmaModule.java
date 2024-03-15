@@ -56,9 +56,7 @@ public class GT_MetaTileEntity_EM_PlasmaModule extends GT_MetaTileEntity_EM_Base
 
     private long EUt = 0;
     private int currentParallel = 0;
-    private boolean multiStep = false;
     private boolean debug = true;
-    private int fusionTier = 0;
     private int inputMaxParallel = 0;
 
     public GT_MetaTileEntity_EM_PlasmaModule(int aID, String aName, String aNameRegional) {
@@ -87,8 +85,8 @@ public class GT_MetaTileEntity_EM_PlasmaModule extends GT_MetaTileEntity_EM_Base
                 if (getUserEU(userUUID).compareTo(BigInteger.valueOf(wirelessEUt * recipe.mDuration)) < 0) {
                     return CheckRecipeResultRegistry.insufficientPower(wirelessEUt * recipe.mDuration);
                 }
-                if (recipe.mSpecialValue > fusionTier
-                        || Objects.equals(recipe.mSpecialItems.toString(), "true") && !multiStep) {
+                if (recipe.mSpecialValue > getPlasmaTier()
+                        || Objects.equals(recipe.mSpecialItems.toString(), "true") && !isMultiStepPlasmaCapable) {
                     return SimpleCheckRecipeResult.ofFailure("missing_upgrades");
                 }
                 return CheckRecipeResultRegistry.SUCCESSFUL;
@@ -122,6 +120,7 @@ public class GT_MetaTileEntity_EM_PlasmaModule extends GT_MetaTileEntity_EM_Base
         logic.setAmperageOC(false);
         logic.setMaxParallel(getMaxParallel());
         logic.setSpeedBonus(getSpeedBonus());
+        logic.setEuModifier(getEnergyDiscount());
     }
 
     @Override
@@ -133,12 +132,13 @@ public class GT_MetaTileEntity_EM_PlasmaModule extends GT_MetaTileEntity_EM_Base
     }
 
     protected Widget createTestButton(IWidgetBuilder<?> builder) {
-        return new ButtonWidget().setOnClick((clickData, widget) -> multiStep = !multiStep)
+        return new ButtonWidget()
+                .setOnClick((clickData, widget) -> isMultiStepPlasmaCapable = !isMultiStepPlasmaCapable)
                 .setPlayClickSoundResource(
                         () -> isAllowedToWork() ? SoundResource.GUI_BUTTON_UP.resourceLocation
                                 : SoundResource.GUI_BUTTON_DOWN.resourceLocation)
                 .setBackground(() -> {
-                    if (multiStep) {
+                    if (isMultiStepPlasmaCapable) {
                         return new IDrawable[] { GT_UITextures.BUTTON_STANDARD_PRESSED,
                                 GT_UITextures.OVERLAY_BUTTON_POWER_SWITCH_ON };
                     } else {
@@ -153,7 +153,7 @@ public class GT_MetaTileEntity_EM_PlasmaModule extends GT_MetaTileEntity_EM_Base
     }
 
     protected Widget createTestButton2() {
-        return new TextFieldWidget().setSetterInt(val -> fusionTier = val).setGetterInt(() -> fusionTier)
+        return new TextFieldWidget().setSetterInt(this::setPlasmaTier).setGetterInt(this::getPlasmaTier)
                 .setNumbers(0, 2).setTextAlignment(Alignment.Center).setTextColor(Color.WHITE.normal).setPos(3, 18)
                 .addTooltip("fusion tier").setTooltipShowUpDelay(TOOLTIP_DELAY).setSize(16, 16).setPos(174, 80)
                 .setBackground(GT_UITextures.BACKGROUND_TEXT_FIELD);
@@ -199,6 +199,7 @@ public class GT_MetaTileEntity_EM_PlasmaModule extends GT_MetaTileEntity_EM_Base
         str.add(YELLOW + "Max Parallel: " + RESET + formatNumbers(getMaxParallel()));
         str.add(YELLOW + "Current Parallel: " + RESET + formatNumbers(currentParallel));
         str.add(YELLOW + "Recipe time multiplier: " + RESET + formatNumbers(getSpeedBonus()));
+        str.add(YELLOW + "Energy multiplier: " + RESET + formatNumbers(getEnergyDiscount()));
         return str.toArray(new String[0]);
     }
 

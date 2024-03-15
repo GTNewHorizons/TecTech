@@ -36,10 +36,15 @@ public class GT_MetaTileEntity_EM_BaseModule extends GT_MetaTileEntity_Multibloc
     protected final int tier = getTier();
     protected boolean isConnected = false;
     protected boolean isUpgrade83Unlocked = false;
+    protected int plasmaTier = 0;
+    protected boolean isMultiStepPlasmaCapable = false;
+    protected boolean isMagmatterCapable = false;
     protected UUID userUUID;
     protected int machineHeat = 0;
+    protected int overclockHeat = 0;
     protected int maximumParallel = 0;
     protected float processingSpeedBonus = 0;
+    protected float energyDiscount = 0;
 
     private static final String STRUCTURE_PIECE_MAIN = "main";
     private static final IStructureDefinition<GT_MetaTileEntity_EM_BaseModule> STRUCTURE_DEFINITION = StructureDefinition
@@ -110,15 +115,23 @@ public class GT_MetaTileEntity_EM_BaseModule extends GT_MetaTileEntity_Multibloc
         machineHeat = heat;
     }
 
-    public Integer getHeat() {
+    public int getHeat() {
         return machineHeat;
+    }
+
+    public void setHeatForOC(Integer heat) {
+        overclockHeat = heat;
+    }
+
+    public int getHeatForOC() {
+        return overclockHeat;
     }
 
     public void setMaxParallel(Integer parallel) {
         maximumParallel = parallel;
     }
 
-    public Integer getMaxParallel() {
+    public int getMaxParallel() {
         return maximumParallel;
     }
 
@@ -126,12 +139,40 @@ public class GT_MetaTileEntity_EM_BaseModule extends GT_MetaTileEntity_Multibloc
         processingSpeedBonus = bonus;
     }
 
-    public Float getSpeedBonus() {
+    public float getSpeedBonus() {
         return processingSpeedBonus;
+    }
+
+    public void setEnergyDiscount(Float discount) {
+        energyDiscount = discount;
+    }
+
+    public float getEnergyDiscount() {
+        return energyDiscount;
     }
 
     public void setUpgrade83(Boolean upgrade) {
         isUpgrade83Unlocked = upgrade;
+    }
+
+    public void setMultiStepPlasma(Boolean isCapable) {
+        isMultiStepPlasmaCapable = isCapable;
+    }
+
+    public void setPlasmaTier(Integer tier) {
+        plasmaTier = tier;
+    }
+
+    public int getPlasmaTier() {
+        return plasmaTier;
+    }
+
+    public void setMagmatterCapable(Boolean isCapable) {
+        isMagmatterCapable = isCapable;
+    }
+
+    public float getHeatEnergyDiscount() {
+        return isUpgrade83Unlocked ? 0.92f : 0.95f;
     }
 
     protected void fixAllIssues() {

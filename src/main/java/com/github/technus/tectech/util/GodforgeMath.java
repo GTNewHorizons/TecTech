@@ -27,23 +27,30 @@ public class GodforgeMath {
     }
 
     public static int calculateMaxFuelFactor(GT_MetaTileEntity_EM_ForgeOfGods godforge) {
-
-        if (godforge.isUpgradeActive(27)) {
-            return Integer.MAX_VALUE;
-        }
-
         int fuelCap = 5;
-        if (godforge.isUpgradeActive(9)) {
-            fuelCap += godforge.getTotalActiveUpgrades();
+        if (godforge.isUpgradeActive(27)) {
+            fuelCap = Integer.MAX_VALUE;
+        } else {
+            if (godforge.isUpgradeActive(9)) {
+                fuelCap += godforge.getTotalActiveUpgrades();
+            }
+            if (godforge.isUpgradeActive(3)) {
+                fuelCap *= 1.2;
+            }
         }
-
-        if (godforge.isUpgradeActive(3)) {
-            fuelCap *= 1.2;
-        }
-        return fuelCap;
+        return Math.max(fuelCap, 1);
     }
 
-    public static int calculateMaxHeatForModules(GT_MetaTileEntity_EM_BaseModule module,
+    public static int calculateEffectiveFuelFactor(GT_MetaTileEntity_EM_ForgeOfGods godforge) {
+        int fuelFactor = godforge.getFuelFactor();
+        if (fuelFactor <= 43) {
+            return fuelFactor;
+        } else {
+            return 43 + (int) Math.floor(Math.pow((fuelFactor - 43), 0.4));
+        }
+    }
+
+    public static void calculateMaxHeatForModules(GT_MetaTileEntity_EM_BaseModule module,
             GT_MetaTileEntity_EM_ForgeOfGods godforge) {
         double logBase = 1.5;
         int baseHeat = 12601;
@@ -54,10 +61,35 @@ public class GodforgeMath {
                 logBase = 1.18;
             }
         }
-        return baseHeat + (int) (Math.log(godforge.getFuelFactor()) / Math.log(logBase) * 1000);
+        int recipeHeat = baseHeat + (int) (Math.log(godforge.getFuelFactor()) / Math.log(logBase) * 1000);
+        module.setHeatForOC(calculateOverclockHeat(module, godforge, recipeHeat));
+        module.setHeat(recipeHeat);
     }
 
-    public static float calucateSpeedBonusForModules(GT_MetaTileEntity_EM_BaseModule module,
+    public static int calculateOverclockHeat(GT_MetaTileEntity_EM_BaseModule module,
+            GT_MetaTileEntity_EM_ForgeOfGods godforge, Integer recipeHeat) {
+        int actualHeat;
+        double exponent;
+        if (godforge.isUpgradeActive(20)) {
+            if (module instanceof GT_MetaTileEntity_EM_SmeltingModule) {
+                exponent = 0.85;
+            } else {
+                exponent = 0.8;
+            }
+            if (recipeHeat > 30000) {
+                actualHeat = (int) Math.floor(30000 + Math.pow(recipeHeat - 30000, exponent));
+            } else {
+                actualHeat = recipeHeat;
+            }
+        } else if (godforge.isUpgradeActive(17)) {
+            actualHeat = Math.min(recipeHeat, 30000);
+        } else {
+            actualHeat = Math.min(recipeHeat, 15000);
+        }
+        return actualHeat;
+    }
+
+    public static void calculateSpeedBonusForModules(GT_MetaTileEntity_EM_BaseModule module,
             GT_MetaTileEntity_EM_ForgeOfGods godforge) {
         double speedBonus = 1;
 
@@ -72,19 +104,10 @@ public class GodforgeMath {
                 speedBonus /= Math.pow(module.getMaxParallel(), 0.012);
             }
         }
-        return (float) speedBonus;
+        module.setSpeedBonus((float) speedBonus);
     }
 
-    public static int calculateEffectiveFuelFactor(GT_MetaTileEntity_EM_ForgeOfGods godforge) {
-        int fuelFactor = godforge.getFuelFactor();
-        if (fuelFactor <= 43) {
-            return fuelFactor;
-        } else {
-            return 43 + (int) Math.floor(Math.pow((fuelFactor - 43), 0.4));
-        }
-    }
-
-    public static int calucateMaxParallelForModules(GT_MetaTileEntity_EM_BaseModule module,
+    public static void calculateMaxParallelForModules(GT_MetaTileEntity_EM_BaseModule module,
             GT_MetaTileEntity_EM_ForgeOfGods godforge) {
         int baseParallel = 0;
         float fuelFactorMultiplier = 1;
@@ -140,6 +163,40 @@ public class GodforgeMath {
             }
         }
 
-        return (int) (baseParallel * node53 * fuelFactorMultiplier * heatMultiplier * upgradeAmountMultiplier);
+        module.setMaxParallel(
+                (int) (baseParallel * node53 * fuelFactorMultiplier * heatMultiplier * upgradeAmountMultiplier));
+    }
+
+    public static void calculateEnergyDiscountForModules(GT_MetaTileEntity_EM_BaseModule module,
+            GT_MetaTileEntity_EM_ForgeOfGods godforge) {
+        double discount = 1;
+
+        if (godforge.isUpgradeActive(19)) {
+            double fillRatioMinusZeroPointFive = (double) godforge.getBatteryCharge() / godforge.getMaxBatteryCharge()
+                    - 0.5;
+            if (module instanceof GT_MetaTileEntity_EM_PlasmaModule) {
+                discount = 1 - (Math.pow(fillRatioMinusZeroPointFive, 2) * (-0.6) + 0.15);
+            } else {
+                discount = 1 - (Math.pow(fillRatioMinusZeroPointFive, 2) * (-0.6) + 0.15) * 2 / 3;
+            }
+        }
+
+        module.setEnergyDiscount((float) discount);
+    }
+
+    public static void setMiscModuleParameters(GT_MetaTileEntity_EM_BaseModule module,
+            GT_MetaTileEntity_EM_ForgeOfGods godforge) {
+        int plasmaTier = 0;
+
+        if (godforge.isUpgradeActive(30)) {
+            plasmaTier = 2;
+        } else if (godforge.isUpgradeActive(24)) {
+            plasmaTier = 1;
+        }
+
+        module.setUpgrade83(godforge.isUpgradeActive(19));
+        module.setMultiStepPlasma(godforge.isUpgradeActive(15));
+        module.setPlasmaTier(plasmaTier);
+        module.setMagmatterCapable(godforge.isUpgradeActive(30));
     }
 }
