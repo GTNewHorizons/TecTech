@@ -99,6 +99,7 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
     private int selectedFuelType = 0;
     private int internalBattery = 0;
     private int maxBatteryCharge = 100;
+    private int gravitonShardsAvailable = 0;
     private long fuelConsumption = 0;
     private boolean batteryCharging = false;
     public ArrayList<GT_MetaTileEntity_EM_BaseModule> moduleHatches = new ArrayList<>();
@@ -664,6 +665,7 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
 
     private int currentUpgradeID = 0;
     private int currentColorCode = 0;
+    private int gravitonShardCost = 0;
     private int[] prereqUpgrades = new int[] {};
     private int[] followupUpgrades = new int[] {};
     private boolean allPrereqRequired = false;
@@ -676,7 +678,7 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
         final int PARENT_HEIGHT = 1000;
         ModularWindow.Builder builder = ModularWindow.builder(PARENT_WIDTH, PARENT_HEIGHT);
         scrollable.widget(
-                createUpgradeBox(0, 0, new int[] {}, false, new int[] { 1 }, false, new Pos2d(126, 56), scrollable))
+                createUpgradeBox(0, 0, new int[] {}, false, new int[] { 1 }, false, 0, new Pos2d(126, 56), scrollable))
                 .widget(
                         createUpgradeBox(
                                 1,
@@ -685,6 +687,7 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
                                 false,
                                 new int[] { 2, 3 },
                                 false,
+                                1,
                                 new Pos2d(126, 116),
                                 scrollable))
                 .widget(
@@ -695,6 +698,7 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
                                 false,
                                 new int[] { 4, 5 },
                                 false,
+                                1,
                                 new Pos2d(96, 176),
                                 scrollable))
                 .widget(
@@ -705,6 +709,7 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
                                 false,
                                 new int[] { 5, 6 },
                                 false,
+                                1,
                                 new Pos2d(156, 176),
                                 scrollable))
                 .widget(
@@ -715,6 +720,7 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
                                 false,
                                 new int[] { 8 },
                                 false,
+                                1,
                                 new Pos2d(66, 236),
                                 scrollable))
                 .widget(
@@ -725,6 +731,7 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
                                 false,
                                 new int[] { 7 },
                                 false,
+                                1,
                                 new Pos2d(126, 236),
                                 scrollable))
                 .widget(
@@ -735,6 +742,7 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
                                 false,
                                 new int[] { 10 },
                                 false,
+                                1,
                                 new Pos2d(186, 236),
                                 scrollable))
                 .widget(
@@ -745,6 +753,7 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
                                 false,
                                 new int[] { 8, 9, 10 },
                                 false,
+                                2,
                                 new Pos2d(126, 296),
                                 scrollable))
                 .widget(
@@ -755,6 +764,7 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
                                 true,
                                 new int[] { 11 },
                                 false,
+                                2,
                                 new Pos2d(56, 356),
                                 scrollable))
                 .widget(
@@ -765,6 +775,7 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
                                 false,
                                 new int[] {},
                                 false,
+                                2,
                                 new Pos2d(126, 356),
                                 scrollable))
                 .widget(
@@ -775,6 +786,7 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
                                 true,
                                 new int[] { 11 },
                                 false,
+                                2,
                                 new Pos2d(196, 356),
                                 scrollable))
                 .widget(
@@ -785,6 +797,7 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
                                 false,
                                 new int[] { 12, 13, 14 },
                                 false,
+                                2,
                                 new Pos2d(126, 416),
                                 scrollable))
                 .widget(
@@ -795,6 +808,7 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
                                 false,
                                 new int[] { 17 },
                                 true,
+                                3,
                                 new Pos2d(66, 476),
                                 scrollable))
                 .widget(
@@ -805,6 +819,7 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
                                 false,
                                 new int[] { 18 },
                                 true,
+                                3,
                                 new Pos2d(126, 476),
                                 scrollable))
                 .widget(
@@ -815,6 +830,7 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
                                 false,
                                 new int[] { 15, 19 },
                                 true,
+                                3,
                                 new Pos2d(186, 476),
                                 scrollable))
                 .widget(
@@ -825,6 +841,7 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
                                 false,
                                 new int[] {},
                                 false,
+                                4,
                                 new Pos2d(246, 496),
                                 scrollable))
                 .widget(
@@ -835,6 +852,7 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
                                 false,
                                 new int[] {},
                                 false,
+                                4,
                                 new Pos2d(6, 556),
                                 scrollable))
                 .widget(
@@ -845,6 +863,7 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
                                 false,
                                 new int[] { 16, 20 },
                                 false,
+                                3,
                                 new Pos2d(66, 536),
                                 scrollable))
                 .widget(
@@ -855,6 +874,7 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
                                 false,
                                 new int[] { 21 },
                                 false,
+                                3,
                                 new Pos2d(126, 536),
                                 scrollable))
                 .widget(
@@ -865,6 +885,7 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
                                 false,
                                 new int[] { 22 },
                                 false,
+                                3,
                                 new Pos2d(186, 536),
                                 scrollable))
                 .widget(
@@ -875,6 +896,7 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
                                 false,
                                 new int[] { 23 },
                                 false,
+                                3,
                                 new Pos2d(66, 596),
                                 scrollable))
                 .widget(
@@ -885,6 +907,7 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
                                 false,
                                 new int[] { 23 },
                                 false,
+                                3,
                                 new Pos2d(126, 596),
                                 scrollable))
                 .widget(
@@ -895,6 +918,7 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
                                 false,
                                 new int[] { 23 },
                                 false,
+                                3,
                                 new Pos2d(186, 596),
                                 scrollable))
                 .widget(
@@ -905,6 +929,7 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
                                 false,
                                 new int[] { 24 },
                                 false,
+                                4,
                                 new Pos2d(126, 656),
                                 scrollable))
                 .widget(
@@ -915,6 +940,7 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
                                 false,
                                 new int[] { 25 },
                                 false,
+                                5,
                                 new Pos2d(126, 718),
                                 scrollable))
                 .widget(
@@ -925,6 +951,7 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
                                 false,
                                 new int[] { 26 },
                                 false,
+                                6,
                                 new Pos2d(36, 758),
                                 scrollable))
                 .widget(
@@ -935,6 +962,7 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
                                 false,
                                 new int[] { 27 },
                                 false,
+                                7,
                                 new Pos2d(36, 848),
                                 scrollable))
                 .widget(
@@ -945,6 +973,7 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
                                 false,
                                 new int[] { 28 },
                                 false,
+                                8,
                                 new Pos2d(126, 888),
                                 scrollable))
                 .widget(
@@ -955,6 +984,7 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
                                 false,
                                 new int[] { 29 },
                                 false,
+                                9,
                                 new Pos2d(216, 848),
                                 scrollable))
                 .widget(
@@ -965,6 +995,7 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
                                 false,
                                 new int[] { 30 },
                                 false,
+                                10,
                                 new Pos2d(216, 758),
                                 scrollable))
                 .widget(
@@ -975,6 +1006,7 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
                                 false,
                                 new int[] {},
                                 false,
+                                12,
                                 new Pos2d(126, 798),
                                 scrollable))
                 .widget(new TextWidget("").setPos(0, 1000));
@@ -994,7 +1026,16 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
                                     new TextWidget(translateToLocal("fog.debug.resetbutton.text"))
                                             .setTextAlignment(Alignment.Center).setScale(0.57f).setMaxWidth(36)
                                             .setPos(3, 3))
+                            .addChild(
+                                    new NumericWidget().setSetter(val -> gravitonShardsAvailable = (int) val)
+                                            .setGetter(() -> gravitonShardsAvailable).setBounds(0, 112)
+                                            .setDefaultValue(0).setScrollValues(1, 4, 64)
+                                            .setTextAlignment(Alignment.Center).setTextColor(Color.WHITE.normal)
+                                            .setSize(25, 18).setPos(4, 16)
+                                            .addTooltip(translateToLocal("fog.debug.gravitonshardsetter.tooltip"))
+                                            .setBackground(GT_UITextures.BACKGROUND_TEXT_FIELD))
                             .setPos(4, 354));
+
         }
         return builder.build();
     }
@@ -1006,6 +1047,7 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
             case 3 -> TecTechUITextures.BACKGROUND_GLOW_GREEN;
             default -> TecTechUITextures.BACKGROUND_GLOW_BLUE;
         };
+        new TextWidget();
         ModularWindow.Builder builder = ModularWindow.builder(200, 200).setBackground(background)
                 .widget(ButtonWidget.closeWindowButton(true).setPos(185, 3))
                 .widget(
@@ -1018,7 +1060,24 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
                                         new TextWidget(translateToLocal("fog.upgrade.lore." + (currentUpgradeID)))
                                                 .setTextAlignment(Alignment.Center).setMaxWidth(185)
                                                 .setDefaultColor(0x9c9c9c).setPos(9, 110))
-                                .setSize(200, 200))
+                                .addChild(
+                                        new TextWidget(
+                                                translateToLocal("gt.blockmachines.multimachine.FOG.shardcost") + " "
+                                                        + EnumChatFormatting.BLUE
+                                                        + gravitonShardCost).setTextAlignment(Alignment.Center)
+                                                                .setScale(0.7f).setMaxWidth(70)
+                                                                .setDefaultColor(0x9c9c9c).setPos(7, 178))
+                                .addChild(
+                                        new TextWidget(
+                                                translateToLocal("gt.blockmachines.multimachine.FOG.availableshards"))
+                                                        .setTextAlignment(Alignment.Center).setScale(0.7f)
+                                                        .setMaxWidth(90).setDefaultColor(0x9c9c9c).setPos(113, 178))
+                                .addChild(
+                                        TextWidget.dynamicText(this::gravitonShardAmount)
+                                                .setTextAlignment(Alignment.Center).setScale(0.7f).setMaxWidth(90)
+                                                .setDefaultColor(0x9c9c9c).setPos(173, 185)))
+                .setSize(200, 200)
+
                 .widget(new MultiChildWidget().addChild(new ButtonWidget().setOnClick((clickData, widget) -> {
                     int unlockedPrereqUpgrades = 0;
                     int unlockedFollowupUpgrades = 0;
@@ -1030,7 +1089,9 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
                             }
                         }
                         if (allPrereqRequired) {
-                            if (unlockedPrereqUpgrades == prereqUpgrades.length) {
+                            if (unlockedPrereqUpgrades == prereqUpgrades.length
+                                    && gravitonShardsAvailable >= gravitonShardCost) {
+                                gravitonShardsAvailable -= gravitonShardCost;
                                 upgrades[currentUpgradeID] = true;
                             }
                         } else if (unlockedPrereqUpgrades > 0 || prereqUpgrades.length == 0) {
@@ -1046,7 +1107,8 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
                                     }
                                 }
                             }
-                            if (unlockedSplitUpgrades <= 0) {
+                            if (unlockedSplitUpgrades <= 0 && gravitonShardsAvailable >= gravitonShardCost) {
+                                gravitonShardsAvailable -= gravitonShardCost;
                                 upgrades[currentUpgradeID] = true;
                             }
                         }
@@ -1057,6 +1119,7 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
                             }
                         }
                         if (unlockedFollowupUpgrades == 0) {
+                            gravitonShardsAvailable += gravitonShardCost;
                             upgrades[currentUpgradeID] = false;
                         }
                     }
@@ -1083,14 +1146,16 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
      *                                unlock this one. True means ALL, False means AT LEAST ONE
      * @param followingUpgradeIDs     IDs of the following upgrades directly connected to the current one
      * @param isStartOfSplit          Whether this upgrade is one of the initial split upgrades
+     * @param shardCost               How many graviton shards are needed to unlock this upgrade
      * @param pos                     Position of the upgrade inside the scrollableWidget
      */
     private Widget createUpgradeBox(int upgradeID, int colorCode, int[] prerequisiteUpgradeIDs,
-            boolean requireAllPrerequisites, int[] followingUpgradeIDs, boolean isStartOfSplit, Pos2d pos,
-            IWidgetBuilder<?> builder) {
+            boolean requireAllPrerequisites, int[] followingUpgradeIDs, boolean isStartOfSplit, int shardCost,
+            Pos2d pos, IWidgetBuilder<?> builder) {
         return new MultiChildWidget().addChild(new ButtonWidget().setOnClick((clickData, widget) -> {
             currentUpgradeID = upgradeID;
             currentColorCode = colorCode;
+            gravitonShardCost = shardCost;
             prereqUpgrades = prerequisiteUpgradeIDs;
             allPrereqRequired = requireAllPrerequisites;
             followupUpgrades = followingUpgradeIDs;
@@ -1167,6 +1232,15 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
         return new Text(fuelConsumption + " L/5s");
     }
 
+    private Text gravitonShardAmount() {
+        EnumChatFormatting enoughGravitonShards = EnumChatFormatting.RED;
+        if (gravitonShardsAvailable >= gravitonShardCost) {
+            enoughGravitonShards = EnumChatFormatting.GREEN;
+        }
+        return new Text(enoughGravitonShards + Integer.toString(gravitonShardsAvailable));
+
+    }
+
     private Text storedFuel() {
         return new Text(
                 translateToLocal("gt.blockmachines.multimachine.FOG.storedfuel") + " "
@@ -1216,6 +1290,7 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
         NBT.setInteger("internalBattery", internalBattery);
         NBT.setBoolean("batteryCharging", batteryCharging);
         NBT.setInteger("batterySize", maxBatteryCharge);
+        NBT.setInteger("gravitonShardsAvailable", gravitonShardsAvailable);
 
         // Store booleanArray of all upgrades
         NBTTagCompound upgradeBooleanArrayNBTTag = new NBTTagCompound();
@@ -1239,6 +1314,7 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
         internalBattery = NBT.getInteger("internalBattery");
         batteryCharging = NBT.getBoolean("batteryCharging");
         maxBatteryCharge = NBT.getInteger("batterySize");
+        gravitonShardsAvailable = NBT.getInteger("gravitonShardsAvailable");
 
         NBTTagCompound tempBooleanTag = NBT.getCompoundTag("upgrades");
 
