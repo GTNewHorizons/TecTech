@@ -69,6 +69,10 @@ public class TecTechUITextures {
             .fullImage(MODID, "gui/overlay_button/parametrizer_if");
     public static final UITexture OVERLAY_BUTTON_ARROW_BLUE_UP = UITexture
             .fullImage(MODID, "gui/overlay_button/arrow_blue_up");
+    public static final UITexture OVERLAY_BUTTON_BATTERY_ON = UITexture
+            .fullImage(MODID, "gui/overlay_button/battery_on");
+    public static final UITexture OVERLAY_BUTTON_BATTERY_OFF = UITexture
+            .fullImage(MODID, "gui/overlay_button/battery_off");
 
     public static final UITexture OVERLAY_SLOT_RACK = UITexture.fullImage(MODID, "gui/overlay_slot/rack");
     public static final UITexture OVERLAY_SLOT_MESH = UITexture.fullImage(MODID, "gui/overlay_slot/mesh");

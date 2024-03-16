@@ -98,7 +98,9 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
     private int fuelConsumptionFactor = 1;
     private int selectedFuelType = 0;
     private int internalBattery = 0;
+    private int maxBatteryCharge = 100;
     private long fuelConsumption = 0;
+    private boolean batteryCharging = false;
     public ArrayList<GT_MetaTileEntity_EM_BaseModule> moduleHatches = new ArrayList<>();
 
     private static int spacetimeCompressionFieldMetadata = -1;
@@ -106,7 +108,7 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
     private static final int FUEL_CONFIG_WINDOW_ID = 9;
     private static final int UPGRADE_TREE_WINDOW_ID = 10;
     private static final int INDIVIDUAL_UPGRADE_WINDOW_ID = 11;
-    private static final int MAX_BATTERY_CHARGE = 100;
+    private static final int BATTERY_CONFIG_WINDOW_ID = 12;
     private static final int[] FIRST_SPLIT_UPGRADES = new int[] { 12, 13, 14 };
     private static final int[] RING_UPGRADES = new int[] { 26, 29 };
     protected static final String STRUCTURE_PIECE_MAIN = "main";
@@ -273,19 +275,19 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
                     ticker = 0;
                     FluidStack fluidInHatch = mInputHatches.get(0).getFluid();
 
-                    fuelConsumption = (long) calculateFuelConsumption(this);
+                    fuelConsumption = (long) calculateFuelConsumption(this) * 5 * (batteryCharging ? 2 : 1);
                     if (fluidInHatch != null && fluidInHatch.isFluidEqual(validFuelList.get(selectedFuelType))) {
                         FluidStack fluidNeeded = new FluidStack(
                                 validFuelList.get(selectedFuelType),
                                 (int) fuelConsumption);
                         FluidStack fluidReal = mInputHatches.get(0).drain(fluidNeeded.amount, true);
                         if (fluidReal == null || fluidReal.amount < fluidNeeded.amount) {
-                            reduceBattery(1);
-                        } else {
-                            increaseBattery(1);
+                            reduceBattery(fuelConsumptionFactor);
+                        } else if (batteryCharging) {
+                            increaseBattery(fuelConsumptionFactor);
                         }
                     } else {
-                        reduceBattery(1);
+                        reduceBattery(fuelConsumptionFactor);
                     }
                     // Do module calculations and checks
                     if (moduleHatches.size() > 0 && internalBattery > 0) {
@@ -427,6 +429,7 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
         buildContext.addSyncedWindow(UPGRADE_TREE_WINDOW_ID, this::createUpgradeTreeWindow);
         buildContext.addSyncedWindow(INDIVIDUAL_UPGRADE_WINDOW_ID, this::createIndividualUpgradeWindow);
         buildContext.addSyncedWindow(FUEL_CONFIG_WINDOW_ID, this::createFuelConfigWindow);
+        buildContext.addSyncedWindow(BATTERY_CONFIG_WINDOW_ID, this::createBatteryWindow);
         builder.widget(
                 new ButtonWidget().setOnClick(
                         (clickData, widget) -> {
@@ -449,13 +452,11 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
                                     button.add(TecTechUITextures.BUTTON_CELESTIAL_32x32);
                                     button.add(TecTechUITextures.OVERLAY_BUTTON_HEAT_ON);
                                     return button.toArray(new IDrawable[0]);
-                                }).addTooltip(translateToLocal("fog.button.fuelconfig.tooltip")).setPos(174, 129))
+                                }).addTooltip(translateToLocal("fog.button.fuelconfig.tooltip")).setPos(174, 110))
                 .widget(
-                        TextWidget.dynamicText(this::storedFuel).setDefaultColor(EnumChatFormatting.WHITE).setPos(3, 5)
-                                .setSize(74, 34));
-
-        Widget powerSwitchButton = createPowerSwitchButton();
-        builder.widget(powerSwitchButton)
+                        TextWidget.dynamicText(this::storedFuel).setDefaultColor(EnumChatFormatting.WHITE).setPos(6, 8)
+                                .setSize(74, 34))
+                .widget(createPowerSwitchButton()).widget(createBatteryButton(builder))
                 .widget(new FakeSyncWidget.BooleanSyncer(() -> getBaseMetaTileEntity().isAllowedToWork(), val -> {
                     if (val) {
                         getBaseMetaTileEntity().enableWorking();
@@ -488,6 +489,57 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
         return (ButtonWidget) button;
     }
 
+    protected Widget createBatteryButton(IWidgetBuilder<?> builder) {
+        Widget button = new ButtonWidget().setOnClick((clickData, widget) -> {
+            TecTech.proxy.playSound(getBaseMetaTileEntity(), "fx_click");
+            if (clickData.mouseButton == 0) {
+                batteryCharging = !batteryCharging;
+            } else if (clickData.mouseButton == 1 && !widget.isClient() && upgrades[8]) {
+                widget.getContext().openSyncedWindow(BATTERY_CONFIG_WINDOW_ID);
+            }
+        }).setPlayClickSound(false).setBackground(() -> {
+            List<UITexture> ret = new ArrayList<>();
+            ret.add(TecTechUITextures.BUTTON_CELESTIAL_32x32);
+            if (batteryCharging) {
+                ret.add(TecTechUITextures.OVERLAY_BUTTON_BATTERY_ON);
+            } else {
+                ret.add(TecTechUITextures.OVERLAY_BUTTON_BATTERY_OFF);
+            }
+            return ret.toArray(new IDrawable[0]);
+        }).setPos(174, 129).setSize(16, 16);
+        button.addTooltip(translateToLocal("fog.button.battery.tooltip.01"))
+                .addTooltip(EnumChatFormatting.GRAY + translateToLocal("fog.button.battery.tooltip.02"))
+                .setTooltipShowUpDelay(TOOLTIP_DELAY).attachSyncer(
+                        new FakeSyncWidget.BooleanSyncer(() -> batteryCharging, val -> batteryCharging = val),
+                        builder);
+        return button;
+    }
+
+    protected ModularWindow createBatteryWindow(final EntityPlayer player) {
+        final int WIDTH = 78;
+        final int HEIGHT = 52;
+        final int PARENT_WIDTH = getGUIWidth();
+        final int PARENT_HEIGHT = getGUIHeight();
+        ModularWindow.Builder builder = ModularWindow.builder(WIDTH, HEIGHT);
+        builder.setBackground(GT_UITextures.BACKGROUND_SINGLEBLOCK_DEFAULT);
+        builder.setGuiTint(getGUIColorization());
+        builder.setDraggable(true);
+        builder.setPos(
+                (size, window) -> Alignment.Center.getAlignedPos(size, new Size(PARENT_WIDTH, PARENT_HEIGHT)).add(
+                        Alignment.BottomRight
+                                .getAlignedPos(new Size(PARENT_WIDTH, PARENT_HEIGHT), new Size(WIDTH, HEIGHT))
+                                .add(WIDTH - 3, 0).subtract(0, 10)));
+        builder.widget(
+                TextWidget.localised("gt.blockmachines.multimachine.FOG.batteryinfo").setPos(3, 4).setSize(74, 20))
+                .widget(
+                        new NumericWidget().setSetter(val -> maxBatteryCharge = (int) val)
+                                .setGetter(() -> maxBatteryCharge).setBounds(1, Integer.MAX_VALUE).setDefaultValue(100)
+                                .setScrollValues(1, 4, 64).setTextAlignment(Alignment.Center)
+                                .setTextColor(Color.WHITE.normal).setSize(70, 18).setPos(4, 25)
+                                .setBackground(GT_UITextures.BACKGROUND_TEXT_FIELD));
+        return builder.build();
+    }
+
     protected ModularWindow createFuelConfigWindow(final EntityPlayer player) {
         final int WIDTH = 78;
         final int HEIGHT = 130;
@@ -507,7 +559,7 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
                         new NumericWidget().setSetter(val -> fuelConsumptionFactor = (int) val)
                                 .setGetter(() -> fuelConsumptionFactor).setBounds(1, calculateMaxFuelFactor(this))
                                 .setDefaultValue(1).setScrollValues(1, 4, 64).setTextAlignment(Alignment.Center)
-                                .setTextColor(Color.WHITE.normal).setSize(70, 18).setPos(3, 35)
+                                .setTextColor(Color.WHITE.normal).setSize(70, 18).setPos(4, 35)
                                 .setBackground(GT_UITextures.BACKGROUND_TEXT_FIELD))
                 .widget(
                         new DrawableWidget().setDrawable(GT_UITextures.PICTURE_INFORMATION).setPos(65, 25)
@@ -1112,17 +1164,22 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
     }
 
     private Text fuelUsage() {
-        return new Text(fuelConsumption + " L/s");
+        return new Text(fuelConsumption + " L/5s");
     }
 
     private Text storedFuel() {
         return new Text(
-                translateToLocal("gt.blockmachines.multimachine.FOG.storedfuel") + " " + internalBattery + "/100");
+                translateToLocal("gt.blockmachines.multimachine.FOG.storedfuel") + " "
+                        + internalBattery
+                        + "/"
+                        + maxBatteryCharge);
     }
 
     private void increaseBattery(Integer amount) {
-        if ((internalBattery + amount) <= MAX_BATTERY_CHARGE) {
+        if ((internalBattery + amount) <= maxBatteryCharge) {
             internalBattery += amount;
+        } else {
+            batteryCharging = false;
         }
     }
 
@@ -1144,7 +1201,7 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
     }
 
     public int getMaxBatteryCharge() {
-        return MAX_BATTERY_CHARGE;
+        return maxBatteryCharge;
     }
 
     @Override
@@ -1157,6 +1214,8 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
         NBT.setInteger("selectedFuelType", selectedFuelType);
         NBT.setInteger("fuelConsumptionFactor", fuelConsumptionFactor);
         NBT.setInteger("internalBattery", internalBattery);
+        NBT.setBoolean("batteryCharging", batteryCharging);
+        NBT.setInteger("batterySize", maxBatteryCharge);
 
         // Store booleanArray of all upgrades
         NBTTagCompound upgradeBooleanArrayNBTTag = new NBTTagCompound();
@@ -1178,6 +1237,8 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
         selectedFuelType = NBT.getInteger("selectedFuelType");
         fuelConsumptionFactor = NBT.getInteger("fuelConsumptionFactor");
         internalBattery = NBT.getInteger("internalBattery");
+        batteryCharging = NBT.getBoolean("batteryCharging");
+        maxBatteryCharge = NBT.getInteger("batterySize");
 
         NBTTagCompound tempBooleanTag = NBT.getCompoundTag("upgrades");
 

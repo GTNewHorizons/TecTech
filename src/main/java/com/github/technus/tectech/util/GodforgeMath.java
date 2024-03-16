@@ -169,19 +169,24 @@ public class GodforgeMath {
 
     public static void calculateEnergyDiscountForModules(GT_MetaTileEntity_EM_BaseModule module,
             GT_MetaTileEntity_EM_ForgeOfGods godforge) {
-        double discount = 1;
+        double fillRatioDiscount = 1;
+        double maxBatteryDiscount = 1;
+
+        if (godforge.isUpgradeActive(8)) {
+            maxBatteryDiscount = 1 - (1 - Math.pow(1.001, -0.01 * godforge.getMaxBatteryCharge())) / 20;
+        }
 
         if (godforge.isUpgradeActive(19)) {
             double fillRatioMinusZeroPointFive = (double) godforge.getBatteryCharge() / godforge.getMaxBatteryCharge()
                     - 0.5;
             if (module instanceof GT_MetaTileEntity_EM_PlasmaModule) {
-                discount = 1 - (Math.pow(fillRatioMinusZeroPointFive, 2) * (-0.6) + 0.15);
+                fillRatioDiscount = 1 - (Math.pow(fillRatioMinusZeroPointFive, 2) * (-0.6) + 0.15);
             } else {
-                discount = 1 - (Math.pow(fillRatioMinusZeroPointFive, 2) * (-0.6) + 0.15) * 2 / 3;
+                fillRatioDiscount = 1 - (Math.pow(fillRatioMinusZeroPointFive, 2) * (-0.6) + 0.15) * 2 / 3;
             }
         }
 
-        module.setEnergyDiscount((float) discount);
+        module.setEnergyDiscount((float) (fillRatioDiscount * maxBatteryDiscount));
     }
 
     public static void setMiscModuleParameters(GT_MetaTileEntity_EM_BaseModule module,
