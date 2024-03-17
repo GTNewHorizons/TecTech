@@ -33,7 +33,6 @@ import com.github.technus.tectech.util.CommonValues;
 
 import gregtech.api.enums.Materials;
 import gregtech.api.enums.Textures;
-import gregtech.api.enums.TierEU;
 import gregtech.api.interfaces.ITexture;
 import gregtech.api.interfaces.metatileentity.IMetaTileEntity;
 import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
@@ -115,9 +114,9 @@ public class GT_MetaTileEntity_EM_MoltenModule extends GT_MetaTileEntity_EM_Base
             @Nonnull
             @Override
             protected GT_OverclockCalculator createOverclockCalculator(@Nonnull GT_Recipe recipe) {
-                return super.createOverclockCalculator(recipe).setEUt(TierEU.MAX).setRecipeHeat(recipe.mSpecialValue)
-                        .setHeatOC(true).setHeatDiscount(true).setMachineHeat(getHeatForOC())
-                        .setHeatDiscountMultiplier(getHeatEnergyDiscount());
+                return super.createOverclockCalculator(recipe).setEUt(getProcessingVoltage())
+                        .setRecipeHeat(recipe.mSpecialValue).setHeatOC(true).setHeatDiscount(true)
+                        .setMachineHeat(getHeatForOC()).setHeatDiscountMultiplier(getHeatEnergyDiscount());
 
             }
 

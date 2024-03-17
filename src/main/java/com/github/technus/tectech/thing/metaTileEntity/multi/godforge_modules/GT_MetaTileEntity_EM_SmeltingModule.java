@@ -39,7 +39,6 @@ import com.gtnewhorizons.modularui.common.widget.ButtonWidget;
 import com.gtnewhorizons.modularui.common.widget.FakeSyncWidget;
 
 import gregtech.api.enums.Textures;
-import gregtech.api.enums.TierEU;
 import gregtech.api.gui.modularui.GT_UITextures;
 import gregtech.api.interfaces.ITexture;
 import gregtech.api.interfaces.metatileentity.IMetaTileEntity;
@@ -135,9 +134,9 @@ public class GT_MetaTileEntity_EM_SmeltingModule extends GT_MetaTileEntity_EM_Ba
             @Nonnull
             @Override
             protected GT_OverclockCalculator createOverclockCalculator(@Nonnull GT_Recipe recipe) {
-                return super.createOverclockCalculator(recipe).setEUt(TierEU.MAX).setRecipeHeat(recipe.mSpecialValue)
-                        .setHeatOC(true).setHeatDiscount(true).setMachineHeat(getHeatForOC())
-                        .setHeatDiscountMultiplier(getHeatEnergyDiscount());
+                return super.createOverclockCalculator(recipe).setEUt(getProcessingVoltage())
+                        .setRecipeHeat(recipe.mSpecialValue).setHeatOC(true).setHeatDiscount(true)
+                        .setMachineHeat(getHeatForOC()).setHeatDiscountMultiplier(getHeatEnergyDiscount());
             }
         };
     }

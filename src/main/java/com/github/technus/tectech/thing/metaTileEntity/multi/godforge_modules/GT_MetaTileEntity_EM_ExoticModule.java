@@ -212,7 +212,7 @@ public class GT_MetaTileEntity_EM_ExoticModule extends GT_MetaTileEntity_EM_Base
             @Nonnull
             @Override
             protected GT_OverclockCalculator createOverclockCalculator(@Nonnull GT_Recipe recipe) {
-                return super.createOverclockCalculator(recipe).setEUt(TierEU.MAX).setNoOverclock(true);
+                return super.createOverclockCalculator(recipe).setEUt(getProcessingVoltage());
             }
 
         };

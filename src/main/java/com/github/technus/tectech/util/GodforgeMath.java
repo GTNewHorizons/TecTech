@@ -189,6 +189,28 @@ public class GodforgeMath {
         module.setEnergyDiscount((float) (fillRatioDiscount * maxBatteryDiscount));
     }
 
+    public static void calculateProcessingVoltageForModules(GT_MetaTileEntity_EM_BaseModule module,
+            GT_MetaTileEntity_EM_ForgeOfGods godforge) {
+        long voltage = Integer.MAX_VALUE;
+
+        if (godforge.isUpgradeActive(4)) {
+            voltage += calculateEffectiveFuelFactor(godforge) * 100_000_000L;
+        }
+
+        if (godforge.isUpgradeActive(23)) {
+            int ringAmount = 0;
+            if (godforge.isUpgradeActive(26)) {
+                ringAmount++;
+            }
+            if (godforge.isUpgradeActive(29)) {
+                ringAmount++;
+            }
+            voltage *= Math.pow(4, ringAmount);
+        }
+
+        module.setProcessingVoltage(voltage);
+    }
+
     public static void setMiscModuleParameters(GT_MetaTileEntity_EM_BaseModule module,
             GT_MetaTileEntity_EM_ForgeOfGods godforge) {
         int plasmaTier = 0;
@@ -203,5 +225,6 @@ public class GodforgeMath {
         module.setMultiStepPlasma(godforge.isUpgradeActive(15));
         module.setPlasmaTier(plasmaTier);
         module.setMagmatterCapable(godforge.isUpgradeActive(30));
+        module.setVoltageConfig(godforge.isUpgradeActive(28));
     }
 }

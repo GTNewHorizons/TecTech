@@ -974,9 +974,11 @@ fog.debug.gravitonshardsetter.tooltip=Set the amount of availabe graviton shards
 fog.button.fuelconfig.tooltip=Fuel Configuration Menu
 fog.button.furnacemode.tooltip=Toggle Furnace Mode
 fog.button.magmattermode.tooltip.01=Toggle Magmatter Mode
-fog.button.magmattermode.tooltip.02=Magmatter Mode Locked, missing upgrade
+fog.button.magmattermode.tooltip.02=Magmatter Mode locked, missing upgrade
 fog.button.battery.tooltip.01=Toggle Battery Charging
 fog.button.battery.tooltip.02=Right click to open configuration menu (if unlocked)
+fog.button.voltageconfig.tooltip.01=Open voltage config
+fog.button.voltageconfig.tooltip.02=Voltage config locked, missing upgrade
 
 
 achievement.gt.blockmachines.multimachine.em.forge_of_gods=Forge of the Gods
@@ -1008,6 +1010,7 @@ gt.blockmachines.multimachine.FOG.availableshards=Available Graviton Shards:
 gt.blockmachines.multimachine.FOG.modulestatus=Status:
 gt.blockmachines.multimachine.FOG.modulestatus.true=Connected
 gt.blockmachines.multimachine.FOG.modulestatus.false=Disconnected
+gt.blockmachines.multimachine.FOG.voltageinfo=Set processing voltage
 
 # Optical Circuits
 achievement.gt.metaitem.03.32155=Optical Assembly

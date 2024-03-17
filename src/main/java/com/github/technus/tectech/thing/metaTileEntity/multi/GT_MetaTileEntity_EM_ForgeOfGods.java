@@ -9,6 +9,7 @@ import static com.github.technus.tectech.util.GodforgeMath.calculateFuelConsumpt
 import static com.github.technus.tectech.util.GodforgeMath.calculateMaxFuelFactor;
 import static com.github.technus.tectech.util.GodforgeMath.calculateMaxHeatForModules;
 import static com.github.technus.tectech.util.GodforgeMath.calculateMaxParallelForModules;
+import static com.github.technus.tectech.util.GodforgeMath.calculateProcessingVoltageForModules;
 import static com.github.technus.tectech.util.GodforgeMath.calculateSpeedBonusForModules;
 import static com.github.technus.tectech.util.GodforgeMath.setMiscModuleParameters;
 import static com.gtnewhorizon.structurelib.structure.StructureUtility.ofBlock;
@@ -308,6 +309,9 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
                             calculateMaxParallelForModules(module, this);
                             calculateEnergyDiscountForModules(module, this);
                             setMiscModuleParameters(module, this);
+                            if (!upgrades[28]) {
+                                calculateProcessingVoltageForModules(module, this);
+                            }
                         }
                     } else if (moduleHatches.size() > maxModuleCount) {
                         for (GT_MetaTileEntity_EM_BaseModule module : moduleHatches) {
@@ -457,16 +461,16 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
                 .widget(
                         new DrawableWidget().setDrawable(TecTechUITextures.PICTURE_HEAT_SINK_SMALL).setPos(174, 183)
                                 .setSize(16, 6))
-                .widget(
-                        new ButtonWidget().setOnClick(
-                                (clickData, widget) -> {
-                                    if (!widget.isClient()) widget.getContext().openSyncedWindow(FUEL_CONFIG_WINDOW_ID);
-                                }).setSize(16, 16).setBackground(() -> {
-                                    List<UITexture> button = new ArrayList<>();
-                                    button.add(TecTechUITextures.BUTTON_CELESTIAL_32x32);
-                                    button.add(TecTechUITextures.OVERLAY_BUTTON_HEAT_ON);
-                                    return button.toArray(new IDrawable[0]);
-                                }).addTooltip(translateToLocal("fog.button.fuelconfig.tooltip")).setPos(174, 110))
+                .widget(new ButtonWidget().setOnClick((clickData, widget) -> {
+                    if (!widget.isClient()) {
+                        widget.getContext().openSyncedWindow(FUEL_CONFIG_WINDOW_ID);
+                    }
+                }).setSize(16, 16).setBackground(() -> {
+                    List<UITexture> button = new ArrayList<>();
+                    button.add(TecTechUITextures.BUTTON_CELESTIAL_32x32);
+                    button.add(TecTechUITextures.OVERLAY_BUTTON_HEAT_ON);
+                    return button.toArray(new IDrawable[0]);
+                }).addTooltip(translateToLocal("fog.button.fuelconfig.tooltip")).setPos(174, 110))
                 .widget(
                         TextWidget.dynamicText(this::storedFuel).setDefaultColor(EnumChatFormatting.WHITE).setPos(6, 8)
                                 .setSize(74, 34))
