@@ -3,11 +3,13 @@ package com.github.technus.tectech.thing.metaTileEntity.multi.godforge_modules;
 import static com.github.technus.tectech.thing.casing.GT_Block_CasingsTT.texturePage;
 import static gregtech.common.misc.WirelessNetworkManager.addEUToGlobalEnergyMap;
 import static gregtech.common.misc.WirelessNetworkManager.processInitialSettings;
+import static net.minecraft.util.StatCollector.translateToLocal;
 
 import java.util.UUID;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.EnumChatFormatting;
 import net.minecraftforge.common.util.ForgeDirection;
 
 import com.github.technus.tectech.thing.casing.TT_Container_Casings;
@@ -16,11 +18,13 @@ import com.github.technus.tectech.thing.metaTileEntity.multi.base.render.TT_Rend
 import com.gtnewhorizon.structurelib.structure.IStructureDefinition;
 import com.gtnewhorizon.structurelib.structure.StructureDefinition;
 import com.gtnewhorizon.structurelib.structure.StructureUtility;
+import com.gtnewhorizons.modularui.api.drawable.Text;
 import com.gtnewhorizons.modularui.api.screen.ModularWindow;
 import com.gtnewhorizons.modularui.api.screen.UIBuildContext;
 import com.gtnewhorizons.modularui.common.widget.DrawableWidget;
 import com.gtnewhorizons.modularui.common.widget.DynamicPositionedColumn;
 import com.gtnewhorizons.modularui.common.widget.SlotWidget;
+import com.gtnewhorizons.modularui.common.widget.TextWidget;
 
 import gregtech.api.enums.Textures;
 import gregtech.api.gui.modularui.GT_UITextures;
@@ -229,6 +233,10 @@ public class GT_MetaTileEntity_EM_BaseModule extends GT_MetaTileEntity_Multibloc
         drawTexts(screenElements, inventorySlot);
         builder.widget(screenElements);
 
+        builder.widget(
+                TextWidget.dynamicText(this::connectionStatus).setDefaultColor(EnumChatFormatting.BLACK).setPos(75, 94)
+                        .setSize(100, 10));
+
         builder.widget(createPowerSwitchButton(builder)).widget(createVoidExcessButton(builder))
                 .widget(createInputSeparationButton(builder)).widget(createBatchModeButton(builder))
                 .widget(createLockToSingleRecipeButton(builder));
@@ -265,6 +273,15 @@ public class GT_MetaTileEntity_EM_BaseModule extends GT_MetaTileEntity_Multibloc
     @Override
     public boolean willExplodeInRain() {
         return false;
+    }
+
+    private Text connectionStatus() {
+        String status = EnumChatFormatting.RED
+                + translateToLocal("gt.blockmachines.multimachine.FOG.modulestatus.false");
+        if (isConnected) {
+            status = EnumChatFormatting.GREEN + translateToLocal("gt.blockmachines.multimachine.FOG.modulestatus.true");
+        }
+        return new Text(translateToLocal("gt.blockmachines.multimachine.FOG.modulestatus") + " " + status);
     }
 
     @Override

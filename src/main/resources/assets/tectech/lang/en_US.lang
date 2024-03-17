@@ -1005,6 +1005,9 @@ gt.blockmachines.multimachine.FOG.storedfuel=Stored fuel amount:
 gt.blockmachines.multimachine.FOG.batteryinfo=Set battery size
 gt.blockmachines.multimachine.FOG.shardcost=Graviton Shard cost:
 gt.blockmachines.multimachine.FOG.availableshards=Available Graviton Shards:
+gt.blockmachines.multimachine.FOG.modulestatus=Status:
+gt.blockmachines.multimachine.FOG.modulestatus.true=Connected
+gt.blockmachines.multimachine.FOG.modulestatus.false=Disconnected
 
 # Optical Circuits
 achievement.gt.metaitem.03.32155=Optical Assembly
