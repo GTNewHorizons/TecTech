@@ -1298,6 +1298,30 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
     protected void setHatchRecipeMap(GT_MetaTileEntity_Hatch_Input hatch) {}
 
     @Override
+    public void setItemNBT(NBTTagCompound NBT) {
+        NBT.setInteger("spacetimeCompressionTier", spacetimeCompressionFieldMetadata + 1);
+        NBT.setInteger("solenoidCoilTier", solenoidCoilMetadata - 7);
+        NBT.setInteger("selectedFuelType", selectedFuelType);
+        NBT.setInteger("fuelConsumptionFactor", fuelConsumptionFactor);
+        NBT.setInteger("internalBattery", internalBattery);
+        NBT.setBoolean("batteryCharging", batteryCharging);
+        NBT.setInteger("batterySize", maxBatteryCharge);
+        NBT.setInteger("gravitonShardsAvailable", gravitonShardsAvailable);
+
+        // Store booleanArray of all upgrades
+        NBTTagCompound upgradeBooleanArrayNBTTag = new NBTTagCompound();
+
+        int upgradeIndex = 0;
+        for (Boolean upgrade : upgrades) {
+            upgradeBooleanArrayNBTTag.setBoolean("upgrade" + upgradeIndex, upgrade);
+            upgradeIndex++;
+        }
+
+        NBT.setTag("upgrades", upgradeBooleanArrayNBTTag);
+        super.saveNBTData(NBT);
+    }
+
+    @Override
     public void saveNBTData(NBTTagCompound NBT) {
         NBT.setInteger("spacetimeCompressionTier", spacetimeCompressionFieldMetadata + 1);
         NBT.setInteger("solenoidCoilTier", solenoidCoilMetadata - 7);
