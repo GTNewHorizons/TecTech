@@ -214,6 +214,7 @@ public class GodforgeMath {
     public static void setMiscModuleParameters(GT_MetaTileEntity_EM_BaseModule module,
             GT_MetaTileEntity_EM_ForgeOfGods godforge) {
         int plasmaTier = 0;
+        double overclockTimeFactor = 2;
 
         if (godforge.isUpgradeActive(30)) {
             plasmaTier = 2;
@@ -221,10 +222,19 @@ public class GodforgeMath {
             plasmaTier = 1;
         }
 
+        if (godforge.isUpgradeActive(14)) {
+            if (module instanceof GT_MetaTileEntity_EM_PlasmaModule) {
+                overclockTimeFactor = 2.3;
+            } else {
+                overclockTimeFactor = 2.15;
+            }
+        }
+
         module.setUpgrade83(godforge.isUpgradeActive(19));
         module.setMultiStepPlasma(godforge.isUpgradeActive(15));
         module.setPlasmaTier(plasmaTier);
         module.setMagmatterCapable(godforge.isUpgradeActive(30));
         module.setVoltageConfig(godforge.isUpgradeActive(28));
+        module.setOverclockTimeFactor(overclockTimeFactor);
     }
 }

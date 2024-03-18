@@ -116,7 +116,8 @@ public class GT_MetaTileEntity_EM_MoltenModule extends GT_MetaTileEntity_EM_Base
             protected GT_OverclockCalculator createOverclockCalculator(@Nonnull GT_Recipe recipe) {
                 return super.createOverclockCalculator(recipe).setEUt(getProcessingVoltage())
                         .setRecipeHeat(recipe.mSpecialValue).setHeatOC(true).setHeatDiscount(true)
-                        .setMachineHeat(getHeatForOC()).setHeatDiscountMultiplier(getHeatEnergyDiscount());
+                        .setMachineHeat(getHeatForOC()).setHeatDiscountMultiplier(getHeatEnergyDiscount())
+                        .setDurationDecreasePerOC(getOverclockTimeFactor());
 
             }
 
@@ -214,6 +215,7 @@ public class GT_MetaTileEntity_EM_MoltenModule extends GT_MetaTileEntity_EM_Base
         str.add(YELLOW + "Effective Heat Capacity: " + RESET + formatNumbers(getHeatForOC()));
         str.add(YELLOW + "Recipe time multiplier: " + RESET + formatNumbers(getSpeedBonus()));
         str.add(YELLOW + "Energy multiplier: " + RESET + formatNumbers(getEnergyDiscount()));
+        str.add(YELLOW + "Recipe time divisor per non-perfect OC: " + RESET + formatNumbers(getOverclockTimeFactor()));
         return str.toArray(new String[0]);
     }
 

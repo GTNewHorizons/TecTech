@@ -54,6 +54,7 @@ public class GT_MetaTileEntity_EM_BaseModule extends GT_MetaTileEntity_Multibloc
 
     protected final int tier = getTier();
     protected boolean isConnected = false;
+    protected double overclockTimeFactor = 2d;
     protected boolean isUpgrade83Unlocked = false;
     protected boolean isMultiStepPlasmaCapable = false;
     protected boolean isMagmatterCapable = false;
@@ -173,8 +174,16 @@ public class GT_MetaTileEntity_EM_BaseModule extends GT_MetaTileEntity_Multibloc
         return energyDiscount;
     }
 
-    public void setUpgrade83(Boolean upgrade) {
-        isUpgrade83Unlocked = upgrade;
+    public void setUpgrade83(Boolean unlocked) {
+        isUpgrade83Unlocked = unlocked;
+    }
+
+    public void setOverclockTimeFactor(Double factor) {
+        overclockTimeFactor = factor;
+    }
+
+    public double getOverclockTimeFactor() {
+        return overclockTimeFactor;
     }
 
     public void setMultiStepPlasma(Boolean isCapable) {

@@ -101,7 +101,6 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
     private int internalBattery = 0;
     private int maxBatteryCharge = 100;
     private int gravitonShardsAvailable = 0;
-    private int maxModuleCount = 0;
     private long fuelConsumption = 0;
     private boolean batteryCharging = false;
     public ArrayList<GT_MetaTileEntity_EM_BaseModule> moduleHatches = new ArrayList<>();
@@ -277,7 +276,7 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
                 if (ticker % (5 * SECONDS) == 0) {
                     ticker = 0;
                     FluidStack fluidInHatch = mInputHatches.get(0).getFluid();
-                    maxModuleCount = 8;
+                    int maxModuleCount = 8;
 
                     if (upgrades[26]) {
                         maxModuleCount += 4;

@@ -107,7 +107,8 @@ public class GT_MetaTileEntity_EM_PlasmaModule extends GT_MetaTileEntity_EM_Base
             @Nonnull
             @Override
             protected GT_OverclockCalculator createOverclockCalculator(@Nonnull GT_Recipe recipe) {
-                return super.createOverclockCalculator(recipe).setEUt(getProcessingVoltage());
+                return super.createOverclockCalculator(recipe).setEUt(getProcessingVoltage())
+                        .setDurationDecreasePerOC(getOverclockTimeFactor());
             }
         };
     }
@@ -199,6 +200,7 @@ public class GT_MetaTileEntity_EM_PlasmaModule extends GT_MetaTileEntity_EM_Base
         str.add(YELLOW + "Current Parallel: " + RESET + formatNumbers(currentParallel));
         str.add(YELLOW + "Recipe time multiplier: " + RESET + formatNumbers(getSpeedBonus()));
         str.add(YELLOW + "Energy multiplier: " + RESET + formatNumbers(getEnergyDiscount()));
+        str.add(YELLOW + "Recipe time divisor per non-perfect OC: " + RESET + formatNumbers(getOverclockTimeFactor()));
         return str.toArray(new String[0]);
     }
 
