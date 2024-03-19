@@ -5,6 +5,7 @@ import com.github.technus.tectech.thing.metaTileEntity.multi.godforge_modules.GT
 import com.github.technus.tectech.thing.metaTileEntity.multi.godforge_modules.GT_MetaTileEntity_EM_MoltenModule;
 import com.github.technus.tectech.thing.metaTileEntity.multi.godforge_modules.GT_MetaTileEntity_EM_PlasmaModule;
 import com.github.technus.tectech.thing.metaTileEntity.multi.godforge_modules.GT_MetaTileEntity_EM_SmeltingModule;
+import com.github.technus.tectech.thing.metaTileEntity.multi.godforge_modules.GT_MetaTileEntity_EM_ExoticModule;
 
 public class GodforgeMath {
 
@@ -125,6 +126,9 @@ public class GodforgeMath {
         if (module instanceof GT_MetaTileEntity_EM_PlasmaModule) {
             baseParallel = 256;
         }
+        if (module instanceof GT_MetaTileEntity_EM_ExoticModule) {
+            baseParallel = 128;
+        }
 
         if (module instanceof GT_MetaTileEntity_EM_MoltenModule
                 || (module instanceof GT_MetaTileEntity_EM_SmeltingModule && godforge.isUpgradeActive(16))) {
@@ -236,5 +240,6 @@ public class GodforgeMath {
         module.setMagmatterCapable(godforge.isUpgradeActive(30));
         module.setVoltageConfig(godforge.isUpgradeActive(28));
         module.setOverclockTimeFactor(overclockTimeFactor);
+        module.setExoticBonuses(godforge.isUpgradeActive(25));
     }
 }
