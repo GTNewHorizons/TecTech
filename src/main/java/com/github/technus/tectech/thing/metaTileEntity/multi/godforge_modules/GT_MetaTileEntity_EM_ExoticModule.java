@@ -32,6 +32,7 @@ import javax.annotation.Nonnull;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.EnumChatFormatting;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
@@ -81,7 +82,6 @@ public class GT_MetaTileEntity_EM_ExoticModule extends GT_MetaTileEntity_EM_Base
     private long actualParallel = 0;
     private static final long BASE_PARALLEL = 36;
     private boolean recipeInProgress = false;
-    private boolean magmatterCapable = true;
     private boolean magmatterMode = false;
     private FluidStack[] randomizedFluidInput = new FluidStack[] {};
     private ItemStack[] randomizedItemInput = new ItemStack[] {};
@@ -454,35 +454,37 @@ public class GT_MetaTileEntity_EM_ExoticModule extends GT_MetaTileEntity_EM_Base
 
     protected ButtonWidget magmatterSwitch(IWidgetBuilder<?> builder) {
         Widget button = new ButtonWidget().setOnClick((clickData, widget) -> {
-            if (magmatterCapable) {
+            if (isMagmatterCapable) {
                 magmatterMode = !magmatterMode;
             }
-        }).setPlayClickSound(isMagmatterModeOn()).setBackground(() -> {
+        }).setPlayClickSound(isMagmatterCapable).setBackground(() -> {
             List<UITexture> ret = new ArrayList<>();
             if (isMagmatterModeOn()) {
                 ret.add(GT_UITextures.BUTTON_STANDARD_PRESSED);
-                if (magmatterCapable) {
+                if (isMagmatterCapable) {
                     ret.add(GT_UITextures.OVERLAY_BUTTON_CHECKMARK);
                 } else {
                     ret.add(GT_UITextures.OVERLAY_BUTTON_DISABLE);
                 }
             } else {
                 ret.add(GT_UITextures.BUTTON_STANDARD);
-                if (magmatterCapable) {
+                if (isMagmatterCapable) {
                     ret.add(GT_UITextures.OVERLAY_BUTTON_CROSS);
                 } else {
                     ret.add(GT_UITextures.OVERLAY_BUTTON_DISABLE);
                 }
             }
-            if (!magmatterCapable) {
+            if (!isMagmatterCapable) {
                 ret.add(GT_UITextures.OVERLAY_BUTTON_DISABLE);
             }
             return ret.toArray(new IDrawable[0]);
         }).attachSyncer(new FakeSyncWidget.BooleanSyncer(this::isMagmatterModeOn, this::setMagmatterMode), builder)
                 .addTooltip(translateToLocal("fog.button.magmattermode.tooltip.01"))
-                .setTooltipShowUpDelay(TOOLTIP_DELAY).setPos(174, 91).setSize(16, 16);
-        if (!magmatterCapable) {
-            button.addTooltip(translateToLocal("fog.button.magmattermode.tooltip.02"));
+                .setTooltipShowUpDelay(TOOLTIP_DELAY).setPos(174, 91).setSize(16, 16).attachSyncer(
+                        new FakeSyncWidget.BooleanSyncer(() -> isMagmatterCapable, this::setMagmatterCapable),
+                        builder);
+        if (!isMagmatterCapable) {
+            button.addTooltip(EnumChatFormatting.GRAY + translateToLocal("fog.button.magmattermode.tooltip.02"));
         }
         return (ButtonWidget) button;
     }

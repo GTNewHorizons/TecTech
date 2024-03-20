@@ -73,6 +73,7 @@ public class TecTechUITextures {
             .fullImage(MODID, "gui/overlay_button/battery_on");
     public static final UITexture OVERLAY_BUTTON_BATTERY_OFF = UITexture
             .fullImage(MODID, "gui/overlay_button/battery_off");
+    public static final UITexture OVERLAY_CYCLIC_BLUE = UITexture.fullImage(MODID, "gui/overlay_button/cyclic_blue");
 
     public static final UITexture OVERLAY_SLOT_RACK = UITexture.fullImage(MODID, "gui/overlay_slot/rack");
     public static final UITexture OVERLAY_SLOT_MESH = UITexture.fullImage(MODID, "gui/overlay_slot/mesh");
@@ -89,6 +90,7 @@ public class TecTechUITextures {
     public static final UITexture PICTURE_TECTECH_LOGO = UITexture.fullImage(MODID, "gui/picture/tectech_logo");
     public static final UITexture PICTURE_TECTECH_LOGO_DARK = UITexture
             .fullImage(MODID, "gui/picture/tectech_logo_dark");
+    public static final UITexture PICTURE_GODFORGE_LOGO = UITexture.fullImage(MODID, "gui/picture/gorge_logo");
     public static final UITexture PICTURE_RACK_LARGE = UITexture.fullImage(MODID, "gui/picture/rack_large");
     public static final UITexture PICTURE_HEAT_SINK = UITexture.fullImage(MODID, "gui/picture/heat_sink");
     public static final UITexture PICTURE_UNCERTAINTY_MONITOR = UITexture

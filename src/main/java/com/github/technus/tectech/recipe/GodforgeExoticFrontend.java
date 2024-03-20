@@ -7,7 +7,10 @@ import java.util.List;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 
+import com.github.technus.tectech.thing.gui.TecTechUITextures;
 import com.gtnewhorizons.modularui.api.math.Pos2d;
+import com.gtnewhorizons.modularui.api.screen.ModularWindow;
+import com.gtnewhorizons.modularui.common.widget.DrawableWidget;
 
 import gregtech.api.recipe.BasicUIPropertiesBuilder;
 import gregtech.api.recipe.NEIRecipePropertiesBuilder;
@@ -23,6 +26,13 @@ public class GodforgeExoticFrontend extends RecipeMapFrontend {
     public GodforgeExoticFrontend(BasicUIPropertiesBuilder uiPropertiesBuilder,
             NEIRecipePropertiesBuilder neiPropertiesBuilder) {
         super(uiPropertiesBuilder, neiPropertiesBuilder);
+    }
+
+    @Override
+    public void addGregTechLogo(ModularWindow.Builder builder, Pos2d windowOffset) {
+        builder.widget(
+                new DrawableWidget().setDrawable(TecTechUITextures.PICTURE_GODFORGE_LOGO).setSize(18, 18)
+                        .setPos(new Pos2d(151, 63).add(windowOffset)));
     }
 
     @Override

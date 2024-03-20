@@ -437,7 +437,7 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
         if (doesBindPlayerInventory()) {
             builder.widget(
                     new DrawableWidget().setDrawable(TecTechUITextures.BACKGROUND_SCREEN_BLUE).setPos(4, 4)
-                            .setSize(190, 91));
+                            .setSize(190, 85));
         } else {
             builder.widget(
                     new DrawableWidget().setDrawable(TecTechUITextures.BACKGROUND_SCREEN_BLUE_NO_INVENTORY).setPos(4, 4)
@@ -480,7 +480,23 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
                     } else {
                         getBaseMetaTileEntity().disableWorking();
                     }
-                }));
+                })).widget(new ButtonWidget().setOnClick((clickData, widget) -> {
+                    if (!widget.isClient()) {
+                        checkMachine_EM(this.getBaseMetaTileEntity(), null);
+                    }
+                }).setSize(16, 16).setBackground(() -> {
+                    List<UITexture> button = new ArrayList<>();
+                    button.add(TecTechUITextures.BUTTON_CELESTIAL_32x32);
+                    button.add(TecTechUITextures.OVERLAY_CYCLIC_BLUE);
+                    return button.toArray(new IDrawable[0]);
+                }).addTooltip(translateToLocal("fog.button.structurecheck.tooltip")).setPos(8, 91));
+    }
+
+    @Override
+    public void addGregTechLogo(ModularWindow.Builder builder) {
+        builder.widget(
+                new DrawableWidget().setDrawable(TecTechUITextures.PICTURE_GODFORGE_LOGO).setSize(18, 18)
+                        .setPos(172, 67));
     }
 
     @Override
