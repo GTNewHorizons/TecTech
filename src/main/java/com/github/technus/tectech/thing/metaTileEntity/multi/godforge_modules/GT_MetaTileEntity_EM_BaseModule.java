@@ -67,7 +67,7 @@ public class GT_MetaTileEntity_EM_BaseModule extends GT_MetaTileEntity_Multibloc
     protected int plasmaTier = 0;
     protected float processingSpeedBonus = 0;
     protected float energyDiscount = 0;
-    protected long processingVoltage = 0;
+    protected long processingVoltage = 2_000_000_000;
 
     private static final String STRUCTURE_PIECE_MAIN = "main";
     private static final int VOLTAGE_WINDOW_ID = 9;
@@ -346,7 +346,11 @@ public class GT_MetaTileEntity_EM_BaseModule extends GT_MetaTileEntity_Multibloc
     }
 
     @Override
-    public void addGregTechLogo(ModularWindow.Builder builder) {}
+    public void addGregTechLogo(ModularWindow.Builder builder) {
+        builder.widget(
+                new DrawableWidget().setDrawable(TecTechUITextures.PICTURE_GODFORGE_LOGO).setSize(18, 18)
+                        .setPos(172, 67));
+    }
 
     @Override
     public boolean supportsInputSeparation() {
