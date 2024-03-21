@@ -16,10 +16,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
-import java.util.stream.Stream;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.util.ForgeDirection;
@@ -74,7 +72,7 @@ public class GT_MetaTileEntity_EM_SmeltingModule extends GT_MetaTileEntity_EM_Ba
 
     @Override
     public RecipeMap<?> getRecipeMap() {
-        return null;
+        return furnaceMode ? RecipeMaps.furnaceRecipes : RecipeMaps.blastFurnaceRecipes;
     }
 
     @Nonnull
@@ -83,26 +81,11 @@ public class GT_MetaTileEntity_EM_SmeltingModule extends GT_MetaTileEntity_EM_Ba
         return Arrays.asList(RecipeMaps.blastFurnaceRecipes, RecipeMaps.furnaceRecipes);
     }
 
-    private static RecipeMap<?> getRecipeMap(boolean furnaceMode) {
-        if (furnaceMode) {
-            return RecipeMaps.furnaceRecipes;
-        } else {
-            return RecipeMaps.blastFurnaceRecipes;
-        }
-    }
-
     long wirelessEUt = 0;
 
     @Override
     protected ProcessingLogic createProcessingLogic() {
         return new ProcessingLogic() {
-
-            @Nonnull
-            @Override
-            protected Stream<GT_Recipe> findRecipeMatches(@Nullable RecipeMap<?> map) {
-                RecipeMap<?> recipes = getRecipeMap(furnaceMode);
-                return super.findRecipeMatches(recipes);
-            }
 
             @NotNull
             @Override
