@@ -13,6 +13,7 @@ import net.minecraftforge.fluids.FluidStack;
 import com.github.technus.tectech.recipe.TT_recipeAdder;
 
 import gregtech.api.enums.Materials;
+import gregtech.api.enums.MaterialsUEVplus;
 import gregtech.api.enums.TierEU;
 import gtPlusPlus.core.material.ELEMENT;
 
@@ -289,11 +290,10 @@ public class Godforge implements Runnable {
             // Exotic module fake recipes
             {
                 TT_recipeAdder.addFOGExoticFakeRecipe(
-                        new Object[] { Materials.Iron.getDust(1), Materials.Bismuth.getDust(1),
-                                Materials.Tritanium.getDust(1) },
-                        new Object[] { Materials.Helium.getGas(1000), ELEMENT.getInstance().NEON.getFluidStack(1000),
-                                ELEMENT.getInstance().XENON.getFluidStack(1000) },
-                        new FluidStack[] { Materials.Titanium.getMolten(1000) },
+                        new ItemStack[] { Materials.Iron.getDust(1) },
+                        new FluidStack[] {},
+                        new FluidStack[] { MaterialsUEVplus.QuarkGluonPlasma.getFluid(1000),
+                                MaterialsUEVplus.MagMatter.getMolten(144) },
                         10 * SECONDS,
                         (int) TierEU.RECIPE_MAX,
                         1);
