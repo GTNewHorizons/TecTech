@@ -1683,7 +1683,7 @@ public class GT_MetaTileEntity_EM_EyeOfHarmony extends GT_MetaTileEntity_Multibl
 
         aNBT.setTag(FLUID_OUTPUT_NBT_TAG, fluidStackListNBTTag);
 
-        if (starMatter != null) {
+        if (starMatter != null && starMatter.fluidStack != null) {
 
             NBTTagCompound fixedRecipeOutputs = new NBTTagCompound();
 
