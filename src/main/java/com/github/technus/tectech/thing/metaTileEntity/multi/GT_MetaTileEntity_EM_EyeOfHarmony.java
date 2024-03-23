@@ -1560,7 +1560,7 @@ public class GT_MetaTileEntity_EM_EyeOfHarmony extends GT_MetaTileEntity_Multibl
             str.add("EU Output: " + RED + toStandardForm(outputEU_BigInt) + RESET + " EU");
             str.add("EU Input:  " + RED + toStandardForm(usedEU.abs()) + RESET + " EU");
             int currentMaxProgresstime = Math.max(maxProgresstime(), 1);
-            if (starMatter != null) {
+            if (starMatter != null && starMatter.fluidStack != null) {
                 FluidStackLong starMatterOutput = new FluidStackLong(
                         starMatter.fluidStack,
                         (long) (starMatter.amount * yield * successChance * parallelAmount));
@@ -1749,16 +1749,14 @@ public class GT_MetaTileEntity_EM_EyeOfHarmony extends GT_MetaTileEntity_Multibl
 
             outputFluids.add(new FluidStackLong(fluidStack, fluidAmount));
         }
-        if (starMatter != null) {
 
-            tempFluidTag = aNBT.getCompoundTag(CURRENT_RECIPE_FIXED_OUTPUTS_TAG);
-            starMatter = new FluidStackLong(
-                    FluidStack.loadFluidStackFromNBT(aNBT.getCompoundTag(CURRENT_RECIPE_STAR_MATTER_TAG)),
-                    tempFluidTag.getLong(0 + FLUID_AMOUNT));
-            stellarPlasma = new FluidStackLong(
-                    FluidStack.loadFluidStackFromNBT(aNBT.getCompoundTag(CURRENT_RECIPE_STELLAR_PLASMA_TAG)),
-                    tempFluidTag.getLong(1 + FLUID_AMOUNT));
-        }
+        tempFluidTag = aNBT.getCompoundTag(CURRENT_RECIPE_FIXED_OUTPUTS_TAG);
+        starMatter = new FluidStackLong(
+                FluidStack.loadFluidStackFromNBT(aNBT.getCompoundTag(CURRENT_RECIPE_STAR_MATTER_TAG)),
+                tempFluidTag.getLong(0 + FLUID_AMOUNT));
+        stellarPlasma = new FluidStackLong(
+                FluidStack.loadFluidStackFromNBT(aNBT.getCompoundTag(CURRENT_RECIPE_STELLAR_PLASMA_TAG)),
+                tempFluidTag.getLong(1 + FLUID_AMOUNT));
 
         super.loadNBTData(aNBT);
     }
