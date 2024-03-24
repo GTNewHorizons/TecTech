@@ -242,4 +242,22 @@ public class GodforgeMath {
         module.setOverclockTimeFactor(overclockTimeFactor);
         module.setExoticBonuses(godforge.isUpgradeActive(25));
     }
+
+    public static boolean allowModuleConnection(GT_MetaTileEntity_EM_BaseModule module,
+            GT_MetaTileEntity_EM_ForgeOfGods godforge) {
+
+        if (module instanceof GT_MetaTileEntity_EM_MoltenModule && godforge.isUpgradeActive(5)) {
+            return true;
+        }
+
+        if (module instanceof GT_MetaTileEntity_EM_PlasmaModule && godforge.isUpgradeActive(7)) {
+            return true;
+        }
+
+        if (module instanceof GT_MetaTileEntity_EM_ExoticModule && godforge.isUpgradeActive(11)) {
+            return true;
+        }
+
+        return module instanceof GT_MetaTileEntity_EM_SmeltingModule;
+    }
 }

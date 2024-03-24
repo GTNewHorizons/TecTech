@@ -4,14 +4,7 @@ import static com.github.technus.tectech.thing.casing.GT_Block_CasingsTT.texture
 import static com.github.technus.tectech.thing.casing.TT_Container_Casings.forgeOfGodsRenderBlock;
 import static com.github.technus.tectech.thing.casing.TT_Container_Casings.sBlockCasingsBA0;
 import static com.github.technus.tectech.thing.casing.TT_Container_Casings.sBlockCasingsTT;
-import static com.github.technus.tectech.util.GodforgeMath.calculateEnergyDiscountForModules;
-import static com.github.technus.tectech.util.GodforgeMath.calculateFuelConsumption;
-import static com.github.technus.tectech.util.GodforgeMath.calculateMaxFuelFactor;
-import static com.github.technus.tectech.util.GodforgeMath.calculateMaxHeatForModules;
-import static com.github.technus.tectech.util.GodforgeMath.calculateMaxParallelForModules;
-import static com.github.technus.tectech.util.GodforgeMath.calculateProcessingVoltageForModules;
-import static com.github.technus.tectech.util.GodforgeMath.calculateSpeedBonusForModules;
-import static com.github.technus.tectech.util.GodforgeMath.setMiscModuleParameters;
+import static com.github.technus.tectech.util.GodforgeMath.*;
 import static com.gtnewhorizon.structurelib.structure.StructureUtility.ofBlock;
 import static com.gtnewhorizon.structurelib.structure.StructureUtility.ofBlocksTiered;
 import static com.gtnewhorizon.structurelib.structure.StructureUtility.transpose;
@@ -302,14 +295,18 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
                     // Do module calculations and checks
                     if (moduleHatches.size() > 0 && internalBattery > 0 && moduleHatches.size() <= maxModuleCount) {
                         for (GT_MetaTileEntity_EM_BaseModule module : moduleHatches) {
-                            module.connect();
-                            calculateMaxHeatForModules(module, this);
-                            calculateSpeedBonusForModules(module, this);
-                            calculateMaxParallelForModules(module, this);
-                            calculateEnergyDiscountForModules(module, this);
-                            setMiscModuleParameters(module, this);
-                            if (!upgrades[28]) {
-                                calculateProcessingVoltageForModules(module, this);
+                            if (allowModuleConnection(module, this)) {
+                                module.connect();
+                                calculateMaxHeatForModules(module, this);
+                                calculateSpeedBonusForModules(module, this);
+                                calculateMaxParallelForModules(module, this);
+                                calculateEnergyDiscountForModules(module, this);
+                                setMiscModuleParameters(module, this);
+                                if (!upgrades[28]) {
+                                    calculateProcessingVoltageForModules(module, this);
+                                }
+                            } else {
+                                module.disconnect();
                             }
                         }
                     } else if (moduleHatches.size() > maxModuleCount) {
