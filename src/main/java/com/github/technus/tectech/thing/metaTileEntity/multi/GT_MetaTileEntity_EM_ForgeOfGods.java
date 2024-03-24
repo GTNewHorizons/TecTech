@@ -1235,7 +1235,7 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
         return selectedFuelType;
     }
 
-    private void setFuelType(Integer fuelType) {
+    private void setFuelType(int fuelType) {
         selectedFuelType = fuelType;
     }
 
@@ -1243,7 +1243,7 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
         return fuelConsumptionFactor;
     }
 
-    public boolean isUpgradeActive(Integer upgradeID) {
+    public boolean isUpgradeActive(int upgradeID) {
         return upgrades[upgradeID];
     }
 
@@ -1278,7 +1278,7 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
                         + maxBatteryCharge);
     }
 
-    private void increaseBattery(Integer amount) {
+    private void increaseBattery(int amount) {
         if ((internalBattery + amount) <= maxBatteryCharge) {
             internalBattery += amount;
         } else {
@@ -1286,7 +1286,7 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
         }
     }
 
-    public void reduceBattery(Integer amount) {
+    public void reduceBattery(int amount) {
         internalBattery -= amount;
         if (internalBattery <= 0) {
             internalBattery = 0;

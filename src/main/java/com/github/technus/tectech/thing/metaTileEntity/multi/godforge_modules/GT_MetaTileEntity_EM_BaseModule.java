@@ -135,7 +135,7 @@ public class GT_MetaTileEntity_EM_BaseModule extends GT_MetaTileEntity_Multibloc
         isConnected = false;
     }
 
-    public void setHeat(Integer heat) {
+    public void setHeat(int heat) {
         machineHeat = heat;
     }
 
@@ -143,7 +143,7 @@ public class GT_MetaTileEntity_EM_BaseModule extends GT_MetaTileEntity_Multibloc
         return machineHeat;
     }
 
-    public void setHeatForOC(Integer heat) {
+    public void setHeatForOC(int heat) {
         overclockHeat = heat;
     }
 
@@ -151,7 +151,7 @@ public class GT_MetaTileEntity_EM_BaseModule extends GT_MetaTileEntity_Multibloc
         return overclockHeat;
     }
 
-    public void setMaxParallel(Integer parallel) {
+    public void setMaxParallel(int parallel) {
         maximumParallel = parallel;
     }
 
@@ -159,7 +159,7 @@ public class GT_MetaTileEntity_EM_BaseModule extends GT_MetaTileEntity_Multibloc
         return maximumParallel;
     }
 
-    public void setSpeedBonus(Float bonus) {
+    public void setSpeedBonus(float bonus) {
         processingSpeedBonus = bonus;
     }
 
@@ -167,7 +167,7 @@ public class GT_MetaTileEntity_EM_BaseModule extends GT_MetaTileEntity_Multibloc
         return processingSpeedBonus;
     }
 
-    public void setEnergyDiscount(Float discount) {
+    public void setEnergyDiscount(float discount) {
         energyDiscount = discount;
     }
 
@@ -175,11 +175,11 @@ public class GT_MetaTileEntity_EM_BaseModule extends GT_MetaTileEntity_Multibloc
         return energyDiscount;
     }
 
-    public void setUpgrade83(Boolean unlocked) {
+    public void setUpgrade83(boolean unlocked) {
         isUpgrade83Unlocked = unlocked;
     }
 
-    public void setOverclockTimeFactor(Double factor) {
+    public void setOverclockTimeFactor(double factor) {
         overclockTimeFactor = factor;
     }
 
@@ -187,11 +187,11 @@ public class GT_MetaTileEntity_EM_BaseModule extends GT_MetaTileEntity_Multibloc
         return overclockTimeFactor;
     }
 
-    public void setMultiStepPlasma(Boolean isCapable) {
+    public void setMultiStepPlasma(boolean isCapable) {
         isMultiStepPlasmaCapable = isCapable;
     }
 
-    public void setProcessingVoltage(Long Voltage) {
+    public void setProcessingVoltage(long Voltage) {
         processingVoltage = Voltage;
     }
 
@@ -199,7 +199,7 @@ public class GT_MetaTileEntity_EM_BaseModule extends GT_MetaTileEntity_Multibloc
         return processingVoltage;
     }
 
-    public void setMagmatterCapable(Boolean isCapable) {
+    public void setMagmatterCapable(boolean isCapable) {
         isMagmatterCapable = isCapable;
     }
 
@@ -207,7 +207,7 @@ public class GT_MetaTileEntity_EM_BaseModule extends GT_MetaTileEntity_Multibloc
         return isUpgrade83Unlocked ? 0.92f : 0.95f;
     }
 
-    public void setPlasmaTier(Integer tier) {
+    public void setPlasmaTier(int tier) {
         plasmaTier = tier;
     }
 
@@ -215,11 +215,11 @@ public class GT_MetaTileEntity_EM_BaseModule extends GT_MetaTileEntity_Multibloc
         return plasmaTier;
     }
 
-    public void setVoltageConfig(Boolean unlocked) {
+    public void setVoltageConfig(boolean unlocked) {
         isVoltageConfigUnlocked = unlocked;
     }
 
-    public void setExoticBonuses(Boolean unlocked) {
+    public void setExoticBonuses(boolean unlocked) {
         exoticBonuses = unlocked;
     }
 
