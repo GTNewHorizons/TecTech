@@ -4,7 +4,15 @@ import static com.github.technus.tectech.thing.casing.GT_Block_CasingsTT.texture
 import static com.github.technus.tectech.thing.casing.TT_Container_Casings.forgeOfGodsRenderBlock;
 import static com.github.technus.tectech.thing.casing.TT_Container_Casings.sBlockCasingsBA0;
 import static com.github.technus.tectech.thing.casing.TT_Container_Casings.sBlockCasingsTT;
-import static com.github.technus.tectech.util.GodforgeMath.*;
+import static com.github.technus.tectech.util.GodforgeMath.allowModuleConnection;
+import static com.github.technus.tectech.util.GodforgeMath.calculateEnergyDiscountForModules;
+import static com.github.technus.tectech.util.GodforgeMath.calculateFuelConsumption;
+import static com.github.technus.tectech.util.GodforgeMath.calculateMaxFuelFactor;
+import static com.github.technus.tectech.util.GodforgeMath.calculateMaxHeatForModules;
+import static com.github.technus.tectech.util.GodforgeMath.calculateMaxParallelForModules;
+import static com.github.technus.tectech.util.GodforgeMath.calculateProcessingVoltageForModules;
+import static com.github.technus.tectech.util.GodforgeMath.calculateSpeedBonusForModules;
+import static com.github.technus.tectech.util.GodforgeMath.setMiscModuleParameters;
 import static com.gtnewhorizon.structurelib.structure.StructureUtility.ofBlock;
 import static com.gtnewhorizon.structurelib.structure.StructureUtility.ofBlocksTiered;
 import static com.gtnewhorizon.structurelib.structure.StructureUtility.transpose;
