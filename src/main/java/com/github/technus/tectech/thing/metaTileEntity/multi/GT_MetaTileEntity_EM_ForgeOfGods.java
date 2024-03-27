@@ -12,6 +12,7 @@ import static com.github.technus.tectech.util.GodforgeMath.calculateMaxHeatForMo
 import static com.github.technus.tectech.util.GodforgeMath.calculateMaxParallelForModules;
 import static com.github.technus.tectech.util.GodforgeMath.calculateProcessingVoltageForModules;
 import static com.github.technus.tectech.util.GodforgeMath.calculateSpeedBonusForModules;
+import static com.github.technus.tectech.util.GodforgeMath.queryMilestoneStats;
 import static com.github.technus.tectech.util.GodforgeMath.setMiscModuleParameters;
 import static com.gtnewhorizon.structurelib.structure.StructureUtility.ofBlock;
 import static com.gtnewhorizon.structurelib.structure.StructureUtility.ofBlocksTiered;
@@ -26,6 +27,7 @@ import static gregtech.api.util.GT_StructureUtility.buildHatchAdder;
 import static gregtech.api.util.GT_Utility.formatNumbers;
 import static net.minecraft.util.StatCollector.translateToLocal;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -103,6 +105,9 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
     private int maxBatteryCharge = 100;
     private int gravitonShardsAvailable = 0;
     private long fuelConsumption = 0;
+    private long totalRecipesProcessed = 0;
+    private long totalFuelConsumed = 0;
+    private BigInteger totalPowerConsumed = BigInteger.ZERO;
     private boolean batteryCharging = false;
     public ArrayList<GT_MetaTileEntity_EM_BaseModule> moduleHatches = new ArrayList<>();
 
@@ -294,8 +299,11 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
                         FluidStack fluidReal = mInputHatches.get(0).drain(fluidNeeded.amount, true);
                         if (fluidReal == null || fluidReal.amount < fluidNeeded.amount) {
                             reduceBattery(fuelConsumptionFactor);
-                        } else if (batteryCharging) {
-                            increaseBattery(fuelConsumptionFactor);
+                        } else {
+                            totalFuelConsumed += getFuelFactor();
+                            if (batteryCharging) {
+                                increaseBattery(fuelConsumptionFactor);
+                            }
                         }
                     } else {
                         reduceBattery(fuelConsumptionFactor);
@@ -310,6 +318,7 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
                                 calculateMaxParallelForModules(module, this);
                                 calculateEnergyDiscountForModules(module, this);
                                 setMiscModuleParameters(module, this);
+                                queryMilestoneStats(module, this);
                                 if (!upgrades[28]) {
                                     calculateProcessingVoltageForModules(module, this);
                                 }
@@ -1295,16 +1304,18 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
     }
 
     public void reduceBattery(int amount) {
-        internalBattery -= amount;
-        if (internalBattery <= 0) {
+        if (internalBattery - amount <= 0) {
             internalBattery = 0;
             if (moduleHatches.size() > 0) {
                 for (GT_MetaTileEntity_EM_BaseModule module : moduleHatches) {
                     module.disconnect();
                 }
             }
-
+        } else {
+            internalBattery -= amount;
+            totalFuelConsumed += amount;
         }
+
     }
 
     public int getBatteryCharge() {
@@ -1313,6 +1324,14 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
 
     public int getMaxBatteryCharge() {
         return maxBatteryCharge;
+    }
+
+    public void addTotalPowerConsumed(BigInteger amount) {
+        totalPowerConsumed = totalPowerConsumed.add(amount);
+    }
+
+    public void addTotalRecipesProcessed(long amount) {
+        totalRecipesProcessed += amount;
     }
 
     @Override
@@ -1328,6 +1347,9 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
         NBT.setBoolean("batteryCharging", batteryCharging);
         NBT.setInteger("batterySize", maxBatteryCharge);
         NBT.setInteger("gravitonShardsAvailable", gravitonShardsAvailable);
+        NBT.setByteArray("totalPowerConsumed", totalPowerConsumed.toByteArray());
+        NBT.setLong("totalRecipesProcessed", totalRecipesProcessed);
+        NBT.setLong("totalFuelConsumed", totalFuelConsumed);
 
         // Store booleanArray of all upgrades
         NBTTagCompound upgradeBooleanArrayNBTTag = new NBTTagCompound();
@@ -1352,6 +1374,9 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
         NBT.setBoolean("batteryCharging", batteryCharging);
         NBT.setInteger("batterySize", maxBatteryCharge);
         NBT.setInteger("gravitonShardsAvailable", gravitonShardsAvailable);
+        NBT.setByteArray("totalPowerConsumed", totalPowerConsumed.toByteArray());
+        NBT.setLong("totalRecipesProcessed", totalRecipesProcessed);
+        NBT.setLong("totalFuelConsumed", totalFuelConsumed);
 
         // Store booleanArray of all upgrades
         NBTTagCompound upgradeBooleanArrayNBTTag = new NBTTagCompound();
@@ -1376,6 +1401,9 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
         batteryCharging = NBT.getBoolean("batteryCharging");
         maxBatteryCharge = NBT.getInteger("batterySize");
         gravitonShardsAvailable = NBT.getInteger("gravitonShardsAvailable");
+        totalPowerConsumed = new BigInteger(NBT.getByteArray("totalPowerConsumed"));
+        totalRecipesProcessed = NBT.getLong("totalRecipesProcessed");
+        totalFuelConsumed = NBT.getLong("totalFuelConsumed");
 
         NBTTagCompound tempBooleanTag = NBT.getCompoundTag("upgrades");
 

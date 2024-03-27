@@ -1,5 +1,7 @@
 package com.github.technus.tectech.util;
 
+import java.math.BigInteger;
+
 import com.github.technus.tectech.thing.metaTileEntity.multi.GT_MetaTileEntity_EM_ForgeOfGods;
 import com.github.technus.tectech.thing.metaTileEntity.multi.godforge_modules.GT_MetaTileEntity_EM_BaseModule;
 import com.github.technus.tectech.thing.metaTileEntity.multi.godforge_modules.GT_MetaTileEntity_EM_ExoticModule;
@@ -259,5 +261,14 @@ public class GodforgeMath {
         }
 
         return module instanceof GT_MetaTileEntity_EM_SmeltingModule;
+    }
+
+    public static void queryMilestoneStats(GT_MetaTileEntity_EM_BaseModule module,
+            GT_MetaTileEntity_EM_ForgeOfGods godforge) {
+        godforge.addTotalPowerConsumed(module.getPowerTally());
+        module.setPowerTally(BigInteger.ZERO);
+        godforge.addTotalRecipesProcessed(module.getRecipeTally());
+        module.setRecipeTally(0);
+
     }
 }

@@ -6,6 +6,7 @@ import static gregtech.common.misc.WirelessNetworkManager.addEUToGlobalEnergyMap
 import static gregtech.common.misc.WirelessNetworkManager.processInitialSettings;
 import static net.minecraft.util.StatCollector.translateToLocal;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -68,6 +69,8 @@ public class GT_MetaTileEntity_EM_BaseModule extends GT_MetaTileEntity_Multibloc
     protected float processingSpeedBonus = 0;
     protected float energyDiscount = 0;
     protected long processingVoltage = 2_000_000_000;
+    protected BigInteger powerTally = BigInteger.ZERO;
+    protected long recipeTally = 0;
 
     private static final String STRUCTURE_PIECE_MAIN = "main";
     private static final int VOLTAGE_WINDOW_ID = 9;
@@ -221,6 +224,30 @@ public class GT_MetaTileEntity_EM_BaseModule extends GT_MetaTileEntity_Multibloc
 
     public void setExoticBonuses(boolean unlocked) {
         exoticBonuses = unlocked;
+    }
+
+    public void setPowerTally(BigInteger amount) {
+        powerTally = amount;
+    }
+
+    public BigInteger getPowerTally() {
+        return powerTally;
+    }
+
+    public void addToPowerTally(BigInteger amount) {
+        powerTally = powerTally.add(amount);
+    }
+
+    public void setRecipeTally(long amount) {
+        recipeTally = amount;
+    }
+
+    public long getRecipeTally() {
+        return recipeTally;
+    }
+
+    public void addToRecipeTally(long amount) {
+        recipeTally += amount;
     }
 
     protected void fixAllIssues() {
@@ -396,6 +423,8 @@ public class GT_MetaTileEntity_EM_BaseModule extends GT_MetaTileEntity_Multibloc
         NBT.setBoolean("isConnected", isConnected);
         NBT.setBoolean("isVoltageConfigUnlocked", isVoltageConfigUnlocked);
         NBT.setLong("processingVoltage", processingVoltage);
+        NBT.setLong("recipeTally", recipeTally);
+        NBT.setByteArray("powerTally", powerTally.toByteArray());
         super.saveNBTData(NBT);
     }
 
@@ -404,6 +433,8 @@ public class GT_MetaTileEntity_EM_BaseModule extends GT_MetaTileEntity_Multibloc
         isConnected = NBT.getBoolean("isConnected");
         isVoltageConfigUnlocked = NBT.getBoolean("isVoltageConfigUnlocked");
         processingVoltage = NBT.getLong("processingVoltage");
+        recipeTally = NBT.getLong("recipeTally");
+        powerTally = new BigInteger(NBT.getByteArray("powerTally"));
         super.loadNBTData(NBT);
     }
 
