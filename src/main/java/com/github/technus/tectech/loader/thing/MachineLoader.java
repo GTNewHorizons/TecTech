@@ -2046,16 +2046,20 @@ public class MachineLoader implements Runnable {
                             "multimachine.em.smelting_module",
                             "Helioflare Power Forge").getStackForm(1L));
             Machine_Multi_MoltenModule.set(
-                    new GT_MetaTileEntity_EM_MoltenModule(15413, "multimachine.em.molten_module", "Helioflux Melting Core")
-                            .getStackForm(1L));
+                    new GT_MetaTileEntity_EM_MoltenModule(
+                            15413,
+                            "multimachine.em.molten_module",
+                            "Helioflux Melting Core").getStackForm(1L));
             Machine_Multi_PlasmaModule.set(
                     new GT_MetaTileEntity_EM_PlasmaModule(
                             15414,
                             "multimachine.em.plasma_module",
                             "Heliothermal Plasma Fabricator").getStackForm(1L));
             Machine_Multi_QuarkGluonPlasmaModule.set(
-                    new GT_MetaTileEntity_EM_ExoticModule(15415, "multimachine.em.exotic_module", "Heliofusion Exoticizer")
-                            .getStackForm(1L));
+                    new GT_MetaTileEntity_EM_ExoticModule(
+                            15415,
+                            "multimachine.em.exotic_module",
+                            "Heliofusion Exoticizer").getStackForm(1L));
         }
 
         // ===================================================================================================

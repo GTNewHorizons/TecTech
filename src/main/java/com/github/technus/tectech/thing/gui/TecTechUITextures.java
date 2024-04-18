@@ -73,6 +73,7 @@ public class TecTechUITextures {
             .fullImage(MODID, "gui/overlay_button/battery_on");
     public static final UITexture OVERLAY_BUTTON_BATTERY_OFF = UITexture
             .fullImage(MODID, "gui/overlay_button/battery_off");
+    public static final UITexture OVERLAY_BUTTON_FLAG = UITexture.fullImage(MODID, "gui/overlay_button/flag");
     public static final UITexture OVERLAY_CYCLIC_BLUE = UITexture.fullImage(MODID, "gui/overlay_button/cyclic_blue");
 
     public static final UITexture OVERLAY_SLOT_RACK = UITexture.fullImage(MODID, "gui/overlay_slot/rack");
@@ -86,6 +87,14 @@ public class TecTechUITextures {
             .fullImage(MODID, "gui/progressbar/research_station_3");
     public static final UITexture PROGRESSBAR_GODFORGE_PLASMA = UITexture
             .fullImage(MODID, "gui/progressbar/godforge_plasma");
+    public static final UITexture PROGRESSBAR_GODFORGE_MILESTONE_BLUE = UITexture
+            .fullImage(MODID, "gui/progressbar/godforge_progressbar_blue");
+    public static final UITexture PROGRESSBAR_GODFORGE_MILESTONE_RED = UITexture
+            .fullImage(MODID, "gui/progressbar/godforge_progressbar_red");
+    public static final UITexture PROGRESSBAR_GODFORGE_MILESTONE_PURPLE = UITexture
+            .fullImage(MODID, "gui/progressbar/godforge_progressbar_purple");
+    public static final UITexture PROGRESSBAR_GODFORGE_MILESTONE_RAINBOW = UITexture
+            .fullImage(MODID, "gui/progressbar/godforge_progressbar_rainbow");
 
     public static final UITexture PICTURE_TECTECH_LOGO = UITexture.fullImage(MODID, "gui/picture/tectech_logo");
     public static final UITexture PICTURE_TECTECH_LOGO_DARK = UITexture
@@ -131,4 +140,13 @@ public class TecTechUITextures {
     public static final UITexture PICTURE_UPGRADE_CONNECTOR_SWITCH = UITexture
             .fullImage(MODID, "gui/picture/connector_switch");
     public static final UITexture SLOT_OUTLINE_GREEN = UITexture.fullImage(MODID, "gui/picture/green_selector");
+    public static final UITexture PICTURE_GODFORGE_MILESTONE_CHARGE = UITexture
+            .fullImage(MODID, "gui/picture/milestone_charge");
+    public static final UITexture PICTURE_GODFORGE_MILESTONE_CONVERSION = UITexture
+            .fullImage(MODID, "gui/picture/milestone_conversion");
+    public static final UITexture PICTURE_GODFORGE_MILESTONE_CATALYST = UITexture
+            .fullImage(MODID, "gui/picture/milestone_catalyst");
+    public static final UITexture PICTURE_GODFORGE_MILESTONE_COMPOSITION = UITexture
+            .fullImage(MODID, "gui/picture/milestone_composition");
+
 }

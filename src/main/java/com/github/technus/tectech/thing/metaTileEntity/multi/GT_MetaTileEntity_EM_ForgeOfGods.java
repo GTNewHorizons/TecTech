@@ -14,6 +14,7 @@ import static com.github.technus.tectech.util.GodforgeMath.calculateProcessingVo
 import static com.github.technus.tectech.util.GodforgeMath.calculateSpeedBonusForModules;
 import static com.github.technus.tectech.util.GodforgeMath.queryMilestoneStats;
 import static com.github.technus.tectech.util.GodforgeMath.setMiscModuleParameters;
+import static com.github.technus.tectech.util.TT_Utility.toExponentForm;
 import static com.gtnewhorizon.structurelib.structure.StructureUtility.ofBlock;
 import static com.gtnewhorizon.structurelib.structure.StructureUtility.ofBlocksTiered;
 import static com.gtnewhorizon.structurelib.structure.StructureUtility.transpose;
@@ -25,6 +26,9 @@ import static gregtech.api.metatileentity.BaseTileEntity.TOOLTIP_DELAY;
 import static gregtech.api.util.GT_RecipeBuilder.SECONDS;
 import static gregtech.api.util.GT_StructureUtility.buildHatchAdder;
 import static gregtech.api.util.GT_Utility.formatNumbers;
+import static java.lang.Math.floor;
+import static java.lang.Math.log;
+import static java.lang.Math.max;
 import static net.minecraft.util.StatCollector.translateToLocal;
 
 import java.math.BigInteger;
@@ -54,10 +58,12 @@ import com.github.technus.tectech.thing.metaTileEntity.multi.base.render.TT_Rend
 import com.github.technus.tectech.thing.metaTileEntity.multi.godforge_modules.GT_MetaTileEntity_EM_BaseModule;
 import com.github.technus.tectech.util.CommonValues;
 import com.google.common.collect.ImmutableList;
+import com.google.common.math.LongMath;
 import com.gtnewhorizon.structurelib.alignment.constructable.IConstructable;
 import com.gtnewhorizon.structurelib.alignment.constructable.ISurvivalConstructable;
 import com.gtnewhorizon.structurelib.structure.IItemSource;
 import com.gtnewhorizon.structurelib.structure.IStructureDefinition;
+import com.gtnewhorizons.modularui.api.ModularUITextures;
 import com.gtnewhorizons.modularui.api.drawable.IDrawable;
 import com.gtnewhorizons.modularui.api.drawable.Text;
 import com.gtnewhorizons.modularui.api.drawable.UITexture;
@@ -69,13 +75,7 @@ import com.gtnewhorizons.modularui.api.screen.ModularWindow;
 import com.gtnewhorizons.modularui.api.screen.UIBuildContext;
 import com.gtnewhorizons.modularui.api.widget.IWidgetBuilder;
 import com.gtnewhorizons.modularui.api.widget.Widget;
-import com.gtnewhorizons.modularui.common.widget.ButtonWidget;
-import com.gtnewhorizons.modularui.common.widget.DrawableWidget;
-import com.gtnewhorizons.modularui.common.widget.FakeSyncWidget;
-import com.gtnewhorizons.modularui.common.widget.FluidNameHolderWidget;
-import com.gtnewhorizons.modularui.common.widget.MultiChildWidget;
-import com.gtnewhorizons.modularui.common.widget.Scrollable;
-import com.gtnewhorizons.modularui.common.widget.TextWidget;
+import com.gtnewhorizons.modularui.common.widget.*;
 import com.gtnewhorizons.modularui.common.widget.textfield.NumericWidget;
 
 import cpw.mods.fml.relauncher.Side;
@@ -107,6 +107,9 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
     private long fuelConsumption = 0;
     private long totalRecipesProcessed = 0;
     private long totalFuelConsumed = 0;
+    private float powerMilestonePercentage = 0;
+    private float recipeMilestonePercentage = 0;
+    private float fuelMilestonePercentage = 0;
     private BigInteger totalPowerConsumed = BigInteger.ZERO;
     private boolean batteryCharging = false;
     public ArrayList<GT_MetaTileEntity_EM_BaseModule> moduleHatches = new ArrayList<>();
@@ -117,8 +120,15 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
     private static final int UPGRADE_TREE_WINDOW_ID = 10;
     private static final int INDIVIDUAL_UPGRADE_WINDOW_ID = 11;
     private static final int BATTERY_CONFIG_WINDOW_ID = 12;
+    private static final int MILESTONE_WINDOW_ID = 13;
     private static final int[] FIRST_SPLIT_UPGRADES = new int[] { 12, 13, 14 };
     private static final int[] RING_UPGRADES = new int[] { 26, 29 };
+    private static final long POWER_MILESTONE_CONSTANT = LongMath.pow(10, 15);
+    private static final long RECIPE_MILESTONE_CONSTANT = LongMath.pow(10, 7);
+    private static final long FUEL_MILESTONE_CONSTANT = 10_000;
+    private static final double POWER_LOG_CONSTANT = Math.log(9);
+    private static final double RECIPE_LOG_CONSTANT = Math.log(6);
+    private static final double FUEL_LOG_CONSTANT = Math.log(3);
     protected static final String STRUCTURE_PIECE_MAIN = "main";
 
     private boolean debugMode = true;
@@ -291,6 +301,8 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
                         maxModuleCount += 4;
                     }
 
+                    determineMilestoneProgress();
+
                     fuelConsumption = (long) calculateFuelConsumption(this) * 5 * (batteryCharging ? 2 : 1);
                     if (fluidInHatch != null && fluidInHatch.isFluidEqual(validFuelList.get(selectedFuelType))) {
                         FluidStack fluidNeeded = new FluidStack(
@@ -461,6 +473,7 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
         buildContext.addSyncedWindow(INDIVIDUAL_UPGRADE_WINDOW_ID, this::createIndividualUpgradeWindow);
         buildContext.addSyncedWindow(FUEL_CONFIG_WINDOW_ID, this::createFuelConfigWindow);
         buildContext.addSyncedWindow(BATTERY_CONFIG_WINDOW_ID, this::createBatteryWindow);
+        buildContext.addSyncedWindow(MILESTONE_WINDOW_ID, this::createMilestoneWindow);
         builder.widget(
                 new ButtonWidget().setOnClick(
                         (clickData, widget) -> {
@@ -503,7 +516,17 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
                     button.add(TecTechUITextures.BUTTON_CELESTIAL_32x32);
                     button.add(TecTechUITextures.OVERLAY_CYCLIC_BLUE);
                     return button.toArray(new IDrawable[0]);
-                }).addTooltip(translateToLocal("fog.button.structurecheck.tooltip")).setPos(8, 91));
+                }).addTooltip(translateToLocal("fog.button.structurecheck.tooltip")).setPos(8, 91))
+                .widget(new ButtonWidget().setOnClick((clickData, widget) -> {
+                    if (!widget.isClient()) {
+                        widget.getContext().openSyncedWindow(MILESTONE_WINDOW_ID);
+                    }
+                }).setSize(16, 16).setBackground(() -> {
+                    List<UITexture> button = new ArrayList<>();
+                    button.add(TecTechUITextures.BUTTON_CELESTIAL_32x32);
+                    button.add(TecTechUITextures.OVERLAY_BUTTON_FLAG);
+                    return button.toArray(new IDrawable[0]);
+                }).addTooltip(translateToLocal("fog.button.milestones.tooltip")).setPos(174, 91));
     }
 
     @Override
@@ -609,8 +632,7 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
                                 .setTextColor(Color.WHITE.normal).setSize(70, 18).setPos(4, 35)
                                 .setBackground(GT_UITextures.BACKGROUND_TEXT_FIELD))
                 .widget(
-                        new DrawableWidget().setDrawable(GT_UITextures.PICTURE_INFORMATION).setPos(65, 25)
-                                .setSize(4, 10)
+                        new DrawableWidget().setDrawable(ModularUITextures.ICON_INFO).setPos(64, 24).setSize(10, 10)
                                 .addTooltip(translateToLocal("gt.blockmachines.multimachine.FOG.fuelinfo.0"))
                                 .addTooltip(translateToLocal("gt.blockmachines.multimachine.FOG.fuelinfo.1"))
                                 .addTooltip(translateToLocal("gt.blockmachines.multimachine.FOG.fuelinfo.2"))
@@ -706,6 +728,80 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
                                         new FakeSyncWidget.IntegerSyncer(this::getFuelType, this::setFuelType),
                                         builder));
 
+        return builder.build();
+    }
+
+    private int[] milestoneProgress = new int[] { 0, 0, 0, 4 };
+
+    protected ModularWindow createMilestoneWindow(final EntityPlayer player) {
+        final int WIDTH = 400;
+        final int HEIGHT = 300;
+        ModularWindow.Builder builder = ModularWindow.builder(WIDTH, HEIGHT);
+        builder.setBackground(GT_UITextures.BACKGROUND_SINGLEBLOCK_DEFAULT);
+        builder.setGuiTint(getGUIColorization());
+        builder.setDraggable(true);
+        builder.widget(
+                new DrawableWidget().setDrawable(TecTechUITextures.PICTURE_GODFORGE_MILESTONE_CHARGE).setPos(62, 24)
+                        .setSize(80, 100));
+        builder.widget(
+                new DrawableWidget().setDrawable(TecTechUITextures.PICTURE_GODFORGE_MILESTONE_CONVERSION)
+                        .setPos(263, 25).setSize(70, 98));
+        builder.widget(
+                new DrawableWidget().setDrawable(TecTechUITextures.PICTURE_GODFORGE_MILESTONE_CATALYST).setPos(52, 169)
+                        .setSize(100, 100));
+        builder.widget(
+                new DrawableWidget().setDrawable(TecTechUITextures.PICTURE_GODFORGE_MILESTONE_COMPOSITION)
+                        .setPos(248, 169).setSize(100, 100));
+        builder.widget(
+                TextWidget.localised("gt.blockmachines.multimachine.FOG.powermilestone").setPos(77, 45)
+                        .setSize(50, 30));
+        builder.widget(
+                TextWidget.localised("gt.blockmachines.multimachine.FOG.recipemilestone").setPos(268, 45)
+                        .setSize(60, 30));
+        builder.widget(
+                TextWidget.localised("gt.blockmachines.multimachine.FOG.fuelmilestone").setPos(77, 190)
+                        .setSize(50, 30));
+        builder.widget(
+                TextWidget.localised("gt.blockmachines.multimachine.FOG.purchasablemilestone").setPos(268, 190)
+                        .setSize(60, 30));
+        builder.widget(
+                new ProgressBar().setProgress(() -> powerMilestonePercentage).setDirection(ProgressBar.Direction.RIGHT)
+                        .setTexture(TecTechUITextures.PROGRESSBAR_GODFORGE_MILESTONE_RED, 130).setSynced(true, false)
+                        .setSize(130, 7).setPos(37, 70).addTooltip(milestoneProgressText(1, false)))
+                .widget(
+                        new ProgressBar().setProgress(() -> recipeMilestonePercentage)
+                                .setDirection(ProgressBar.Direction.RIGHT)
+                                .setTexture(TecTechUITextures.PROGRESSBAR_GODFORGE_MILESTONE_PURPLE, 130)
+                                .setSynced(true, false).setSize(130, 7).setPos(233, 70)
+                                .addTooltip(milestoneProgressText(2, false)))
+                .widget(
+                        new ProgressBar().setProgress(() -> fuelMilestonePercentage)
+                                .setDirection(ProgressBar.Direction.RIGHT)
+                                .setTexture(TecTechUITextures.PROGRESSBAR_GODFORGE_MILESTONE_BLUE, 130)
+                                .setSynced(true, false).setSize(130, 7).setPos(37, 215)
+                                .addTooltip(milestoneProgressText(3, false)))
+                .widget(
+                        new ProgressBar().setProgress(() -> milestoneProgress[3] / 7f)
+                                .setDirection(ProgressBar.Direction.RIGHT)
+                                .setTexture(TecTechUITextures.PROGRESSBAR_GODFORGE_MILESTONE_RAINBOW, 130)
+                                .setSynced(true, false).setSize(130, 7).setPos(233, 215)
+                                .addTooltip(milestoneProgressText(4, false)))
+                .widget(
+                        TextWidget.dynamicText(() -> milestoneProgressText(1, true)).setTextAlignment(Alignment.Center)
+                                .setScale(0.7f).setMaxWidth(90).setDefaultColor(EnumChatFormatting.DARK_GRAY)
+                                .setPos(150, 85)
+                                .addTooltip(translateToLocal("gt.blockmachines.multimachine.FOG.milestoneprogress")))
+                .widget(
+                        new ExpandTab().setNormalTexture(ModularUITextures.ARROW_DOWN.withFixedSize(14, 14, 3, 3))
+                                .widget(
+                                        new DrawableWidget().setDrawable(ModularUITextures.ARROW_UP).setSize(14, 14)
+                                                .setPos(3, 3))
+                                .widget(
+                                        TextWidget.dynamicText(() -> milestoneProgressText(1, false)).setScale(0.5f)
+                                                .setSize(100, 20).setPos(5, 20))
+                                .setExpandedSize(130, 130).setSize(20, 20).setPos(37, 75)
+                                .setBackground(TecTechUITextures.BACKGROUND_GLOW_ORANGE))
+                .widget(ButtonWidget.closeWindowButton(true).setPos(384, 4));
         return builder.build();
     }
 
@@ -1293,6 +1389,113 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
                         + internalBattery
                         + "/"
                         + maxBatteryCharge);
+    }
+
+    private void determineMilestoneProgress() {
+        if (milestoneProgress[0] < 7) {
+            powerMilestonePercentage = (float) max(
+                    (log((totalPowerConsumed.divide(BigInteger.valueOf(POWER_MILESTONE_CONSTANT))).longValue())
+                            / POWER_LOG_CONSTANT + 1),
+                    0) / 7;
+            milestoneProgress[0] = (int) floor(powerMilestonePercentage * 7);
+        } else {
+            powerMilestonePercentage = 1;
+        }
+        if (milestoneProgress[1] < 7) {
+            recipeMilestonePercentage = (float) max(
+                    (log(totalRecipesProcessed * 1f / RECIPE_MILESTONE_CONSTANT) / RECIPE_LOG_CONSTANT + 1),
+                    0) / 7;
+            milestoneProgress[1] = (int) floor(recipeMilestonePercentage * 7);
+        } else {
+            recipeMilestonePercentage = 1;
+        }
+        if (milestoneProgress[2] < 7) {
+            fuelMilestonePercentage = (float) max(
+                    (log(totalFuelConsumed * 1f / FUEL_MILESTONE_CONSTANT) / FUEL_LOG_CONSTANT + 1),
+                    0) / 7;
+            milestoneProgress[2] = (int) floor(fuelMilestonePercentage * 7);
+        } else {
+            fuelMilestonePercentage = 1;
+        }
+    }
+
+    private Text milestoneProgressText(int milestoneID, boolean formatting) {
+        long min;
+        long max;
+        BigInteger bigMin;
+        BigInteger bigMax;
+        Text done = new Text(translateToLocal("gt.blockmachines.multimachine.FOG.milestonecomplete"));
+        String suffix;
+        switch (milestoneID) {
+            case 1:
+                if (milestoneProgress[0] < 7) {
+                    suffix = "EU";
+                    bigMin = totalPowerConsumed;
+                    bigMax = BigInteger.valueOf(LongMath.pow(9, milestoneProgress[0] + 1))
+                            .multiply(BigInteger.valueOf(LongMath.pow(10, 15)));
+                    if (formatting) {
+                        return new Text(
+                                translateToLocal("gt.blockmachines.multimachine.FOG.progress") + ": "
+                                        + toExponentForm(bigMin)
+                                        + "/"
+                                        + toExponentForm(bigMax)
+                                        + " "
+                                        + suffix);
+                    } else {
+                        return new Text(
+                                translateToLocal("gt.blockmachines.multimachine.FOG.progress") + ": "
+                                        + bigMin
+                                        + "/"
+                                        + bigMax
+                                        + " "
+                                        + suffix);
+                    }
+                } else {
+                    return done;
+                }
+            case 2:
+                if (milestoneProgress[1] < 7) {
+                    suffix = translateToLocal("gt.blockmachines.multimachine.FOG.recipes");
+                    min = totalRecipesProcessed;
+                    max = LongMath.pow(6, milestoneProgress[1] + 1) * LongMath.pow(10, 7);
+                    break;
+                } else {
+                    return done;
+                }
+            case 3:
+                if (milestoneProgress[2] < 7) {
+                    suffix = translateToLocal("gt.blockmachines.multimachine.FOG.fuel");
+                    min = totalFuelConsumed;
+                    max = LongMath.pow(3, milestoneProgress[2] + 1) * LongMath.pow(10, 4);
+                    break;
+                } else {
+                    return done;
+                }
+            case 4:
+                if (milestoneProgress[3] < 7) {
+                    suffix = translateToLocal("gt.blockmachines.multimachine.FOG.extensions");
+                    min = milestoneProgress[3];
+                    max = 7;
+                    break;
+                } else {
+                    return done;
+                }
+            default:
+                return new Text("Error");
+        }
+        if (formatting) {
+            return new Text(
+                    translateToLocal("gt.blockmachines.multimachine.FOG.progress") + ": "
+                            + formatNumbers(min)
+                            + "/"
+                            + formatNumbers(max)
+                            + " "
+                            + suffix);
+        } else {
+            return new Text(
+                    translateToLocal(
+                            "gt.blockmachines.multimachine.FOG.progress") + ": " + min + "/" + max + " " + suffix);
+        }
     }
 
     private void increaseBattery(int amount) {
