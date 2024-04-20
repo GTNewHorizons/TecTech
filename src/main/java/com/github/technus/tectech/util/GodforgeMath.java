@@ -107,6 +107,15 @@ public class GodforgeMath {
                 speedBonus /= Math.pow(module.getMaxParallel(), 0.012);
             }
         }
+
+        if (module instanceof GT_MetaTileEntity_EM_ExoticModule) {
+            if (godforge.isUpgradeActive(25)) {
+                speedBonus = Math.sqrt(speedBonus);
+            } else {
+                speedBonus = 1;
+            }
+        }
+
         module.setSpeedBonus((float) speedBonus);
     }
 
@@ -129,7 +138,7 @@ public class GodforgeMath {
             baseParallel = 256;
         }
         if (module instanceof GT_MetaTileEntity_EM_ExoticModule) {
-            baseParallel = 128;
+            baseParallel = 36;
         }
 
         if (module instanceof GT_MetaTileEntity_EM_MoltenModule
@@ -169,8 +178,20 @@ public class GodforgeMath {
             }
         }
 
-        module.setMaxParallel(
-                (int) (baseParallel * node53 * fuelFactorMultiplier * heatMultiplier * upgradeAmountMultiplier));
+        int maxParallel = (int) (baseParallel * node53
+                * fuelFactorMultiplier
+                * heatMultiplier
+                * upgradeAmountMultiplier);
+
+        if (module instanceof GT_MetaTileEntity_EM_ExoticModule) {
+            if (godforge.isUpgradeActive(25)) {
+                maxParallel = (int) Math.max(9 * Math.floor(Math.sqrt(maxParallel) / 9), 36);
+            } else {
+                maxParallel = baseParallel;
+            }
+        }
+
+        module.setMaxParallel(maxParallel);
     }
 
     public static void calculateEnergyDiscountForModules(GT_MetaTileEntity_EM_BaseModule module,
@@ -189,6 +210,16 @@ public class GodforgeMath {
                 fillRatioDiscount = 1 - (Math.pow(fillRatioMinusZeroPointFive, 2) * (-0.6) + 0.15);
             } else {
                 fillRatioDiscount = 1 - (Math.pow(fillRatioMinusZeroPointFive, 2) * (-0.6) + 0.15) * 2 / 3;
+            }
+        }
+
+        if (module instanceof GT_MetaTileEntity_EM_ExoticModule) {
+            if (!godforge.isUpgradeActive(25)) {
+                fillRatioDiscount = 1;
+                maxBatteryDiscount = 1;
+            } else {
+                fillRatioDiscount = Math.sqrt(fillRatioDiscount);
+                maxBatteryDiscount = Math.sqrt(maxBatteryDiscount);
             }
         }
 
@@ -234,6 +265,13 @@ public class GodforgeMath {
             } else {
                 overclockTimeFactor = 2.15;
             }
+            if (module instanceof GT_MetaTileEntity_EM_ExoticModule) {
+                if (godforge.isUpgradeActive(25)) {
+                    overclockTimeFactor = 2 + Math.pow(overclockTimeFactor - 2, 2);
+                } else {
+                    overclockTimeFactor = 2;
+                }
+            }
         }
 
         module.setUpgrade83(godforge.isUpgradeActive(19));
@@ -242,7 +280,6 @@ public class GodforgeMath {
         module.setMagmatterCapable(godforge.isUpgradeActive(30));
         module.setVoltageConfig(godforge.isUpgradeActive(28));
         module.setOverclockTimeFactor(overclockTimeFactor);
-        module.setExoticBonuses(godforge.isUpgradeActive(25));
     }
 
     public static boolean allowModuleConnection(GT_MetaTileEntity_EM_BaseModule module,

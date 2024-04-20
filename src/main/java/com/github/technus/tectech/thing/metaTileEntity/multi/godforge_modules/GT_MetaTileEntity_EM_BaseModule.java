@@ -57,7 +57,6 @@ public class GT_MetaTileEntity_EM_BaseModule extends GT_MetaTileEntity_Multibloc
     protected boolean isConnected = false;
     protected double overclockTimeFactor = 2d;
     protected boolean isUpgrade83Unlocked = false;
-    protected boolean exoticBonuses = false;
     protected boolean isMultiStepPlasmaCapable = false;
     protected boolean isMagmatterCapable = false;
     private boolean isVoltageConfigUnlocked = false;
@@ -220,10 +219,6 @@ public class GT_MetaTileEntity_EM_BaseModule extends GT_MetaTileEntity_Multibloc
 
     public void setVoltageConfig(boolean unlocked) {
         isVoltageConfigUnlocked = unlocked;
-    }
-
-    public void setExoticBonuses(boolean unlocked) {
-        exoticBonuses = unlocked;
     }
 
     public void setPowerTally(BigInteger amount) {
