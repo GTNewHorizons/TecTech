@@ -24,7 +24,6 @@ public class Godforge implements Runnable {
     public static final HashMap<ItemStack, Integer> exoticModulePlasmaItemMap = new HashMap<>();
     public static final HashMap<FluidStack, Integer> exoticModulePlasmaFluidMap = new HashMap<>();
     public static final HashMap<ItemStack, Integer> exoticModuleMagmatterItemMap = new HashMap<>();
-    public static final HashMap<FluidStack, Integer> exoticModuleMagmatterFluidMap = new HashMap<>();
 
     @Override
     public void run() {
@@ -507,10 +506,7 @@ public class Godforge implements Runnable {
             }
         }
 
-        // Magmatter maps
-        exoticModuleMagmatterItemMap.putAll(exoticModulePlasmaItemMap);
-        exoticModuleMagmatterFluidMap.putAll(exoticModulePlasmaFluidMap);
-
+        // Magmatter map
         // GT materials
         exoticModuleMagmatterItemMap.put(Materials.CosmicNeutronium.getDustTiny(1), 100000);
         exoticModuleMagmatterItemMap.put(Materials.Draconium.getDustTiny(1), 100000);
@@ -522,10 +518,10 @@ public class Godforge implements Runnable {
         // GT++ materials
         if (GTPlusPlus.isModLoaded()) {
             exoticModuleMagmatterItemMap.put(ELEMENT.STANDALONE.CELESTIAL_TUNGSTEN.getTinyDust(1), 100000);
-            exoticModuleMagmatterFluidMap.put(ELEMENT.STANDALONE.HYPOGEN.getFluidStack(1), 100000);
-            exoticModuleMagmatterFluidMap.put(ELEMENT.STANDALONE.RHUGNOR.getFluidStack(1), 100000);
-            exoticModuleMagmatterFluidMap.put(ELEMENT.STANDALONE.CHRONOMATIC_GLASS.getFluidStack(1), 100000);
-            exoticModuleMagmatterFluidMap.put(ELEMENT.STANDALONE.DRAGON_METAL.getFluidStack(1), 100000);
+            exoticModuleMagmatterItemMap.put(ELEMENT.STANDALONE.HYPOGEN.getTinyDust(1), 100000);
+            exoticModuleMagmatterItemMap.put(ELEMENT.STANDALONE.RHUGNOR.getTinyDust(1), 100000);
+            exoticModuleMagmatterItemMap.put(ELEMENT.STANDALONE.CHRONOMATIC_GLASS.getTinyDust(1), 100000);
+            exoticModuleMagmatterItemMap.put(ELEMENT.STANDALONE.DRAGON_METAL.getTinyDust(1), 100000);
         }
     }
 }

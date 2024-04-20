@@ -1,6 +1,5 @@
 package com.github.technus.tectech.thing.metaTileEntity.multi.godforge_modules;
 
-import static com.github.technus.tectech.loader.recipe.Godforge.exoticModuleMagmatterFluidMap;
 import static com.github.technus.tectech.loader.recipe.Godforge.exoticModuleMagmatterItemMap;
 import static com.github.technus.tectech.loader.recipe.Godforge.exoticModulePlasmaFluidMap;
 import static com.github.technus.tectech.loader.recipe.Godforge.exoticModulePlasmaItemMap;
@@ -76,11 +75,9 @@ public class GT_MetaTileEntity_EM_ExoticModule extends GT_MetaTileEntity_EM_Base
 
     private int numberOfFluids = 0;
     private int numberOfItems = 0;
-    private int currentParallel = 0;
     private long wirelessEUt = 0;
     private long EUt = 0;
     private long actualParallel = 0;
-    private static final long BASE_PARALLEL = 36;
     private boolean recipeInProgress = false;
     private boolean magmatterMode = false;
     private FluidStack[] randomizedFluidInput = new FluidStack[] {};
@@ -106,14 +103,6 @@ public class GT_MetaTileEntity_EM_ExoticModule extends GT_MetaTileEntity_EM_Base
         return new GT_MetaTileEntity_EM_ExoticModule(mName);
     }
 
-    private void setActualParallel() {
-        if (exoticBonuses) {
-            actualParallel = 9 * (long) Math.floor(Math.sqrt(getMaxParallel()) / 9);
-        } else {
-            actualParallel = BASE_PARALLEL;
-        }
-    }
-
     @Override
     protected ProcessingLogic createProcessingLogic() {
         return new ProcessingLogic() {
@@ -122,39 +111,47 @@ public class GT_MetaTileEntity_EM_ExoticModule extends GT_MetaTileEntity_EM_Base
             @Override
             protected Stream<GT_Recipe> findRecipeMatches(@Nullable RecipeMap<?> map) {
                 if (!recipeInProgress) {
-                    setActualParallel();
-                    HashMap<FluidStack, Integer> fluidMap = exoticModulePlasmaFluidMap;
-                    HashMap<ItemStack, Integer> itemMap = exoticModulePlasmaItemMap;
+                    actualParallel = getMaxParallel();
                     FluidStack outputFluid = MaterialsUEVplus.QuarkGluonPlasma.getFluid(1000 * actualParallel);
-
-                    if (magmatterMode) {
-                        fluidMap = exoticModuleMagmatterFluidMap;
-                        itemMap = exoticModuleMagmatterItemMap;
-                        outputFluid = MaterialsUEVplus.MagMatter.getMolten(144 * actualParallel);
-                    }
-
                     tempRecipeMap = emptyRecipeMap;
-                    numberOfFluids = getRandomIntInRange(0, NUMBER_OF_INPUTS);
-                    numberOfItems = NUMBER_OF_INPUTS - numberOfFluids;
-                    randomizedFluidInput = getRandomFluidInputs(fluidMap, numberOfFluids);
-                    randomizedItemInput = getRandomItemInputs(itemMap, numberOfItems);
+                    if (magmatterMode) {
+                        randomizedItemInput = getRandomItemInputs(exoticModuleMagmatterItemMap, 1);
+                        numberOfItems = 1;
+                        numberOfFluids = 2;
+                        int timeAmount = getRandomIntInRange(1, 50);
+                        int spaceAmount = getRandomIntInRange(51, 100);
+                        randomizedFluidInput = new FluidStack[] { MaterialsUEVplus.Time.getMolten(timeAmount * 1000L),
+                                MaterialsUEVplus.Space.getMolten(spaceAmount * 1000L) };
+                        inputPlasmas = new ArrayList<>(
+                                Arrays.asList(
+                                        convertItemToPlasma(
+                                                randomizedItemInput,
+                                                (spaceAmount - timeAmount) * actualParallel)));
+                        inputPlasmas.add(MaterialsUEVplus.Time.getMolten(timeAmount * actualParallel));
+                        inputPlasmas.add(MaterialsUEVplus.Space.getMolten(spaceAmount * actualParallel));
+                        outputFluid = MaterialsUEVplus.MagMatter.getMolten(144 * actualParallel);
+                    } else {
+                        numberOfFluids = getRandomIntInRange(0, NUMBER_OF_INPUTS);
+                        numberOfItems = NUMBER_OF_INPUTS - numberOfFluids;
+                        randomizedFluidInput = getRandomFluidInputs(exoticModulePlasmaFluidMap, numberOfFluids);
+                        randomizedItemInput = getRandomItemInputs(exoticModulePlasmaItemMap, numberOfItems);
 
-                    if (numberOfFluids != 0) {
-                        for (FluidStack fluidStack : randomizedFluidInput) {
-                            fluidStack.amount = 1000 * getRandomIntInRange(1, 64);
+                        if (numberOfFluids != 0) {
+                            for (FluidStack fluidStack : randomizedFluidInput) {
+                                fluidStack.amount = 1000 * getRandomIntInRange(1, 64);
+                            }
                         }
-                    }
 
-                    if (numberOfItems != 0) {
-                        for (ItemStack itemStack : randomizedItemInput) {
-                            itemStack.stackSize = getRandomIntInRange(1, 64);
+                        if (numberOfItems != 0) {
+                            for (ItemStack itemStack : randomizedItemInput) {
+                                itemStack.stackSize = getRandomIntInRange(1, 64);
+                            }
                         }
+
+                        inputPlasmas = new ArrayList<>(
+                                Arrays.asList(convertItemToPlasma(randomizedItemInput, actualParallel)));
+                        inputPlasmas.addAll(Arrays.asList(convertFluidToPlasma(randomizedFluidInput, actualParallel)));
                     }
-
-                    inputPlasmas = new ArrayList<>(
-                            Arrays.asList(convertItemToPlasma(randomizedItemInput, actualParallel)));
-                    inputPlasmas.addAll(Arrays.asList(convertFluidToPlasma(randomizedFluidInput, actualParallel)));
-
                     plasmaRecipe = new GT_Recipe(
                             false,
                             null,
@@ -195,22 +192,22 @@ public class GT_MetaTileEntity_EM_ExoticModule extends GT_MetaTileEntity_EM_Base
                     }
 
                     if (numberOfItems != 0) {
+                        long multiplier = actualParallel;
+                        if (magmatterMode) {
+                            multiplier = 1;
+                        }
                         for (ItemStack itemStack : randomizedItemInput) {
-                            int stacksize = (int) (itemStack.stackSize * actualParallel);
-                            if (stacksize < 64) {
-                                addOutput(new ItemStack(itemStack.getItem(), stacksize));
-                            } else {
-                                // split itemStacks > 64
-                                while (stacksize >= 64) {
-                                    ItemStack tmpItem = itemStack.copy();
-                                    tmpItem.stackSize = 64;
-                                    addOutput(tmpItem);
-                                    stacksize -= 64;
-                                }
-                                ItemStack tmpItem = itemStack.copy();
-                                tmpItem.stackSize = stacksize;
+                            int stacksize = (int) (itemStack.stackSize * multiplier);
+                            ItemStack tmpItem = itemStack.copy();
+                            // split itemStacks > 64
+                            while (stacksize >= 64) {
+                                tmpItem.stackSize = 64;
                                 addOutput(tmpItem);
+                                stacksize -= 64;
                             }
+                            tmpItem.stackSize = stacksize;
+                            addOutput(tmpItem);
+
                         }
                     }
 
@@ -231,7 +228,6 @@ public class GT_MetaTileEntity_EM_ExoticModule extends GT_MetaTileEntity_EM_Base
                 }
                 addToPowerTally(BigInteger.valueOf(calculatedEut * duration));
                 addToRecipeTally(calculatedParallels);
-                currentParallel = calculatedParallels;
                 EUt = calculatedEut;
                 setCalculatedEut(0);
                 tempRecipeMap = emptyRecipeMap;
@@ -243,7 +239,7 @@ public class GT_MetaTileEntity_EM_ExoticModule extends GT_MetaTileEntity_EM_Base
             @Override
             protected GT_OverclockCalculator createOverclockCalculator(@Nonnull GT_Recipe recipe) {
                 return super.createOverclockCalculator(recipe).setEUt(getProcessingVoltage())
-                        .setDurationDecreasePerOC(2 + Math.pow(getOverclockTimeFactor() - 2, 2));
+                        .setDurationDecreasePerOC(getOverclockTimeFactor());
             }
 
         };
@@ -254,8 +250,8 @@ public class GT_MetaTileEntity_EM_ExoticModule extends GT_MetaTileEntity_EM_Base
         logic.setAvailableVoltage(Long.MAX_VALUE);
         logic.setAvailableAmperage(Integer.MAX_VALUE);
         logic.setAmperageOC(false);
-        logic.setSpeedBonus((float) Math.sqrt(getSpeedBonus()));
-        logic.setEuModifier((float) Math.sqrt(getEnergyDiscount()));
+        logic.setSpeedBonus(getSpeedBonus());
+        logic.setEuModifier(getEnergyDiscount());
     }
 
     @Override
@@ -522,14 +518,11 @@ public class GT_MetaTileEntity_EM_ExoticModule extends GT_MetaTileEntity_EM_Base
                         + RESET
                         + " s");
         str.add("Currently using: " + RED + formatNumbers(EUt) + RESET + " EU/t");
-        str.add(YELLOW + "Max Parallel: " + RESET + formatNumbers(actualParallel));
-        str.add(YELLOW + "Current Parallel: " + RESET + formatNumbers(currentParallel));
-        str.add(YELLOW + "Recipe time multiplier: " + RESET + formatNumbers(Math.sqrt(getSpeedBonus())));
-        str.add(YELLOW + "Energy multiplier: " + RESET + formatNumbers(Math.sqrt(getEnergyDiscount())));
-        str.add(
-                YELLOW + "Recipe time divisor per non-perfect OC: "
-                        + RESET
-                        + formatNumbers(2 + Math.pow(getOverclockTimeFactor() - 2, 2)));
+        str.add(YELLOW + "Max Parallel: " + RESET + formatNumbers(getMaxParallel()));
+        str.add(YELLOW + "Current Parallel: " + RESET + formatNumbers(getMaxParallel()));
+        str.add(YELLOW + "Recipe time multiplier: " + RESET + formatNumbers(getSpeedBonus()));
+        str.add(YELLOW + "Energy multiplier: " + RESET + formatNumbers(getEnergyDiscount()));
+        str.add(YELLOW + "Recipe time divisor per non-perfect OC: " + RESET + formatNumbers(getOverclockTimeFactor()));
         return str.toArray(new String[0]);
     }
 
