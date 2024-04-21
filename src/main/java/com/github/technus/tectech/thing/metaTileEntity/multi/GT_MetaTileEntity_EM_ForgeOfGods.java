@@ -112,6 +112,7 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
     private int internalBattery = 0;
     private int maxBatteryCharge = 100;
     private int gravitonShardsAvailable = 0;
+    private int gravitonShardsSpent = 0;
     private long fuelConsumption = 0;
     private long totalRecipesProcessed = 0;
     private long totalFuelConsumed = 0;
@@ -139,7 +140,7 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
     private static final double FUEL_LOG_CONSTANT = Math.log(3);
     protected static final String STRUCTURE_PIECE_MAIN = "main";
 
-    private boolean debugMode = true;
+    private boolean debugMode = false;
 
     public int survivalConstruct(ItemStack stackSize, int elementBudget, IItemSource source, EntityPlayerMP actor) {
         if (mMachine) return -1;
@@ -310,6 +311,9 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
                     }
 
                     determineMilestoneProgress();
+                    if (!debugMode) {
+                        determineGravitonShardAmount();
+                    }
 
                     fuelConsumption = (long) calculateFuelConsumption(this) * 5 * (batteryCharging ? 2 : 1);
                     if (fluidInHatch != null && fluidInHatch.isFluidEqual(validFuelList.get(selectedFuelType))) {
@@ -1242,6 +1246,7 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
                             if (unlockedPrereqUpgrades == prereqUpgrades.length
                                     && gravitonShardsAvailable >= gravitonShardCost) {
                                 gravitonShardsAvailable -= gravitonShardCost;
+                                gravitonShardsSpent += gravitonShardCost;
                                 upgrades[currentUpgradeID] = true;
                             }
                         } else if (unlockedPrereqUpgrades > 0 || prereqUpgrades.length == 0) {
@@ -1259,6 +1264,7 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
                             }
                             if (unlockedSplitUpgrades <= 0 && gravitonShardsAvailable >= gravitonShardCost) {
                                 gravitonShardsAvailable -= gravitonShardCost;
+                                gravitonShardsSpent += gravitonShardCost;
                                 upgrades[currentUpgradeID] = true;
                             }
                         }
@@ -1270,6 +1276,7 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
                         }
                         if (unlockedFollowupUpgrades == 0) {
                             gravitonShardsAvailable += gravitonShardCost;
+                            gravitonShardsSpent -= gravitonShardCost;
                             upgrades[currentUpgradeID] = false;
                         }
                     }
@@ -1427,6 +1434,15 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
         }
     }
 
+    private void determineGravitonShardAmount() {
+        int sum = 0;
+        for (int progress : milestoneProgress) {
+            progress = Math.min(progress, 7);
+            sum += progress * (progress + 1) / 2;
+        }
+        gravitonShardsAvailable = sum - gravitonShardsSpent;
+    }
+
     private Text milestoneProgressText(int milestoneID, boolean formatting) {
         long min;
         long max;
@@ -1441,7 +1457,7 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
                     bigMin = totalPowerConsumed;
                     bigMax = BigInteger.valueOf(LongMath.pow(9, milestoneProgress[0] + 1))
                             .multiply(BigInteger.valueOf(LongMath.pow(10, 15)));
-                    if (formatting) {
+                    if (formatting && (bigMin.compareTo(BigInteger.valueOf(1_000L)) > 0)) {
                         return new Text(
                                 translateToLocal("gt.blockmachines.multimachine.FOG.progress") + ": "
                                         + toExponentForm(bigMin)
@@ -1558,6 +1574,7 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
         NBT.setBoolean("batteryCharging", batteryCharging);
         NBT.setInteger("batterySize", maxBatteryCharge);
         NBT.setInteger("gravitonShardsAvailable", gravitonShardsAvailable);
+        NBT.setInteger("gravitonShardsSpent", gravitonShardsSpent);
         NBT.setByteArray("totalPowerConsumed", totalPowerConsumed.toByteArray());
         NBT.setLong("totalRecipesProcessed", totalRecipesProcessed);
         NBT.setLong("totalFuelConsumed", totalFuelConsumed);
@@ -1585,6 +1602,7 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
         NBT.setBoolean("batteryCharging", batteryCharging);
         NBT.setInteger("batterySize", maxBatteryCharge);
         NBT.setInteger("gravitonShardsAvailable", gravitonShardsAvailable);
+        NBT.setInteger("gravitonShardsSpent", gravitonShardsSpent);
         NBT.setByteArray("totalPowerConsumed", totalPowerConsumed.toByteArray());
         NBT.setLong("totalRecipesProcessed", totalRecipesProcessed);
         NBT.setLong("totalFuelConsumed", totalFuelConsumed);
@@ -1612,6 +1630,7 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
         batteryCharging = NBT.getBoolean("batteryCharging");
         maxBatteryCharge = NBT.getInteger("batterySize");
         gravitonShardsAvailable = NBT.getInteger("gravitonShardsAvailable");
+        gravitonShardsSpent = NBT.getInteger("gravitonShardsSpent");
         totalPowerConsumed = new BigInteger(NBT.getByteArray("totalPowerConsumed"));
         totalRecipesProcessed = NBT.getLong("totalRecipesProcessed");
         totalFuelConsumed = NBT.getLong("totalFuelConsumed");
