@@ -109,7 +109,9 @@ public class GT_MetaTileEntity_EM_SmeltingModule extends GT_MetaTileEntity_EM_Ba
                     return CheckRecipeResultRegistry.insufficientPower(calculatedEut * duration);
                 }
                 addToPowerTally(BigInteger.valueOf(calculatedEut * duration));
-                addToRecipeTally(calculatedParallels);
+                if (!furnaceMode) {
+                    addToRecipeTally(calculatedParallels);
+                }
                 currentParallel = calculatedParallels;
                 EUt = calculatedEut;
                 setCalculatedEut(0);
