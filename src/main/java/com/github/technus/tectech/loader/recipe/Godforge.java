@@ -1,11 +1,13 @@
 package com.github.technus.tectech.loader.recipe;
 
+import static com.github.technus.tectech.util.GodforgeMath.getRandomIntInRange;
 import static gregtech.api.enums.Mods.GTPlusPlus;
 import static gregtech.api.util.GT_RecipeBuilder.SECONDS;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
@@ -15,6 +17,7 @@ import com.github.technus.tectech.recipe.TT_recipeAdder;
 import gregtech.api.enums.Materials;
 import gregtech.api.enums.MaterialsUEVplus;
 import gregtech.api.enums.TierEU;
+import gregtech.api.util.GT_Utility;
 import gtPlusPlus.core.material.ELEMENT;
 
 public class Godforge implements Runnable {
@@ -24,6 +27,11 @@ public class Godforge implements Runnable {
     public static final HashMap<ItemStack, Integer> exoticModulePlasmaItemMap = new HashMap<>();
     public static final HashMap<FluidStack, Integer> exoticModulePlasmaFluidMap = new HashMap<>();
     public static final HashMap<ItemStack, Integer> exoticModuleMagmatterItemMap = new HashMap<>();
+    public static final List<ItemStack> quarkGluonFluidItemsForNEI = new ArrayList<>();
+    public static final List<ItemStack> quarkGluonItemsForNEI = new ArrayList<>();
+    public static final List<ItemStack> magmatterTimeFluidItemsForNEI = new ArrayList<>();
+    public static final List<ItemStack> magmatterSpaceFluidItemsForNEI = new ArrayList<>();
+    public static final List<ItemStack> magmatterItemsForNEI = new ArrayList<>();
 
     @Override
     public void run() {
@@ -290,9 +298,16 @@ public class Godforge implements Runnable {
             {
                 TT_recipeAdder.addFOGExoticFakeRecipe(
                         new ItemStack[] { Materials.Iron.getDust(1) },
-                        new FluidStack[] {},
-                        new FluidStack[] { MaterialsUEVplus.QuarkGluonPlasma.getFluid(1000),
-                                MaterialsUEVplus.MagMatter.getMolten(144) },
+                        new FluidStack[] { Materials.Iron.getMolten(1) },
+                        new FluidStack[] { MaterialsUEVplus.QuarkGluonPlasma.getFluid(1000) },
+                        10 * SECONDS,
+                        (int) TierEU.RECIPE_MAX,
+                        1);
+
+                TT_recipeAdder.addFOGExoticFakeRecipe(
+                        new ItemStack[] { Materials.Iron.getDust(1) },
+                        new FluidStack[] { Materials.Iron.getMolten(1), Materials.Bismuth.getMolten(1) },
+                        new FluidStack[] { MaterialsUEVplus.MagMatter.getMolten(144) },
                         10 * SECONDS,
                         (int) TierEU.RECIPE_MAX,
                         1);
@@ -523,5 +538,24 @@ public class Godforge implements Runnable {
             exoticModuleMagmatterItemMap.put(ELEMENT.STANDALONE.CHRONOMATIC_GLASS.getTinyDust(1), 100000);
             exoticModuleMagmatterItemMap.put(ELEMENT.STANDALONE.DRAGON_METAL.getTinyDust(1), 100000);
         }
+
+        // For NEI
+        for (FluidStack fluid : exoticModulePlasmaFluidMap.keySet()) {
+            fluid.amount = getRandomIntInRange(1, 64);
+            quarkGluonFluidItemsForNEI.add(GT_Utility.getFluidDisplayStack(fluid, true));
+        }
+        for (ItemStack item : exoticModulePlasmaItemMap.keySet()) {
+            item.stackSize = getRandomIntInRange(1, 64);
+            quarkGluonItemsForNEI.add(item);
+        }
+        for (int i = 0; i < 21; i++) {
+            magmatterTimeFluidItemsForNEI.add(
+                    GT_Utility.getFluidDisplayStack(MaterialsUEVplus.Time.getMolten(getRandomIntInRange(1, 50)), true));
+            magmatterSpaceFluidItemsForNEI.add(
+                    GT_Utility.getFluidDisplayStack(
+                            MaterialsUEVplus.Space.getMolten(getRandomIntInRange(51, 100)),
+                            true));
+        }
+        magmatterItemsForNEI.addAll(exoticModuleMagmatterItemMap.keySet());
     }
 }

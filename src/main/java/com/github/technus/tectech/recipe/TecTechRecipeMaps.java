@@ -51,7 +51,7 @@ public class TecTechRecipeMaps {
             .maxIO(1, 1, 1, 1).progressBar(TecTechUITextures.PROGRESSBAR_GODFORGE_PLASMA, ProgressBar.Direction.RIGHT)
             .progressBarPos(78, 33).neiTransferRect(78, 33, 20, 20).frontend(GodforgePlasmaFrontend::new).build();
     public static final RecipeMap<RecipeMapBackend> godforgeExoticMatterRecipes = RecipeMapBuilder
-            .of("gt.recipe.fog_exotic").maxIO(1, 1, 1, 2)
+            .of("gt.recipe.fog_exotic").maxIO(1, 1, 2, 1)
             .progressBar(TecTechUITextures.PROGRESSBAR_GODFORGE_PLASMA, ProgressBar.Direction.RIGHT)
             .progressBarPos(78, 33).neiTransferRect(78, 33, 20, 20).frontend(GodforgeExoticFrontend::new).build();
 

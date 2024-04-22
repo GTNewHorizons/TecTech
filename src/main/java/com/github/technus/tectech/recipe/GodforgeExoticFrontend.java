@@ -1,17 +1,16 @@
 package com.github.technus.tectech.recipe;
 
-import static com.github.technus.tectech.loader.recipe.Godforge.exoticModulePlasmaFluidMap;
-import static com.github.technus.tectech.loader.recipe.Godforge.exoticModulePlasmaItemMap;
+import static com.github.technus.tectech.loader.recipe.Godforge.magmatterItemsForNEI;
+import static com.github.technus.tectech.loader.recipe.Godforge.magmatterSpaceFluidItemsForNEI;
+import static com.github.technus.tectech.loader.recipe.Godforge.magmatterTimeFluidItemsForNEI;
+import static com.github.technus.tectech.loader.recipe.Godforge.quarkGluonFluidItemsForNEI;
+import static com.github.technus.tectech.loader.recipe.Godforge.quarkGluonItemsForNEI;
 import static gregtech.api.util.GT_Utility.trans;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 import javax.annotation.ParametersAreNonnullByDefault;
-
-import net.minecraft.item.ItemStack;
-import net.minecraftforge.fluids.FluidStack;
 
 import com.github.technus.tectech.thing.gui.TecTechUITextures;
 import com.gtnewhorizons.modularui.api.math.Pos2d;
@@ -19,6 +18,7 @@ import com.gtnewhorizons.modularui.api.screen.ModularWindow;
 import com.gtnewhorizons.modularui.common.widget.DrawableWidget;
 
 import codechicken.nei.PositionedStack;
+import gregtech.api.enums.MaterialsUEVplus;
 import gregtech.api.recipe.BasicUIPropertiesBuilder;
 import gregtech.api.recipe.NEIRecipePropertiesBuilder;
 import gregtech.api.recipe.RecipeMapFrontend;
@@ -45,17 +45,14 @@ public class GodforgeExoticFrontend extends RecipeMapFrontend {
 
     @Override
     public void drawNEIOverlays(GT_NEI_DefaultHandler.CachedDefaultRecipe neiCachedRecipe) {
-
-        List<ItemStack> cyclingDusts = new ArrayList<>(exoticModulePlasmaItemMap.keySet());
-        neiCachedRecipe.mInputs.set(0, new PositionedStack(cyclingDusts, 48, 23, true));
-
-        List<FluidStack> fluids = new ArrayList<>(exoticModulePlasmaFluidMap.keySet());
-        List<ItemStack> fluidItems = new ArrayList<>();
-        for (FluidStack fluid : fluids) {
-            fluidItems.add(GT_Utility.getFluidDisplayStack(fluid, true));
+        if (neiCachedRecipe.mRecipe.mFluidOutputs[0].equals(MaterialsUEVplus.QuarkGluonPlasma.getFluid(1000))) {
+            neiCachedRecipe.mInputs.set(0, new PositionedStack(quarkGluonItemsForNEI, 48, 23, true));
+            neiCachedRecipe.mInputs.set(1, new PositionedStack(quarkGluonFluidItemsForNEI, 48, 52, true));
+        } else {
+            neiCachedRecipe.mInputs.set(0, new PositionedStack(magmatterItemsForNEI, 48, 23, true));
+            neiCachedRecipe.mInputs.set(1, new PositionedStack(magmatterSpaceFluidItemsForNEI, 30, 52, true));
+            neiCachedRecipe.mInputs.set(2, new PositionedStack(magmatterTimeFluidItemsForNEI, 48, 52, true));
         }
-        neiCachedRecipe.mInputs.add(0, new PositionedStack(fluidItems, 48, 52, true));
-
     }
 
     @Override
