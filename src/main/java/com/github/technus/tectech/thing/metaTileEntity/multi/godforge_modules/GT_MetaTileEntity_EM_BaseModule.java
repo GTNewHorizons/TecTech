@@ -1,6 +1,7 @@
 package com.github.technus.tectech.thing.metaTileEntity.multi.godforge_modules;
 
-import static com.github.technus.tectech.thing.casing.GT_Block_CasingsTT.texturePage;
+import static com.github.technus.tectech.thing.casing.TT_Container_Casings.GodforgeCasings;
+import static com.gtnewhorizon.structurelib.structure.StructureUtility.ofBlock;
 import static gregtech.api.metatileentity.BaseTileEntity.TOOLTIP_DELAY;
 import static gregtech.common.misc.WirelessNetworkManager.addEUToGlobalEnergyMap;
 import static gregtech.common.misc.WirelessNetworkManager.processInitialSettings;
@@ -17,13 +18,11 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraftforge.common.util.ForgeDirection;
 
-import com.github.technus.tectech.thing.casing.TT_Container_Casings;
 import com.github.technus.tectech.thing.gui.TecTechUITextures;
 import com.github.technus.tectech.thing.metaTileEntity.multi.base.GT_MetaTileEntity_MultiblockBase_EM;
 import com.github.technus.tectech.thing.metaTileEntity.multi.base.render.TT_RenderedExtendedFacingTexture;
 import com.gtnewhorizon.structurelib.structure.IStructureDefinition;
 import com.gtnewhorizon.structurelib.structure.StructureDefinition;
-import com.gtnewhorizon.structurelib.structure.StructureUtility;
 import com.gtnewhorizons.modularui.api.drawable.IDrawable;
 import com.gtnewhorizons.modularui.api.drawable.Text;
 import com.gtnewhorizons.modularui.api.drawable.UITexture;
@@ -42,6 +41,7 @@ import com.gtnewhorizons.modularui.common.widget.SlotWidget;
 import com.gtnewhorizons.modularui.common.widget.TextWidget;
 import com.gtnewhorizons.modularui.common.widget.textfield.NumericWidget;
 
+import gregtech.api.GregTech_API;
 import gregtech.api.enums.Textures;
 import gregtech.api.gui.modularui.GT_UITextures;
 import gregtech.api.interfaces.ITexture;
@@ -73,21 +73,35 @@ public class GT_MetaTileEntity_EM_BaseModule extends GT_MetaTileEntity_Multibloc
 
     private static final String STRUCTURE_PIECE_MAIN = "main";
     private static final int VOLTAGE_WINDOW_ID = 9;
+    private static final int TEXTURE_INDEX = 960;
     private static final IStructureDefinition<GT_MetaTileEntity_EM_BaseModule> STRUCTURE_DEFINITION = StructureDefinition
             .<GT_MetaTileEntity_EM_BaseModule>builder()
             .addShape(
                     STRUCTURE_PIECE_MAIN,
-                    StructureUtility.transpose(
-                            new String[][] { { "H", "H" }, { "~", "H" }, { "H", "H" }, { "H", "H" }, { "H", "H" } }))
+                    new String[][] { { "       ", "  BBB  ", " BBBBB ", " BB~BB ", " BBBBB ", "  BBB  ", "       " },
+                            { "  CCC  ", " CFFFC ", "CFFFFFC", "CFFFFFC", "CFFFFFC", " CFFFC ", "  CCC  " },
+                            { "       ", "       ", "   E   ", "  EAE  ", "   E   ", "       ", "       " },
+                            { "       ", "       ", "   E   ", "  EAE  ", "   E   ", "       ", "       " },
+                            { "       ", "       ", "   E   ", "  EAE  ", "   E   ", "       ", "       " },
+                            { "       ", "       ", "   E   ", "  EAE  ", "   E   ", "       ", "       " },
+                            { "       ", "       ", "       ", "   D   ", "       ", "       ", "       " },
+                            { "       ", "       ", "       ", "   D   ", "       ", "       ", "       " },
+                            { "       ", "       ", "       ", "   D   ", "       ", "       ", "       " },
+                            { "       ", "       ", "       ", "   D   ", "       ", "       ", "       " },
+                            { "       ", "       ", "       ", "   D   ", "       ", "       ", "       " },
+                            { "       ", "       ", "       ", "   G   ", "       ", "       ", "       " } })
+            .addElement('A', ofBlock(GregTech_API.sSolenoidCoilCasings, 9))
             .addElement(
-                    'H',
+                    'B',
                     GT_StructureUtility.ofHatchAdderOptional(
                             GT_MetaTileEntity_EM_BaseModule::addClassicToMachineList,
-                            texturePage << 7,
+                            TEXTURE_INDEX,
                             1,
-                            TT_Container_Casings.sBlockCasingsBA0,
-                            12))
-            .build();
+                            GodforgeCasings,
+                            0))
+            .addElement('C', ofBlock(GodforgeCasings, 0)).addElement('D', ofBlock(GodforgeCasings, 1))
+            .addElement('E', ofBlock(GodforgeCasings, 2)).addElement('F', ofBlock(GodforgeCasings, 3))
+            .addElement('G', ofBlock(GodforgeCasings, 4)).build();
 
     public GT_MetaTileEntity_EM_BaseModule(int aID, String aName, String aNameRegional) {
         super(aID, aName, aNameRegional);
@@ -270,13 +284,13 @@ public class GT_MetaTileEntity_EM_BaseModule extends GT_MetaTileEntity_Multibloc
 
     @Override
     public void construct(ItemStack stackSize, boolean hintsOnly) {
-        structureBuild_EM(STRUCTURE_PIECE_MAIN, 0, 1, 0, stackSize, hintsOnly);
+        structureBuild_EM(STRUCTURE_PIECE_MAIN, 3, 3, 0, stackSize, hintsOnly);
     }
 
     @Override
     public boolean checkMachine_EM(IGregTechTileEntity aBaseMetaTileEntity, ItemStack aStack) {
         fixAllIssues();
-        return structureCheck_EM(STRUCTURE_PIECE_MAIN, 0, 1, 0);
+        return structureCheck_EM(STRUCTURE_PIECE_MAIN, 3, 3, 0);
     }
 
     @Override
@@ -437,11 +451,11 @@ public class GT_MetaTileEntity_EM_BaseModule extends GT_MetaTileEntity_Multibloc
     public ITexture[] getTexture(IGregTechTileEntity aBaseMetaTileEntity, ForgeDirection side, ForgeDirection facing,
             int colorIndex, boolean aActive, boolean aRedstone) {
         if (side == facing) {
-            return new ITexture[] { Textures.BlockIcons.getCasingTextureForId(texturePage << 7),
+            return new ITexture[] { Textures.BlockIcons.getCasingTextureForId(TEXTURE_INDEX),
                     new TT_RenderedExtendedFacingTexture(
                             aActive ? GT_MetaTileEntity_MultiblockBase_EM.ScreenON
                                     : GT_MetaTileEntity_MultiblockBase_EM.ScreenOFF) };
         }
-        return new ITexture[] { Textures.BlockIcons.getCasingTextureForId(texturePage << 7) };
+        return new ITexture[] { Textures.BlockIcons.getCasingTextureForId(TEXTURE_INDEX) };
     }
 }

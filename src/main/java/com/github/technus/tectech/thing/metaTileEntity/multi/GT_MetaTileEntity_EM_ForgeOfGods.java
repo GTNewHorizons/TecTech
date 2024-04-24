@@ -1,9 +1,7 @@
 package com.github.technus.tectech.thing.metaTileEntity.multi;
 
-import static com.github.technus.tectech.thing.casing.GT_Block_CasingsTT.texturePage;
+import static com.github.technus.tectech.thing.casing.TT_Container_Casings.GodforgeCasings;
 import static com.github.technus.tectech.thing.casing.TT_Container_Casings.forgeOfGodsRenderBlock;
-import static com.github.technus.tectech.thing.casing.TT_Container_Casings.sBlockCasingsBA0;
-import static com.github.technus.tectech.thing.casing.TT_Container_Casings.sBlockCasingsTT;
 import static com.github.technus.tectech.util.GodforgeMath.allowModuleConnection;
 import static com.github.technus.tectech.util.GodforgeMath.calculateEnergyDiscountForModules;
 import static com.github.technus.tectech.util.GodforgeMath.calculateFuelConsumption;
@@ -16,12 +14,9 @@ import static com.github.technus.tectech.util.GodforgeMath.queryMilestoneStats;
 import static com.github.technus.tectech.util.GodforgeMath.setMiscModuleParameters;
 import static com.github.technus.tectech.util.TT_Utility.toExponentForm;
 import static com.gtnewhorizon.structurelib.structure.StructureUtility.ofBlock;
-import static com.gtnewhorizon.structurelib.structure.StructureUtility.ofBlocksTiered;
-import static com.gtnewhorizon.structurelib.structure.StructureUtility.transpose;
 import static gregtech.api.enums.GT_HatchElement.InputBus;
 import static gregtech.api.enums.GT_HatchElement.InputHatch;
 import static gregtech.api.enums.GT_HatchElement.OutputBus;
-import static gregtech.api.enums.GT_HatchElement.OutputHatch;
 import static gregtech.api.metatileentity.BaseTileEntity.TOOLTIP_DELAY;
 import static gregtech.api.util.GT_RecipeBuilder.SECONDS;
 import static gregtech.api.util.GT_StructureUtility.buildHatchAdder;
@@ -47,17 +42,14 @@ import net.minecraft.util.EnumChatFormatting;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.FluidStack;
 
-import org.apache.commons.lang3.tuple.Pair;
-
 import com.github.technus.tectech.TecTech;
+import com.github.technus.tectech.thing.block.GodforgeGlassBlock;
 import com.github.technus.tectech.thing.block.TileForgeOfGods;
-import com.github.technus.tectech.thing.casing.TT_Container_Casings;
 import com.github.technus.tectech.thing.gui.TecTechUITextures;
 import com.github.technus.tectech.thing.metaTileEntity.multi.base.GT_MetaTileEntity_MultiblockBase_EM;
 import com.github.technus.tectech.thing.metaTileEntity.multi.base.render.TT_RenderedExtendedFacingTexture;
 import com.github.technus.tectech.thing.metaTileEntity.multi.godforge_modules.GT_MetaTileEntity_EM_BaseModule;
 import com.github.technus.tectech.util.CommonValues;
-import com.google.common.collect.ImmutableList;
 import com.google.common.math.LongMath;
 import com.gtnewhorizon.structurelib.alignment.constructable.IConstructable;
 import com.gtnewhorizon.structurelib.alignment.constructable.ISurvivalConstructable;
@@ -104,7 +96,6 @@ import gregtech.api.util.IGT_HatchAdder;
 public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_MultiblockBase_EM
         implements IConstructable, ISurvivalConstructable {
 
-    private static Textures.BlockIcons.CustomIcon ScreenOFF;
     private static Textures.BlockIcons.CustomIcon ScreenON;
 
     private int fuelConsumptionFactor = 1;
@@ -123,13 +114,12 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
     private boolean batteryCharging = false;
     public ArrayList<GT_MetaTileEntity_EM_BaseModule> moduleHatches = new ArrayList<>();
 
-    private static int spacetimeCompressionFieldMetadata = -1;
-    private int solenoidCoilMetadata = -1;
     private static final int FUEL_CONFIG_WINDOW_ID = 9;
     private static final int UPGRADE_TREE_WINDOW_ID = 10;
     private static final int INDIVIDUAL_UPGRADE_WINDOW_ID = 11;
     private static final int BATTERY_CONFIG_WINDOW_ID = 12;
     private static final int MILESTONE_WINDOW_ID = 13;
+    private static final int TEXTURE_INDEX = 960;
     private static final int[] FIRST_SPLIT_UPGRADES = new int[] { 12, 13, 14 };
     private static final int[] RING_UPGRADES = new int[] { 26, 29 };
     private static final long POWER_MILESTONE_CONSTANT = LongMath.pow(10, 15);
@@ -140,13 +130,13 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
     private static final double FUEL_LOG_CONSTANT = Math.log(3);
     protected static final String STRUCTURE_PIECE_MAIN = "main";
 
-    private boolean debugMode = false;
+    private boolean debugMode = true;
 
     public int survivalConstruct(ItemStack stackSize, int elementBudget, IItemSource source, EntityPlayerMP actor) {
         if (mMachine) return -1;
-        int realBudget = elementBudget >= 200 ? elementBudget : Math.min(200, elementBudget * 5); // 200 blocks max per
-        // placement.
-        return survivialBuildPiece(STRUCTURE_PIECE_MAIN, stackSize, 31, 34, 0, realBudget, source, actor, false, true);
+        int realBudget = elementBudget >= 1000 ? elementBudget : Math.min(1000, elementBudget * 5);
+        // 1000 blocks max per placement.
+        return survivialBuildPiece(STRUCTURE_PIECE_MAIN, stackSize, 63, 14, 0, realBudget, source, actor, false, true);
     }
 
     @Override
@@ -155,53 +145,21 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
     }
 
     public static final IStructureDefinition<GT_MetaTileEntity_EM_ForgeOfGods> STRUCTURE_DEFINITION = IStructureDefinition
-            .<GT_MetaTileEntity_EM_ForgeOfGods>builder()
-            .addShape("main", transpose(ForgeofGodsStructureString.godForge))
+            .<GT_MetaTileEntity_EM_ForgeOfGods>builder().addShape("main", ForgeofGodsStructureString.godforge)
 
+            .addElement('A', ofBlock(GregTech_API.sSolenoidCoilCasings, 9))
             .addElement(
-                    'A',
-                    buildHatchAdder(GT_MetaTileEntity_EM_ForgeOfGods.class)
-                            .atLeast(InputHatch, OutputHatch, InputBus, OutputBus).casingIndex(texturePage << 7).dot(1)
-                            .buildAndChain(sBlockCasingsBA0, 12))
-            .addElement('B', ofBlock(sBlockCasingsTT, 11)).addElement('C', ofBlock(sBlockCasingsTT, 12))
+                    'B',
+                    buildHatchAdder(GT_MetaTileEntity_EM_ForgeOfGods.class).atLeast(InputHatch, InputBus, OutputBus)
+                            .casingIndex(TEXTURE_INDEX + 1).dot(1).buildAndChain(GodforgeCasings, 1))
+            .addElement('C', ofBlock(GodforgeCasings, 0)).addElement('D', ofBlock(GodforgeCasings, 1))
+            .addElement('E', ofBlock(GodforgeCasings, 2)).addElement('F', ofBlock(GodforgeCasings, 3))
+            .addElement('G', ofBlock(GodforgeCasings, 4)).addElement('H', ofBlock(GodforgeCasings, 5))
+            .addElement('I', ofBlock(GodforgeGlassBlock.INSTANCE, 0))
             .addElement(
-                    'D',
-                    ofBlocksTiered(
-                            (block, meta) -> block == GregTech_API.sSolenoidCoilCasings ? meta : -1,
-                            ImmutableList.of(
-                                    Pair.of(GregTech_API.sSolenoidCoilCasings, 7),
-                                    Pair.of(GregTech_API.sSolenoidCoilCasings, 8),
-                                    Pair.of(GregTech_API.sSolenoidCoilCasings, 9),
-                                    Pair.of(GregTech_API.sSolenoidCoilCasings, 10)),
-                            -1,
-                            (t, meta) -> t.solenoidCoilMetadata = meta,
-                            t -> t.solenoidCoilMetadata))
-            .addElement(
-                    'E',
-                    ofBlocksTiered(
-                            (block, meta) -> block == TT_Container_Casings.SpacetimeCompressionFieldGenerators ? meta
-                                    : -1,
-                            ImmutableList.of(
-                                    Pair.of(TT_Container_Casings.SpacetimeCompressionFieldGenerators, 0),
-                                    Pair.of(TT_Container_Casings.SpacetimeCompressionFieldGenerators, 1),
-                                    Pair.of(TT_Container_Casings.SpacetimeCompressionFieldGenerators, 2),
-                                    Pair.of(TT_Container_Casings.SpacetimeCompressionFieldGenerators, 3),
-                                    Pair.of(TT_Container_Casings.SpacetimeCompressionFieldGenerators, 4),
-                                    Pair.of(TT_Container_Casings.SpacetimeCompressionFieldGenerators, 5),
-                                    Pair.of(TT_Container_Casings.SpacetimeCompressionFieldGenerators, 6),
-                                    Pair.of(TT_Container_Casings.SpacetimeCompressionFieldGenerators, 7),
-                                    Pair.of(TT_Container_Casings.SpacetimeCompressionFieldGenerators, 8)),
-                            -1,
-                            (t, meta) -> spacetimeCompressionFieldMetadata = meta,
-                            t -> spacetimeCompressionFieldMetadata))
-            .addElement(
-                    'F',
-                    buildHatchAdder(GT_MetaTileEntity_EM_ForgeOfGods.class).atLeast(InputHatch)
-                            .casingIndex(texturePage << 7).dot(2).buildAndChain(sBlockCasingsBA0, 12))
-            .addElement(
-                    'G',
+                    'K',
                     GT_HatchElementBuilder.<GT_MetaTileEntity_EM_ForgeOfGods>builder().atLeast(moduleElement.Module)
-                            .casingIndex(texturePage << 7).dot(3).buildAndChain(sBlockCasingsBA0, 12))
+                            .casingIndex(TEXTURE_INDEX).dot(3).buildAndChain(GodforgeCasings, 0))
             .build();
 
     public GT_MetaTileEntity_EM_ForgeOfGods(int aID, String aName, String aNameRegional) {
@@ -220,8 +178,7 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
     @Override
     @SideOnly(Side.CLIENT)
     public void registerIcons(IIconRegister aBlockIconRegister) {
-        ScreenOFF = new Textures.BlockIcons.CustomIcon("iconsets/EM_BHG");
-        ScreenON = new Textures.BlockIcons.CustomIcon("iconsets/EM_BHG_ACTIVE");
+        ScreenON = new Textures.BlockIcons.CustomIcon("iconsets/GODFORGE_CONTROLLER");
         super.registerIcons(aBlockIconRegister);
     }
 
@@ -229,15 +186,15 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
     public ITexture[] getTexture(IGregTechTileEntity aBaseMetaTileEntity, ForgeDirection side, ForgeDirection facing,
             int colorIndex, boolean aActive, boolean aRedstone) {
         if (side == facing) {
-            return new ITexture[] { Textures.BlockIcons.casingTexturePages[texturePage][12],
-                    new TT_RenderedExtendedFacingTexture(aActive ? ScreenON : ScreenOFF) };
+            return new ITexture[] { Textures.BlockIcons.getCasingTextureForId(TEXTURE_INDEX + 1),
+                    new TT_RenderedExtendedFacingTexture(ScreenON) };
         }
-        return new ITexture[] { Textures.BlockIcons.casingTexturePages[texturePage][12] };
+        return new ITexture[] { Textures.BlockIcons.getCasingTextureForId(TEXTURE_INDEX + 1) };
     }
 
     @Override
     public void construct(ItemStack stackSize, boolean hintsOnly) {
-        structureBuild_EM(STRUCTURE_PIECE_MAIN, 31, 34, 0, stackSize, hintsOnly);
+        structureBuild_EM(STRUCTURE_PIECE_MAIN, 63, 14, 0, stackSize, hintsOnly);
     }
 
     private final ArrayList<FluidStack> validFuelList = new ArrayList<>() {
@@ -252,11 +209,10 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
     @Override
     public boolean checkMachine_EM(IGregTechTileEntity iGregTechTileEntity, ItemStack itemStack) {
 
-        spacetimeCompressionFieldMetadata = -1;
         moduleHatches.clear();
 
         // Check structure of multi.
-        if (!structureCheck_EM(STRUCTURE_PIECE_MAIN, 31, 34, 0)) {
+        if (!structureCheck_EM(STRUCTURE_PIECE_MAIN, 63, 14, 0)) {
             return false;
         }
 
@@ -300,6 +256,7 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
                 // Check and drain fuel
                 if (ticker % (5 * SECONDS) == 0) {
                     ticker = 0;
+                    // TODO: Fix NPE here
                     FluidStack fluidInHatch = mInputHatches.get(0).getFluid();
                     int maxModuleCount = 8;
 
@@ -442,7 +399,6 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
         str.add("Output Hatches:" + formatNumbers(mOutputHatches.size()));
         str.add("Input Buses:" + formatNumbers(mInputBusses.size()));
         str.add("Input Hatches:" + formatNumbers(mInputHatches.size()));
-        str.add("Max Parallel:" + formatNumbers(Math.pow(4, spacetimeCompressionFieldMetadata + 1)));
         return str.toArray(new String[0]);
     }
 
@@ -1566,8 +1522,6 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
 
     @Override
     public void setItemNBT(NBTTagCompound NBT) {
-        NBT.setInteger("spacetimeCompressionTier", spacetimeCompressionFieldMetadata + 1);
-        NBT.setInteger("solenoidCoilTier", solenoidCoilMetadata - 7);
         NBT.setInteger("selectedFuelType", selectedFuelType);
         NBT.setInteger("fuelConsumptionFactor", fuelConsumptionFactor);
         NBT.setInteger("internalBattery", internalBattery);
@@ -1594,8 +1548,6 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
 
     @Override
     public void saveNBTData(NBTTagCompound NBT) {
-        NBT.setInteger("spacetimeCompressionTier", spacetimeCompressionFieldMetadata + 1);
-        NBT.setInteger("solenoidCoilTier", solenoidCoilMetadata - 7);
         NBT.setInteger("selectedFuelType", selectedFuelType);
         NBT.setInteger("fuelConsumptionFactor", fuelConsumptionFactor);
         NBT.setInteger("internalBattery", internalBattery);
@@ -1622,8 +1574,6 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
 
     @Override
     public void loadNBTData(NBTTagCompound NBT) {
-        spacetimeCompressionFieldMetadata = NBT.getInteger("spacetimeCompressionTier") - 1;
-        solenoidCoilMetadata = NBT.getInteger("solenoidCoilTier") + 7;
         selectedFuelType = NBT.getInteger("selectedFuelType");
         fuelConsumptionFactor = NBT.getInteger("fuelConsumptionFactor");
         internalBattery = NBT.getInteger("internalBattery");

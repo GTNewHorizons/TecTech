@@ -1,7 +1,6 @@
 package com.github.technus.tectech.thing.metaTileEntity.multi.godforge_modules;
 
 import static com.github.technus.tectech.recipe.TecTechRecipeMaps.godforgePlasmaRecipes;
-import static com.github.technus.tectech.thing.casing.GT_Block_CasingsTT.texturePage;
 import static gregtech.api.metatileentity.BaseTileEntity.TOOLTIP_DELAY;
 import static gregtech.api.util.GT_Utility.formatNumbers;
 import static gregtech.common.misc.WirelessNetworkManager.addEUToGlobalEnergyMap;
@@ -17,12 +16,8 @@ import java.util.Objects;
 
 import javax.annotation.Nonnull;
 
-import net.minecraftforge.common.util.ForgeDirection;
-
 import org.jetbrains.annotations.NotNull;
 
-import com.github.technus.tectech.thing.metaTileEntity.multi.base.GT_MetaTileEntity_MultiblockBase_EM;
-import com.github.technus.tectech.thing.metaTileEntity.multi.base.render.TT_RenderedExtendedFacingTexture;
 import com.github.technus.tectech.util.CommonValues;
 import com.gtnewhorizons.modularui.api.drawable.IDrawable;
 import com.gtnewhorizons.modularui.api.math.Alignment;
@@ -36,9 +31,7 @@ import com.gtnewhorizons.modularui.common.widget.FakeSyncWidget;
 import com.gtnewhorizons.modularui.common.widget.textfield.TextFieldWidget;
 
 import gregtech.api.enums.SoundResource;
-import gregtech.api.enums.Textures;
 import gregtech.api.gui.modularui.GT_UITextures;
-import gregtech.api.interfaces.ITexture;
 import gregtech.api.interfaces.metatileentity.IMetaTileEntity;
 import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
 import gregtech.api.logic.ProcessingLogic;
@@ -166,18 +159,6 @@ public class GT_MetaTileEntity_EM_PlasmaModule extends GT_MetaTileEntity_EM_Base
                 .setNumbers(0, Integer.MAX_VALUE).setTextAlignment(Alignment.Center).setTextColor(Color.WHITE.normal)
                 .setPos(3, 18).addTooltip("parallel").setTooltipShowUpDelay(TOOLTIP_DELAY).setSize(70, 16)
                 .setPos(174, 60).setBackground(GT_UITextures.BACKGROUND_TEXT_FIELD);
-    }
-
-    @Override
-    public ITexture[] getTexture(IGregTechTileEntity aBaseMetaTileEntity, ForgeDirection side, ForgeDirection facing,
-            int colorIndex, boolean aActive, boolean aRedstone) {
-        if (side == facing) {
-            return new ITexture[] { Textures.BlockIcons.getCasingTextureForId(texturePage << 7),
-                    new TT_RenderedExtendedFacingTexture(
-                            aActive ? GT_MetaTileEntity_MultiblockBase_EM.ScreenON
-                                    : GT_MetaTileEntity_MultiblockBase_EM.ScreenOFF) };
-        }
-        return new ITexture[] { Textures.BlockIcons.getCasingTextureForId(texturePage << 7) };
     }
 
     @Override
