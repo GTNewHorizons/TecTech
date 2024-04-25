@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -41,6 +42,8 @@ import com.gtnewhorizons.modularui.common.widget.SlotWidget;
 import com.gtnewhorizons.modularui.common.widget.TextWidget;
 import com.gtnewhorizons.modularui.common.widget.textfield.NumericWidget;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import gregtech.api.GregTech_API;
 import gregtech.api.enums.Textures;
 import gregtech.api.gui.modularui.GT_UITextures;
@@ -70,6 +73,8 @@ public class GT_MetaTileEntity_EM_BaseModule extends GT_MetaTileEntity_Multibloc
     protected long processingVoltage = 2_000_000_000;
     protected BigInteger powerTally = BigInteger.ZERO;
     protected long recipeTally = 0;
+    private static Textures.BlockIcons.CustomIcon ScreenON;
+    private static Textures.BlockIcons.CustomIcon ScreenOFF;
 
     private static final String STRUCTURE_PIECE_MAIN = "main";
     private static final int VOLTAGE_WINDOW_ID = 9;
@@ -448,13 +453,19 @@ public class GT_MetaTileEntity_EM_BaseModule extends GT_MetaTileEntity_Multibloc
     }
 
     @Override
+    @SideOnly(Side.CLIENT)
+    public void registerIcons(IIconRegister aBlockIconRegister) {
+        ScreenON = new Textures.BlockIcons.CustomIcon("iconsets/GODFORGE_MODULE_ACTIVE");
+        ScreenOFF = new Textures.BlockIcons.CustomIcon("iconsets/SCREEN_OFF");
+        super.registerIcons(aBlockIconRegister);
+    }
+
+    @Override
     public ITexture[] getTexture(IGregTechTileEntity aBaseMetaTileEntity, ForgeDirection side, ForgeDirection facing,
             int colorIndex, boolean aActive, boolean aRedstone) {
         if (side == facing) {
             return new ITexture[] { Textures.BlockIcons.getCasingTextureForId(TEXTURE_INDEX),
-                    new TT_RenderedExtendedFacingTexture(
-                            aActive ? GT_MetaTileEntity_MultiblockBase_EM.ScreenON
-                                    : GT_MetaTileEntity_MultiblockBase_EM.ScreenOFF) };
+                    new TT_RenderedExtendedFacingTexture(aActive ? ScreenON : ScreenOFF) };
         }
         return new ITexture[] { Textures.BlockIcons.getCasingTextureForId(TEXTURE_INDEX) };
     }

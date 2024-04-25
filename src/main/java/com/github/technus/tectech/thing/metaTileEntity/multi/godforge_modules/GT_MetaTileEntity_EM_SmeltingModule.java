@@ -142,7 +142,7 @@ public class GT_MetaTileEntity_EM_SmeltingModule extends GT_MetaTileEntity_EM_Ba
 
     protected ButtonWidget furnaceSwitch(IWidgetBuilder<?> builder) {
         Widget button = new ButtonWidget().setOnClick((clickData, widget) -> furnaceMode = !furnaceMode)
-                .setPlayClickSound(isFurnaceModeOn()).setBackground(() -> {
+                .setPlayClickSound(true).setBackground(() -> {
                     List<UITexture> ret = new ArrayList<>();
                     if (isFurnaceModeOn()) {
                         ret.add(GT_UITextures.BUTTON_STANDARD_PRESSED);
