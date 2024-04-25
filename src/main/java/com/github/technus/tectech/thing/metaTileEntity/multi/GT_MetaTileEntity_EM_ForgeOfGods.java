@@ -80,7 +80,6 @@ import com.gtnewhorizons.modularui.common.widget.textfield.NumericWidget;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import gregtech.api.GregTech_API;
 import gregtech.api.enums.MaterialsUEVplus;
 import gregtech.api.enums.Textures;
 import gregtech.api.gui.modularui.GT_UITextures;
@@ -147,17 +146,16 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
     public static final IStructureDefinition<GT_MetaTileEntity_EM_ForgeOfGods> STRUCTURE_DEFINITION = IStructureDefinition
             .<GT_MetaTileEntity_EM_ForgeOfGods>builder().addShape("main", ForgeofGodsStructureString.godforge)
 
-            .addElement('A', ofBlock(GregTech_API.sSolenoidCoilCasings, 9))
             .addElement(
-                    'B',
+                    'A',
                     buildHatchAdder(GT_MetaTileEntity_EM_ForgeOfGods.class).atLeast(InputHatch, InputBus, OutputBus)
                             .casingIndex(TEXTURE_INDEX + 1).dot(1).buildAndChain(GodforgeCasings, 1))
-            .addElement('C', ofBlock(GodforgeCasings, 0)).addElement('D', ofBlock(GodforgeCasings, 1))
-            .addElement('E', ofBlock(GodforgeCasings, 2)).addElement('F', ofBlock(GodforgeCasings, 3))
-            .addElement('G', ofBlock(GodforgeCasings, 4)).addElement('H', ofBlock(GodforgeCasings, 5))
-            .addElement('I', ofBlock(GodforgeGlassBlock.INSTANCE, 0))
+            .addElement('B', ofBlock(GodforgeCasings, 0)).addElement('C', ofBlock(GodforgeCasings, 1))
+            .addElement('D', ofBlock(GodforgeCasings, 2)).addElement('E', ofBlock(GodforgeCasings, 3))
+            .addElement('F', ofBlock(GodforgeCasings, 4)).addElement('G', ofBlock(GodforgeCasings, 5))
+            .addElement('H', ofBlock(GodforgeGlassBlock.INSTANCE, 0))
             .addElement(
-                    'K',
+                    'J',
                     GT_HatchElementBuilder.<GT_MetaTileEntity_EM_ForgeOfGods>builder().atLeast(moduleElement.Module)
                             .casingIndex(TEXTURE_INDEX).dot(3).buildAndChain(GodforgeCasings, 0))
             .build();
