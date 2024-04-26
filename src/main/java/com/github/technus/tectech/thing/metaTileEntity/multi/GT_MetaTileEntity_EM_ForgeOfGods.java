@@ -34,7 +34,6 @@ import java.util.List;
 
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -53,8 +52,8 @@ import com.github.technus.tectech.util.CommonValues;
 import com.google.common.math.LongMath;
 import com.gtnewhorizon.structurelib.alignment.constructable.IConstructable;
 import com.gtnewhorizon.structurelib.alignment.constructable.ISurvivalConstructable;
-import com.gtnewhorizon.structurelib.structure.IItemSource;
 import com.gtnewhorizon.structurelib.structure.IStructureDefinition;
+import com.gtnewhorizon.structurelib.structure.ISurvivalBuildEnvironment;
 import com.gtnewhorizons.modularui.api.ModularUITextures;
 import com.gtnewhorizons.modularui.api.drawable.IDrawable;
 import com.gtnewhorizons.modularui.api.drawable.Text;
@@ -103,6 +102,7 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
     private int maxBatteryCharge = 100;
     private int gravitonShardsAvailable = 0;
     private int gravitonShardsSpent = 0;
+    private int ringAmount = 1;
     private long fuelConsumption = 0;
     private long totalRecipesProcessed = 0;
     private long totalFuelConsumed = 0;
@@ -128,14 +128,42 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
     private static final double RECIPE_LOG_CONSTANT = Math.log(6);
     private static final double FUEL_LOG_CONSTANT = Math.log(3);
     protected static final String STRUCTURE_PIECE_MAIN = "main";
+    protected static final String STRUCTURE_PIECE_SECOND_RING = "second_ring";
+    protected static final String STRUCTURE_PIECE_THIRD_RING = "third_ring";
+    private static final String TOOLTIP_BAR = EnumChatFormatting.BLUE + "--------------------------------------------";
 
     private boolean debugMode = true;
 
-    public int survivalConstruct(ItemStack stackSize, int elementBudget, IItemSource source, EntityPlayerMP actor) {
+    public int survivalConstruct(ItemStack stackSize, int elementBudget, ISurvivalBuildEnvironment env) {
         if (mMachine) return -1;
         int realBudget = elementBudget >= 1000 ? elementBudget : Math.min(1000, elementBudget * 5);
         // 1000 blocks max per placement.
-        return survivialBuildPiece(STRUCTURE_PIECE_MAIN, stackSize, 63, 14, 0, realBudget, source, actor, false, true);
+        int built = survivialBuildPiece(STRUCTURE_PIECE_MAIN, stackSize, 63, 20, 0, realBudget, env, false, true);
+        if (isUpgradeActive(26) && stackSize.stackSize > 1) {
+            built += survivialBuildPiece(
+                    STRUCTURE_PIECE_SECOND_RING,
+                    stackSize,
+                    55,
+                    10,
+                    -73,
+                    realBudget,
+                    env,
+                    false,
+                    true);
+        }
+        if (isUpgradeActive(29) && stackSize.stackSize > 2) {
+            built += survivialBuildPiece(
+                    STRUCTURE_PIECE_THIRD_RING,
+                    stackSize,
+                    47,
+                    12,
+                    -82,
+                    realBudget,
+                    env,
+                    false,
+                    true);
+        }
+        return built;
     }
 
     @Override
@@ -144,8 +172,10 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
     }
 
     public static final IStructureDefinition<GT_MetaTileEntity_EM_ForgeOfGods> STRUCTURE_DEFINITION = IStructureDefinition
-            .<GT_MetaTileEntity_EM_ForgeOfGods>builder().addShape("main", ForgeofGodsStructureString.godforge)
-
+            .<GT_MetaTileEntity_EM_ForgeOfGods>builder()
+            .addShape(STRUCTURE_PIECE_MAIN, ForgeOfGodsStructureString.MAIN_STRUCTURE)
+            .addShape(STRUCTURE_PIECE_SECOND_RING, ForgeOfGodsRingsStructureString.SECOND_RING)
+            .addShape(STRUCTURE_PIECE_THIRD_RING, ForgeOfGodsRingsStructureString.THIRD_RING)
             .addElement(
                     'A',
                     buildHatchAdder(GT_MetaTileEntity_EM_ForgeOfGods.class).atLeast(InputHatch, InputBus, OutputBus)
@@ -153,12 +183,12 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
             .addElement('B', ofBlock(GodforgeCasings, 0)).addElement('C', ofBlock(GodforgeCasings, 1))
             .addElement('D', ofBlock(GodforgeCasings, 2)).addElement('E', ofBlock(GodforgeCasings, 3))
             .addElement('F', ofBlock(GodforgeCasings, 4)).addElement('G', ofBlock(GodforgeCasings, 5))
-            .addElement('H', ofBlock(GodforgeGlassBlock.INSTANCE, 0))
+            .addElement('H', ofBlock(GodforgeGlassBlock.INSTANCE, 0)).addElement('I', ofBlock(GodforgeCasings, 7))
             .addElement(
                     'J',
                     GT_HatchElementBuilder.<GT_MetaTileEntity_EM_ForgeOfGods>builder().atLeast(moduleElement.Module)
                             .casingIndex(TEXTURE_INDEX).dot(3).buildAndChain(GodforgeCasings, 0))
-            .build();
+            .addElement('K', ofBlock(GodforgeCasings, 6)).build();
 
     public GT_MetaTileEntity_EM_ForgeOfGods(int aID, String aName, String aNameRegional) {
         super(aID, aName, aNameRegional);
@@ -193,6 +223,12 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
     @Override
     public void construct(ItemStack stackSize, boolean hintsOnly) {
         structureBuild_EM(STRUCTURE_PIECE_MAIN, 63, 14, 0, stackSize, hintsOnly);
+        if (isUpgradeActive(26) && stackSize.stackSize > 1) {
+            buildPiece(STRUCTURE_PIECE_SECOND_RING, stackSize, hintsOnly, 55, 10, -73);
+        }
+        if (isUpgradeActive(29) && stackSize.stackSize > 2) {
+            buildPiece(STRUCTURE_PIECE_THIRD_RING, stackSize, hintsOnly, 47, 12, -82);
+        }
     }
 
     private final ArrayList<FluidStack> validFuelList = new ArrayList<>() {
@@ -232,6 +268,13 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
         // Make sure there is 1 input hatch.
         if (mInputHatches.size() != 1) {
             return false;
+        }
+
+        if (isUpgradeActive(26) && checkPiece(STRUCTURE_PIECE_SECOND_RING, 55, 10, -73)) {
+            ringAmount = 2;
+            if (isUpgradeActive(29) && checkPiece(STRUCTURE_PIECE_THIRD_RING, 47, 12, -82)) {
+                ringAmount = 3;
+            }
         }
 
         mHardHammer = true;
@@ -393,10 +436,11 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
     @Override
     public String[] getInfoData() {
         ArrayList<String> str = new ArrayList<>(Arrays.asList(super.getInfoData()));
-        str.add("Output Buses:" + formatNumbers(mOutputBusses.size()));
-        str.add("Output Hatches:" + formatNumbers(mOutputHatches.size()));
-        str.add("Input Buses:" + formatNumbers(mInputBusses.size()));
-        str.add("Input Hatches:" + formatNumbers(mInputHatches.size()));
+        str.add(TOOLTIP_BAR);
+        str.add("Number of Rings: " + EnumChatFormatting.GOLD + ringAmount);
+        str.add("Total Upgrades Unlocked: " + EnumChatFormatting.GOLD + getTotalActiveUpgrades());
+        str.add("Connected Modules: " + EnumChatFormatting.GOLD + moduleHatches.size());
+        str.add(TOOLTIP_BAR);
         return str.toArray(new String[0]);
     }
 

@@ -1,8 +1,8 @@
 package com.github.technus.tectech.thing.metaTileEntity.multi;
 
-public abstract class ForgeofGodsStructureString {
+public abstract class ForgeOfGodsStructureString {
 
-    public static final String[][] godforge = { {
+    public static final String[][] MAIN_STRUCTURE = { {
             "                                                                                                                               ",
             "                                                                                                                               ",
             "                                                                                                                               ",
@@ -5763,5 +5763,4 @@ public abstract class ForgeofGodsStructureString {
                     "                                                                                                                               ",
                     "                                                                                                                               ",
                     "                                                                                                                               " } };
-
 }
