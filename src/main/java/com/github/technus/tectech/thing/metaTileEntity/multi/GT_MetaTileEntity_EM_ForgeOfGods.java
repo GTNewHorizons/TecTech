@@ -1254,11 +1254,7 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
                                         unlockedSplitUpgrades++;
                                     }
                                 }
-                                for (int maxSplitUpgrades : RING_UPGRADES) {
-                                    if (upgrades[maxSplitUpgrades]) {
-                                        unlockedSplitUpgrades--;
-                                    }
-                                }
+                                unlockedSplitUpgrades -= (ringAmount - 1);
                             }
                             if (unlockedSplitUpgrades <= 0 && gravitonShardsAvailable >= gravitonShardCost) {
                                 gravitonShardsAvailable -= gravitonShardCost;
