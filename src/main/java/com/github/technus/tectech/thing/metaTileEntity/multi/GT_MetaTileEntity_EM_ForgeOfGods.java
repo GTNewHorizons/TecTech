@@ -1378,6 +1378,10 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
         return upgrades[upgradeID];
     }
 
+    public int getRingAmount() {
+        return ringAmount;
+    }
+
     public int getTotalActiveUpgrades() {
         int totalUpgrades = 0;
         for (boolean upgrade : upgrades) {

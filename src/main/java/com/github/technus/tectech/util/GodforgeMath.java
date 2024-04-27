@@ -235,14 +235,7 @@ public class GodforgeMath {
         }
 
         if (godforge.isUpgradeActive(23)) {
-            int ringAmount = 0;
-            if (godforge.isUpgradeActive(26)) {
-                ringAmount++;
-            }
-            if (godforge.isUpgradeActive(29)) {
-                ringAmount++;
-            }
-            voltage *= Math.pow(4, ringAmount);
+            voltage *= Math.pow(4, godforge.getRingAmount());
         }
 
         module.setProcessingVoltage(voltage);
