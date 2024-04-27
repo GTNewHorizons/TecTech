@@ -120,7 +120,6 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
     private static final int MILESTONE_WINDOW_ID = 13;
     private static final int TEXTURE_INDEX = 960;
     private static final int[] FIRST_SPLIT_UPGRADES = new int[] { 12, 13, 14 };
-    private static final int[] RING_UPGRADES = new int[] { 26, 29 };
     private static final long POWER_MILESTONE_CONSTANT = LongMath.pow(10, 15);
     private static final long RECIPE_MILESTONE_CONSTANT = LongMath.pow(10, 7);
     private static final long FUEL_MILESTONE_CONSTANT = 10_000;
@@ -1208,36 +1207,47 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
             case 3 -> TecTechUITextures.BACKGROUND_GLOW_GREEN;
             default -> TecTechUITextures.BACKGROUND_GLOW_BLUE;
         };
-        new TextWidget();
-        ModularWindow.Builder builder = ModularWindow.builder(200, 200).setBackground(background)
-                .widget(ButtonWidget.closeWindowButton(true).setPos(185, 3))
+        int WIDTH = 250;
+        int HEIGHT = 250;
+        int LORE_POS = 110;
+        if (currentUpgradeID == 0) {
+            WIDTH = 300;
+            HEIGHT = 300;
+            LORE_POS = 85;
+        }
+        ModularWindow.Builder builder = ModularWindow.builder(WIDTH, HEIGHT).setBackground(background)
+                .widget(ButtonWidget.closeWindowButton(true).setPos(WIDTH - 15, 3))
                 .widget(
                         new MultiChildWidget()
                                 .addChild(
                                         new TextWidget(translateToLocal("fog.upgrade.text." + (currentUpgradeID)))
-                                                .setTextAlignment(Alignment.Center).setMaxWidth(185)
-                                                .setDefaultColor(0x9c9c9c).setPos(9, 35))
+                                                .setTextAlignment(Alignment.TopLeft).setMaxWidth(WIDTH - 15)
+                                                .setDefaultColor(0x9c9c9c).setPos(9, 30))
                                 .addChild(
-                                        new TextWidget(translateToLocal("fog.upgrade.lore." + (currentUpgradeID)))
-                                                .setTextAlignment(Alignment.Center).setMaxWidth(185)
-                                                .setDefaultColor(0x9c9c9c).setPos(9, 110))
+                                        new TextWidget(
+                                                EnumChatFormatting.ITALIC
+                                                        + translateToLocal("fog.upgrade.lore." + (currentUpgradeID)))
+                                                                .setTextAlignment(Alignment.Center)
+                                                                .setMaxWidth(WIDTH - 15).setDefaultColor(0x9c9c9c)
+                                                                .setPos(9, LORE_POS))
                                 .addChild(
                                         new TextWidget(
                                                 translateToLocal("gt.blockmachines.multimachine.FOG.shardcost") + " "
                                                         + EnumChatFormatting.BLUE
                                                         + gravitonShardCost).setTextAlignment(Alignment.Center)
                                                                 .setScale(0.7f).setMaxWidth(70)
-                                                                .setDefaultColor(0x9c9c9c).setPos(7, 178))
+                                                                .setDefaultColor(0x9c9c9c).setPos(11, HEIGHT - 25))
                                 .addChild(
                                         new TextWidget(
                                                 translateToLocal("gt.blockmachines.multimachine.FOG.availableshards"))
                                                         .setTextAlignment(Alignment.Center).setScale(0.7f)
-                                                        .setMaxWidth(90).setDefaultColor(0x9c9c9c).setPos(113, 178))
+                                                        .setMaxWidth(90).setDefaultColor(0x9c9c9c)
+                                                        .setPos(WIDTH - 87, HEIGHT - 25))
                                 .addChild(
                                         TextWidget.dynamicText(this::gravitonShardAmount)
                                                 .setTextAlignment(Alignment.Center).setScale(0.7f).setMaxWidth(90)
-                                                .setDefaultColor(0x9c9c9c).setPos(173, 185)))
-                .setSize(200, 200)
+                                                .setDefaultColor(0x9c9c9c).setPos(WIDTH - 27, HEIGHT - 18)))
+                .setSize(WIDTH, HEIGHT)
 
                 .widget(new MultiChildWidget().addChild(new ButtonWidget().setOnClick((clickData, widget) -> {
                     int unlockedPrereqUpgrades = 0;
@@ -1293,7 +1303,7 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
                         .addChild(
                                 new TextWidget(translateToLocal("fog.upgrade.confirm"))
                                         .setTextAlignment(Alignment.Center).setScale(0.7f).setMaxWidth(36).setPos(3, 5))
-                        .setPos(79, 177));
+                        .setPos(WIDTH / 2 - 21, HEIGHT - 25));
         return builder.build();
     }
 
@@ -1320,6 +1330,9 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
             allPrereqRequired = requireAllPrerequisites;
             followupUpgrades = followingUpgradeIDs;
             isUpradeSplitStart = isStartOfSplit;
+            if (upgradeID == 0) {
+
+            }
             if (!widget.isClient()) widget.getContext().openSyncedWindow(INDIVIDUAL_UPGRADE_WINDOW_ID);
         }).setSize(40, 15).setBackground(() -> {
             if (upgrades[upgradeID]) {
