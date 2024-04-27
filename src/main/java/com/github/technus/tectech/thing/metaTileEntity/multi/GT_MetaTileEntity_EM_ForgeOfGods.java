@@ -493,7 +493,8 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
                             button.add(TecTechUITextures.BUTTON_CELESTIAL_32x32);
                             button.add(TecTechUITextures.OVERLAY_BUTTON_ARROW_BLUE_UP);
                             return button.toArray(new IDrawable[0]);
-                        }).addTooltip("Path of Celestial Transcendence").setPos(174, 167))
+                        }).addTooltip("Path of Celestial Transcendence").setPos(174, 167)
+                        .setTooltipShowUpDelay(TOOLTIP_DELAY))
                 .widget(
                         new DrawableWidget().setDrawable(TecTechUITextures.PICTURE_HEAT_SINK_SMALL).setPos(174, 183)
                                 .setSize(16, 6))
@@ -506,7 +507,8 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
                     button.add(TecTechUITextures.BUTTON_CELESTIAL_32x32);
                     button.add(TecTechUITextures.OVERLAY_BUTTON_HEAT_ON);
                     return button.toArray(new IDrawable[0]);
-                }).addTooltip(translateToLocal("fog.button.fuelconfig.tooltip")).setPos(174, 110))
+                }).addTooltip(translateToLocal("fog.button.fuelconfig.tooltip")).setPos(174, 110)
+                        .setTooltipShowUpDelay(TOOLTIP_DELAY))
                 .widget(
                         TextWidget.dynamicText(this::storedFuel).setDefaultColor(EnumChatFormatting.WHITE).setPos(6, 8)
                                 .setSize(74, 34))
@@ -526,7 +528,8 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
                     button.add(TecTechUITextures.BUTTON_CELESTIAL_32x32);
                     button.add(TecTechUITextures.OVERLAY_CYCLIC_BLUE);
                     return button.toArray(new IDrawable[0]);
-                }).addTooltip(translateToLocal("fog.button.structurecheck.tooltip")).setPos(8, 91))
+                }).addTooltip(translateToLocal("fog.button.structurecheck.tooltip")).setPos(8, 91)
+                        .setTooltipShowUpDelay(TOOLTIP_DELAY))
                 .widget(new ButtonWidget().setOnClick((clickData, widget) -> {
                     if (!widget.isClient()) {
                         widget.getContext().openSyncedWindow(MILESTONE_WINDOW_ID);
@@ -536,7 +539,8 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
                     button.add(TecTechUITextures.BUTTON_CELESTIAL_32x32);
                     button.add(TecTechUITextures.OVERLAY_BUTTON_FLAG);
                     return button.toArray(new IDrawable[0]);
-                }).addTooltip(translateToLocal("fog.button.milestones.tooltip")).setPos(174, 91));
+                }).addTooltip(translateToLocal("fog.button.milestones.tooltip")).setTooltipShowUpDelay(TOOLTIP_DELAY)
+                        .setPos(174, 91));
     }
 
     @Override
@@ -647,7 +651,8 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
                                 .addTooltip(translateToLocal("gt.blockmachines.multimachine.FOG.fuelinfo.1"))
                                 .addTooltip(translateToLocal("gt.blockmachines.multimachine.FOG.fuelinfo.2"))
                                 .addTooltip(translateToLocal("gt.blockmachines.multimachine.FOG.fuelinfo.3"))
-                                .addTooltip(translateToLocal("gt.blockmachines.multimachine.FOG.fuelinfo.4")))
+                                .addTooltip(translateToLocal("gt.blockmachines.multimachine.FOG.fuelinfo.4"))
+                                .setTooltipShowUpDelay(TOOLTIP_DELAY))
                 .widget(
                         TextWidget.localised("gt.blockmachines.multimachine.FOG.fueltype").setPos(3, 57)
                                 .setSize(74, 24))
@@ -669,7 +674,7 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
                                         addFluidNameInfo(tooltip, fluid);
                                         addAdditionalFluidInfo(tooltip, fluid);
                                     }
-                                }.setPos(1, 1).setSize(16, 16))
+                                }.setTooltipShowUpDelay(TOOLTIP_DELAY).setPos(1, 1).setSize(16, 16))
                                 .addChild(new ButtonWidget().setOnClick((clickData, widget) -> {
                                     TecTech.proxy.playSound(getBaseMetaTileEntity(), "fx_click");
                                     selectedFuelType = 0;
@@ -697,7 +702,7 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
                                         addFluidNameInfo(tooltip, fluid);
                                         addAdditionalFluidInfo(tooltip, fluid);
                                     }
-                                }.setPos(1, 1).setSize(16, 16))
+                                }.setTooltipShowUpDelay(TOOLTIP_DELAY).setPos(1, 1).setSize(16, 16))
                                 .addChild(new ButtonWidget().setOnClick((clickData, widget) -> {
                                     TecTech.proxy.playSound(getBaseMetaTileEntity(), "fx_click");
                                     selectedFuelType = 1;
@@ -724,7 +729,7 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
                                         addFluidNameInfo(tooltip, fluid);
                                         addAdditionalFluidInfo(tooltip, fluid);
                                     }
-                                }.setPos(1, 1).setSize(16, 16))
+                                }.setTooltipShowUpDelay(TOOLTIP_DELAY).setPos(1, 1).setSize(16, 16))
                                 .addChild(new ButtonWidget().setOnClick((clickData, widget) -> {
                                     TecTech.proxy.playSound(getBaseMetaTileEntity(), "fx_click");
                                     selectedFuelType = 2;
@@ -777,30 +782,32 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
         builder.widget(
                 new ProgressBar().setProgress(() -> powerMilestonePercentage).setDirection(ProgressBar.Direction.RIGHT)
                         .setTexture(TecTechUITextures.PROGRESSBAR_GODFORGE_MILESTONE_RED, 130).setSynced(true, false)
-                        .setSize(130, 7).setPos(37, 70).addTooltip(milestoneProgressText(1, false)))
+                        .setSize(130, 7).setPos(37, 70).addTooltip(milestoneProgressText(1, false))
+                        .setTooltipShowUpDelay(TOOLTIP_DELAY))
                 .widget(
                         new ProgressBar().setProgress(() -> recipeMilestonePercentage)
                                 .setDirection(ProgressBar.Direction.RIGHT)
                                 .setTexture(TecTechUITextures.PROGRESSBAR_GODFORGE_MILESTONE_PURPLE, 130)
                                 .setSynced(true, false).setSize(130, 7).setPos(233, 70)
-                                .addTooltip(milestoneProgressText(2, false)))
+                                .addTooltip(milestoneProgressText(2, false)).setTooltipShowUpDelay(TOOLTIP_DELAY))
                 .widget(
                         new ProgressBar().setProgress(() -> fuelMilestonePercentage)
                                 .setDirection(ProgressBar.Direction.RIGHT)
                                 .setTexture(TecTechUITextures.PROGRESSBAR_GODFORGE_MILESTONE_BLUE, 130)
                                 .setSynced(true, false).setSize(130, 7).setPos(37, 215)
-                                .addTooltip(milestoneProgressText(3, false)))
+                                .addTooltip(milestoneProgressText(3, false)).setTooltipShowUpDelay(TOOLTIP_DELAY))
                 .widget(
                         new ProgressBar().setProgress(() -> milestoneProgress[3] / 7f)
                                 .setDirection(ProgressBar.Direction.RIGHT)
                                 .setTexture(TecTechUITextures.PROGRESSBAR_GODFORGE_MILESTONE_RAINBOW, 130)
                                 .setSynced(true, false).setSize(130, 7).setPos(233, 215)
-                                .addTooltip(milestoneProgressText(4, false)))
+                                .addTooltip(milestoneProgressText(4, false)).setTooltipShowUpDelay(TOOLTIP_DELAY))
                 .widget(
                         TextWidget.dynamicText(() -> milestoneProgressText(1, true)).setTextAlignment(Alignment.Center)
                                 .setScale(0.7f).setMaxWidth(90).setDefaultColor(EnumChatFormatting.DARK_GRAY)
                                 .setPos(150, 85)
-                                .addTooltip(translateToLocal("gt.blockmachines.multimachine.FOG.milestoneprogress")))
+                                .addTooltip(translateToLocal("gt.blockmachines.multimachine.FOG.milestoneprogress"))
+                                .setTooltipShowUpDelay(TOOLTIP_DELAY))
                 .widget(
                         new ExpandTab().setNormalTexture(ModularUITextures.ARROW_DOWN.withFixedSize(14, 14, 3, 3))
                                 .widget(
@@ -1173,7 +1180,8 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
                             .addChild(
                                     new ButtonWidget().setOnClick((clickData, widget) -> upgrades = new boolean[31])
                                             .setSize(40, 15).setBackground(GT_UITextures.BUTTON_STANDARD)
-                                            .addTooltip(translateToLocal("fog.debug.resetbutton.tooltip")))
+                                            .addTooltip(translateToLocal("fog.debug.resetbutton.tooltip"))
+                                            .setTooltipShowUpDelay(TOOLTIP_DELAY))
                             .addChild(
                                     new TextWidget(translateToLocal("fog.debug.resetbutton.text"))
                                             .setTextAlignment(Alignment.Center).setScale(0.57f).setMaxWidth(36)
@@ -1185,6 +1193,7 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
                                             .setTextAlignment(Alignment.Center).setTextColor(Color.WHITE.normal)
                                             .setSize(25, 18).setPos(4, 16)
                                             .addTooltip(translateToLocal("fog.debug.gravitonshardsetter.tooltip"))
+                                            .setTooltipShowUpDelay(TOOLTIP_DELAY)
                                             .setBackground(GT_UITextures.BACKGROUND_TEXT_FIELD))
                             .setPos(4, 354));
 
@@ -1280,7 +1289,7 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
                     } else {
                         return new IDrawable[] { GT_UITextures.BUTTON_STANDARD };
                     }
-                }).addTooltip(translateToLocal("fog.upgrade.confirm")))
+                }).addTooltip(translateToLocal("fog.upgrade.confirm")).setTooltipShowUpDelay(TOOLTIP_DELAY))
                         .addChild(
                                 new TextWidget(translateToLocal("fog.upgrade.confirm"))
                                         .setTextAlignment(Alignment.Center).setScale(0.7f).setMaxWidth(36).setPos(3, 5))
@@ -1318,7 +1327,7 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
             } else {
                 return new IDrawable[] { GT_UITextures.BUTTON_STANDARD };
             }
-        }).addTooltip(translateToLocal("fog.upgrade.tt." + upgradeID)))
+        }).addTooltip(translateToLocal("fog.upgrade.tt." + upgradeID)).setTooltipShowUpDelay(TOOLTIP_DELAY))
                 .addChild(
                         new TextWidget(translateToLocal("fog.upgrade.tt." + upgradeID))
                                 .setTextAlignment(Alignment.Center).setScale(0.57f).setMaxWidth(36).setPos(3, 3))
