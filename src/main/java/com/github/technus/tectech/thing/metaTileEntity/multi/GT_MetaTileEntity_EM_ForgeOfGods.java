@@ -143,7 +143,7 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
                     STRUCTURE_PIECE_SECOND_RING,
                     stackSize,
                     55,
-                    10,
+                    11,
                     -73,
                     realBudget,
                     env,
@@ -155,7 +155,7 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
                     STRUCTURE_PIECE_THIRD_RING,
                     stackSize,
                     47,
-                    12,
+                    13,
                     -82,
                     realBudget,
                     env,
@@ -223,10 +223,10 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
     public void construct(ItemStack stackSize, boolean hintsOnly) {
         structureBuild_EM(STRUCTURE_PIECE_MAIN, 63, 14, 0, stackSize, hintsOnly);
         if (isUpgradeActive(26) && stackSize.stackSize > 1) {
-            buildPiece(STRUCTURE_PIECE_SECOND_RING, stackSize, hintsOnly, 55, 10, -73);
+            buildPiece(STRUCTURE_PIECE_SECOND_RING, stackSize, hintsOnly, 55, 11, -73);
         }
         if (isUpgradeActive(29) && stackSize.stackSize > 2) {
-            buildPiece(STRUCTURE_PIECE_THIRD_RING, stackSize, hintsOnly, 47, 12, -82);
+            buildPiece(STRUCTURE_PIECE_THIRD_RING, stackSize, hintsOnly, 47, 13, -82);
         }
     }
 
@@ -269,9 +269,9 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
             return false;
         }
 
-        if (isUpgradeActive(26) && checkPiece(STRUCTURE_PIECE_SECOND_RING, 55, 10, -73)) {
+        if (isUpgradeActive(26) && checkPiece(STRUCTURE_PIECE_SECOND_RING, 55, 11, -73)) {
             ringAmount = 2;
-            if (isUpgradeActive(29) && checkPiece(STRUCTURE_PIECE_THIRD_RING, 47, 12, -82)) {
+            if (isUpgradeActive(29) && checkPiece(STRUCTURE_PIECE_THIRD_RING, 47, 13, -82)) {
                 ringAmount = 3;
             }
         }
@@ -1303,7 +1303,7 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
                         .addChild(
                                 new TextWidget(translateToLocal("fog.upgrade.confirm"))
                                         .setTextAlignment(Alignment.Center).setScale(0.7f).setMaxWidth(36).setPos(3, 5))
-                        .setPos(WIDTH / 2 - 21, HEIGHT - 25));
+                        .setPos(WIDTH / 2 - 21, (int) (HEIGHT * 0.9)));
         return builder.build();
     }
 
