@@ -1330,9 +1330,6 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
             allPrereqRequired = requireAllPrerequisites;
             followupUpgrades = followingUpgradeIDs;
             isUpradeSplitStart = isStartOfSplit;
-            if (upgradeID == 0) {
-
-            }
             if (!widget.isClient()) widget.getContext().openSyncedWindow(INDIVIDUAL_UPGRADE_WINDOW_ID);
         }).setSize(40, 15).setBackground(() -> {
             if (upgrades[upgradeID]) {
