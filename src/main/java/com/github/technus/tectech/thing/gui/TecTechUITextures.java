@@ -22,6 +22,7 @@ public class TecTechUITextures {
     public static final UITexture BACKGROUND_GLOW_PURPLE = UITexture.fullImage(MODID, "gui/background/purple_glow");
     public static final UITexture BACKGROUND_GLOW_BLUE = UITexture.fullImage(MODID, "gui/background/blue_glow");
     public static final UITexture BACKGROUND_GLOW_GREEN = UITexture.fullImage(MODID, "gui/background/green_glow");
+    public static final UITexture BACKGROUND_SPACE = UITexture.fullImage(MODID, "gui/background/space");
 
     public static final UITexture BUTTON_STANDARD_16x16 = UITexture.fullImage(MODID, "gui/button/standard_16x16");
     public static final UITexture BUTTON_STANDARD_LIGHT_16x16 = UITexture
@@ -87,6 +88,8 @@ public class TecTechUITextures {
             .fullImage(MODID, "gui/progressbar/research_station_3");
     public static final UITexture PROGRESSBAR_GODFORGE_PLASMA = UITexture
             .fullImage(MODID, "gui/progressbar/godforge_plasma");
+    public static final UITexture PROGRESSBAR_GODFORGE_MILESTONE_BACKGROUND = UITexture
+            .fullImage(MODID, "gui/progressbar/godforge_progressbar_background");
     public static final UITexture PROGRESSBAR_GODFORGE_MILESTONE_BLUE = UITexture
             .fullImage(MODID, "gui/progressbar/godforge_progressbar_blue");
     public static final UITexture PROGRESSBAR_GODFORGE_MILESTONE_RED = UITexture
@@ -95,6 +98,14 @@ public class TecTechUITextures {
             .fullImage(MODID, "gui/progressbar/godforge_progressbar_purple");
     public static final UITexture PROGRESSBAR_GODFORGE_MILESTONE_RAINBOW = UITexture
             .fullImage(MODID, "gui/progressbar/godforge_progressbar_rainbow");
+    public static final UITexture PROGRESSBAR_GODFORGE_MILESTONE_BLUE_INVERTED = UITexture
+            .fullImage(MODID, "gui/progressbar/godforge_progressbar_blue_inverted");
+    public static final UITexture PROGRESSBAR_GODFORGE_MILESTONE_RED_INVERTED = UITexture
+            .fullImage(MODID, "gui/progressbar/godforge_progressbar_red_inverted");
+    public static final UITexture PROGRESSBAR_GODFORGE_MILESTONE_PURPLE_INVERTED = UITexture
+            .fullImage(MODID, "gui/progressbar/godforge_progressbar_purple_inverted");
+    public static final UITexture PROGRESSBAR_GODFORGE_MILESTONE_RAINBOW_INVERTED = UITexture
+            .fullImage(MODID, "gui/progressbar/godforge_progressbar_rainbow_inverted");
 
     public static final UITexture PICTURE_TECTECH_LOGO = UITexture.fullImage(MODID, "gui/picture/tectech_logo");
     public static final UITexture PICTURE_TECTECH_LOGO_DARK = UITexture

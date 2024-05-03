@@ -68,7 +68,6 @@ import com.gtnewhorizons.modularui.api.widget.IWidgetBuilder;
 import com.gtnewhorizons.modularui.api.widget.Widget;
 import com.gtnewhorizons.modularui.common.widget.ButtonWidget;
 import com.gtnewhorizons.modularui.common.widget.DrawableWidget;
-import com.gtnewhorizons.modularui.common.widget.ExpandTab;
 import com.gtnewhorizons.modularui.common.widget.FakeSyncWidget;
 import com.gtnewhorizons.modularui.common.widget.FluidNameHolderWidget;
 import com.gtnewhorizons.modularui.common.widget.MultiChildWidget;
@@ -109,6 +108,9 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
     private float powerMilestonePercentage = 0;
     private float recipeMilestonePercentage = 0;
     private float fuelMilestonePercentage = 0;
+    private float invertedPowerMilestonePercentage = 0;
+    private float invertedRecipeMilestonePercentage = 0;
+    private float invertedFuelMilestonePercentage = 0;
     private BigInteger totalPowerConsumed = BigInteger.ZERO;
     private boolean batteryCharging = false;
     public ArrayList<GT_MetaTileEntity_EM_BaseModule> moduleHatches = new ArrayList<>();
@@ -123,6 +125,10 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
     private static final long POWER_MILESTONE_CONSTANT = LongMath.pow(10, 15);
     private static final long RECIPE_MILESTONE_CONSTANT = LongMath.pow(10, 7);
     private static final long FUEL_MILESTONE_CONSTANT = 10_000;
+    private static final long RECIPE_MILESTONE_T7_CONSTANT = RECIPE_MILESTONE_CONSTANT * LongMath.pow(6, 6);
+    private static final long FUEL_MILESTONE_T7_CONSTANT = FUEL_MILESTONE_CONSTANT * LongMath.pow(3, 6);
+    private static final BigInteger POWER_MILESTONE_T7_CONSTANT = BigInteger.valueOf(POWER_MILESTONE_CONSTANT)
+            .multiply(BigInteger.valueOf(LongMath.pow(9, 6)));
     private static final double POWER_LOG_CONSTANT = Math.log(9);
     private static final double RECIPE_LOG_CONSTANT = Math.log(6);
     private static final double FUEL_LOG_CONSTANT = Math.log(3);
@@ -751,7 +757,7 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
         final int WIDTH = 400;
         final int HEIGHT = 300;
         ModularWindow.Builder builder = ModularWindow.builder(WIDTH, HEIGHT);
-        builder.setBackground(GT_UITextures.BACKGROUND_SINGLEBLOCK_DEFAULT);
+        builder.setBackground(TecTechUITextures.BACKGROUND_SPACE);
         builder.setGuiTint(getGUIColorization());
         builder.setDraggable(true);
         builder.widget(
@@ -767,17 +773,29 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
                 new DrawableWidget().setDrawable(TecTechUITextures.PICTURE_GODFORGE_MILESTONE_COMPOSITION)
                         .setPos(248, 169).setSize(100, 100));
         builder.widget(
-                TextWidget.localised("gt.blockmachines.multimachine.FOG.powermilestone").setPos(77, 45)
-                        .setSize(50, 30));
+                TextWidget.localised("gt.blockmachines.multimachine.FOG.powermilestone")
+                        .setDefaultColor(EnumChatFormatting.GOLD).setPos(77, 45).setSize(50, 30));
         builder.widget(
-                TextWidget.localised("gt.blockmachines.multimachine.FOG.recipemilestone").setPos(268, 45)
-                        .setSize(60, 30));
+                TextWidget.localised("gt.blockmachines.multimachine.FOG.recipemilestone")
+                        .setDefaultColor(EnumChatFormatting.GOLD).setPos(268, 45).setSize(60, 30));
         builder.widget(
-                TextWidget.localised("gt.blockmachines.multimachine.FOG.fuelmilestone").setPos(77, 190)
-                        .setSize(50, 30));
+                TextWidget.localised("gt.blockmachines.multimachine.FOG.fuelmilestone")
+                        .setDefaultColor(EnumChatFormatting.GOLD).setPos(77, 190).setSize(50, 30));
         builder.widget(
-                TextWidget.localised("gt.blockmachines.multimachine.FOG.purchasablemilestone").setPos(268, 190)
-                        .setSize(60, 30));
+                TextWidget.localised("gt.blockmachines.multimachine.FOG.purchasablemilestone")
+                        .setDefaultColor(EnumChatFormatting.GOLD).setPos(268, 190).setSize(60, 30));
+        builder.widget(
+                new DrawableWidget().setDrawable(TecTechUITextures.PROGRESSBAR_GODFORGE_MILESTONE_BACKGROUND)
+                        .setPos(37, 70).setSize(130, 7))
+                .widget(
+                        new DrawableWidget().setDrawable(TecTechUITextures.PROGRESSBAR_GODFORGE_MILESTONE_BACKGROUND)
+                                .setPos(233, 70).setSize(130, 7))
+                .widget(
+                        new DrawableWidget().setDrawable(TecTechUITextures.PROGRESSBAR_GODFORGE_MILESTONE_BACKGROUND)
+                                .setPos(37, 215).setSize(130, 7))
+                .widget(
+                        new DrawableWidget().setDrawable(TecTechUITextures.PROGRESSBAR_GODFORGE_MILESTONE_BACKGROUND)
+                                .setPos(233, 215).setSize(130, 7));
         builder.widget(
                 new ProgressBar().setProgress(() -> powerMilestonePercentage).setDirection(ProgressBar.Direction.RIGHT)
                         .setTexture(TecTechUITextures.PROGRESSBAR_GODFORGE_MILESTONE_RED, 130).setSynced(true, false)
@@ -802,6 +820,32 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
                                 .setSynced(true, false).setSize(130, 7).setPos(233, 215)
                                 .addTooltip(milestoneProgressText(4, false)).setTooltipShowUpDelay(TOOLTIP_DELAY))
                 .widget(
+                        new ProgressBar().setProgress(() -> invertedPowerMilestonePercentage)
+                                .setDirection(ProgressBar.Direction.LEFT)
+                                .setTexture(TecTechUITextures.PROGRESSBAR_GODFORGE_MILESTONE_RED_INVERTED, 130)
+                                .setSynced(true, false).setSize(130, 7).setPos(37, 70)
+                                .addTooltip(milestoneProgressText(1, false)).setTooltipShowUpDelay(TOOLTIP_DELAY))
+                .widget(
+                        new ProgressBar().setProgress(() -> invertedRecipeMilestonePercentage)
+                                .setDirection(ProgressBar.Direction.LEFT)
+                                .setTexture(TecTechUITextures.PROGRESSBAR_GODFORGE_MILESTONE_PURPLE_INVERTED, 130)
+                                .setSynced(true, false).setSize(130, 7).setPos(233, 70)
+                                .addTooltip(milestoneProgressText(2, false)).setTooltipShowUpDelay(TOOLTIP_DELAY))
+                .widget(
+                        new ProgressBar().setProgress(() -> invertedFuelMilestonePercentage)
+                                .setDirection(ProgressBar.Direction.LEFT)
+                                .setTexture(TecTechUITextures.PROGRESSBAR_GODFORGE_MILESTONE_BLUE_INVERTED, 130)
+                                .setSynced(true, false).setSize(130, 7).setPos(37, 215)
+                                .addTooltip(milestoneProgressText(3, false)).setTooltipShowUpDelay(TOOLTIP_DELAY))
+                .widget(
+                        new ProgressBar().setProgress(() -> 1 - milestoneProgress[3] / 7f)
+                                .setDirection(ProgressBar.Direction.LEFT)
+                                .setTexture(TecTechUITextures.PROGRESSBAR_GODFORGE_MILESTONE_RAINBOW_INVERTED, 130)
+                                .setSynced(true, false).setSize(130, 7).setPos(233, 215)
+                                .addTooltip(milestoneProgressText(4, false)).setTooltipShowUpDelay(TOOLTIP_DELAY))
+                // spotless:off
+                /*
+                .widget(
                         TextWidget.dynamicText(() -> milestoneProgressText(1, true)).setTextAlignment(Alignment.Center)
                                 .setScale(0.7f).setMaxWidth(90).setDefaultColor(EnumChatFormatting.DARK_GRAY)
                                 .setPos(150, 85)
@@ -817,7 +861,9 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
                                                 .setSize(100, 20).setPos(5, 20))
                                 .setExpandedSize(130, 130).setSize(20, 20).setPos(37, 75)
                                 .setBackground(TecTechUITextures.BACKGROUND_GLOW_ORANGE))
-                .widget(ButtonWidget.closeWindowButton(true).setPos(384, 4));
+                 */
+                // spotless:on
+                .widget(ButtonWidget.closeWindowButton(true).setPos(382, 6));
         return builder.build();
     }
 
@@ -1424,6 +1470,9 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
     }
 
     private void determineMilestoneProgress() {
+        int closestRelevantSeven;
+        float rawProgress;
+        float actualProgress;
         if (milestoneProgress[0] < 7) {
             powerMilestonePercentage = (float) max(
                     (log((totalPowerConsumed.divide(BigInteger.valueOf(POWER_MILESTONE_CONSTANT))).longValue())
@@ -1431,15 +1480,36 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
                     0) / 7;
             milestoneProgress[0] = (int) floor(powerMilestonePercentage * 7);
         } else {
-            powerMilestonePercentage = 1;
+            rawProgress = (totalPowerConsumed.divide(POWER_MILESTONE_T7_CONSTANT).floatValue() - 1) / 7;
+            closestRelevantSeven = (int) floor(rawProgress);
+            actualProgress = rawProgress - closestRelevantSeven;
+            milestoneProgress[0] = 7 + closestRelevantSeven;
+            if (closestRelevantSeven % 2 == 0) {
+                invertedPowerMilestonePercentage = actualProgress;
+                powerMilestonePercentage = 1 - invertedPowerMilestonePercentage;
+            } else {
+                powerMilestonePercentage = actualProgress;
+                invertedPowerMilestonePercentage = 1 - powerMilestonePercentage;
+            }
         }
+
         if (milestoneProgress[1] < 7) {
             recipeMilestonePercentage = (float) max(
                     (log(totalRecipesProcessed * 1f / RECIPE_MILESTONE_CONSTANT) / RECIPE_LOG_CONSTANT + 1),
                     0) / 7;
             milestoneProgress[1] = (int) floor(recipeMilestonePercentage * 7);
         } else {
-            recipeMilestonePercentage = 1;
+            rawProgress = (((float) totalRecipesProcessed / RECIPE_MILESTONE_T7_CONSTANT) - 1) / 7;
+            closestRelevantSeven = (int) floor(rawProgress);
+            actualProgress = rawProgress - closestRelevantSeven;
+            milestoneProgress[1] = 7 + closestRelevantSeven;
+            if (closestRelevantSeven % 2 == 0) {
+                invertedRecipeMilestonePercentage = actualProgress;
+                recipeMilestonePercentage = 1 - invertedRecipeMilestonePercentage;
+            } else {
+                recipeMilestonePercentage = actualProgress;
+                invertedRecipeMilestonePercentage = 1 - recipeMilestonePercentage;
+            }
         }
         if (milestoneProgress[2] < 7) {
             fuelMilestonePercentage = (float) max(
@@ -1447,14 +1517,23 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
                     0) / 7;
             milestoneProgress[2] = (int) floor(fuelMilestonePercentage * 7);
         } else {
-            fuelMilestonePercentage = 1;
+            rawProgress = (((float) totalFuelConsumed / FUEL_MILESTONE_T7_CONSTANT) - 1) / 7;
+            closestRelevantSeven = (int) floor(rawProgress);
+            actualProgress = rawProgress - closestRelevantSeven;
+            milestoneProgress[2] = 7 + closestRelevantSeven;
+            if ((closestRelevantSeven % 2) == 0) {
+                invertedFuelMilestonePercentage = actualProgress;
+                fuelMilestonePercentage = 1 - invertedFuelMilestonePercentage;
+            } else {
+                fuelMilestonePercentage = actualProgress;
+                invertedFuelMilestonePercentage = 1 - fuelMilestonePercentage;
+            }
         }
     }
 
     private void determineGravitonShardAmount() {
         int sum = 0;
         for (int progress : milestoneProgress) {
-            progress = Math.min(progress, 7);
             sum += progress * (progress + 1) / 2;
         }
         gravitonShardsAvailable = sum - gravitonShardsSpent;
