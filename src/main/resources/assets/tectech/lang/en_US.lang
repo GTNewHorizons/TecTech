@@ -1018,6 +1018,7 @@ gt.blockmachines.multimachine.FOG.voltageinfo=Set processing voltage
 gt.blockmachines.multimachine.FOG.progress=Progress
 gt.blockmachines.multimachine.FOG.milestonecomplete=Complete
 gt.blockmachines.multimachine.FOG.milestoneprogress=Current progress towards next milestone
+gt.blockmachines.multimachine.FOG.milestoneinfo=View Milestone Progress
 gt.blockmachines.multimachine.FOG.powermilestone=Charge
 gt.blockmachines.multimachine.FOG.recipemilestone=Conversion
 gt.blockmachines.multimachine.FOG.fuelmilestone=Catalyst

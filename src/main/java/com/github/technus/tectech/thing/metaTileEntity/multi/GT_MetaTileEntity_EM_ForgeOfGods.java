@@ -120,6 +120,7 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
     private static final int INDIVIDUAL_UPGRADE_WINDOW_ID = 11;
     private static final int BATTERY_CONFIG_WINDOW_ID = 12;
     private static final int MILESTONE_WINDOW_ID = 13;
+    private static final int INDIVIDUAL_MILESTONE_WINDOW_ID = 14;
     private static final int TEXTURE_INDEX = 960;
     private static final int[] FIRST_SPLIT_UPGRADES = new int[] { 12, 13, 14 };
     private static final long POWER_MILESTONE_CONSTANT = LongMath.pow(10, 15);
@@ -489,6 +490,7 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
         buildContext.addSyncedWindow(FUEL_CONFIG_WINDOW_ID, this::createFuelConfigWindow);
         buildContext.addSyncedWindow(BATTERY_CONFIG_WINDOW_ID, this::createBatteryWindow);
         buildContext.addSyncedWindow(MILESTONE_WINDOW_ID, this::createMilestoneWindow);
+        buildContext.addSyncedWindow(INDIVIDUAL_MILESTONE_WINDOW_ID, this::createIndividualMilestoneWindow);
         builder.widget(
                 new ButtonWidget().setOnClick(
                         (clickData, widget) -> {
@@ -760,18 +762,10 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
         builder.setBackground(TecTechUITextures.BACKGROUND_SPACE);
         builder.setGuiTint(getGUIColorization());
         builder.setDraggable(true);
-        builder.widget(
-                new DrawableWidget().setDrawable(TecTechUITextures.PICTURE_GODFORGE_MILESTONE_CHARGE).setPos(62, 24)
-                        .setSize(80, 100));
-        builder.widget(
-                new DrawableWidget().setDrawable(TecTechUITextures.PICTURE_GODFORGE_MILESTONE_CONVERSION)
-                        .setPos(263, 25).setSize(70, 98));
-        builder.widget(
-                new DrawableWidget().setDrawable(TecTechUITextures.PICTURE_GODFORGE_MILESTONE_CATALYST).setPos(52, 169)
-                        .setSize(100, 100));
-        builder.widget(
-                new DrawableWidget().setDrawable(TecTechUITextures.PICTURE_GODFORGE_MILESTONE_COMPOSITION)
-                        .setPos(248, 169).setSize(100, 100));
+        builder.widget(createMilestoneButton(0, 80, 100, new Pos2d(62, 24)));
+        builder.widget(createMilestoneButton(1, 70, 98, new Pos2d(263, 25)));
+        builder.widget(createMilestoneButton(2, 100, 100, new Pos2d(52, 169)));
+        builder.widget(createMilestoneButton(3, 100, 100, new Pos2d(248, 169)));
         builder.widget(
                 TextWidget.localised("gt.blockmachines.multimachine.FOG.powermilestone")
                         .setDefaultColor(EnumChatFormatting.GOLD).setPos(77, 45).setSize(50, 30));
@@ -867,8 +861,68 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
         return builder.build();
     }
 
+    protected ModularWindow createIndividualMilestoneWindow(final EntityPlayer player) {
+        final int WIDTH = 150;
+        final int HEIGHT = 150;
+        int symbol_width;
+        int symbol_height;
+        ModularWindow.Builder builder = ModularWindow.builder(WIDTH, HEIGHT);
+        UITexture symbol;
+        switch (currentMilestoneID) {
+            case 1 -> {
+                symbol = TecTechUITextures.PICTURE_GODFORGE_MILESTONE_CONVERSION;
+                symbol_width = 54;
+                symbol_height = 75;
+            }
+            case 2 -> {
+                symbol = TecTechUITextures.PICTURE_GODFORGE_MILESTONE_CATALYST;
+                symbol_width = 75;
+                symbol_height = 75;
+            }
+            case 3 -> {
+                symbol = TecTechUITextures.PICTURE_GODFORGE_MILESTONE_COMPOSITION;
+                symbol_width = 75;
+                symbol_height = 75;
+            }
+            default -> {
+                symbol = TecTechUITextures.PICTURE_GODFORGE_MILESTONE_CHARGE;
+                symbol_width = 60;
+                symbol_height = 75;
+            }
+        }
+
+        builder.setBackground(TecTechUITextures.BACKGROUND_GLOW_WHITE);
+        builder.setDraggable(true);
+        builder.widget(
+                new DrawableWidget().setDrawable(symbol).setSize(symbol_width, symbol_height)
+                        .setPos((WIDTH - symbol_width) / 2, (HEIGHT - symbol_height) / 2))
+                .widget(
+                        TextWidget.dynamicText(() -> milestoneProgressText(currentMilestoneID + 1, false))
+                                .setScale(0.5f).setSize(100, 20).setPos(5, 20));
+
+        return builder.build();
+    }
+
+    private int currentMilestoneID = 0;
+
+    private Widget createMilestoneButton(int milestoneID, int width, int height, Pos2d pos) {
+        return new ButtonWidget().setOnClick((clickData, widget) -> {
+            currentMilestoneID = milestoneID;
+            if (!widget.isClient()) {
+                widget.getContext().openSyncedWindow(INDIVIDUAL_MILESTONE_WINDOW_ID);
+            }
+        }).setSize(width, height).setBackground(() -> switch (milestoneID) {
+            case 1 -> new IDrawable[] { TecTechUITextures.PICTURE_GODFORGE_MILESTONE_CONVERSION_GLOW };
+            case 2 -> new IDrawable[] { TecTechUITextures.PICTURE_GODFORGE_MILESTONE_CATALYST_GLOW };
+            case 3 -> new IDrawable[] { TecTechUITextures.PICTURE_GODFORGE_MILESTONE_COMPOSITION_GLOW };
+            default -> new IDrawable[] { TecTechUITextures.PICTURE_GODFORGE_MILESTONE_CHARGE_GLOW };
+        }).addTooltip(translateToLocal("gt.blockmachines.multimachine.FOG.milestoneinfo")).setPos(pos)
+                .setTooltipShowUpDelay(TOOLTIP_DELAY);
+    }
+
     private int currentUpgradeID = 0;
     private int currentColorCode = 0;
+    private int currentMilestoneBG = 0;
     private int gravitonShardCost = 0;
     private int[] prereqUpgrades = new int[] {};
     private int[] followupUpgrades = new int[] {};
@@ -881,12 +935,24 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
         final int PARENT_WIDTH = 300;
         final int PARENT_HEIGHT = 1000;
         ModularWindow.Builder builder = ModularWindow.builder(PARENT_WIDTH, PARENT_HEIGHT);
-        scrollable.widget(
-                createUpgradeBox(0, 0, new int[] {}, false, new int[] { 1 }, false, 0, new Pos2d(126, 56), scrollable))
+        scrollable
+                .widget(
+                        createUpgradeBox(
+                                0,
+                                0,
+                                3,
+                                new int[] {},
+                                false,
+                                new int[] { 1 },
+                                false,
+                                0,
+                                new Pos2d(126, 56),
+                                scrollable))
                 .widget(
                         createUpgradeBox(
                                 1,
                                 0,
+                                1,
                                 new int[] { 0 },
                                 false,
                                 new int[] { 2, 3 },
@@ -898,6 +964,7 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
                         createUpgradeBox(
                                 2,
                                 0,
+                                2,
                                 new int[] { 1 },
                                 false,
                                 new int[] { 4, 5 },
@@ -909,6 +976,7 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
                         createUpgradeBox(
                                 3,
                                 0,
+                                2,
                                 new int[] { 1 },
                                 false,
                                 new int[] { 5, 6 },
@@ -919,6 +987,7 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
                 .widget(
                         createUpgradeBox(
                                 4,
+                                0,
                                 0,
                                 new int[] { 2 },
                                 false,
@@ -931,6 +1000,7 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
                         createUpgradeBox(
                                 5,
                                 0,
+                                3,
                                 new int[] { 2, 3 },
                                 false,
                                 new int[] { 7 },
@@ -942,6 +1012,7 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
                         createUpgradeBox(
                                 6,
                                 0,
+                                1,
                                 new int[] { 3 },
                                 false,
                                 new int[] { 10 },
@@ -953,6 +1024,7 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
                         createUpgradeBox(
                                 7,
                                 0,
+                                3,
                                 new int[] { 5 },
                                 false,
                                 new int[] { 8, 9, 10 },
@@ -963,6 +1035,7 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
                 .widget(
                         createUpgradeBox(
                                 8,
+                                0,
                                 0,
                                 new int[] { 4, 7 },
                                 true,
@@ -975,6 +1048,7 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
                         createUpgradeBox(
                                 9,
                                 0,
+                                2,
                                 new int[] { 7 },
                                 false,
                                 new int[] {},
@@ -986,6 +1060,7 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
                         createUpgradeBox(
                                 10,
                                 0,
+                                1,
                                 new int[] { 6, 7 },
                                 true,
                                 new int[] { 11 },
@@ -997,6 +1072,7 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
                         createUpgradeBox(
                                 11,
                                 0,
+                                3,
                                 new int[] { 8, 10 },
                                 false,
                                 new int[] { 12, 13, 14 },
@@ -1008,6 +1084,7 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
                         createUpgradeBox(
                                 12,
                                 1,
+                                2,
                                 new int[] { 11 },
                                 false,
                                 new int[] { 17 },
@@ -1019,6 +1096,7 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
                         createUpgradeBox(
                                 13,
                                 2,
+                                1,
                                 new int[] { 11 },
                                 false,
                                 new int[] { 18 },
@@ -1030,6 +1108,7 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
                         createUpgradeBox(
                                 14,
                                 3,
+                                0,
                                 new int[] { 11 },
                                 false,
                                 new int[] { 15, 19 },
@@ -1041,6 +1120,7 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
                         createUpgradeBox(
                                 15,
                                 3,
+                                1,
                                 new int[] { 14 },
                                 false,
                                 new int[] {},
@@ -1051,6 +1131,7 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
                 .widget(
                         createUpgradeBox(
                                 16,
+                                1,
                                 1,
                                 new int[] { 17 },
                                 false,
@@ -1063,6 +1144,7 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
                         createUpgradeBox(
                                 17,
                                 1,
+                                0,
                                 new int[] { 12 },
                                 false,
                                 new int[] { 16, 20 },
@@ -1074,6 +1156,7 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
                         createUpgradeBox(
                                 18,
                                 2,
+                                1,
                                 new int[] { 13 },
                                 false,
                                 new int[] { 21 },
@@ -1085,6 +1168,7 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
                         createUpgradeBox(
                                 19,
                                 3,
+                                0,
                                 new int[] { 14 },
                                 false,
                                 new int[] { 22 },
@@ -1096,6 +1180,7 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
                         createUpgradeBox(
                                 20,
                                 1,
+                                0,
                                 new int[] { 17 },
                                 false,
                                 new int[] { 23 },
@@ -1107,6 +1192,7 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
                         createUpgradeBox(
                                 21,
                                 2,
+                                1,
                                 new int[] { 18 },
                                 false,
                                 new int[] { 23 },
@@ -1118,6 +1204,7 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
                         createUpgradeBox(
                                 22,
                                 3,
+                                1,
                                 new int[] { 19 },
                                 false,
                                 new int[] { 23 },
@@ -1128,6 +1215,7 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
                 .widget(
                         createUpgradeBox(
                                 23,
+                                0,
                                 0,
                                 new int[] { 20, 21, 22 },
                                 false,
@@ -1140,6 +1228,7 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
                         createUpgradeBox(
                                 24,
                                 0,
+                                1,
                                 new int[] { 23 },
                                 false,
                                 new int[] { 25 },
@@ -1151,6 +1240,7 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
                         createUpgradeBox(
                                 25,
                                 0,
+                                1,
                                 new int[] { 24 },
                                 false,
                                 new int[] { 26 },
@@ -1162,6 +1252,7 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
                         createUpgradeBox(
                                 26,
                                 0,
+                                3,
                                 new int[] { 25 },
                                 false,
                                 new int[] { 27 },
@@ -1173,6 +1264,7 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
                         createUpgradeBox(
                                 27,
                                 0,
+                                2,
                                 new int[] { 26 },
                                 false,
                                 new int[] { 28 },
@@ -1183,6 +1275,7 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
                 .widget(
                         createUpgradeBox(
                                 28,
+                                0,
                                 0,
                                 new int[] { 27 },
                                 false,
@@ -1195,6 +1288,7 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
                         createUpgradeBox(
                                 29,
                                 0,
+                                3,
                                 new int[] { 28 },
                                 false,
                                 new int[] { 30 },
@@ -1206,6 +1300,7 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
                         createUpgradeBox(
                                 30,
                                 0,
+                                3,
                                 new int[] { 29 },
                                 false,
                                 new int[] {},
@@ -1247,12 +1342,46 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
     }
 
     protected ModularWindow createIndividualUpgradeWindow(final EntityPlayer player) {
-        UITexture background = switch (currentColorCode) {
-            case 1 -> TecTechUITextures.BACKGROUND_GLOW_PURPLE;
-            case 2 -> TecTechUITextures.BACKGROUND_GLOW_ORANGE;
-            case 3 -> TecTechUITextures.BACKGROUND_GLOW_GREEN;
-            default -> TecTechUITextures.BACKGROUND_GLOW_BLUE;
-        };
+        UITexture background;
+        UITexture overlay;
+        UITexture milestoneSymbol;
+        float widthRatio;
+        switch (currentColorCode) {
+            case 1 -> {
+                background = TecTechUITextures.BACKGROUND_GLOW_PURPLE;
+                overlay = TecTechUITextures.PICTURE_OVERLAY_PURPLE;
+            }
+            case 2 -> {
+                background = TecTechUITextures.BACKGROUND_GLOW_ORANGE;
+                overlay = TecTechUITextures.PICTURE_OVERLAY_ORANGE;
+            }
+            case 3 -> {
+                background = TecTechUITextures.BACKGROUND_GLOW_GREEN;
+                overlay = TecTechUITextures.PICTURE_OVERLAY_GREEN;
+            }
+            default -> {
+                background = TecTechUITextures.BACKGROUND_GLOW_BLUE;
+                overlay = TecTechUITextures.PICTURE_OVERLAY_BLUE;
+            }
+        }
+        switch (currentMilestoneBG) {
+            case 1 -> {
+                milestoneSymbol = TecTechUITextures.PICTURE_GODFORGE_MILESTONE_CONVERSION;
+                widthRatio = 0.72f;
+            }
+            case 2 -> {
+                milestoneSymbol = TecTechUITextures.PICTURE_GODFORGE_MILESTONE_CATALYST;
+                widthRatio = 1f;
+            }
+            case 3 -> {
+                milestoneSymbol = TecTechUITextures.PICTURE_GODFORGE_MILESTONE_COMPOSITION;
+                widthRatio = 1f;
+            }
+            default -> {
+                milestoneSymbol = TecTechUITextures.PICTURE_GODFORGE_MILESTONE_CHARGE;
+                widthRatio = 0.8f;
+            }
+        }
         int WIDTH = 250;
         int HEIGHT = 250;
         int LORE_POS = 110;
@@ -1264,7 +1393,15 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
         ModularWindow.Builder builder = ModularWindow.builder(WIDTH, HEIGHT).setBackground(background)
                 .widget(ButtonWidget.closeWindowButton(true).setPos(WIDTH - 15, 3))
                 .widget(
+                        new DrawableWidget().setDrawable(milestoneSymbol)
+                                .setPos((int) ((1 - widthRatio / 2) * WIDTH / 2), HEIGHT / 4)
+                                .setSize((int) (WIDTH / 2 * widthRatio), HEIGHT / 2))
+                .widget(
+                        new DrawableWidget()
+                                .setDrawable(overlay).setPos(WIDTH / 4, HEIGHT / 4).setSize(WIDTH / 2, HEIGHT / 2))
+                .widget(
                         new MultiChildWidget()
+
                                 .addChild(
                                         new TextWidget(translateToLocal("fog.upgrade.text." + (currentUpgradeID)))
                                                 .setTextAlignment(Alignment.TopLeft).setMaxWidth(WIDTH - 15)
@@ -1357,6 +1494,8 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
      * @param upgradeID               ID of the upgrade
      * @param colorCode               Number deciding which colored background to use, 0 for blue, 1 for purple, 2 for
      *                                orange and 3 for green
+     * @param milestone               Number deciding which milestone symbol to display in the background, 0 for charge,
+     *                                1 for conversion, 2 for catalyst and 3 for composition
      * @param prerequisiteUpgradeIDs  IDs of the prior upgrades directly connected to the current one
      * @param requireAllPrerequisites Decides how many connected prerequisite upgrades have to be unlocked to be able to
      *                                unlock this one. True means ALL, False means AT LEAST ONE
@@ -1365,12 +1504,13 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
      * @param shardCost               How many graviton shards are needed to unlock this upgrade
      * @param pos                     Position of the upgrade inside the scrollableWidget
      */
-    private Widget createUpgradeBox(int upgradeID, int colorCode, int[] prerequisiteUpgradeIDs,
+    private Widget createUpgradeBox(int upgradeID, int colorCode, int milestone, int[] prerequisiteUpgradeIDs,
             boolean requireAllPrerequisites, int[] followingUpgradeIDs, boolean isStartOfSplit, int shardCost,
             Pos2d pos, IWidgetBuilder<?> builder) {
         return new MultiChildWidget().addChild(new ButtonWidget().setOnClick((clickData, widget) -> {
             currentUpgradeID = upgradeID;
             currentColorCode = colorCode;
+            currentMilestoneBG = milestone;
             gravitonShardCost = shardCost;
             prereqUpgrades = prerequisiteUpgradeIDs;
             allPrereqRequired = requireAllPrerequisites;
