@@ -91,7 +91,7 @@ public class GT_MetaTileEntity_EM_PlasmaModule extends GT_MetaTileEntity_EM_Base
                 if (!addEUToGlobalEnergyMap(userUUID, -calculatedEut * duration)) {
                     return CheckRecipeResultRegistry.insufficientPower(wirelessEUt * recipe.mDuration);
                 }
-                addToPowerTally(BigInteger.valueOf(calculatedEut * duration));
+                addToPowerTally(BigInteger.valueOf(calculatedEut).multiply(BigInteger.valueOf(duration)));
                 addToRecipeTally(calculatedParallels);
                 currentParallel = calculatedParallels;
                 EUt = calculatedEut;

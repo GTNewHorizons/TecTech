@@ -102,7 +102,7 @@ public class GT_MetaTileEntity_EM_SmeltingModule extends GT_MetaTileEntity_EM_Ba
                 if (!addEUToGlobalEnergyMap(userUUID, -calculatedEut * duration)) {
                     return CheckRecipeResultRegistry.insufficientPower(calculatedEut * duration);
                 }
-                addToPowerTally(BigInteger.valueOf(calculatedEut * duration));
+                addToPowerTally(BigInteger.valueOf(calculatedEut).multiply(BigInteger.valueOf(duration)));
                 if (!furnaceMode) {
                     addToRecipeTally(calculatedParallels);
                 }
