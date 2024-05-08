@@ -305,8 +305,10 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
                 // Check and drain fuel
                 if (ticker % (5 * SECONDS) == 0) {
                     ticker = 0;
-                    // TODO: Fix NPE here
-                    FluidStack fluidInHatch = mInputHatches.get(0).getFluid();
+                    FluidStack fluidInHatch = null;
+                    if (mInputHatches != null) {
+                        fluidInHatch = mInputHatches.get(0).getFluid();
+                    }
                     int maxModuleCount = 8;
 
                     if (upgrades[26]) {
