@@ -147,14 +147,14 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
         if (mMachine) return -1;
         int realBudget = elementBudget >= 1000 ? elementBudget : Math.min(1000, elementBudget * 5);
         // 1000 blocks max per placement.
-        int built = survivialBuildPiece(STRUCTURE_PIECE_MAIN, stackSize, 63, 20, 0, realBudget, env, false, true);
+        int built = survivialBuildPiece(STRUCTURE_PIECE_MAIN, stackSize, 63, 20, 1, realBudget, env, false, true);
         if (isUpgradeActive(26) && stackSize.stackSize > 1) {
             built += survivialBuildPiece(
                     STRUCTURE_PIECE_SECOND_RING,
                     stackSize,
                     55,
                     11,
-                    -73,
+                    -67,
                     realBudget,
                     env,
                     false,
@@ -166,7 +166,7 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
                     stackSize,
                     47,
                     13,
-                    -82,
+                    -76,
                     realBudget,
                     env,
                     false,
@@ -188,7 +188,7 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
             .addElement(
                     'A',
                     buildHatchAdder(GT_MetaTileEntity_EM_ForgeOfGods.class).atLeast(InputHatch, InputBus, OutputBus)
-                            .casingIndex(TEXTURE_INDEX + 1).dot(1).buildAndChain(GodforgeCasings, 1))
+                            .casingIndex(TEXTURE_INDEX + 3).dot(1).buildAndChain(GodforgeCasings, 3))
             .addElement('B', ofBlock(GodforgeCasings, 0)).addElement('C', ofBlock(GodforgeCasings, 1))
             .addElement('D', ofBlock(GodforgeCasings, 2)).addElement('E', ofBlock(GodforgeCasings, 3))
             .addElement('F', ofBlock(GodforgeCasings, 4)).addElement('G', ofBlock(GodforgeCasings, 5))
@@ -231,12 +231,12 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
 
     @Override
     public void construct(ItemStack stackSize, boolean hintsOnly) {
-        structureBuild_EM(STRUCTURE_PIECE_MAIN, 63, 14, 0, stackSize, hintsOnly);
+        structureBuild_EM(STRUCTURE_PIECE_MAIN, 63, 14, 1, stackSize, hintsOnly);
         if (isUpgradeActive(26) && stackSize.stackSize > 1) {
-            buildPiece(STRUCTURE_PIECE_SECOND_RING, stackSize, hintsOnly, 55, 11, -73);
+            buildPiece(STRUCTURE_PIECE_SECOND_RING, stackSize, hintsOnly, 55, 11, -67);
         }
         if (isUpgradeActive(29) && stackSize.stackSize > 2) {
-            buildPiece(STRUCTURE_PIECE_THIRD_RING, stackSize, hintsOnly, 47, 13, -82);
+            buildPiece(STRUCTURE_PIECE_THIRD_RING, stackSize, hintsOnly, 47, 13, -76);
         }
     }
 
@@ -255,7 +255,7 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
         moduleHatches.clear();
 
         // Check structure of multi.
-        if (!structureCheck_EM(STRUCTURE_PIECE_MAIN, 63, 14, 0)) {
+        if (!structureCheck_EM(STRUCTURE_PIECE_MAIN, 63, 14, 1)) {
             return false;
         }
 
@@ -279,9 +279,9 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
             return false;
         }
 
-        if (isUpgradeActive(26) && checkPiece(STRUCTURE_PIECE_SECOND_RING, 55, 11, -73)) {
+        if (isUpgradeActive(26) && checkPiece(STRUCTURE_PIECE_SECOND_RING, 55, 11, -67)) {
             ringAmount = 2;
-            if (isUpgradeActive(29) && checkPiece(STRUCTURE_PIECE_THIRD_RING, 47, 13, -82)) {
+            if (isUpgradeActive(29) && checkPiece(STRUCTURE_PIECE_THIRD_RING, 47, 13, -76)) {
                 ringAmount = 3;
             }
         }
