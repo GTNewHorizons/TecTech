@@ -115,6 +115,7 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
     private float invertedFuelMilestonePercentage = 0;
     private BigInteger totalPowerConsumed = BigInteger.ZERO;
     private boolean batteryCharging = false;
+    private boolean inversion = false;
     public ArrayList<GT_MetaTileEntity_EM_BaseModule> moduleHatches = new ArrayList<>();
 
     private static final int FUEL_CONFIG_WINDOW_ID = 9;
@@ -318,11 +319,6 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
                         maxModuleCount += 4;
                     }
 
-                    determineMilestoneProgress();
-                    if (!debugMode) {
-                        determineGravitonShardAmount();
-                    }
-
                     fuelConsumption = (long) calculateFuelConsumption(this) * 5 * (batteryCharging ? 2 : 1);
                     if (fluidInHatch != null && fluidInHatch.isFluidEqual(validFuelList.get(selectedFuelType))) {
                         FluidStack fluidNeeded = new FluidStack(
@@ -340,6 +336,13 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
                     } else {
                         reduceBattery(fuelConsumptionFactor);
                     }
+
+                    checkInversionStatus();
+                    determineMilestoneProgress();
+                    if (!debugMode) {
+                        determineGravitonShardAmount();
+                    }
+
                     // Do module calculations and checks
                     if (moduleHatches.size() > 0 && internalBattery > 0 && moduleHatches.size() <= maxModuleCount) {
                         for (GT_MetaTileEntity_EM_BaseModule module : moduleHatches) {
@@ -757,7 +760,7 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
         return builder.build();
     }
 
-    private int[] milestoneProgress = new int[] { 0, 0, 0, 4 };
+    private int[] milestoneProgress = new int[] { 0, 0, 0, 7 };
 
     protected ModularWindow createMilestoneWindow(final EntityPlayer player) {
         final int WIDTH = 400;
@@ -890,6 +893,9 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
                         TextWidget.localised("gt.blockmachines.multimachine.FOG." + milestoneType + "milestone")
                                 .setDefaultColor(EnumChatFormatting.GOLD).setTextAlignment(Alignment.Center)
                                 .setPos(0, 8).setSize(150, 15))
+                .widget(
+                        TextWidget.dynamicText(this::inversionStatusText).setDefaultColor(EnumChatFormatting.AQUA)
+                                .setTextAlignment(Alignment.Center).setScale(0.8f).setPos(0, 120).setSize(150, 15))
                 .widget(
                         TextWidget.dynamicText(() -> totalMilestoneProgress(currentMilestoneID)).setScale(0.7f)
                                 .setDefaultColor(EnumChatFormatting.WHITE).setTextAlignment(Alignment.Center)
@@ -1614,6 +1620,27 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
                         + maxBatteryCharge);
     }
 
+    private void checkInversionStatus() {
+        int inversionChecker = 0;
+        for (int progress : milestoneProgress) {
+            if (progress < 7) {
+                break;
+            }
+            inversionChecker++;
+        }
+        if (inversionChecker == 4) {
+            inversion = true;
+        }
+    }
+
+    private Text inversionStatusText() {
+        String inversionStatus = "";
+        if (inversion) {
+            inversionStatus = EnumChatFormatting.BOLD + translateToLocal("gt.blockmachines.multimachine.FOG.inversion");
+        }
+        return new Text(inversionStatus);
+    }
+
     private void determineMilestoneProgress() {
         int closestRelevantSeven;
         float rawProgress;
@@ -1624,11 +1651,12 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
                             / POWER_LOG_CONSTANT + 1),
                     0) / 7;
             milestoneProgress[0] = (int) floor(powerMilestonePercentage * 7);
-        } else {
+        }
+        if (inversion) {
             rawProgress = (totalPowerConsumed.divide(POWER_MILESTONE_T7_CONSTANT).floatValue() - 1) / 7;
             closestRelevantSeven = (int) floor(rawProgress);
             actualProgress = rawProgress - closestRelevantSeven;
-            milestoneProgress[0] = 7 + closestRelevantSeven;
+            milestoneProgress[0] = 7 + (int) floor(rawProgress * 7);
             if (closestRelevantSeven % 2 == 0) {
                 invertedPowerMilestonePercentage = actualProgress;
                 powerMilestonePercentage = 1 - invertedPowerMilestonePercentage;
@@ -1643,11 +1671,12 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
                     (log(totalRecipesProcessed * 1f / RECIPE_MILESTONE_CONSTANT) / RECIPE_LOG_CONSTANT + 1),
                     0) / 7;
             milestoneProgress[1] = (int) floor(recipeMilestonePercentage * 7);
-        } else {
+        }
+        if (inversion) {
             rawProgress = (((float) totalRecipesProcessed / RECIPE_MILESTONE_T7_CONSTANT) - 1) / 7;
             closestRelevantSeven = (int) floor(rawProgress);
             actualProgress = rawProgress - closestRelevantSeven;
-            milestoneProgress[1] = 7 + closestRelevantSeven;
+            milestoneProgress[1] = 7 + (int) floor(rawProgress * 7);
             if (closestRelevantSeven % 2 == 0) {
                 invertedRecipeMilestonePercentage = actualProgress;
                 recipeMilestonePercentage = 1 - invertedRecipeMilestonePercentage;
@@ -1661,11 +1690,12 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
                     (log(totalFuelConsumed * 1f / FUEL_MILESTONE_CONSTANT) / FUEL_LOG_CONSTANT + 1),
                     0) / 7;
             milestoneProgress[2] = (int) floor(fuelMilestonePercentage * 7);
-        } else {
+        }
+        if (inversion) {
             rawProgress = (((float) totalFuelConsumed / FUEL_MILESTONE_T7_CONSTANT) - 1) / 7;
             closestRelevantSeven = (int) floor(rawProgress);
             actualProgress = rawProgress - closestRelevantSeven;
-            milestoneProgress[2] = 7 + closestRelevantSeven;
+            milestoneProgress[2] = 7 + (int) floor(rawProgress * 7);
             if ((closestRelevantSeven % 2) == 0) {
                 invertedFuelMilestonePercentage = actualProgress;
                 fuelMilestonePercentage = 1 - invertedFuelMilestonePercentage;
@@ -1679,16 +1709,23 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
     private void determineGravitonShardAmount() {
         int sum = 0;
         for (int progress : milestoneProgress) {
+            if (!inversion) {
+                progress = Math.min(progress, 7);
+            }
             sum += progress * (progress + 1) / 2;
         }
         gravitonShardsAvailable = sum - gravitonShardsSpent;
     }
 
     private Text gravitonShardAmountText(int milestoneID) {
+        int sum;
+        int progress = milestoneProgress[milestoneID];
+        if (!inversion) {
+            progress = Math.min(progress, 7);
+        }
+        sum = progress * (progress + 1) / 2;
         return new Text(
-                translateToLocal("gt.blockmachines.multimachine.FOG.shardgain") + ": "
-                        + EnumChatFormatting.GRAY
-                        + (milestoneProgress[milestoneID] * (milestoneProgress[milestoneID] + 1) / 2));
+                translateToLocal("gt.blockmachines.multimachine.FOG.shardgain") + ": " + EnumChatFormatting.GRAY + sum);
     }
 
     private Text totalMilestoneProgress(int milestoneID) {
@@ -1757,8 +1794,9 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
     private Text milestoneProgressText(int milestoneID, boolean formatting) {
         long max;
         BigInteger bigMax;
-        Text done = new Text(translateToLocal("gt.blockmachines.multimachine.FOG.milestonecomplete"));
         String suffix;
+        String progressText = translateToLocal("gt.blockmachines.multimachine.FOG.progress");
+        Text done = new Text(translateToLocal("gt.blockmachines.multimachine.FOG.milestonecomplete"));
         if (Interactable.hasShiftDown()) {
             formatting = false;
             done = new Text(
@@ -1768,48 +1806,51 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
         }
         switch (milestoneID) {
             case 0:
-                if (milestoneProgress[0] < 7) {
+                if (milestoneProgress[0] < 7 || inversion) {
                     suffix = translateToLocal("gt.blockmachines.multimachine.FOG.power");
-                    bigMax = BigInteger.valueOf(LongMath.pow(9, milestoneProgress[0] + 1))
-                            .multiply(BigInteger.valueOf(LongMath.pow(10, 15)));
+                    if (inversion) {
+                        bigMax = POWER_MILESTONE_T7_CONSTANT.multiply(BigInteger.valueOf(milestoneProgress[0] - 5));
+                    } else {
+                        bigMax = BigInteger.valueOf(LongMath.pow(9, milestoneProgress[0]))
+                                .multiply(BigInteger.valueOf(LongMath.pow(10, 15)));
+                    }
                     if (formatting && (totalPowerConsumed.compareTo(BigInteger.valueOf(1_000L)) > 0)) {
                         return new Text(
-                                translateToLocal("gt.blockmachines.multimachine.FOG.progress") + ":\n"
-                                        + EnumChatFormatting.GRAY
-                                        + toExponentForm(bigMax)
-                                        + " "
-                                        + suffix);
+                                progressText + ": " + EnumChatFormatting.GRAY + toExponentForm(bigMax) + " " + suffix);
                     } else {
-                        return new Text(
-                                translateToLocal("gt.blockmachines.multimachine.FOG.progress") + ":\n"
-                                        + EnumChatFormatting.GRAY
-                                        + bigMax
-                                        + " "
-                                        + suffix);
+                        return new Text(progressText + ": " + EnumChatFormatting.GRAY + bigMax + " " + suffix);
                     }
                 } else {
                     return done;
                 }
             case 1:
-                if (milestoneProgress[1] < 7) {
+                if (milestoneProgress[1] < 7 || inversion) {
                     suffix = translateToLocal("gt.blockmachines.multimachine.FOG.recipes");
-                    max = LongMath.pow(6, milestoneProgress[1] + 1) * LongMath.pow(10, 7);
+                    if (inversion) {
+                        max = RECIPE_MILESTONE_T7_CONSTANT * (milestoneProgress[1] - 5);
+                    } else {
+                        max = LongMath.pow(6, milestoneProgress[1]) * LongMath.pow(10, 7);
+                    }
                     break;
                 } else {
                     return done;
                 }
             case 2:
-                if (milestoneProgress[2] < 7) {
+                if (milestoneProgress[2] < 7 || inversion) {
                     suffix = translateToLocal("gt.blockmachines.multimachine.FOG.fuel");
-                    max = LongMath.pow(3, milestoneProgress[2] + 1) * LongMath.pow(10, 4);
+                    if (inversion) {
+                        max = FUEL_MILESTONE_T7_CONSTANT * (milestoneProgress[2] - 5);
+                    } else {
+                        max = LongMath.pow(3, milestoneProgress[2]) * LongMath.pow(10, 4);
+                    }
                     break;
                 } else {
                     return done;
                 }
             case 3:
-                if (milestoneProgress[3] < 7) {
+                if (milestoneProgress[3] < 7 || inversion) {
                     suffix = translateToLocal("gt.blockmachines.multimachine.FOG.extensions");
-                    max = 7;
+                    max = milestoneProgress[3] + 1;
                     break;
                 } else {
                     return done;
@@ -1818,19 +1859,9 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
                 return new Text("Error");
         }
         if (formatting) {
-            return new Text(
-                    translateToLocal("gt.blockmachines.multimachine.FOG.progress") + ":\n"
-                            + EnumChatFormatting.GRAY
-                            + formatNumbers(max)
-                            + " "
-                            + suffix);
+            return new Text(progressText + ": " + EnumChatFormatting.GRAY + formatNumbers(max) + " " + suffix);
         } else {
-            return new Text(
-                    translateToLocal("gt.blockmachines.multimachine.FOG.progress") + ":\n"
-                            + EnumChatFormatting.GRAY
-                            + max
-                            + " "
-                            + suffix);
+            return new Text(progressText + ": " + EnumChatFormatting.GRAY + max + " " + suffix);
         }
     }
 
