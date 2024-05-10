@@ -48,6 +48,10 @@ import com.github.technus.tectech.thing.gui.TecTechUITextures;
 import com.github.technus.tectech.thing.metaTileEntity.multi.base.GT_MetaTileEntity_MultiblockBase_EM;
 import com.github.technus.tectech.thing.metaTileEntity.multi.base.render.TT_RenderedExtendedFacingTexture;
 import com.github.technus.tectech.thing.metaTileEntity.multi.godforge_modules.GT_MetaTileEntity_EM_BaseModule;
+import com.github.technus.tectech.thing.metaTileEntity.multi.godforge_modules.GT_MetaTileEntity_EM_ExoticModule;
+import com.github.technus.tectech.thing.metaTileEntity.multi.godforge_modules.GT_MetaTileEntity_EM_MoltenModule;
+import com.github.technus.tectech.thing.metaTileEntity.multi.godforge_modules.GT_MetaTileEntity_EM_PlasmaModule;
+import com.github.technus.tectech.thing.metaTileEntity.multi.godforge_modules.GT_MetaTileEntity_EM_SmeltingModule;
 import com.github.technus.tectech.util.CommonValues;
 import com.google.common.math.LongMath;
 import com.gtnewhorizon.structurelib.alignment.constructable.IConstructable;
@@ -110,9 +114,11 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
     private float powerMilestonePercentage = 0;
     private float recipeMilestonePercentage = 0;
     private float fuelMilestonePercentage = 0;
+    private float structureMilestonePercentage = 0;
     private float invertedPowerMilestonePercentage = 0;
     private float invertedRecipeMilestonePercentage = 0;
     private float invertedFuelMilestonePercentage = 0;
+    private float invertedStructureMilestonePercentage = 0;
     private BigInteger totalPowerConsumed = BigInteger.ZERO;
     private boolean batteryCharging = false;
     private boolean inversion = false;
@@ -337,6 +343,7 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
                         reduceBattery(fuelConsumptionFactor);
                     }
 
+                    determineCompositionMilestoneLevel();
                     checkInversionStatus();
                     determineMilestoneProgress();
                     if (!debugMode) {
@@ -760,7 +767,7 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
         return builder.build();
     }
 
-    private int[] milestoneProgress = new int[] { 0, 0, 0, 7 };
+    private int[] milestoneProgress = new int[] { 0, 0, 0, 0 };
 
     protected ModularWindow createMilestoneWindow(final EntityPlayer player) {
         final int WIDTH = 400;
@@ -815,7 +822,7 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
                                 .setSynced(true, false).setSize(130, 7).setPos(37, 215)
                                 .addTooltip(milestoneProgressText(2, false)).setTooltipShowUpDelay(TOOLTIP_DELAY))
                 .widget(
-                        new ProgressBar().setProgress(() -> milestoneProgress[3] / 7f)
+                        new ProgressBar().setProgress(() -> structureMilestonePercentage)
                                 .setDirection(ProgressBar.Direction.RIGHT)
                                 .setTexture(TecTechUITextures.PROGRESSBAR_GODFORGE_MILESTONE_RAINBOW, 130)
                                 .setSynced(true, false).setSize(130, 7).setPos(233, 215)
@@ -839,7 +846,7 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
                                 .setSynced(true, false).setSize(130, 7).setPos(37, 215)
                                 .addTooltip(milestoneProgressText(2, false)).setTooltipShowUpDelay(TOOLTIP_DELAY))
                 .widget(
-                        new ProgressBar().setProgress(() -> 1 - milestoneProgress[3] / 7f)
+                        new ProgressBar().setProgress(() -> invertedStructureMilestonePercentage)
                                 .setDirection(ProgressBar.Direction.LEFT)
                                 .setTexture(TecTechUITextures.PROGRESSBAR_GODFORGE_MILESTONE_RAINBOW_INVERTED, 130)
                                 .setSynced(true, false).setSize(130, 7).setPos(233, 215)
@@ -1641,6 +1648,30 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
         return new Text(inversionStatus);
     }
 
+    private void determineCompositionMilestoneLevel() {
+        int[] uniqueModuleCount = new int[4];
+        for (GT_MetaTileEntity_EM_BaseModule module : moduleHatches) {
+            if (module instanceof GT_MetaTileEntity_EM_SmeltingModule) {
+                uniqueModuleCount[0] = 1;
+                continue;
+            }
+            if (module instanceof GT_MetaTileEntity_EM_MoltenModule) {
+                uniqueModuleCount[1] = 1;
+                continue;
+            }
+            if (module instanceof GT_MetaTileEntity_EM_PlasmaModule) {
+                uniqueModuleCount[2] = 1;
+                continue;
+            }
+            if (module instanceof GT_MetaTileEntity_EM_ExoticModule) {
+                uniqueModuleCount[3] = 1;
+            }
+
+        }
+        totalExtensionsBuilt = Arrays.stream(uniqueModuleCount).sum() + ringAmount - 1;
+        milestoneProgress[3] = totalExtensionsBuilt;
+    }
+
     private void determineMilestoneProgress() {
         int closestRelevantSeven;
         float rawProgress;
@@ -1702,6 +1733,22 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
             } else {
                 fuelMilestonePercentage = actualProgress;
                 invertedFuelMilestonePercentage = 1 - fuelMilestonePercentage;
+            }
+        }
+
+        if (milestoneProgress[3] < 7) {
+            structureMilestonePercentage = totalExtensionsBuilt / 7f;
+        }
+        if (inversion) {
+            rawProgress = (totalExtensionsBuilt - 7) / 7f;
+            closestRelevantSeven = (int) floor(rawProgress);
+            actualProgress = rawProgress - closestRelevantSeven;;
+            if ((closestRelevantSeven % 2) == 0) {
+                invertedStructureMilestonePercentage = actualProgress;
+                structureMilestonePercentage = 1 - invertedStructureMilestonePercentage;
+            } else {
+                structureMilestonePercentage = actualProgress;
+                invertedStructureMilestonePercentage = 1 - structureMilestonePercentage;
             }
         }
     }
