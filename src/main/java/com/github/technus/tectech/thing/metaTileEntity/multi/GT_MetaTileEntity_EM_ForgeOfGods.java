@@ -1415,21 +1415,26 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
                                 .setPos((int) ((1 - widthRatio / 2) * WIDTH / 2), HEIGHT / 4)
                                 .setSize((int) (WIDTH / 2 * widthRatio), HEIGHT / 2))
                 .widget(
-                        new DrawableWidget()
-                                .setDrawable(overlay).setPos(WIDTH / 4, HEIGHT / 4).setSize(WIDTH / 2, HEIGHT / 2))
+                        new DrawableWidget().setDrawable(overlay).setPos(WIDTH / 4, HEIGHT / 4)
+                                .setSize(WIDTH / 2, HEIGHT / 2))
                 .widget(
                         new MultiChildWidget()
-
+                                .addChild(
+                                        new TextWidget(translateToLocal("fog.upgrade.tt." + (currentUpgradeID)))
+                                                .setTextAlignment(Alignment.Center)
+                                                .setDefaultColor(EnumChatFormatting.GOLD).setSize(WIDTH - 15, 30)
+                                                .setPos(9, 5))
                                 .addChild(
                                         new TextWidget(translateToLocal("fog.upgrade.text." + (currentUpgradeID)))
-                                                .setTextAlignment(Alignment.TopLeft).setMaxWidth(WIDTH - 15)
-                                                .setDefaultColor(0x9c9c9c).setPos(9, 30))
+                                                .setTextAlignment(Alignment.CenterLeft).setDefaultColor(0x9c9c9c)
+                                                .setSize(WIDTH - 15, LORE_POS - 30).setPos(9, 30))
                                 .addChild(
                                         new TextWidget(
                                                 EnumChatFormatting.ITALIC
                                                         + translateToLocal("fog.upgrade.lore." + (currentUpgradeID)))
                                                                 .setTextAlignment(Alignment.Center)
-                                                                .setMaxWidth(WIDTH - 15).setDefaultColor(0x9c9c9c)
+                                                                .setDefaultColor(0x9c9c9c)
+                                                                .setSize(WIDTH - 15, (int) (HEIGHT * 0.9) - LORE_POS)
                                                                 .setPos(9, LORE_POS))
                                 .addChild(
                                         new TextWidget(
