@@ -971,6 +971,7 @@ fog.upgrade.text.30=*insert text here* upgrade end
 
 fog.debug.resetbutton.text=Reset
 fog.debug.resetbutton.tooltip=Resets all upgrades to zero
+fog.debug.unlockall.text=Unlock all upgrades
 fog.debug.gravitonshardsetter.tooltip=Set the amount of availabe graviton shards
 
 fog.button.fuelconfig.tooltip=Fuel Configuration Menu

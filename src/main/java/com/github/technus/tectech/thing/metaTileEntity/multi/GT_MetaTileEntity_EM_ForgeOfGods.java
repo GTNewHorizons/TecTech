@@ -14,12 +14,8 @@ import static com.github.technus.tectech.util.GodforgeMath.queryMilestoneStats;
 import static com.github.technus.tectech.util.GodforgeMath.setMiscModuleParameters;
 import static com.github.technus.tectech.util.TT_Utility.toExponentForm;
 import static com.gtnewhorizon.structurelib.structure.StructureUtility.ofBlock;
-import static gregtech.api.enums.GT_HatchElement.InputBus;
-import static gregtech.api.enums.GT_HatchElement.InputHatch;
-import static gregtech.api.enums.GT_HatchElement.OutputBus;
 import static gregtech.api.metatileentity.BaseTileEntity.TOOLTIP_DELAY;
 import static gregtech.api.util.GT_RecipeBuilder.SECONDS;
-import static gregtech.api.util.GT_StructureUtility.buildHatchAdder;
 import static gregtech.api.util.GT_Utility.formatNumbers;
 import static java.lang.Math.floor;
 import static java.lang.Math.log;
@@ -191,10 +187,7 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
             .addShape(STRUCTURE_PIECE_MAIN, ForgeOfGodsStructureString.MAIN_STRUCTURE)
             .addShape(STRUCTURE_PIECE_SECOND_RING, ForgeOfGodsRingsStructureString.SECOND_RING)
             .addShape(STRUCTURE_PIECE_THIRD_RING, ForgeOfGodsRingsStructureString.THIRD_RING)
-            .addElement(
-                    'A',
-                    buildHatchAdder(GT_MetaTileEntity_EM_ForgeOfGods.class).atLeast(InputHatch, InputBus, OutputBus)
-                            .casingIndex(TEXTURE_INDEX + 3).dot(1).buildAndChain(GodforgeCasings, 3))
+            .addElement('A', classicHatches(TEXTURE_INDEX + 3, 1, GodforgeCasings, 3))
             .addElement('B', ofBlock(GodforgeCasings, 0)).addElement('C', ofBlock(GodforgeCasings, 1))
             .addElement('D', ofBlock(GodforgeCasings, 2)).addElement('E', ofBlock(GodforgeCasings, 3))
             .addElement('F', ofBlock(GodforgeCasings, 4)).addElement('G', ofBlock(GodforgeCasings, 5))
@@ -1353,6 +1346,16 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
                                             .addTooltip(translateToLocal("fog.debug.gravitonshardsetter.tooltip"))
                                             .setTooltipShowUpDelay(TOOLTIP_DELAY)
                                             .setBackground(GT_UITextures.BACKGROUND_TEXT_FIELD))
+                            .addChild(
+                                    new ButtonWidget()
+                                            .setOnClick((clickData, widget) -> Arrays.fill(upgrades, true))
+                                            .setSize(40, 15).setBackground(GT_UITextures.BUTTON_STANDARD)
+                                            .addTooltip(translateToLocal("fog.debug.unlockall.text"))
+                                            .setTooltipShowUpDelay(TOOLTIP_DELAY).setPos(0, 35))
+                            .addChild(
+                                    new TextWidget(translateToLocal("fog.debug.unlockall.text"))
+                                            .setTextAlignment(Alignment.Center).setScale(0.57f).setMaxWidth(36)
+                                            .setPos(3, 38))
                             .setPos(4, 354));
 
         }
