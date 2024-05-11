@@ -1635,9 +1635,7 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
             }
             inversionChecker++;
         }
-        if (inversionChecker == 4) {
-            inversion = true;
-        }
+        inversion = inversionChecker == 4;
     }
 
     private Text inversionStatusText() {
@@ -1649,26 +1647,47 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
     }
 
     private void determineCompositionMilestoneLevel() {
-        int[] uniqueModuleCount = new int[4];
+        int[] uniqueModuleCount = new int[5];
+        int smelting = 0;
+        int molten = 0;
+        int plasma = 0;
+        int exotic = 0;
+        int exoticMagmatter = 0;
         for (GT_MetaTileEntity_EM_BaseModule module : moduleHatches) {
             if (module instanceof GT_MetaTileEntity_EM_SmeltingModule) {
                 uniqueModuleCount[0] = 1;
+                smelting++;
                 continue;
             }
             if (module instanceof GT_MetaTileEntity_EM_MoltenModule) {
                 uniqueModuleCount[1] = 1;
+                molten++;
                 continue;
             }
             if (module instanceof GT_MetaTileEntity_EM_PlasmaModule) {
                 uniqueModuleCount[2] = 1;
+                plasma++;
                 continue;
             }
             if (module instanceof GT_MetaTileEntity_EM_ExoticModule) {
-                uniqueModuleCount[3] = 1;
+                if (!((GT_MetaTileEntity_EM_ExoticModule) module).isMagmatterModeOn()) {
+                    uniqueModuleCount[3] = 1;
+                    exotic++;
+                } else {
+                    uniqueModuleCount[4] = 1;
+                    exoticMagmatter++;
+                }
             }
 
         }
         totalExtensionsBuilt = Arrays.stream(uniqueModuleCount).sum() + ringAmount - 1;
+        if (inversion) {
+            totalExtensionsBuilt += (smelting - 1
+                    + (molten - 1) * 2
+                    + (plasma - 1) * 3
+                    + (exotic - 1) * 4
+                    + (exoticMagmatter - 1) * 5) / 5;
+        }
         milestoneProgress[3] = totalExtensionsBuilt;
     }
 

@@ -469,7 +469,7 @@ public class GT_MetaTileEntity_EM_ExoticModule extends GT_MetaTileEntity_EM_Base
         return (ButtonWidget) button;
     }
 
-    private boolean isMagmatterModeOn() {
+    public boolean isMagmatterModeOn() {
         return magmatterMode;
     }
 
