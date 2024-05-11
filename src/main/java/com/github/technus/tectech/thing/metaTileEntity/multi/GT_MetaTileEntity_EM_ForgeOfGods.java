@@ -107,10 +107,10 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
     private int gravitonShardsAvailable = 0;
     private int gravitonShardsSpent = 0;
     private int ringAmount = 1;
-    private int totalExtensionsBuilt = 0;
     private long fuelConsumption = 0;
     private long totalRecipesProcessed = 0;
     private long totalFuelConsumed = 0;
+    private float totalExtensionsBuilt = 0;
     private float powerMilestonePercentage = 0;
     private float recipeMilestonePercentage = 0;
     private float fuelMilestonePercentage = 0;
@@ -147,7 +147,7 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
     protected static final String STRUCTURE_PIECE_THIRD_RING = "third_ring";
     private static final String TOOLTIP_BAR = EnumChatFormatting.BLUE + "--------------------------------------------";
 
-    private boolean debugMode = true;
+    private final boolean debugMode = true;
 
     public int survivalConstruct(ItemStack stackSize, int elementBudget, ISurvivalBuildEnvironment env) {
         if (mMachine) return -1;
@@ -767,7 +767,7 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
         return builder.build();
     }
 
-    private int[] milestoneProgress = new int[] { 0, 0, 0, 0 };
+    private final int[] milestoneProgress = new int[] { 0, 0, 0, 0 };
 
     protected ModularWindow createMilestoneWindow(final EntityPlayer player) {
         final int WIDTH = 400;
@@ -1686,9 +1686,9 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
                     + (molten - 1) * 2
                     + (plasma - 1) * 3
                     + (exotic - 1) * 4
-                    + (exoticMagmatter - 1) * 5) / 5;
+                    + (exoticMagmatter - 1) * 5) / 5f;
         }
-        milestoneProgress[3] = totalExtensionsBuilt;
+        milestoneProgress[3] = (int) Math.floor(totalExtensionsBuilt);
     }
 
     private void determineMilestoneProgress() {
@@ -1761,7 +1761,7 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
         if (inversion) {
             rawProgress = (totalExtensionsBuilt - 7) / 7f;
             closestRelevantSeven = (int) floor(rawProgress);
-            actualProgress = rawProgress - closestRelevantSeven;;
+            actualProgress = rawProgress - closestRelevantSeven;
             if ((closestRelevantSeven % 2) == 0) {
                 invertedStructureMilestonePercentage = actualProgress;
                 structureMilestonePercentage = 1 - invertedStructureMilestonePercentage;
@@ -1810,7 +1810,7 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
             }
             case 3 -> {
                 suffix = translateToLocal("gt.blockmachines.multimachine.FOG.extensions");
-                progress = totalExtensionsBuilt;
+                progress = milestoneProgress[3];
             }
             default -> {
                 suffix = translateToLocal("gt.blockmachines.multimachine.FOG.power");
