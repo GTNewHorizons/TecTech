@@ -1319,7 +1319,7 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
                                 12,
                                 new Pos2d(126, 798),
                                 scrollable))
-                .widget(new TextWidget("").setPos(0, 1000));
+                .widget(new TextWidget("").setPos(0, 945));
 
         builder.widget(
                 new DrawableWidget().setDrawable(TecTechUITextures.BACKGROUND_STAR).setPos(0, 350).setSize(300, 300))
@@ -1347,8 +1347,7 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
                                             .setTooltipShowUpDelay(TOOLTIP_DELAY)
                                             .setBackground(GT_UITextures.BACKGROUND_TEXT_FIELD))
                             .addChild(
-                                    new ButtonWidget()
-                                            .setOnClick((clickData, widget) -> Arrays.fill(upgrades, true))
+                                    new ButtonWidget().setOnClick((clickData, widget) -> Arrays.fill(upgrades, true))
                                             .setSize(40, 15).setBackground(GT_UITextures.BUTTON_STANDARD)
                                             .addTooltip(translateToLocal("fog.debug.unlockall.text"))
                                             .setTooltipShowUpDelay(TOOLTIP_DELAY).setPos(0, 35))
