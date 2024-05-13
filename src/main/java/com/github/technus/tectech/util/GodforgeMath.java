@@ -29,6 +29,10 @@ public class GodforgeMath {
         } else return Math.max(godforge.getFuelFactor() / 25 * upgradeFactor, 1);
     }
 
+    public static int calculateStartupFuelConsumption(GT_MetaTileEntity_EM_ForgeOfGods godforge) {
+        return (int) Math.max(godforge.getFuelFactor() * 25 * Math.pow(1.2, godforge.getFuelFactor()), 1);
+    }
+
     public static int calculateMaxFuelFactor(GT_MetaTileEntity_EM_ForgeOfGods godforge) {
         int fuelCap = 5;
         if (godforge.isUpgradeActive(27)) {

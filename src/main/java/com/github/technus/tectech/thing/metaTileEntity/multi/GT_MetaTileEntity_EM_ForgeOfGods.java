@@ -10,11 +10,14 @@ import static com.github.technus.tectech.util.GodforgeMath.calculateMaxHeatForMo
 import static com.github.technus.tectech.util.GodforgeMath.calculateMaxParallelForModules;
 import static com.github.technus.tectech.util.GodforgeMath.calculateProcessingVoltageForModules;
 import static com.github.technus.tectech.util.GodforgeMath.calculateSpeedBonusForModules;
+import static com.github.technus.tectech.util.GodforgeMath.calculateStartupFuelConsumption;
 import static com.github.technus.tectech.util.GodforgeMath.queryMilestoneStats;
 import static com.github.technus.tectech.util.GodforgeMath.setMiscModuleParameters;
 import static com.github.technus.tectech.util.TT_Utility.toExponentForm;
 import static com.gtnewhorizon.structurelib.structure.StructureUtility.ofBlock;
+import static gregtech.api.enums.Mods.Avaritia;
 import static gregtech.api.metatileentity.BaseTileEntity.TOOLTIP_DELAY;
+import static gregtech.api.util.GT_ModHandler.getModItem;
 import static gregtech.api.util.GT_RecipeBuilder.SECONDS;
 import static gregtech.api.util.GT_Utility.formatNumbers;
 import static java.lang.Math.floor;
@@ -79,7 +82,9 @@ import com.gtnewhorizons.modularui.common.widget.textfield.NumericWidget;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import gregtech.api.enums.Materials;
 import gregtech.api.enums.MaterialsUEVplus;
+import gregtech.api.enums.OrePrefixes;
 import gregtech.api.enums.Textures;
 import gregtech.api.gui.modularui.GT_UITextures;
 import gregtech.api.interfaces.IHatchElement;
@@ -89,6 +94,7 @@ import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
 import gregtech.api.metatileentity.implementations.GT_MetaTileEntity_Hatch_Input;
 import gregtech.api.util.GT_HatchElementBuilder;
 import gregtech.api.util.GT_Multiblock_Tooltip_Builder;
+import gregtech.api.util.GT_OreDictUnificator;
 import gregtech.api.util.IGT_HatchAdder;
 
 public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_MultiblockBase_EM
@@ -103,6 +109,7 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
     private int gravitonShardsAvailable = 0;
     private int gravitonShardsSpent = 0;
     private int ringAmount = 1;
+    private int stellarFuelAmount = 0;
     private long fuelConsumption = 0;
     private long totalRecipesProcessed = 0;
     private long totalFuelConsumed = 0;
@@ -142,6 +149,8 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
     protected static final String STRUCTURE_PIECE_SECOND_RING = "second_ring";
     protected static final String STRUCTURE_PIECE_THIRD_RING = "third_ring";
     private static final String TOOLTIP_BAR = EnumChatFormatting.BLUE + "--------------------------------------------";
+    private static final ItemStack STELLAR_FUEL = Avaritia.isModLoaded() ? getModItem(Avaritia.ID, "Resource", 1, 8)
+            : GT_OreDictUnificator.get(OrePrefixes.block, Materials.CosmicNeutronium, 1);
 
     private final boolean debugMode = true;
 
@@ -300,82 +309,91 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
     public void onPostTick(IGregTechTileEntity aBaseMetaTileEntity, long aTick) {
         super.onPostTick(aBaseMetaTileEntity, aTick);
         if (aBaseMetaTileEntity.isServerSide()) {
-            if (getBaseMetaTileEntity().isAllowedToWork()) {
-                ticker++;
-                // Check and drain fuel
-                if (ticker % (5 * SECONDS) == 0) {
-                    ticker = 0;
-                    FluidStack fluidInHatch = null;
-                    if (mInputHatches != null) {
-                        fluidInHatch = mInputHatches.get(0).getFluid();
-                    }
-                    int maxModuleCount = 8;
+            ticker++;
+            // Check and drain fuel
+            if (ticker % (5 * SECONDS) == 0) {
+                ticker = 0;
+                FluidStack fluidInHatch = null;
+                if (mInputHatches != null && mInputHatches.size() != 0) {
+                    fluidInHatch = mInputHatches.get(0).getFluid();
+                }
+                int maxModuleCount = 8;
 
-                    if (upgrades[26]) {
-                        maxModuleCount += 4;
-                    }
-                    if (upgrades[29]) {
-                        maxModuleCount += 4;
-                    }
-
-                    fuelConsumption = (long) calculateFuelConsumption(this) * 5 * (batteryCharging ? 2 : 1);
-                    if (fluidInHatch != null && fluidInHatch.isFluidEqual(validFuelList.get(selectedFuelType))) {
-                        FluidStack fluidNeeded = new FluidStack(
-                                validFuelList.get(selectedFuelType),
-                                (int) fuelConsumption);
-                        FluidStack fluidReal = mInputHatches.get(0).drain(fluidNeeded.amount, true);
-                        if (fluidReal == null || fluidReal.amount < fluidNeeded.amount) {
-                            reduceBattery(fuelConsumptionFactor);
-                        } else {
-                            totalFuelConsumed += getFuelFactor();
-                            if (batteryCharging) {
-                                increaseBattery(fuelConsumptionFactor);
+                if (upgrades[26]) {
+                    maxModuleCount += 4;
+                }
+                if (upgrades[29]) {
+                    maxModuleCount += 4;
+                }
+                if (getBaseMetaTileEntity().isAllowedToWork()) {
+                    if (internalBattery == 0) {
+                        for (ItemStack itemStack : mInputBusses.get(0).getRealInventory()) {
+                            if (itemStack != null && itemStack.isItemEqual(STELLAR_FUEL)) {
+                                stellarFuelAmount += itemStack.stackSize;
+                                itemStack.stackSize = 0;
                             }
+                        }
+                        int fuelConsumption = calculateStartupFuelConsumption(this);
+                        if (stellarFuelAmount > fuelConsumption) {
+                            stellarFuelAmount -= fuelConsumption;
+                            increaseBattery(fuelConsumption);
                         }
                     } else {
-                        reduceBattery(fuelConsumptionFactor);
-                    }
-
-                    determineCompositionMilestoneLevel();
-                    checkInversionStatus();
-                    determineMilestoneProgress();
-                    if (!debugMode) {
-                        determineGravitonShardAmount();
-                    }
-
-                    // Do module calculations and checks
-                    if (moduleHatches.size() > 0 && internalBattery > 0 && moduleHatches.size() <= maxModuleCount) {
-                        for (GT_MetaTileEntity_EM_BaseModule module : moduleHatches) {
-                            if (allowModuleConnection(module, this)) {
-                                module.connect();
-                                calculateMaxHeatForModules(module, this);
-                                calculateSpeedBonusForModules(module, this);
-                                calculateMaxParallelForModules(module, this);
-                                calculateEnergyDiscountForModules(module, this);
-                                setMiscModuleParameters(module, this);
-                                queryMilestoneStats(module, this);
-                                if (!upgrades[28]) {
-                                    calculateProcessingVoltageForModules(module, this);
-                                }
+                        fuelConsumption = (long) calculateFuelConsumption(this) * 5 * (batteryCharging ? 2 : 1);
+                        if (fluidInHatch != null && fluidInHatch.isFluidEqual(validFuelList.get(selectedFuelType))) {
+                            FluidStack fluidNeeded = new FluidStack(
+                                    validFuelList.get(selectedFuelType),
+                                    (int) fuelConsumption);
+                            FluidStack fluidReal = mInputHatches.get(0).drain(fluidNeeded.amount, true);
+                            if (fluidReal == null || fluidReal.amount < fluidNeeded.amount) {
+                                reduceBattery(fuelConsumptionFactor);
                             } else {
-                                module.disconnect();
+                                totalFuelConsumed += getFuelFactor();
+                                if (batteryCharging) {
+                                    increaseBattery(fuelConsumptionFactor);
+                                }
                             }
+                        } else {
+                            reduceBattery(fuelConsumptionFactor);
                         }
-                    } else if (moduleHatches.size() > maxModuleCount) {
-                        for (GT_MetaTileEntity_EM_BaseModule module : moduleHatches) {
+                    }
+                } else {
+                    reduceBattery(fuelConsumptionFactor);
+                }
+
+                determineCompositionMilestoneLevel();
+                checkInversionStatus();
+                determineMilestoneProgress();
+                if (!debugMode) {
+                    determineGravitonShardAmount();
+                }
+
+                // Do module calculations and checks
+                if (moduleHatches.size() > 0 && internalBattery > 0 && moduleHatches.size() <= maxModuleCount) {
+                    for (GT_MetaTileEntity_EM_BaseModule module : moduleHatches) {
+                        if (allowModuleConnection(module, this)) {
+                            module.connect();
+                            calculateMaxHeatForModules(module, this);
+                            calculateSpeedBonusForModules(module, this);
+                            calculateMaxParallelForModules(module, this);
+                            calculateEnergyDiscountForModules(module, this);
+                            setMiscModuleParameters(module, this);
+                            queryMilestoneStats(module, this);
+                            if (!upgrades[28]) {
+                                calculateProcessingVoltageForModules(module, this);
+                            }
+                        } else {
                             module.disconnect();
                         }
                     }
-                }
-            } else {
-                if (moduleHatches.size() > 0) {
+                } else if (moduleHatches.size() > maxModuleCount) {
                     for (GT_MetaTileEntity_EM_BaseModule module : moduleHatches) {
                         module.disconnect();
                     }
                 }
+                if (mEfficiency < 0) mEfficiency = 0;
+                fixAllMaintenance();
             }
-            if (mEfficiency < 0) mEfficiency = 0;
-            fixAllMaintenance();
         }
     }
 
