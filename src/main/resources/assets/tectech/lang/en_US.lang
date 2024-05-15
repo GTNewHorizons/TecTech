@@ -1009,6 +1009,7 @@ gt.blockmachines.multimachine.FOG.fuelusage=Fuel Usage
 gt.blockmachines.multimachine.FOG.plasmamultistep=Multi-Step plasma
 gt.blockmachines.multimachine.FOG.plasmarecipetier=Fusion Tier
 gt.blockmachines.multimachine.FOG.storedfuel=Stored fuel amount:
+gt.blockmachines.multimachine.FOG.storedstartupfuel=Star Fuel amount:
 gt.blockmachines.multimachine.FOG.batteryinfo=Set battery size
 gt.blockmachines.multimachine.FOG.shardcost=Graviton Shard cost:
 gt.blockmachines.multimachine.FOG.availableshards=Available Graviton Shards:

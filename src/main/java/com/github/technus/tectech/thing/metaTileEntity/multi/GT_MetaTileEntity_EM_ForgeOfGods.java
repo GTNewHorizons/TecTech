@@ -110,6 +110,7 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
     private int gravitonShardsSpent = 0;
     private int ringAmount = 1;
     private int stellarFuelAmount = 0;
+    private int neededStartupFuel = 0;
     private long fuelConsumption = 0;
     private long totalRecipesProcessed = 0;
     private long totalFuelConsumed = 0;
@@ -327,16 +328,17 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
                 }
                 if (getBaseMetaTileEntity().isAllowedToWork()) {
                     if (internalBattery == 0) {
+
                         for (ItemStack itemStack : mInputBusses.get(0).getRealInventory()) {
                             if (itemStack != null && itemStack.isItemEqual(STELLAR_FUEL)) {
                                 stellarFuelAmount += itemStack.stackSize;
                                 itemStack.stackSize = 0;
                             }
                         }
-                        int fuelConsumption = calculateStartupFuelConsumption(this);
-                        if (stellarFuelAmount > fuelConsumption) {
-                            stellarFuelAmount -= fuelConsumption;
-                            increaseBattery(fuelConsumption);
+                        neededStartupFuel = calculateStartupFuelConsumption(this);
+                        if (stellarFuelAmount >= neededStartupFuel) {
+                            stellarFuelAmount -= neededStartupFuel;
+                            increaseBattery(neededStartupFuel);
                         }
                     } else {
                         fuelConsumption = (long) calculateFuelConsumption(this) * 5 * (batteryCharging ? 2 : 1);
@@ -1645,6 +1647,13 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
     }
 
     private Text storedFuel() {
+        if (internalBattery == 0) {
+            return new Text(
+                    translateToLocal("gt.blockmachines.multimachine.FOG.storedstartupfuel") + " "
+                            + stellarFuelAmount
+                            + "/"
+                            + neededStartupFuel);
+        }
         return new Text(
                 translateToLocal("gt.blockmachines.multimachine.FOG.storedfuel") + " "
                         + internalBattery
@@ -2010,6 +2019,7 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
         NBT.setByteArray("totalPowerConsumed", totalPowerConsumed.toByteArray());
         NBT.setLong("totalRecipesProcessed", totalRecipesProcessed);
         NBT.setLong("totalFuelConsumed", totalFuelConsumed);
+        NBT.setInteger("starFuelStored", stellarFuelAmount);
 
         // Store booleanArray of all upgrades
         NBTTagCompound upgradeBooleanArrayNBTTag = new NBTTagCompound();
@@ -2036,6 +2046,7 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
         NBT.setByteArray("totalPowerConsumed", totalPowerConsumed.toByteArray());
         NBT.setLong("totalRecipesProcessed", totalRecipesProcessed);
         NBT.setLong("totalFuelConsumed", totalFuelConsumed);
+        NBT.setInteger("starFuelStored", stellarFuelAmount);
 
         // Store booleanArray of all upgrades
         NBTTagCompound upgradeBooleanArrayNBTTag = new NBTTagCompound();
@@ -2062,6 +2073,7 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
         totalPowerConsumed = new BigInteger(NBT.getByteArray("totalPowerConsumed"));
         totalRecipesProcessed = NBT.getLong("totalRecipesProcessed");
         totalFuelConsumed = NBT.getLong("totalFuelConsumed");
+        stellarFuelAmount = NBT.getInteger("starFuelStored");
 
         NBTTagCompound tempBooleanTag = NBT.getCompoundTag("upgrades");
 
