@@ -41,6 +41,7 @@ import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.FluidStack;
 
 import com.github.technus.tectech.TecTech;
+import com.github.technus.tectech.thing.CustomItemList;
 import com.github.technus.tectech.thing.block.GodforgeGlassBlock;
 import com.github.technus.tectech.thing.block.TileForgeOfGods;
 import com.github.technus.tectech.thing.gui.TecTechUITextures;
@@ -59,10 +60,13 @@ import com.gtnewhorizon.structurelib.structure.IStructureDefinition;
 import com.gtnewhorizon.structurelib.structure.ISurvivalBuildEnvironment;
 import com.gtnewhorizons.modularui.api.ModularUITextures;
 import com.gtnewhorizons.modularui.api.drawable.IDrawable;
+import com.gtnewhorizons.modularui.api.drawable.ItemDrawable;
 import com.gtnewhorizons.modularui.api.drawable.Text;
 import com.gtnewhorizons.modularui.api.drawable.UITexture;
+import com.gtnewhorizons.modularui.api.forge.ItemStackHandler;
 import com.gtnewhorizons.modularui.api.math.Alignment;
 import com.gtnewhorizons.modularui.api.math.Color;
+import com.gtnewhorizons.modularui.api.math.MainAxisAlignment;
 import com.gtnewhorizons.modularui.api.math.Pos2d;
 import com.gtnewhorizons.modularui.api.math.Size;
 import com.gtnewhorizons.modularui.api.screen.ModularWindow;
@@ -72,16 +76,19 @@ import com.gtnewhorizons.modularui.api.widget.Interactable;
 import com.gtnewhorizons.modularui.api.widget.Widget;
 import com.gtnewhorizons.modularui.common.widget.ButtonWidget;
 import com.gtnewhorizons.modularui.common.widget.DrawableWidget;
+import com.gtnewhorizons.modularui.common.widget.DynamicPositionedColumn;
 import com.gtnewhorizons.modularui.common.widget.FakeSyncWidget;
 import com.gtnewhorizons.modularui.common.widget.FluidNameHolderWidget;
 import com.gtnewhorizons.modularui.common.widget.MultiChildWidget;
 import com.gtnewhorizons.modularui.common.widget.ProgressBar;
 import com.gtnewhorizons.modularui.common.widget.Scrollable;
+import com.gtnewhorizons.modularui.common.widget.SlotGroup;
 import com.gtnewhorizons.modularui.common.widget.TextWidget;
 import com.gtnewhorizons.modularui.common.widget.textfield.NumericWidget;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import gregtech.api.enums.ItemList;
 import gregtech.api.enums.Materials;
 import gregtech.api.enums.MaterialsUEVplus;
 import gregtech.api.enums.OrePrefixes;
@@ -127,6 +134,7 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
     private boolean batteryCharging = false;
     private boolean inversion = false;
     public ArrayList<GT_MetaTileEntity_EM_BaseModule> moduleHatches = new ArrayList<>();
+    protected ItemStackHandler inputSlotHandler = new ItemStackHandler(16);
 
     private static final int FUEL_CONFIG_WINDOW_ID = 9;
     private static final int UPGRADE_TREE_WINDOW_ID = 10;
@@ -134,6 +142,7 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
     private static final int BATTERY_CONFIG_WINDOW_ID = 12;
     private static final int MILESTONE_WINDOW_ID = 13;
     private static final int INDIVIDUAL_MILESTONE_WINDOW_ID = 14;
+    private static final int MANUAL_INSERTION_WINDOW_ID = 15;
     private static final int TEXTURE_INDEX = 960;
     private static final int[] FIRST_SPLIT_UPGRADES = new int[] { 12, 13, 14 };
     private static final long POWER_MILESTONE_CONSTANT = LongMath.pow(10, 15);
@@ -518,6 +527,7 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
         buildContext.addSyncedWindow(BATTERY_CONFIG_WINDOW_ID, this::createBatteryWindow);
         buildContext.addSyncedWindow(MILESTONE_WINDOW_ID, this::createMilestoneWindow);
         buildContext.addSyncedWindow(INDIVIDUAL_MILESTONE_WINDOW_ID, this::createIndividualMilestoneWindow);
+        buildContext.addSyncedWindow(MANUAL_INSERTION_WINDOW_ID, this::createManualInsertionWindow);
         builder.widget(
                 new ButtonWidget().setOnClick(
                         (clickData, widget) -> {
@@ -1531,6 +1541,13 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
                         .addChild(
                                 new TextWidget(translateToLocal("fog.upgrade.confirm"))
                                         .setTextAlignment(Alignment.Center).setScale(0.7f).setMaxWidth(36).setPos(3, 5))
+                        .addChild(new ButtonWidget().setOnClick((clickData, widget) -> {
+                            if (!widget.isClient()) {
+                                widget.getContext().openSyncedWindow(MANUAL_INSERTION_WINDOW_ID);
+                                widget.getContext().closeWindow(INDIVIDUAL_UPGRADE_WINDOW_ID);
+                                widget.getContext().closeWindow(UPGRADE_TREE_WINDOW_ID);
+                            }
+                        }).setBackground(TecTechUITextures.BUTTON_CELESTIAL_32x32).setPos(50, 50))
                         .setPos(WIDTH / 2 - 21, (int) (HEIGHT * 0.9)));
         return builder.build();
     }
@@ -1575,6 +1592,64 @@ public class GT_MetaTileEntity_EM_ForgeOfGods extends GT_MetaTileEntity_Multiblo
                 .setPos(pos).attachSyncer(
                         new FakeSyncWidget.BooleanSyncer(() -> upgrades[upgradeID], val -> upgrades[upgradeID] = val),
                         builder);
+    }
+
+    List<ItemStack> inputs = new ArrayList<>(
+            Arrays.asList(
+                    ItemList.Electric_Motor_UMV.get(13L),
+                    ItemList.Electric_Pump_UXV.get(32L),
+                    ItemList.Electric_Piston_UXV.get(32L),
+                    ItemList.Robot_Arm_UXV.get(32L),
+                    ItemList.Superconducting_Magnet_Solenoid_UIV.get(48L),
+                    ItemList.NaquadriaSupersolid.get(32L),
+                    CustomItemList.astralArrayFabricator.get(36L),
+                    CustomItemList.Machine_Multi_EyeOfHarmony.get(2L)));
+
+    protected ModularWindow createManualInsertionWindow(final EntityPlayer player) {
+        final int WIDTH = 189;
+        final int HEIGHT = 84;
+        final int PARENT_WIDTH = getGUIWidth();
+        final int PARENT_HEIGHT = getGUIHeight();
+        final MultiChildWidget columns = new MultiChildWidget();
+        final DynamicPositionedColumn column1 = new DynamicPositionedColumn();
+        final DynamicPositionedColumn column2 = new DynamicPositionedColumn();
+        final DynamicPositionedColumn column3 = new DynamicPositionedColumn();
+        List<DynamicPositionedColumn> columnList = Arrays.asList(column1, column2, column3);
+        ModularWindow.Builder builder = ModularWindow.builder(WIDTH, HEIGHT);
+        builder.setBackground(GT_UITextures.BACKGROUND_SINGLEBLOCK_DEFAULT);
+        builder.setGuiTint(getGUIColorization());
+        builder.setDraggable(true);
+        builder.setPos(
+                (size, window) -> Alignment.Center.getAlignedPos(size, new Size(PARENT_WIDTH, PARENT_HEIGHT))
+                        .add(
+                                Alignment.TopRight
+                                        .getAlignedPos(new Size(PARENT_WIDTH, PARENT_HEIGHT), new Size(WIDTH, HEIGHT)))
+                        .subtract(5, 0).add(0, 4));
+        builder.widget(
+                SlotGroup.ofItemHandler(inputSlotHandler, 4).startFromSlot(0).endAtSlot(15).phantom(false)
+                        .background(getGUITextureSet().getItemSlot()).build().setPos(111, 6));
+        for (int i = 0; i < inputs.size(); i++) {
+            int index = i;
+            int cleanDiv4 = index / 4;
+            builder.widget(
+                    new DrawableWidget().setDrawable(GT_UITextures.BUTTON_STANDARD_PRESSED)
+                            .setPos(6 + cleanDiv4 * 36, 6 + index % 4 * 18).setSize(18, 18));
+            columnList.get(cleanDiv4)
+                    .addChild(new ItemDrawable().setItem(inputs.get(index)).asWidget().dynamicTooltip(() -> {
+                        List<String> tooltip = new ArrayList<>();
+                        tooltip.add(inputs.get(index) != null ? inputs.get(index).getDisplayName() : "");
+                        return tooltip;
+                    }).setSize(16, 16));
+        }
+
+        columns.addChild(
+                column1.setSpace(2).setAlignment(MainAxisAlignment.SPACE_BETWEEN).setSize(34, 72).setPos(1, 1));
+        columns.addChild(
+                column2.setSpace(2).setAlignment(MainAxisAlignment.SPACE_BETWEEN).setSize(34, 72).setPos(37, 1));
+        columns.addChild(
+                column3.setSpace(2).setAlignment(MainAxisAlignment.SPACE_BETWEEN).setSize(34, 72).setPos(73, 1));
+        builder.widget(columns.setSize(72, 72).setPos(6, 6));
+        return builder.build();
     }
 
     @Override
